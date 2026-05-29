@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WS Admin - Gerenciamento</title>
+    <style>
+        :root {
+            --bg-body: #f1f5f9; --bg-card: #ffffff; --primary-color: #0f172a; --primary-hover: #1e293b;
+            --text-main: #0f172a; --text-muted: #64748b; --border-color: #e2e8f0;
+            --success: #16a34a; --warning: #ca8a04; --danger: #dc2626; --radius-md: 8px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, sans-serif; }
+        body { background: var(--bg-body); color: var(--text-main); }
+
+        /* TELA DE LOGIN */
+        #tela-login { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; background: var(--primary-color); color: white; padding: 20px; }
+        .login-box { background: white; color: var(--text-main); padding: 30px; border-radius: var(--radius-md); width: 100%; max-width: 400px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
+        .login-box h2 { margin-bottom: 20px; color: var(--primary-color); }
+        .login-box input { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid var(--border-color); border-radius: var(--radius-md); font-size: 16px; }
+        .btn-login { width: 100%; padding: 12px; background: var(--primary-color); color: white; border: none; border-radius: var(--radius-md); font-size: 16px; font-weight: bold; cursor: pointer; }
+
+        /* HEADER E CONTAINER GERAL */
+        #tela-admin { display: none; padding-bottom: 40px; }
+        header { background: var(--primary-color); color: white; padding: 20px; text-align: center; }
+        .container { max-width: 800px; margin: auto; padding: 20px; }
+
+        /* MENU DE ABAS DO ADMIN */
+        .admin-tabs { display: flex; gap: 10px; margin-bottom: 25px; border-bottom: 2px solid var(--border-color); padding-bottom: 10px; }
+        .tab-btn { background: transparent; border: none; padding: 10px 15px; font-size: 16px; font-weight: bold; color: var(--text-muted); cursor: pointer; border-radius: var(--radius-md); transition: 0.2s; }
+        .tab-btn:hover { background: #e2e8f0; }
+        .tab-btn.ativo { background: var(--primary-color); color: white; }
+        
+        .conteudo-admin { display: none; animation: fadeIn 0.3s; }
+        .conteudo-admin.ativo { display: block; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        .controles-topo { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .btn-recarregar { background: white; border: 1px solid var(--border-color); padding: 8px 15px; border-radius: var(--radius-md); cursor: pointer; font-weight: bold; }
+
+        /* CARDS DE ORDEM DE SERVIÇO */
+        .os-card { background: var(--bg-card); border-radius: var(--radius-md); padding: 20px; margin-bottom: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); border-left: 5px solid var(--primary-color); }
+        .os-header { display: flex; justify-content: space-between; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; margin-bottom: 10px; }
+        .os-numero { font-size: 18px; font-weight: bold; color: var(--primary-color); }
+        .os-info p { margin-bottom: 6px; font-size: 15px; }
+        .os-info span { font-weight: bold; }
+        .os-acoes { margin-top: 15px; padding-top: 15px; border-top: 1px dashed var(--border-color); display: flex; flex-direction: column; gap: 10px; }
+        .linha-status { display: flex; gap: 10px; }
+        .select-status { flex: 1; padding: 10px; border-radius: var(--radius-md); border: 1px solid var(--border-color); font-size: 15px; font-weight: bold; }
+        .btn-salvar { background: var(--primary-color); color: white; border: none; padding: 10px 15px; border-radius: var(--radius-md); font-weight: bold; cursor: pointer; }
+        .btn-whatsapp { background: #25D366; color: white; text-decoration: none; padding: 10px; border-radius: var(--radius-md); text-align: center; font-weight: bold; }
+        .btn-excluir { background: transparent; color: var(--danger); border: 1px solid var(--danger); padding: 10px; border-radius: var(--radius-md); font-weight: bold; cursor: pointer; }
+
+        /* SESSÃO DA LOJA (PRODUTOS) */
+        .form-produto { background: white; padding: 20px; border-radius: var(--radius-md); margin-bottom: 25px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); border: 1px solid var(--border-color); }
+        .form-produto h3 { margin-bottom: 15px; color: var(--primary-color); }
+        .linha-form { display: flex; gap: 10px; margin-bottom: 15px; }
+        .form-produto input { flex: 1; padding: 12px; border: 1px solid var(--border-color); border-radius: var(--radius-md); font-size: 15px; }
+        .btn-add-produto { background: var(--success); color: white; border: none; padding: 12px; border-radius: var(--radius-md); font-weight: bold; cursor: pointer; width: 100%; font-size: 16px; }
+
+        .grid-produtos { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; }
+        .prod-card { background: white; border: 1px solid var(--border-color); border-radius: var(--radius-md); text-align: center; padding: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .prod-icon { font-size: 40px; margin-bottom: 10px; }
+        .prod-nome { font-weight: bold; margin-bottom: 5px; font-size: 15px; }
+        .prod-preco { color: var(--success); font-weight: 900; margin-bottom: 15px; font-size: 16px; }
+        .btn-del-prod { background: var(--danger); color: white; border: none; padding: 8px; border-radius: var(--radius-md); font-size: 13px; font-weight: bold; cursor: pointer; width: 100%; }
+
+        .mensagem-vazia { text-align: center; color: var(--text-muted); padding: 40px; background: white; border-radius: var(--radius-md); }
+    </style>
+</head>
+<body>
+
+    <div id="tela-login">
+        <div class="login-box">
+            <h2>WS Admin</h2>
+            <p style="margin-bottom: 15px; color: #64748b;">Digite a senha de acesso</p>
+            <input type="password" id="senha" placeholder="Sua senha">
+            <button class="btn-login" onclick="fazerLogin()">Entrar no Painel</button>
+        </div>
+    </div>
+
+    <div id="tela-admin">
+        <header>
+            <h1>⚙️ Painel de Controle</h1>
+        </header>
+
+        <div class="container">
+            
+            <nav class="admin-tabs">
+                <button class="tab-btn ativo" id="btn-aba-os" onclick="mudarAba('aba-os', 'btn-aba-os')">📋 Ordens de Serviço</button>
+                <button class="tab-btn" id="btn-aba-loja" onclick="mudarAba('aba-loja', 'btn-aba-loja')">🛒 Vitrine da Loja</button>
+            </nav>
+
+            <div id="aba-os" class="conteudo-admin ativo">
+                <div class="controles-topo">
+                    <h3>Últimos Agendamentos</h3>
+                    <button class="btn-recarregar" onclick="carregarAgendamentos()">🔄 Atualizar</button>
+                </div>
+                <div id="lista-os">
+                    <div class="mensagem-vazia">Carregando dados...</div>
+                </div>
+            </div>
+
+            <div id="aba-loja" class="conteudo-admin">
+                
+                <div class="form-produto">
+                    <h3>➕ Adicionar Novo Item</h3>
+                    <form id="formAddProduto">
+                        <div class="linha-form">
+                            <input type="text" id="prodNome" placeholder="Nome (Ex: Reparo de Placa, Montagem de Móveis)" required>
+                        </div>
+                        <div class="linha-form">
+                            <input type="text" id="prodPreco" placeholder="Preço (Ex: 80,00 ou A partir de R$ 50)" required>
+                            <input type="text" id="prodIcone" placeholder="Emoji (Ex: 💻, 🪛, 🔌)" required style="max-width: 150px;">
+                        </div>
+                        <button type="submit" class="btn-add-produto" id="btnSalvarProd">Cadastrar na Vitrine</button>
+                    </form>
+                </div>
+
+                <div class="controles-topo">
+                    <h3>Seus Itens Ativos</h3>
+                    <button class="btn-recarregar" onclick="carregarProdutosAdmin()">🔄 Atualizar</button>
+                </div>
+                <div class="grid-produtos" id="lista-produtos">
+                    <div class="mensagem-vazia" style="grid-column: 1 / -1;">Carregando vitrine...</div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+    <script type="module">
+        import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm"; 
+        
+        const supabaseUrl = "https://gbcasddvbcpurkadvegu.supabase.co"; 
+        const supabaseKey = "sb_publishable_YA15vytC5buv0ejQ8fJRPg_WUn6NGjs"; 
+        const supabase = createClient(supabaseUrl, supabaseKey); 
+
+        // LOGIN
+        window.fazerLogin = function() {
+            if (document.getElementById('senha').value === 'admin123') {
+                document.getElementById('tela-login').style.display = 'none';
+                document.getElementById('tela-admin').style.display = 'block';
+                carregarAgendamentos();
+                carregarProdutosAdmin(); // Puxa os produtos assim que logar
+            } else { alert('❌ Senha incorreta!'); }
+        }
+
+        // ALTERAR ABAS DO ADMIN
+        window.mudarAba = function(idAba, idBtn) {
+            document.querySelectorAll('.conteudo-admin').forEach(aba => aba.classList.remove('ativo'));
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('ativo'));
+            document.getElementById(idAba).classList.add('ativo');
+            document.getElementById(idBtn).classList.add('ativo');
+        }
+
+        // ==========================================
+        // LÓGICA DAS ORDENS DE SERVIÇO (MANTIDA)
+        // ==========================================
+        window.carregarAgendamentos = async function() {
+            const containerLista = document.getElementById('lista-os');
+            containerLista.innerHTML = '<div class="mensagem-vazia">Atualizando lista...</div>';
+            const { data, error } = await supabase.from("agendamentos").select("*").order("id", { ascending: false });
+
+            if (error) { containerLista.innerHTML = `<div class="mensagem-vazia">Erro: ${error.message}</div>`; return; }
+            if (!data || data.length === 0) { containerLista.innerHTML = '<div class="mensagem-vazia">Nenhum agendamento encontrado.</div>'; return; }
+
+            containerLista.innerHTML = '';
+            data.forEach(os => {
+                const numeroZap = os.whatsapp.replace(/\D/g, '');
+                const card = document.createElement('div');
+                card.className = 'os-card';
+                card.innerHTML = `
+                    <div class="os-header">
+                        <div class="os-numero">OS #${os.id}</div>
+                        <div class="os-data">📅 ${os.data.split('-').reverse().join('/')} às ${os.hora}</div>
+                    </div>
+                    <div class="os-info">
+                        <p><span>👤 Cliente:</span> ${os.nome}</p>
+                        <p><span>🛠️ Aparelho:</span> ${os.aparelho}</p>
+                        <p><span>📱 WhatsApp:</span> ${os.whatsapp}</p>
+                        <p><span>📝 Defeito:</span> ${os.defeito}</p>
+                    </div>
+                    <div class="os-acoes">
+                        <div class="linha-status">
+                            <select class="select-status" id="status-${os.id}">
+                                <option value="Em análise técnica" ${os.status === 'Em análise técnica' ? 'selected' : ''}>Em análise técnica</option>
+                                <option value="Aguardando Aprovação" ${os.status === 'Aguardando Aprovação' ? 'selected' : ''}>Aguardando Aprovação</option>
+                                <option value="Aguardando Peça" ${os.status === 'Aguardando Peça' ? 'selected' : ''}>Aguardando Peça</option>
+                                <option value="Na Bancada (Reparo)" ${os.status === 'Na Bancada (Reparo)' ? 'selected' : ''}>Na Bancada (Reparo)</option>
+                                <option value="Pronto para Retirada" ${os.status === 'Pronto para Retirada' ? 'selected' : ''}>Pronto para Retirada</option>
+                                <option value="Entregue" ${os.status === 'Entregue' ? 'selected' : ''}>Entregue</option>
+                                <option value="Cancelado" ${os.status === 'Cancelado' ? 'selected' : ''}>Cancelado</option>
+                            </select>
+                            <button class="btn-salvar" onclick="atualizarStatus(${os.id})">💾 Salvar</button>
+                        </div>
+                        <a href="https://wa.me/55${numeroZap}?text=Ol%C3%A1%20${os.nome}!%20Aqui%20%C3%A9%20da%20WS%20sobre%20a%20OS%20${os.id}." target="_blank" class="btn-whatsapp">💬 Chamar no WhatsApp</a>
+                        <button class="btn-excluir" onclick="deletarOS(${os.id})">🗑️ Apagar OS</button>
+                    </div>
+                `;
+                containerLista.appendChild(card);
+            });
+        }
+
+        window.atualizarStatus = async function(idOS) {
+            const selectElement = document.getElementById(`status-${idOS}`);
+            const novoStatus = selectElement.value;
+            selectElement.disabled = true;
+            const { error } = await supabase.from("agendamentos").update({ status: novoStatus }).eq("id", idOS);
+            selectElement.disabled = false;
+            if (!error) alert(`✅ OS #${idOS} atualizada para: "${novoStatus}"`);
+        }
+
+        window.deletarOS = async function(idOS) {
+            if (confirm(`⚠️ ATENÇÃO!\nTem certeza que deseja APAGAR a OS #${idOS}?`)) {
+                await supabase.from("agendamentos").delete().eq("id", idOS);
+                carregarAgendamentos(); 
+            }
+        }
+
+        // ==========================================
+        // NOVA LÓGICA DA VITRINE (PRODUTOS)
+        // ==========================================
+        
+        // 1. Cadastrar Produto
+        document.getElementById('formAddProduto').onsubmit = async function(e) {
+            e.preventDefault();
+            const btn = document.getElementById('btnSalvarProd');
+            btn.innerText = "Salvando..."; btn.disabled = true;
+
+            const dadosProduto = {
+                nome: document.getElementById('prodNome').value,
+                preco: document.getElementById('prodPreco').value,
+                icone: document.getElementById('prodIcone').value,
+                status: 'ativo'
+            };
+
+            const { error } = await supabase.from('produtos').insert([dadosProduto]);
+            
+            btn.innerText = "Cadastrar na Vitrine"; btn.disabled = false;
+
+            if (error) {
+                alert("❌ Erro ao adicionar o produto.");
+            } else {
+                document.getElementById('formAddProduto').reset();
+                carregarProdutosAdmin(); // Atualiza a lista na hora
+                alert("✅ Item adicionado à vitrine do cliente!");
+            }
+        }
+
+        // 2. Listar Produtos no Admin
+        window.carregarProdutosAdmin = async function() {
+            const vitrine = document.getElementById('lista-produtos');
+            vitrine.innerHTML = '<div class="mensagem-vazia" style="grid-column: 1 / -1;">Atualizando...</div>';
+
+            const { data, error } = await supabase.from('produtos').select('*').order('id', { ascending: false });
+
+            if (error || !data || data.length === 0) {
+                vitrine.innerHTML = '<div class="mensagem-vazia" style="grid-column: 1 / -1;">Você ainda não cadastrou nenhum produto ou serviço.</div>';
+                return;
+            }
+
+            vitrine.innerHTML = '';
+            data.forEach(prod => {
+                const card = document.createElement('div');
+                card.className = 'prod-card';
+                card.innerHTML = `
+                    <div class="prod-icon">${prod.icone}</div>
+                    <div class="prod-nome">${prod.nome}</div>
+                    <div class="prod-preco">R$ ${prod.preco}</div>
+                    <button class="btn-del-prod" onclick="deletarProduto(${prod.id}, '${prod.nome}')">🗑️ Remover</button>
+                `;
+                vitrine.appendChild(card);
+            });
+        }
+
+        // 3. Deletar Produto
+        window.deletarProduto = async function(idProd, nomeProd) {
+            if (confirm(`Remover "${nomeProd}" da vitrine dos clientes?`)) {
+                await supabase.from("produtos").delete().eq("id", idProd);
+                carregarProdutosAdmin(); 
+            }
+        }
+    </script>
+</body>
+</html>
