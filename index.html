@@ -1,517 +1,340 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>WS Soluções | Montagem, Câmeras e Elétrica</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WS Agenda Cliente</title>
+    <style>
+        :root {
+            --bg-body: #f3f4f6;
+            --bg-card: #ffffff;
+            --primary-color: #111827;
+            --primary-hover: #1f2937;
+            --text-main: #111827;
+            --text-muted: #6b7280;
+            --border-color: #d1d5db;
+            --success-bg: #dcfce7;
+            --success-text: #166534;
+            --danger-bg: #fee2e2;
+            --danger-text: #991b1b;
+            --warning-bg: #fef3c7;
+            --warning-text: #92400e;
+            --radius-md: 12px;
+            --radius-lg: 18px;
+            --radius-xl: 20px;
+        }
 
-  <script src="https://cdn.tailwindcss.com"></script>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
 
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        body { background: var(--bg-body); color: var(--text-main); padding-bottom: 40px; }
 
-  <style>
-    html{
-      scroll-behavior:smooth;
-    }
+        header {
+            background: var(--primary-color); color: white; padding: 35px 20px 45px;
+            text-align: center; border-bottom-left-radius: var(--radius-xl); border-bottom-right-radius: var(--radius-xl);
+        }
+        header h1 { font-size: 28px; margin-bottom: 5px; }
+        header p { color: #d1d5db; font-size: 15px; }
 
-    body{
-      background:#030712;
-    }
-  </style>
+        .container { max-width: 500px; margin: auto; padding: 0 15px; }
+
+        .tabs {
+            display: flex; background: var(--bg-card); border-radius: var(--radius-lg); margin-top: -25px;
+            position: relative; box-shadow: 0 4px 15px rgba(0,0,0,0.08); overflow: hidden; margin-bottom: 20px;
+        }
+        .tab-btn {
+            flex: 1; background: transparent; color: var(--text-muted); border-radius: 0; padding: 14px 5px;
+            font-size: 14px; font-weight: 600; border-bottom: 3px solid transparent; cursor: pointer; transition: all 0.2s;
+        }
+        .tab-btn:hover { background: #f8fafc; }
+        .tab-btn.ativo { color: var(--primary-color); border-bottom-color: var(--primary-color); background: white; }
+
+        .conteudo-aba { display: none; animation: fadeIn 0.3s ease; }
+        .conteudo-aba.ativo { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+        .card { background: var(--bg-card); border-radius: var(--radius-lg); padding: 25px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid rgba(0,0,0,0.02); }
+        h2 { margin-bottom: 15px; font-size: 18px; color: var(--primary-color); display: flex; align-items: center; gap: 8px; }
+
+        .agenda { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 15px; }
+        .horario { text-align: center; padding: 15px; border-radius: var(--radius-md); font-weight: bold; cursor: pointer; user-select: none; transition: all 0.2s ease; border: 2px solid transparent; }
+        .livre { background: var(--success-bg); color: var(--success-text); }
+        .livre:hover { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(22, 101, 52, 0.15); }
+        .ocupado { background: var(--danger-bg); color: var(--danger-text); cursor: not-allowed; opacity: 0.7; }
+        .selecionado { background: var(--success-text); color: white; transform: scale(1.02); box-shadow: 0 4px 12px rgba(22, 101, 52, 0.3); }
+
+        form { display: flex; flex-direction: column; gap: 12px; }
+        input, textarea { width: 100%; padding: 14px; border-radius: var(--radius-md); border: 1px solid var(--border-color); background: #f9fafb; font-size: 15px; transition: all 0.2s; }
+        input:focus, textarea:focus { outline: none; border-color: var(--primary-color); background: white; box-shadow: 0 0 0 3px rgba(17,24,39,0.1); }
+        textarea { resize: vertical; min-height: 90px; }
+
+        .btn-acao { width: 100%; padding: 16px; margin-top: 5px; background: var(--primary-color); color: white; border: none; border-radius: var(--radius-md); font-size: 16px; font-weight: bold; cursor: pointer; transition: all 0.2s; }
+        .btn-acao:hover { background: var(--primary-hover); }
+        .btn-acao:disabled { background: var(--text-muted); cursor: not-allowed; opacity: 0.8; }
+
+        .status { margin-top: 20px; padding: 18px; border-radius: var(--radius-md); background: #f8fafc; border-left: 5px solid var(--primary-color); color: var(--text-main); font-size: 15px; line-height: 1.6; }
+        .resultado-destaque { font-weight: bold; color: var(--warning-text); background: var(--warning-bg); padding: 4px 8px; border-radius: 6px; }
+
+        .grid-produtos { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-top: 20px; }
+        .produto-card { background: white; border: 1px solid var(--border-color); border-radius: var(--radius-md); overflow: hidden; display: flex; flex-direction: column; transition: transform 0.2s, box-shadow 0.2s; }
+        .produto-card:hover { transform: translateY(-3px); box-shadow: 0 6px 12px rgba(0,0,0,0.08); }
+        .produto-img { background: #f1f5f9; height: 120px; display: flex; align-items: center; justify-content: center; font-size: 40px; border-bottom: 1px solid var(--border-color); }
+        .produto-info { padding: 12px; display: flex; flex-direction: column; flex: 1; }
+        .produto-titulo { font-size: 14px; font-weight: bold; color: var(--text-main); margin-bottom: 5px; line-height: 1.2; }
+        .produto-preco { font-size: 16px; font-weight: 900; color: var(--success-text); margin-bottom: 12px; margin-top: auto; }
+        .btn-comprar { background: var(--bg-body); color: var(--primary-color); border: 1px solid var(--primary-color); padding: 8px; border-radius: 8px; font-size: 13px; font-weight: bold; cursor: pointer; transition: all 0.2s; text-align: center; width: 100%; }
+        .btn-comprar:hover { background: var(--primary-color); color: white; }
+    </style>
 </head>
-
-<body class="text-white font-sans">
-
-<!-- TOPO -->
-<div class="bg-black border-b border-gray-800 text-sm">
-  <div class="container mx-auto px-4 py-2 flex justify-between items-center">
-
-    <div class="flex gap-5 text-gray-300">
-      <span>
-        <i class="fas fa-phone text-blue-500"></i>
-        (88) 99437-7744
-      </span>
-
-      <span class="hidden md:block">
-        <i class="fas fa-clock text-blue-500"></i>
-        Atendimento todos os dias
-      </span>
-    </div>
-
-    <span class="text-emerald-400 font-semibold">
-      Serviço com Garantia
-    </span>
-
-  </div>
-</div>
-
-<!-- HEADER -->
-<header class="sticky top-0 z-50 bg-gray-950/90 backdrop-blur border-b border-gray-900">
-  <div class="container mx-auto px-4 py-4 flex justify-between items-center">
-
-    <h1 class="text-2xl font-black text-blue-500">
-      WS <span class="text-white font-light">SOLUÇÕES</span>
-    </h1>
-
-    <nav class="hidden lg:flex gap-8 text-sm font-semibold">
-      <a href="#inicio" class="hover:text-blue-500">Início</a>
-      <a href="#servicos" class="hover:text-blue-500">Serviços</a>
-      <a href="#portfolio" class="hover:text-blue-500">Portfólio</a>
-      <a href="#contato" class="hover:text-blue-500">Contato</a>
-    </nav>
-
-    <a href="https://wa.me/5588994377744"
-       target="_blank"
-       class="hidden lg:flex bg-blue-600 hover:bg-blue-500 px-5 py-3 rounded-xl font-bold transition">
-      Chamar no WhatsApp
-    </a>
-
-  </div>
-</header>
-
-<!-- HERO -->
-<section id="inicio" class="py-24">
-
-  <div class="container mx-auto px-4 grid lg:grid-cols-2 gap-12 items-center">
-
-    <div>
-
-      <span class="bg-blue-500/10 border border-blue-500/20 text-blue-400 px-4 py-2 rounded-full text-xs font-bold uppercase">
-        Montagem • Câmeras • Elétrica
-      </span>
-
-      <h2 class="text-5xl md:text-6xl font-black leading-tight mt-6">
-        Soluções rápidas e profissionais para sua
-        <span class="text-blue-500">
-          casa ou comércio.
-        </span>
-      </h2>
-
-      <p class="text-gray-400 mt-6 text-lg leading-relaxed">
-        Trabalhamos com instalação de câmeras, montagem de móveis,
-        elétrica residencial, manutenção e suporte técnico com
-        atendimento rápido e serviço de qualidade.
-      </p>
-
-      <div class="flex flex-col sm:flex-row gap-4 mt-10">
-
-        <a href="#contato"
-           class="bg-blue-600 hover:bg-blue-500 px-8 py-4 rounded-xl font-bold text-center transition">
-          Solicitar Orçamento
-        </a>
-
-        <a href="#servicos"
-           class="border border-gray-700 hover:border-blue-500 px-8 py-4 rounded-xl font-bold text-center transition">
-          Ver Serviços
-        </a>
-
-      </div>
-
-    </div>
-
-    <!-- CARD LATERAL -->
-    <div class="bg-gray-900 border border-gray-800 rounded-3xl p-8">
-
-      <div class="space-y-6">
-
-        <div class="flex items-center gap-4 border-b border-gray-800 pb-5">
-          <div class="w-12 h-12 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-500">
-            <i class="fas fa-video"></i>
-          </div>
-
-          <div>
-            <h3 class="font-bold">Instalação de Câmeras</h3>
-            <p class="text-sm text-gray-500">
-              CFTV, DVR e acesso pelo celular
-            </p>
-          </div>
-        </div>
-
-        <div class="flex items-center gap-4 border-b border-gray-800 pb-5">
-          <div class="w-12 h-12 rounded-xl bg-yellow-500/10 flex items-center justify-center text-yellow-500">
-            <i class="fas fa-bolt"></i>
-          </div>
-
-          <div>
-            <h3 class="font-bold">Elétrica Residencial</h3>
-            <p class="text-sm text-gray-500">
-              Tomadas, iluminação e manutenção
-            </p>
-          </div>
-        </div>
-
-        <div class="flex items-center gap-4">
-          <div class="w-12 h-12 rounded-xl bg-cyan-500/10 flex items-center justify-center text-cyan-400">
-            <i class="fas fa-couch"></i>
-          </div>
-
-          <div>
-            <h3 class="font-bold">Montagem de Móveis</h3>
-            <p class="text-sm text-gray-500">
-              Guarda-roupa, cozinha, painel e mais
-            </p>
-          </div>
-        </div>
-
-      </div>
-
-    </div>
-
-  </div>
-
-</section>
-
-<!-- SERVIÇOS -->
-<section id="servicos" class="py-24 bg-gray-900/40 border-t border-gray-900">
-
-  <div class="container mx-auto px-4">
-
-    <div class="text-center mb-16">
-      <h2 class="text-4xl font-black">
-        Nossos Serviços
-      </h2>
-
-      <p class="text-gray-400 mt-4">
-        Atendimento residencial e comercial.
-      </p>
-    </div>
-
-    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-
-      <!-- CARD -->
-      <div class="bg-gray-950 border border-gray-800 p-8 rounded-2xl">
-
-        <div class="w-14 h-14 bg-blue-500/10 rounded-xl flex items-center justify-center text-blue-500 mb-6">
-          <i class="fas fa-video text-2xl"></i>
-        </div>
-
-        <h3 class="text-xl font-bold mb-3">
-          Instalação de Câmeras
-        </h3>
-
-        <p class="text-gray-400 text-sm">
-          Instalação e configuração de câmeras,
-          DVR, acesso remoto e monitoramento.
-        </p>
-
-      </div>
-
-      <!-- CARD -->
-      <div class="bg-gray-950 border border-gray-800 p-8 rounded-2xl">
-
-        <div class="w-14 h-14 bg-yellow-500/10 rounded-xl flex items-center justify-center text-yellow-500 mb-6">
-          <i class="fas fa-bolt text-2xl"></i>
-        </div>
-
-        <h3 class="text-xl font-bold mb-3">
-          Elétrica Residencial
-        </h3>
-
-        <p class="text-gray-400 text-sm">
-          Troca de tomadas, chuveiros,
-          iluminação, ventiladores e manutenção.
-        </p>
-
-      </div>
-
-      <!-- CARD -->
-      <div class="bg-gray-950 border border-gray-800 p-8 rounded-2xl">
-
-        <div class="w-14 h-14 bg-cyan-500/10 rounded-xl flex items-center justify-center text-cyan-400 mb-6">
-          <i class="fas fa-couch text-2xl"></i>
-        </div>
-
-        <h3 class="text-xl font-bold mb-3">
-          Montagem de Móveis
-        </h3>
-
-        <p class="text-gray-400 text-sm">
-          Montagem e desmontagem de móveis
-          com alinhamento e acabamento profissional.
-        </p>
-
-      </div>
-
-      <!-- CARD -->
-      <div class="bg-gray-950 border border-gray-800 p-8 rounded-2xl">
-
-        <div class="w-14 h-14 bg-emerald-500/10 rounded-xl flex items-center justify-center text-emerald-400 mb-6">
-          <i class="fas fa-door-open text-2xl"></i>
-        </div>
-
-        <h3 class="text-xl font-bold mb-3">
-          Portão Eletrônico
-        </h3>
-
-        <p class="text-gray-400 text-sm">
-          Instalação e manutenção de motores
-          e automatizadores.
-        </p>
-
-      </div>
-
-      <!-- CARD -->
-      <div class="bg-gray-950 border border-gray-800 p-8 rounded-2xl">
-
-        <div class="w-14 h-14 bg-purple-500/10 rounded-xl flex items-center justify-center text-purple-400 mb-6">
-          <i class="fas fa-wifi text-2xl"></i>
-        </div>
-
-        <h3 class="text-xl font-bold mb-3">
-          Redes e Wi-Fi
-        </h3>
-
-        <p class="text-gray-400 text-sm">
-          Melhorias de internet,
-          roteadores e cabeamento.
-        </p>
-
-      </div>
-
-      <!-- CARD -->
-      <div class="bg-gray-950 border border-gray-800 p-8 rounded-2xl">
-
-        <div class="w-14 h-14 bg-red-500/10 rounded-xl flex items-center justify-center text-red-400 mb-6">
-          <i class="fas fa-tools text-2xl"></i>
-        </div>
-
-        <h3 class="text-xl font-bold mb-3">
-          Manutenção Técnica
-        </h3>
-
-        <p class="text-gray-400 text-sm">
-          Reparos e suporte técnico
-          para equipamentos eletrônicos.
-        </p>
-
-      </div>
-
-    </div>
-
-  </div>
-
-</section>
-
-<!-- PORTFÓLIO -->
-<section id="portfolio" class="py-24">
-
-  <div class="container mx-auto px-4">
-
-    <div class="text-center mb-16">
-      <h2 class="text-4xl font-black">
-        Alguns Serviços
-      </h2>
-
-      <p class="text-gray-400 mt-4">
-        Fotos reais dos nossos trabalhos.
-      </p>
-    </div>
-
-    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-
-      <!-- ITEM -->
-      <div class="bg-gray-900 border border-gray-800 rounded-2xl overflow-hidden">
-
-        <div class="h-56 bg-gray-800 flex items-center justify-center">
-          <i class="fas fa-camera text-5xl text-gray-600"></i>
-        </div>
-
-        <div class="p-6">
-          <span class="text-blue-500 text-xs font-bold uppercase">
-            Câmeras
-          </span>
-
-          <h3 class="font-bold mt-2">
-            Instalação de Sistema CFTV
-          </h3>
-        </div>
-
-      </div>
-
-      <!-- ITEM -->
-      <div class="bg-gray-900 border border-gray-800 rounded-2xl overflow-hidden">
-
-        <div class="h-56 bg-gray-800 flex items-center justify-center">
-          <i class="fas fa-couch text-5xl text-gray-600"></i>
-        </div>
-
-        <div class="p-6">
-          <span class="text-cyan-400 text-xs font-bold uppercase">
-            Móveis
-          </span>
-
-          <h3 class="font-bold mt-2">
-            Montagem de Guarda-Roupa
-          </h3>
-        </div>
-
-      </div>
-
-      <!-- ITEM -->
-      <div class="bg-gray-900 border border-gray-800 rounded-2xl overflow-hidden">
-
-        <div class="h-56 bg-gray-800 flex items-center justify-center">
-          <i class="fas fa-bolt text-5xl text-gray-600"></i>
-        </div>
-
-        <div class="p-6">
-          <span class="text-yellow-500 text-xs font-bold uppercase">
-            Elétrica
-          </span>
-
-          <h3 class="font-bold mt-2">
-            Instalação e Manutenção
-          </h3>
-        </div>
-
-      </div>
-
-    </div>
-
-  </div>
-
-</section>
-
-<!-- CONTATO -->
-<section id="contato" class="py-24 bg-gray-900/40 border-t border-gray-900">
-
-  <div class="container mx-auto px-4 max-w-5xl">
-
-    <div class="grid lg:grid-cols-2 gap-12">
-
-      <div>
-
-        <h2 class="text-4xl font-black">
-          Fale Conosco
-        </h2>
-
-        <p class="text-gray-400 mt-6 leading-relaxed">
-          Entre em contato pelo WhatsApp e peça seu orçamento.
-        </p>
-
-        <div class="mt-10 bg-gray-950 border border-gray-800 rounded-2xl p-6">
-
-          <div class="flex items-center gap-4">
-
-            <i class="fab fa-whatsapp text-4xl text-emerald-500"></i>
-
-            <div>
-              <p class="text-gray-500 text-sm">
-                WhatsApp
-              </p>
-
-              <h3 class="text-2xl font-bold">
-                (88) 99437-7744
-              </h3>
+<body>
+
+    <header>
+        <h1>WS Agenda</h1>
+        <p>Assistência Técnica Especializada</p>
+    </header>
+
+    <div class="container">
+        
+        <nav class="tabs">
+            <button type="button" class="tab-btn ativo" id="navAgendar" onclick="trocarAba('abaAgendar', 'navAgendar')">📅 Agendar</button>
+            <button type="button" class="tab-btn" id="navConsultar" onclick="trocarAba('abaConsultar', 'navConsultar')">🔍 Consultar</button>
+            <button type="button" class="tab-btn" id="navLoja" onclick="trocarAba('abaLoja', 'navLoja')">🛒 Loja</button>
+        </nav>
+
+        <div id="abaAgendar" class="conteudo-aba ativo">
+            <div class="card">
+                <h2>1. Data e Hora</h2>
+                <input type="date" id="dataAtendimento" required>
+                
+                <div class="agenda" id="horarios">
+                    <div class="horario livre" data-hora="08:00">08:00</div>
+                    <div class="horario livre" data-hora="09:00">09:00</div>
+                    <div class="horario livre" data-hora="10:00">10:00</div>
+                    <div class="horario livre" data-hora="11:00">11:00</div>
+                    <div class="horario livre" data-hora="13:00">13:00</div>
+                    <div class="horario livre" data-hora="14:00">14:00</div>
+                </div>
             </div>
 
-          </div>
-
+            <div class="card">
+                <h2>2. Seus Dados</h2>
+                <form id="form">
+                    <input id="nome" type="text" placeholder="Seu nome completo" required>
+                    <input id="whatsapp" type="text" placeholder="WhatsApp (Apenas números)" maxlength="15" required>
+                    <input id="aparelho" type="text" placeholder="Qual o aparelho ou serviço?" required>
+                    <textarea id="defeito" placeholder="Descreva o defeito ou o que precisa ser feito..." required></textarea>
+                    
+                    <button type="submit" class="btn-acao" id="btnAgendar">Confirmar Agendamento</button>
+                </form>
+            </div>
         </div>
 
-      </div>
+        <div id="abaConsultar" class="conteudo-aba">
+            <div class="card">
+                <h2>Consultar Serviço</h2>
+                <p style="font-size: 14px; color: var(--text-muted); margin-bottom: 15px;">Digite o número da sua Ordem de Serviço (OS) para ver o status atual.</p>
+                <input id="osBusca" type="text" placeholder="Número da sua OS (Ex: 12)">
+                <button type="button" class="btn-acao" id="btnBuscar" style="margin-top: 15px;">Buscar OS</button>
+                <div class="status" id="resultado" style="display:none"></div>
+            </div>
+        </div>
 
-      <!-- FORM -->
-      <div class="bg-gray-950 border border-gray-800 rounded-2xl p-8">
-
-        <form onsubmit="sendToWhatsApp(event)" class="space-y-5">
-
-          <input
-            type="text"
-            id="nome"
-            placeholder="Seu nome"
-            required
-            class="w-full bg-black border border-gray-800 rounded-xl px-4 py-4 outline-none focus:border-blue-500"
-          >
-
-          <select
-            id="servico"
-            class="w-full bg-black border border-gray-800 rounded-xl px-4 py-4 outline-none focus:border-blue-500"
-          >
-
-            <option>Instalação de Câmeras</option>
-            <option>Montagem de Móveis</option>
-            <option>Elétrica Residencial</option>
-            <option>Portão Eletrônico</option>
-            <option>Outro Serviço</option>
-
-          </select>
-
-          <textarea
-            id="mensagem"
-            rows="5"
-            placeholder="Descreva o serviço..."
-            required
-            class="w-full bg-black border border-gray-800 rounded-xl px-4 py-4 outline-none focus:border-blue-500"
-          ></textarea>
-
-          <button
-            type="submit"
-            class="w-full bg-blue-600 hover:bg-blue-500 py-4 rounded-xl font-bold transition"
-          >
-            Enviar no WhatsApp
-          </button>
-
-        </form>
-
-      </div>
+        <div id="abaLoja" class="conteudo-aba">
+            <div class="card">
+                <h2>Produtos & Serviços</h2>
+                <p style="font-size: 14px; color: var(--text-muted); margin-bottom: 5px;">Confira nossas soluções e acessórios.</p>
+                <div class="grid-produtos" id="vitrineProdutos">
+                    <div class="produto-card">
+                        <div class="produto-img">📱</div>
+                        <div class="produto-info">
+                            <div class="produto-titulo">Película de Vidro 3D</div>
+                            <div class="produto-preco">R$ 25,00</div>
+                            <button class="btn-comprar" onclick="alert('Funcionalidade de contato em breve!')">Interesse</button>
+                        </div>
+                    </div>
+                    <div class="produto-card">
+                        <div class="produto-img">🔌</div>
+                        <div class="produto-info">
+                            <div class="produto-titulo">Carregador Turbo 20W</div>
+                            <div class="produto-preco">R$ 45,00</div>
+                            <button class="btn-comprar" onclick="alert('Funcionalidade de contato em breve!')">Interesse</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
     </div>
 
-  </div>
+    <script type="module">
+        import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm"; 
+        
+        const supabaseUrl = "https://gbcasddvbcpurkadvegu.supabase.co"; 
+        const supabaseKey = "sb_publishable_YA15vytC5buv0ejQ8fJRPg_WUn6NGjs"; 
+        const supabase = createClient(supabaseUrl, supabaseKey); 
+        
+        let horarioSelecionado = null; 
+        let dataSelecionada = null; 
+        const horariosEl = document.querySelectorAll(".horario"); 
 
-</section>
+        // --- 1. MÁSCARA AUTOMÁTICA DE WHATSAPP ---
+        const inputWhatsapp = document.getElementById('whatsapp');
+        inputWhatsapp.addEventListener('input', function (e) {
+            let x = e.target.value.replace(/\D/g, '').match(/(\d{0,2})(\d{0,5})(\d{0,4})/);
+            e.target.value = !x[2] ? x[1] : '(' + x[1] + ') ' + x[2] + (x[3] ? '-' + x[3] : '');
+        });
 
-<!-- FOOTER -->
-<footer class="border-t border-gray-900 py-10 text-center text-gray-500 text-sm">
+        // --- 2. BLOQUEIO DE DATAS PASSADAS ---
+        const inputData = document.getElementById("dataAtendimento");
+        const dataHoje = new Date().toISOString().split('T')[0];
+        inputData.setAttribute('min', dataHoje);
 
-  <h3 class="font-bold text-white text-lg">
-    WS SOLUÇÕES
-  </h3>
+        // Sistema de Abas
+        window.trocarAba = function(abaId, navId) {
+            document.querySelectorAll('.conteudo-aba').forEach(el => el.classList.remove('ativo'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('ativo'));
+            document.getElementById(abaId).classList.add('ativo');
+            document.getElementById(navId).classList.add('ativo');
+        }
+        
+        horariosEl.forEach(h => { 
+            h.onclick = () => { 
+                if (h.classList.contains("ocupado")) return; 
+                horariosEl.forEach(x => x.classList.remove("selecionado")); 
+                h.classList.add("selecionado"); 
+                horarioSelecionado = h.dataset.hora; 
+            }; 
+        }); 
 
-  <p class="mt-3">
-    Montagem • Câmeras • Elétrica • Manutenção
-  </p>
+        async function carregarHorarios(data) { 
+            const { data: agendamentos } = await supabase 
+                .from("agendamentos") 
+                .select("hora") 
+                .eq("data", data); 
+                
+            const ocupados = agendamentos?.map(a => a.hora) || []; 
+            
+            horariosEl.forEach(h => { 
+                const hora = h.dataset.hora; 
+                h.classList.remove("ocupado", "selecionado"); 
+                h.classList.add("livre"); 
+                
+                if (ocupados.includes(hora)) { 
+                    h.classList.add("ocupado"); 
+                    h.classList.remove("livre"); 
+                } 
+            }); 
+            horarioSelecionado = null;
+        } 
 
-  <p class="mt-5 text-xs">
-    © 2026 WS Soluções - Todos os direitos reservados.
-  </p>
+        inputData.addEventListener("change", (e) => { 
+            dataSelecionada = e.target.value; 
+            carregarHorarios(dataSelecionada); 
+        }); 
 
-</footer>
+        const form = document.getElementById("form"); 
+        const btnAgendar = document.getElementById("btnAgendar");
 
-<!-- BOTÃO WHATS -->
-<a href="https://wa.me/5588994377744"
-   target="_blank"
-   class="fixed bottom-6 right-6 bg-emerald-500 hover:bg-emerald-400 w-16 h-16 rounded-full flex items-center justify-center text-3xl shadow-2xl z-50">
+        form.onsubmit = async (e) => { 
+            e.preventDefault(); 
+            if (!dataSelecionada) { alert("Por favor, selecione uma data no calendário."); return; }
+            if (!horarioSelecionado) { alert("Por favor, clique em um horário disponível."); return; }
 
-  <i class="fab fa-whatsapp"></i>
+            // Verifica se o cliente digitou o número todo
+            const numZap = inputWhatsapp.value.replace(/\D/g, '');
+            if(numZap.length < 10) { alert("Por favor, digite um número de WhatsApp válido."); return; }
 
-</a>
+            const textoOriginal = btnAgendar.innerText;
+            btnAgendar.innerText = "Verificando disponibilidade...";
+            btnAgendar.disabled = true;
 
-<script>
+            // --- 3. SISTEMA ANTI-DUPLICIDADE (Verificação dupla de concorrência) ---
+            const { data: checagem } = await supabase
+                .from("agendamentos")
+                .select("id")
+                .eq("data", dataSelecionada)
+                .eq("hora", horarioSelecionado);
 
-function sendToWhatsApp(e){
-  e.preventDefault();
+            if (checagem && checagem.length > 0) {
+                alert("⚠️ Ops! Alguém acabou de agendar esse horário. Por favor, atualize e escolha outro.");
+                carregarHorarios(dataSelecionada);
+                btnAgendar.innerText = textoOriginal;
+                btnAgendar.disabled = false;
+                return; // Aborta o envio
+            }
+            // ---------------------------------------------------------------------
 
-  const nome = document.getElementById('nome').value;
-  const servico = document.getElementById('servico').value;
-  const mensagem = document.getElementById('mensagem').value;
+            btnAgendar.innerText = "Salvando agendamento...";
 
-  const texto =
-`Olá, meu nome é ${nome}.
+            const dados = { 
+                nome: document.getElementById("nome").value, 
+                whatsapp: document.getElementById("whatsapp").value, 
+                aparelho: document.getElementById("aparelho").value, 
+                defeito: document.getElementById("defeito").value, 
+                data: dataSelecionada, 
+                hora: horarioSelecionado, 
+                status: "Em análise técnica" 
+            }; 
 
-Serviço: ${servico}
+            const { data, error } = await supabase.from("agendamentos").insert([dados]).select(); 
 
-Detalhes:
-${mensagem}`;
+            btnAgendar.innerText = textoOriginal;
+            btnAgendar.disabled = false;
 
-  const url =
-`https://wa.me/5588994377744?text=${encodeURIComponent(texto)}`;
+            if (!error && data && data.length > 0) { 
+                const numeroDaOS = data[0].id; 
+                alert(`✅ AGENDAMENTO CONFIRMADO!\n\nSeu número de OS é: ${numeroDaOS}\n\nGuarde este número para consultar o status depois.`); 
+                carregarHorarios(dataSelecionada); 
+                form.reset(); 
+                
+                window.trocarAba('abaConsultar', 'navConsultar');
+                document.getElementById('osBusca').value = numeroDaOS;
+            } else { 
+                alert("❌ Ocorreu um erro ao agendar. Tente novamente."); 
+                console.error(error);
+            } 
+        }; 
 
-  window.open(url, '_blank');
-}
+        const btnBuscar = document.getElementById("btnBuscar"); 
+        const osBuscaInput = document.getElementById("osBusca");
 
-</script>
+        btnBuscar.onclick = async () => { 
+            const os = osBuscaInput.value.trim(); 
+            const res = document.getElementById("resultado"); 
+            
+            if(!os) { alert("Digite um número de OS para buscar."); return; }
 
+            btnBuscar.innerText = "Buscando...";
+            
+            const { data, error } = await supabase 
+                .from("agendamentos") 
+                .select("*") 
+                .eq("id", os) 
+                .single(); 
+            
+            btnBuscar.innerText = "Buscar OS";
+            res.style.display = "block"; 
+            
+            if (data) { 
+                const dataFormatada = data.data.split('-').reverse().join('/');
+                res.innerHTML = `
+                    <strong>📋 OS Número:</strong> ${data.id}<br><br>
+                    <strong>👤 Cliente:</strong> ${data.nome}<br>
+                    <strong>🛠️ Serviço/Aparelho:</strong> ${data.aparelho}<br>
+                    <strong>📱 WhatsApp:</strong> ${data.whatsapp}<br>
+                    <strong>📅 Agendado para:</strong> ${dataFormatada} às ${data.hora}<br>
+                    <hr style="margin: 12px 0; border: 0; border-top: 1px solid #e2e8f0;">
+                    <strong>STATUS:</strong> <span class="resultado-destaque">${data.status}</span>
+                `; 
+                osBuscaInput.value = '';
+            } else { 
+                res.innerHTML = "❌ <strong>OS não encontrada.</strong> Verifique se digitou o número corretamente."; 
+            } 
+        }; 
+    </script>
 </body>
 </html>
