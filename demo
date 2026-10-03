@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Minha Empresa</title>
+
+<style>
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    font-family:Arial, sans-serif;
+    background:#f6f7fb;
+    color:#171923;
+    line-height:1.5;
+}
+
+a{
+    text-decoration:none;
+    color:inherit;
+}
+
+/* HEADER */
+
+header{
+    position:sticky;
+    top:0;
+    z-index:10;
+    background:#fff;
+    border-bottom:1px solid #e8e9ef;
+}
+
+.nav{
+    max-width:1180px;
+    height:72px;
+    margin:auto;
+    padding:0 22px;
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+}
+
+.logo{
+    font-size:24px;
+    font-weight:800;
+}
+
+.logo span{
+    color:#2563eb;
+}
+
+nav{
+    display:flex;
+    gap:28px;
+    font-size:14px;
+    font-weight:600;
+}
+
+nav a:hover{
+    color:#2563eb;
+}
+
+/* BOTÕES */
+
+.btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+
+    padding:13px 20px;
+
+    border-radius:10px;
+    font-weight:700;
+
+    border:0;
+    cursor:pointer;
+}
+
+.primary{
+    background:#2563eb;
+    color:#fff;
+}
+
+.secondary{
+    background:#eef3ff;
+    color:#2563eb;
+}
+
+/* HERO */
+
+.hero{
+    background:linear-gradient(135deg,#111827,#1f2937);
+    color:white;
+}
+
+.hero-inner{
+    max-width:1180px;
+    margin:auto;
+
+    padding:92px 22px 100px;
+
+    display:grid;
+    grid-template-columns:1.1fr .9fr;
+    gap:55px;
+
+    align-items:center;
+}
+
+.tag{
+    display:inline-block;
+
+    background:#ffffff18;
+    border:1px solid #ffffff25;
+
+    padding:7px 12px;
+
+    border-radius:30px;
+
+    font-size:12px;
+    font-weight:700;
+
+    margin-bottom:20px;
+}
+
+h1{
+    font-size:clamp(42px,6vw,68px);
+    line-height:1.02;
+
+    letter-spacing:-3px;
+
+    margin-bottom:22px;
+}
+
+.hero p{
+    font-size:18px;
+    color:#d1d5db;
+
+    max-width:590px;
+
+    margin-bottom:30px;
+}
+
+.actions{
+    display:flex;
+    gap:12px;
+    flex-wrap:wrap;
+}
+
+.hero-card{
+    height:350px;
+
+    border-radius:22px;
+
+    background:linear-gradient(145deg,#374151,#111827);
+
+    border:1px solid #ffffff18;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    box-shadow:0 25px 70px #0005;
+}
+
+.hero-card div{
+    text-align:center;
+    color:#9ca3af;
+}
+
+.hero-card strong{
+    display:block;
+
+    font-size:70px;
+
+    color:#fff;
+}
+
+/* SEÇÕES */
+
+section{
+    max-width:1180px;
+    margin:auto;
+
+    padding:78px 22px;
+}
+
+.eyebrow{
+    font-size:12px;
+
+    text-transform:uppercase;
+
+    letter-spacing:2px;
+
+    color:#2563eb;
+
+    font-weight:800;
+
+    margin-bottom:9px;
+}
+
+h2{
+    font-size:36px;
+
+    letter-spacing:-1.5px;
+
+    margin-bottom:12px;
+}
+
+.section-head{
+    margin-bottom:32px;
+}
+
+.section-head p{
+    color:#69707d;
+
+    max-width:650px;
+}
+
+/* SERVIÇOS */
+
+.grid{
+    display:grid;
+
+    grid-template-columns:repeat(3,1fr);
+
+    gap:18px;
+}
+
+.card{
+    background:#fff;
+
+    border:1px solid #e7e9ef;
+
+    border-radius:16px;
+
+    padding:25px;
+
+    box-shadow:0 8px 30px #11182708;
+}
+
+.icon{
+    width:46px;
+    height:46px;
+
+    border-radius:12px;
+
+    background:#eef3ff;
+
+    color:#2563eb;
+
+    display:grid;
+    place-items:center;
+
+    font-size:15px;
+    font-weight:bold;
+
+    margin-bottom:17px;
+}
+
+.card h3{
+    font-size:19px;
+
+    margin-bottom:7px;
+}
+
+.card p{
+    color:#6b7280;
+
+    font-size:14px;
+}
+
+/* SOBRE */
+
+.about{
+    background:#fff;
+}
+
+.about-inner{
+    max-width:1180px;
+
+    margin:auto;
+
+    padding:78px 22px;
+
+    display:grid;
+
+    grid-template-columns:1fr 1fr;
+
+    gap:65px;
+
+    align-items:center;
+}
+
+.mock-photo{
+    height:330px;
+
+    border-radius:20px;
+
+    background:linear-gradient(
+        135deg,
+        #dbeafe,
+        #e5e7eb
+    );
+
+    display:grid;
+
+    place-items:center;
+
+    color:#64748b;
+
+    font-weight:700;
+}
+
+.checks{
+    display:grid;
+
+    gap:13px;
+
+    margin-top:22px;
+}
+
+.checks span{
+    color:#2563eb;
+
+    font-weight:900;
+
+    margin-right:8px;
+}
+
+/* GALERIA */
+
+.gallery{
+    grid-template-columns:repeat(3,1fr);
+}
+
+.photo{
+    height:210px;
+
+    border-radius:15px;
+
+    background:linear-gradient(
+        135deg,
+        #dbeafe,
+        #cbd5e1
+    );
+
+    display:grid;
+
+    place-items:center;
+
+    color:#64748b;
+
+    font-size:13px;
+}
+
+/* CONTATO */
+
+.contact{
+    background:#111827;
+
+    color:#fff;
+
+    max-width:none;
+}
+
+.contact-inner{
+    max-width:1180px;
+
+    margin:auto;
+
+    padding:78px 22px;
+
+    display:flex;
+
+    justify-content:space-between;
+
+    gap:30px;
+
+    align-items:center;
+}
+
+.contact p{
+    color:#cbd5e1;
+
+    max-width:620px;
+}
+
+/* PAINEL */
+
+.admin{
+    background:#eef1f7;
+}
+
+.admin-wrap{
+    max-width:1180px;
+
+    margin:auto;
+
+    padding:70px 22px;
+}
+
+.admin-top{
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:25px;
+}
+
+.admin-grid{
+    display:grid;
+
+    grid-template-columns:220px 1fr;
+
+    gap:18px;
+}
+
+.side,
+.panel{
+    background:#fff;
+
+    border:1px solid #e3e6ed;
+
+    border-radius:15px;
+
+    padding:18px;
+}
+
+.side div{
+    padding:12px;
+
+    border-radius:9px;
+
+    font-weight:600;
+
+    font-size:14px;
+}
+
+.side .active{
+    background:#eef3ff;
+
+    color:#2563eb;
+}
+
+.panel h3{
+    margin-bottom:18px;
+}
+
+.stats{
+    display:grid;
+
+    grid-template-columns:repeat(3,1fr);
+
+    gap:12px;
+}
+
+.stat{
+    border:1px solid #e7e9ef;
+
+    border-radius:12px;
+
+    padding:18px;
+}
+
+.stat small{
+    color:#737b88;
+}
+
+.stat strong{
+    display:block;
+
+    font-size:27px;
+
+    margin-top:5px;
+}
+
+/* FOOTER */
+
+footer{
+    background:#0b1120;
+
+    color:#9ca3af;
+
+    padding:28px 22px;
+
+    font-size:13px;
+}
+
+.foot{
+    max-width:1180px;
+
+    margin:auto;
+
+    display:flex;
+
+    justify-content:space-between;
+}
+
+/* CELULAR */
+
+@media(max-width:800px){
+
+    nav{
+        display:none;
+    }
+
+    .hero-inner,
+    .about-inner{
+        grid-template-columns:1fr;
+    }
+
+    .hero-card{
+        height:250px;
+    }
+
+    .grid,
+    .gallery{
+        grid-template-columns:1fr;
+    }
+
+    .contact-inner{
+        display:block;
+    }
+
+    .contact .btn{
+        margin-top:20px;
+    }
+
+    .admin-grid{
+        grid-template-columns:1fr;
+    }
+
+    .stats{
+        grid-template-columns:1fr;
+    }
+
+    h1{
+        letter-spacing:-2px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+
+<div class="nav">
+
+<div class="logo">
+Minha<span>Empresa</span>
+</div>
+
+<nav>
+<a href="#inicio">Início</a>
+<a href="#servicos">Serviços</a>
+<a href="#sobre">Sobre</a>
+<a href="#galeria">Galeria</a>
+<a href="#contato">Contato</a>
+</nav>
+
+<a class="btn primary" href="#contato">
+Fale conosco
+</a>
+
+</div>
+
+</header>
+
+
+<main>
+
+<!-- HERO -->
+
+<section class="hero" id="inicio">
+
+<div class="hero-inner">
+
+<div>
+
+<span class="tag">
+QUALIDADE • CONFIANÇA • EXPERIÊNCIA
+</span>
+
+<h1>
+Seu negócio merece uma presença profissional.
+</h1>
+
+<p>
+Um site moderno, rápido e adaptado para celular.
+Ideal para empresas, profissionais e negócios locais.
+</p>
+
+<div class="actions">
+
+<a class="btn primary" href="#contato">
+Solicitar orçamento
+</a>
+
+<a class="btn secondary" href="#servicos">
+Ver serviços
+</a>
+
+</div>
+
+</div>
+
+
+<div class="hero-card">
+
+<div>
+
+<strong>IMG</strong>
+
+Área para imagem/banner
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- SERVIÇOS -->
+
+<section id="servicos">
+
+<div class="section-head">
+
+<div class="eyebrow">
+O que fazemos
+</div>
+
+<h2>
+Serviços
+</h2>
+
+<p>
+Os conteúdos abaixo poderão futuramente ser alterados
+pelo cliente através do painel administrativo.
+</p>
+
+</div>
+
+
+<div class="grid">
+
+<article class="card">
+
+<div class="icon">
+01
+</div>
+
+<h3>
+Serviço principal
+</h3>
+
+<p>
+Descrição curta do serviço oferecido pela empresa.
+</p>
+
+</article>
+
+
+<article class="card">
+
+<div class="icon">
+02
+</div>
+
+<h3>
+Serviço especializado
+</h3>
+
+<p>
+Apresente aqui outro serviço ou solução importante.
+</p>
+
+</article>
+
+
+<article class="card">
+
+<div class="icon">
+03
+</div>
+
+<h3>
+Atendimento personalizado
+</h3>
+
+<p>
+Explique rapidamente o diferencial do atendimento.
+</p>
+
+</article>
+
+</div>
+
+</section>
+
+
+<!-- SOBRE -->
+
+<div class="about" id="sobre">
+
+<div class="about-inner">
+
+<div class="mock-photo">
+FOTO DA EMPRESA
+</div>
+
+
+<div>
+
+<div class="eyebrow">
+Sobre nós
+</div>
+
+<h2>
+Uma empresa feita para atender você.
+</h2>
+
+<p style="color:#69707d">
+
+Espaço para apresentar a história,
+experiência e diferenciais da empresa.
+
+</p>
+
+
+<div class="checks">
+
+<div>
+<span>✓</span>
+Atendimento de qualidade
+</div>
+
+<div>
+<span>✓</span>
+Profissionais preparados
+</div>
+
+<div>
+<span>✓</span>
+Compromisso com o cliente
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- GALERIA -->
+
+<section id="galeria">
+
+<div class="section-head">
+
+<div class="eyebrow">
+Portfólio
+</div>
+
+<h2>
+Galeria
+</h2>
+
+<p>
+Fotos dos trabalhos, produtos ou instalações.
+</p>
+
+</div>
+
+
+<div class="grid gallery">
+
+<div class="photo">
+FOTO 01
+</div>
+
+<div class="photo">
+FOTO 02
+</div>
+
+<div class="photo">
+FOTO 03
+</div>
+
+</div>
+
+</section>
+
+
+<!-- CONTATO -->
+
+<section
+class="contact"
+id="contato"
+style="max-width:none"
+>
+
+<div class="contact-inner">
+
+<div>
+
+<div
+class="eyebrow"
+style="color:#60a5fa"
+>
+Contato
+</div>
+
+<h2>
+Vamos conversar?
+</h2>
+
+<p>
+Entre em contato para solicitar um orçamento
+ou tirar suas dúvidas.
+</p>
+
+</div>
+
+
+<a class="btn primary" href="#">
+WhatsApp
+</a>
+
+</div>
+
+</section>
+
+
+<!-- PAINEL DEMONSTRAÇÃO -->
+
+<section class="admin" id="painel">
+
+<div class="admin-wrap">
+
+<div class="admin-top">
+
+<div>
+
+<div class="eyebrow">
+Demonstração
+</div>
+
+<h2>
+Painel administrativo
+</h2>
+
+</div>
+
+<button class="btn primary">
+Salvar alterações
+</button>
+
+</div>
+
+
+<div class="admin-grid">
+
+<aside class="side">
+
+<div class="active">
+Dashboard
+</div>
+
+<div>
+Serviços
+</div>
+
+<div>
+Galeria
+</div>
+
+<div>
+Sobre a empresa
+</div>
+
+<div>
+Contato
+</div>
+
+<div>
+Configurações
+</div>
+
+</aside>
+
+
+<div class="panel">
+
+<h3>
+Visão geral
+</h3>
+
+
+<div class="stats">
+
+<div class="stat">
+
+<small>
+Serviços cadastrados
+</small>
+
+<strong>
+3
+</strong>
+
+</div>
+
+
+<div class="stat">
+
+<small>
+Fotos na galeria
+</small>
+
+<strong>
+8
+</strong>
+
+</div>
+
+
+<div class="stat">
+
+<small>
+Site
+</small>
+
+<strong>
+Ativo
+</strong>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+</main>
+
+
+<footer>
+
+<div class="foot">
+
+<span>
+© 2026 MinhaEmpresa
+</span>
+
+<span>
+Site modelo
+</span>
+
+</div>
+
+</footer>
+
+</body>
+</html>
