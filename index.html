@@ -4,552 +4,550 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Painel da Mila - WS SOLUÇÕES</title>
+<title>Minha Empresa</title>
 
 <style>
-:root{
-    --roxo:#7c3aed;
-    --roxo2:#6d28d9;
-    --roxo3:#4c1d95;
-    --fundo:#f5f3ff;
-    --branco:#fff;
-    --texto:#21172f;
-    --cinza:#6b7280;
-    --borda:#e5e7eb;
-    --verde:#16a34a;
-    --vermelho:#dc2626;
-    --amarelo:#f59e0b;
-    --sombra:0 8px 25px rgba(76,29,149,.10);
-}
-
 *{
+    box-sizing:border-box;
     margin:0;
     padding:0;
-    box-sizing:border-box;
-    font-family:Arial,sans-serif;
+}
+
+html{
+    scroll-behavior:smooth;
 }
 
 body{
-    background:var(--fundo);
-    color:var(--texto);
+    font-family:Arial, sans-serif;
+    background:#f6f7fb;
+    color:#171923;
+    line-height:1.5;
 }
 
+a{
+    text-decoration:none;
+    color:inherit;
+}
+
+/* HEADER */
+
 header{
-    background:linear-gradient(135deg,var(--roxo3),var(--roxo));
-    color:white;
-    padding:16px 22px;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
     position:sticky;
     top:0;
-    z-index:100;
-    box-shadow:var(--sombra);
+    z-index:10;
+    background:#fff;
+    border-bottom:1px solid #e8e9ef;
+}
+
+.nav{
+    max-width:1180px;
+    height:72px;
+    margin:auto;
+    padding:0 22px;
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
 }
 
 .logo{
-    font-size:21px;
-    font-weight:bold;
+    font-size:24px;
+    font-weight:800;
 }
 
-.logo small{
-    display:block;
-    font-size:11px;
-    opacity:.75;
-    margin-top:3px;
-}
-
-.usuario{
-    display:flex;
-    align-items:center;
-    gap:10px;
-}
-
-.avatar{
-    width:40px;
-    height:40px;
-    border-radius:50%;
-    background:white;
-    color:var(--roxo);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-weight:bold;
+.logo span{
+    color:#2563eb;
 }
 
 nav{
-    background:white;
     display:flex;
-    gap:8px;
-    padding:10px 15px;
-    overflow-x:auto;
-    border-bottom:1px solid var(--borda);
+    gap:28px;
+    font-size:14px;
+    font-weight:600;
 }
 
-nav button{
-    border:0;
-    padding:10px 14px;
+nav a:hover{
+    color:#2563eb;
+}
+
+/* BOTÕES */
+
+.btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+
+    padding:13px 20px;
+
     border-radius:10px;
-    background:#f3f0ff;
-    color:var(--roxo3);
-    font-weight:bold;
+    font-weight:700;
+
+    border:0;
     cursor:pointer;
-    white-space:nowrap;
 }
 
-nav button.active,
-nav button:hover{
-    background:var(--roxo);
+.primary{
+    background:#2563eb;
+    color:#fff;
+}
+
+.secondary{
+    background:#eef3ff;
+    color:#2563eb;
+}
+
+/* HERO */
+
+.hero{
+    background:linear-gradient(135deg,#111827,#1f2937);
     color:white;
 }
 
-main{
-    max-width:1250px;
+.hero-inner{
+    max-width:1180px;
     margin:auto;
-    padding:22px;
-}
 
-.tela{
-    display:none;
-}
+    padding:92px 22px 100px;
 
-.tela.ativa{
-    display:block;
-}
-
-.titulo{
-    margin-bottom:20px;
-}
-
-.titulo h1{
-    font-size:27px;
-}
-
-.titulo p{
-    color:var(--cinza);
-    margin-top:5px;
-}
-
-.cards{
     display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(170px,1fr));
-    gap:15px;
+    grid-template-columns:1.1fr .9fr;
+    gap:55px;
+
+    align-items:center;
+}
+
+.tag{
+    display:inline-block;
+
+    background:#ffffff18;
+    border:1px solid #ffffff25;
+
+    padding:7px 12px;
+
+    border-radius:30px;
+
+    font-size:12px;
+    font-weight:700;
+
     margin-bottom:20px;
+}
+
+h1{
+    font-size:clamp(42px,6vw,68px);
+    line-height:1.02;
+
+    letter-spacing:-3px;
+
+    margin-bottom:22px;
+}
+
+.hero p{
+    font-size:18px;
+    color:#d1d5db;
+
+    max-width:590px;
+
+    margin-bottom:30px;
+}
+
+.actions{
+    display:flex;
+    gap:12px;
+    flex-wrap:wrap;
+}
+
+.hero-card{
+    height:350px;
+
+    border-radius:22px;
+
+    background:linear-gradient(145deg,#374151,#111827);
+
+    border:1px solid #ffffff18;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    box-shadow:0 25px 70px #0005;
+}
+
+.hero-card div{
+    text-align:center;
+    color:#9ca3af;
+}
+
+.hero-card strong{
+    display:block;
+
+    font-size:70px;
+
+    color:#fff;
+}
+
+/* SEÇÕES */
+
+section{
+    max-width:1180px;
+    margin:auto;
+
+    padding:78px 22px;
+}
+
+.eyebrow{
+    font-size:12px;
+
+    text-transform:uppercase;
+
+    letter-spacing:2px;
+
+    color:#2563eb;
+
+    font-weight:800;
+
+    margin-bottom:9px;
+}
+
+h2{
+    font-size:36px;
+
+    letter-spacing:-1.5px;
+
+    margin-bottom:12px;
+}
+
+.section-head{
+    margin-bottom:32px;
+}
+
+.section-head p{
+    color:#69707d;
+
+    max-width:650px;
+}
+
+/* SERVIÇOS */
+
+.grid{
+    display:grid;
+
+    grid-template-columns:repeat(3,1fr);
+
+    gap:18px;
 }
 
 .card{
-    background:white;
-    padding:19px;
+    background:#fff;
+
+    border:1px solid #e7e9ef;
+
     border-radius:16px;
-    box-shadow:var(--sombra);
+
+    padding:25px;
+
+    box-shadow:0 8px 30px #11182708;
 }
 
-.card .icone{
-    font-size:25px;
-    margin-bottom:10px;
+.icon{
+    width:46px;
+    height:46px;
+
+    border-radius:12px;
+
+    background:#eef3ff;
+
+    color:#2563eb;
+
+    display:grid;
+    place-items:center;
+
+    font-size:15px;
+    font-weight:bold;
+
+    margin-bottom:17px;
 }
 
 .card h3{
-    color:var(--cinza);
-    font-size:13px;
-}
-
-.card strong{
-    display:block;
-    margin-top:5px;
-    font-size:25px;
-    color:var(--roxo3);
-}
-
-.painel{
-    background:white;
-    border-radius:16px;
-    padding:20px;
-    box-shadow:var(--sombra);
-    margin-bottom:20px;
-}
-
-.painel-titulo{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    gap:10px;
-    margin-bottom:18px;
-}
-
-.painel-titulo h2{
     font-size:19px;
+
+    margin-bottom:7px;
 }
 
-.calendario-topo{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin-bottom:18px;
-}
+.card p{
+    color:#6b7280;
 
-.calendario-topo h2{
-    font-size:21px;
-    text-transform:capitalize;
-}
-
-.navegacao-calendario{
-    display:flex;
-    gap:7px;
-}
-
-.btn-nav{
-    border:0;
-    background:#f3f0ff;
-    color:var(--roxo3);
-    width:38px;
-    height:38px;
-    border-radius:9px;
-    cursor:pointer;
-    font-size:18px;
-    font-weight:bold;
-}
-
-.btn-nav:hover{
-    background:var(--roxo);
-    color:white;
-}
-
-.calendario{
-    width:100%;
-}
-
-.dias-semana,
-.dias{
-    display:grid;
-    grid-template-columns:repeat(7,1fr);
-    gap:6px;
-}
-
-.dia-semana{
-    text-align:center;
-    font-size:12px;
-    color:var(--cinza);
-    font-weight:bold;
-    padding:8px 2px;
-}
-
-.dia{
-    height:75px;
-    background:#fafafa;
-    border:1px solid #eee;
-    border-radius:10px;
-    padding:8px;
-    cursor:pointer;
-    position:relative;
-    transition:.15s;
-}
-
-.dia:hover{
-    border-color:var(--roxo);
-    transform:translateY(-1px);
-}
-
-.dia.outro-mes{
-    opacity:.35;
-}
-
-.numero{
-    font-weight:bold;
     font-size:14px;
 }
 
-.dia.hoje{
-    border:2px solid var(--roxo);
+/* SOBRE */
+
+.about{
+    background:#fff;
 }
 
-.dia.selecionado{
-    background:#f0eaff;
-    border:2px solid var(--roxo);
-}
+.about-inner{
+    max-width:1180px;
 
-/* BOLINHA DO AGENDAMENTO */
-.bolinha-agendamento{
-    width:9px;
-    height:9px;
-    border-radius:50%;
-    background:var(--roxo);
-    position:absolute;
-    left:50%;
-    bottom:9px;
-    transform:translateX(-50%);
-    box-shadow:0 0 0 3px rgba(124,58,237,.12);
-}
+    margin:auto;
 
-@media(max-width:650px){
+    padding:78px 22px;
 
-    .dia{
-        height:58px;
-        padding:5px;
-    }
-
-    .numero{
-        font-size:12px;
-    }
-
-    .bolinha-agendamento{
-        width:7px;
-        height:7px;
-        bottom:6px;
-    }
-}
-
-.agendamentos-dia{
-    margin-top:20px;
-}
-
-.agendamento-item{
-    border:1px solid var(--borda);
-    border-left:4px solid var(--roxo);
-    border-radius:10px;
-    padding:13px;
-    margin-bottom:10px;
-    background:#fafafa;
-}
-
-.agendamento-item strong{
-    display:block;
-    margin-bottom:4px;
-}
-
-.agendamento-info{
-    color:var(--cinza);
-    font-size:13px;
-    margin-top:4px;
-}
-
-.sem-agendamento{
-    text-align:center;
-    padding:25px;
-    color:var(--cinza);
-}
-
-.btn{
-    border:0;
-    border-radius:9px;
-    padding:10px 14px;
-    font-weight:bold;
-    cursor:pointer;
-}
-
-.btn-roxo{
-    background:var(--roxo);
-    color:white;
-}
-
-.btn-verde{
-    background:var(--verde);
-    color:white;
-}
-
-.btn-vermelho{
-    background:var(--vermelho);
-    color:white;
-}
-
-.btn-cinza{
-    background:#e5e7eb;
-    color:#374151;
-}
-
-.btn-editar{
-    background:#ede9fe;
-    color:var(--roxo3);
-}
-
-.acoes-os{
-    display:flex;
-    gap:8px;
-    flex-wrap:wrap;
-    margin-top:10px;
-}
-
-.tabela-container{
-    overflow-x:auto;
-}
-
-table{
-    width:100%;
-    border-collapse:collapse;
-}
-
-th,td{
-    padding:12px 10px;
-    border-bottom:1px solid #eee;
-    text-align:left;
-    white-space:nowrap;
-}
-
-th{
-    color:var(--cinza);
-    font-size:12px;
-}
-
-.status{
-    padding:5px 9px;
-    border-radius:20px;
-    font-size:11px;
-    font-weight:bold;
-}
-
-.aguardando{
-    background:#fef3c7;
-    color:#92400e;
-}
-
-.confirmado{
-    background:#dbeafe;
-    color:#1d4ed8;
-}
-
-.concluido{
-    background:#dcfce7;
-    color:#166534;
-}
-
-.cancelado{
-    background:#fee2e2;
-    color:#991b1b;
-}
-
-.form-grid{
     display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
-    gap:15px;
+
+    grid-template-columns:1fr 1fr;
+
+    gap:65px;
+
+    align-items:center;
 }
 
-.campo{
-    display:flex;
-    flex-direction:column;
-    gap:6px;
+.mock-photo{
+    height:330px;
+
+    border-radius:20px;
+
+    background:linear-gradient(
+        135deg,
+        #dbeafe,
+        #e5e7eb
+    );
+
+    display:grid;
+
+    place-items:center;
+
+    color:#64748b;
+
+    font-weight:700;
 }
 
-.campo label{
+.checks{
+    display:grid;
+
+    gap:13px;
+
+    margin-top:22px;
+}
+
+.checks span{
+    color:#2563eb;
+
+    font-weight:900;
+
+    margin-right:8px;
+}
+
+/* GALERIA */
+
+.gallery{
+    grid-template-columns:repeat(3,1fr);
+}
+
+.photo{
+    height:210px;
+
+    border-radius:15px;
+
+    background:linear-gradient(
+        135deg,
+        #dbeafe,
+        #cbd5e1
+    );
+
+    display:grid;
+
+    place-items:center;
+
+    color:#64748b;
+
     font-size:13px;
-    font-weight:bold;
-    color:#4b5563;
 }
 
-.campo input,
-.campo select,
-.campo textarea{
-    padding:11px;
-    border:1px solid #ddd;
-    border-radius:9px;
-    outline:none;
-    font-size:15px;
-}
+/* CONTATO */
 
-.campo input:focus,
-.campo select:focus,
-.campo textarea:focus{
-    border-color:var(--roxo);
-}
-
-.campo textarea{
-    min-height:90px;
-    resize:vertical;
-}
-
-.form-acoes{
-    display:flex;
-    gap:10px;
-    margin-top:18px;
-    padding-top:12px;
-    background:white;
-    position:sticky;
-    bottom:0;
-    border-top:1px solid var(--borda);
-    flex-wrap:wrap;
-}
-
-.modal{
-    position:fixed;
-    inset:0;
-    background:rgba(0,0,0,.5);
-    display:none;
-    align-items:center;
-    justify-content:center;
-    padding:15px;
-    z-index:300;
-}
-
-.modal.aberto{
-    display:flex;
-}
-
-.modal-box{
-    width:100%;
-    max-width:600px;
-    max-height:85vh;
-    display:flex;
-    flex-direction:column;
-    background:white;
-    border-radius:18px;
-    padding:22px;
-    box-shadow:0 10px 25px rgba(0,0,0,.2);
-}
-
-.modal-topo{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin-bottom:15px;
-    padding-bottom:10px;
-    border-bottom:1px solid var(--borda);
-}
-
-.modal-corpo{
-    overflow-y:auto;
-    padding-right:5px;
-    flex:1;
-}
-
-.fechar{
-    border:0;
-    background:none;
-    font-size:28px;
-    cursor:pointer;
-}
-
-.toast{
-    position:fixed;
-    right:20px;
-    bottom:20px;
+.contact{
     background:#111827;
-    color:white;
-    padding:13px 17px;
-    border-radius:10px;
-    display:none;
-    z-index:500;
+
+    color:#fff;
+
+    max-width:none;
 }
 
-.toast.mostrar{
+.contact-inner{
+    max-width:1180px;
+
+    margin:auto;
+
+    padding:78px 22px;
+
+    display:flex;
+
+    justify-content:space-between;
+
+    gap:30px;
+
+    align-items:center;
+}
+
+.contact p{
+    color:#cbd5e1;
+
+    max-width:620px;
+}
+
+/* PAINEL */
+
+.admin{
+    background:#eef1f7;
+}
+
+.admin-wrap{
+    max-width:1180px;
+
+    margin:auto;
+
+    padding:70px 22px;
+}
+
+.admin-top{
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:25px;
+}
+
+.admin-grid{
+    display:grid;
+
+    grid-template-columns:220px 1fr;
+
+    gap:18px;
+}
+
+.side,
+.panel{
+    background:#fff;
+
+    border:1px solid #e3e6ed;
+
+    border-radius:15px;
+
+    padding:18px;
+}
+
+.side div{
+    padding:12px;
+
+    border-radius:9px;
+
+    font-weight:600;
+
+    font-size:14px;
+}
+
+.side .active{
+    background:#eef3ff;
+
+    color:#2563eb;
+}
+
+.panel h3{
+    margin-bottom:18px;
+}
+
+.stats{
+    display:grid;
+
+    grid-template-columns:repeat(3,1fr);
+
+    gap:12px;
+}
+
+.stat{
+    border:1px solid #e7e9ef;
+
+    border-radius:12px;
+
+    padding:18px;
+}
+
+.stat small{
+    color:#737b88;
+}
+
+.stat strong{
     display:block;
+
+    font-size:27px;
+
+    margin-top:5px;
 }
 
-@media(max-width:650px){
+/* FOOTER */
 
-    main{
-        padding:14px;
+footer{
+    background:#0b1120;
+
+    color:#9ca3af;
+
+    padding:28px 22px;
+
+    font-size:13px;
+}
+
+.foot{
+    max-width:1180px;
+
+    margin:auto;
+
+    display:flex;
+
+    justify-content:space-between;
+}
+
+/* CELULAR */
+
+@media(max-width:800px){
+
+    nav{
+        display:none;
     }
 
-    header{
-        padding:13px 15px;
+    .hero-inner,
+    .about-inner{
+        grid-template-columns:1fr;
     }
 
-    .logo{
-        font-size:18px;
+    .hero-card{
+        height:250px;
     }
 
-    .modal-box{
-        max-height:92vh;
-        padding:17px;
+    .grid,
+    .gallery{
+        grid-template-columns:1fr;
+    }
+
+    .contact-inner{
+        display:block;
+    }
+
+    .contact .btn{
+        margin-top:20px;
+    }
+
+    .admin-grid{
+        grid-template-columns:1fr;
+    }
+
+    .stats{
+        grid-template-columns:1fr;
+    }
+
+    h1{
+        letter-spacing:-2px;
     }
 }
 </style>
@@ -559,198 +557,76 @@ th{
 
 <header>
 
+<div class="nav">
+
 <div class="logo">
-WS SOLUÇÕES
-<small>Painel da equipe</small>
+Minha<span>Empresa</span>
 </div>
 
-<div class="usuario">
+<nav>
+<a href="#inicio">Início</a>
+<a href="#servicos">Serviços</a>
+<a href="#sobre">Sobre</a>
+<a href="#galeria">Galeria</a>
+<a href="#contato">Contato</a>
+</nav>
 
-<div>
-<strong>Mila</strong>
-<small style="display:block;opacity:.75;">Assistente</small>
-</div>
-
-<div class="avatar">M</div>
+<a class="btn primary" href="#contato">
+Fale conosco
+</a>
 
 </div>
 
 </header>
 
 
-<nav>
-
-<button class="active" onclick="abrirTela('inicio',this)">
-🏠 Início
-</button>
-
-<button onclick="abrirTela('clientes',this)">
-👥 Clientes
-</button>
-
-<button onclick="abrirTela('financeiro',this)">
-💰 Financeiro
-</button>
-
-</nav>
-
-
 <main>
 
+<!-- HERO -->
 
-<!-- ================================
-     INÍCIO
-================================ -->
+<section class="hero" id="inicio">
 
-<section id="inicio" class="tela ativa">
+<div class="hero-inner">
 
-<div class="titulo">
+<div>
 
-<h1>Olá, Mila 👋</h1>
+<span class="tag">
+QUALIDADE • CONFIANÇA • EXPERIÊNCIA
+</span>
 
-<p>Controle da WS SOLUÇÕES</p>
+<h1>
+Seu negócio merece uma presença profissional.
+</h1>
 
-</div>
+<p>
+Um site moderno, rápido e adaptado para celular.
+Ideal para empresas, profissionais e negócios locais.
+</p>
 
+<div class="actions">
 
-<div class="cards">
+<a class="btn primary" href="#contato">
+Solicitar orçamento
+</a>
 
-<div class="card">
-
-<div class="icone">👥</div>
-
-<h3>Clientes</h3>
-
-<strong id="totalClientes">0</strong>
-
-</div>
-
-
-<div class="card">
-
-<div class="icone">📅</div>
-
-<h3>Agendamentos</h3>
-
-<strong id="totalAgendamentos">0</strong>
-
-</div>
-
-
-<div class="card">
-
-<div class="icone">⏳</div>
-
-<h3>Pendentes</h3>
-
-<strong id="totalPendentes">0</strong>
-
-</div>
-
-
-<div class="card">
-
-<div class="icone">💰</div>
-
-<h3>Saldo total</h3>
-
-<strong id="totalSaldo">R$ 0,00</strong>
+<a class="btn secondary" href="#servicos">
+Ver serviços
+</a>
 
 </div>
 
 </div>
 
 
-<div class="painel">
+<div class="hero-card">
 
-<div class="calendario-topo">
+<div>
 
-<h2 id="mesAno"></h2>
+<strong>IMG</strong>
 
-<div class="navegacao-calendario">
-
-<button class="btn-nav" onclick="mesAnterior()">‹</button>
-
-<button class="btn-nav" onclick="irParaHoje()">●</button>
-
-<button class="btn-nav" onclick="mesProximo()">›</button>
+Área para imagem/banner
 
 </div>
-
-</div>
-
-
-<div class="calendario">
-
-<div class="dias-semana">
-
-<div class="dia-semana">DOM</div>
-<div class="dia-semana">SEG</div>
-<div class="dia-semana">TER</div>
-<div class="dia-semana">QUA</div>
-<div class="dia-semana">QUI</div>
-<div class="dia-semana">SEX</div>
-<div class="dia-semana">SÁB</div>
-
-</div>
-
-<div id="diasCalendario" class="dias"></div>
-
-</div>
-
-
-<div class="agendamentos-dia">
-
-<div class="painel-titulo">
-
-<h2 id="tituloDia">Agendamentos</h2>
-
-<button
-class="btn btn-roxo"
-onclick="abrirModalAgendamento()">
-+ Agendar
-</button>
-
-</div>
-
-<div id="listaDia"></div>
-
-</div>
-
-</div>
-
-
-<div class="painel">
-
-<div class="painel-titulo">
-
-<h2>📌 Próximos agendamentos</h2>
-
-</div>
-
-
-<div class="tabela-container">
-
-<table>
-
-<thead>
-
-<tr>
-
-<th>Cliente</th>
-<th>Serviço</th>
-<th>Data</th>
-<th>Hora</th>
-<th>Status</th>
-<th>Ação</th>
-
-</tr>
-
-</thead>
-
-<tbody id="tabelaInicio"></tbody>
-
-</table>
 
 </div>
 
@@ -759,157 +635,328 @@ onclick="abrirModalAgendamento()">
 </section>
 
 
-<!-- ================================
-     CLIENTES
-================================ -->
+<!-- SERVIÇOS -->
 
-<section id="clientes" class="tela">
+<section id="servicos">
 
-<div class="titulo">
+<div class="section-head">
 
-<h1>👥 Clientes</h1>
+<div class="eyebrow">
+O que fazemos
+</div>
 
-<p>Cadastro de clientes</p>
+<h2>
+Serviços
+</h2>
+
+<p>
+Os conteúdos abaixo poderão futuramente ser alterados
+pelo cliente através do painel administrativo.
+</p>
 
 </div>
 
 
-<div class="painel">
+<div class="grid">
 
-<div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:15px;">
+<article class="card">
 
-<input
-id="buscarCliente"
-type="search"
-placeholder="🔎 Buscar cliente..."
-oninput="filtrarClientes()"
-style="flex:1;min-width:200px;padding:11px;border:1px solid #ddd;border-radius:9px;"
+<div class="icon">
+01
+</div>
+
+<h3>
+Serviço principal
+</h3>
+
+<p>
+Descrição curta do serviço oferecido pela empresa.
+</p>
+
+</article>
+
+
+<article class="card">
+
+<div class="icon">
+02
+</div>
+
+<h3>
+Serviço especializado
+</h3>
+
+<p>
+Apresente aqui outro serviço ou solução importante.
+</p>
+
+</article>
+
+
+<article class="card">
+
+<div class="icon">
+03
+</div>
+
+<h3>
+Atendimento personalizado
+</h3>
+
+<p>
+Explique rapidamente o diferencial do atendimento.
+</p>
+
+</article>
+
+</div>
+
+</section>
+
+
+<!-- SOBRE -->
+
+<div class="about" id="sobre">
+
+<div class="about-inner">
+
+<div class="mock-photo">
+FOTO DA EMPRESA
+</div>
+
+
+<div>
+
+<div class="eyebrow">
+Sobre nós
+</div>
+
+<h2>
+Uma empresa feita para atender você.
+</h2>
+
+<p style="color:#69707d">
+
+Espaço para apresentar a história,
+experiência e diferenciais da empresa.
+
+</p>
+
+
+<div class="checks">
+
+<div>
+<span>✓</span>
+Atendimento de qualidade
+</div>
+
+<div>
+<span>✓</span>
+Profissionais preparados
+</div>
+
+<div>
+<span>✓</span>
+Compromisso com o cliente
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- GALERIA -->
+
+<section id="galeria">
+
+<div class="section-head">
+
+<div class="eyebrow">
+Portfólio
+</div>
+
+<h2>
+Galeria
+</h2>
+
+<p>
+Fotos dos trabalhos, produtos ou instalações.
+</p>
+
+</div>
+
+
+<div class="grid gallery">
+
+<div class="photo">
+FOTO 01
+</div>
+
+<div class="photo">
+FOTO 02
+</div>
+
+<div class="photo">
+FOTO 03
+</div>
+
+</div>
+
+</section>
+
+
+<!-- CONTATO -->
+
+<section
+class="contact"
+id="contato"
+style="max-width:none"
 >
 
-<button
-class="btn btn-roxo"
-onclick="abrirModalCliente()">
-+ Novo cliente
-</button>
+<div class="contact-inner">
+
+<div>
+
+<div
+class="eyebrow"
+style="color:#60a5fa"
+>
+Contato
+</div>
+
+<h2>
+Vamos conversar?
+</h2>
+
+<p>
+Entre em contato para solicitar um orçamento
+ou tirar suas dúvidas.
+</p>
 
 </div>
 
 
-<div class="tabela-container">
-
-<table>
-
-<thead>
-
-<tr>
-
-<th>Nome</th>
-<th>WhatsApp</th>
-<th>Endereço</th>
-<th>Cadastro</th>
-<th>Ação</th>
-
-</tr>
-
-</thead>
-
-<tbody id="tabelaClientes"></tbody>
-
-</table>
-
-</div>
+<a class="btn primary" href="#">
+WhatsApp
+</a>
 
 </div>
 
 </section>
 
 
-<!-- ================================
-     FINANCEIRO
-================================ -->
+<!-- PAINEL DEMONSTRAÇÃO -->
 
-<section id="financeiro" class="tela">
+<section class="admin" id="painel">
 
-<div class="titulo">
+<div class="admin-wrap">
 
-<h1>💰 Financeiro</h1>
+<div class="admin-top">
 
-<p>Movimentações da empresa</p>
+<div>
+
+<div class="eyebrow">
+Demonstração
+</div>
+
+<h2>
+Painel administrativo
+</h2>
 
 </div>
 
-
-<div class="cards">
-
-<div class="card">
-
-<h3>Entradas</h3>
-
-<strong id="financeiroEntradas">
-R$ 0,00
-</strong>
-
-</div>
-
-
-<div class="card">
-
-<h3>Saídas</h3>
-
-<strong id="financeiroSaidas">
-R$ 0,00
-</strong>
-
-</div>
-
-
-<div class="card">
-
-<h3>Saldo</h3>
-
-<strong id="financeiroSaldo">
-R$ 0,00
-</strong>
-
-</div>
-
-</div>
-
-
-<div class="painel">
-
-<button
-class="btn btn-roxo"
-onclick="abrirModalFinanceiro()">
-+ Nova movimentação
+<button class="btn primary">
+Salvar alterações
 </button>
 
 </div>
 
 
-<div class="painel">
+<div class="admin-grid">
 
-<div class="tabela-container">
+<aside class="side">
 
-<table>
+<div class="active">
+Dashboard
+</div>
 
-<thead>
+<div>
+Serviços
+</div>
 
-<tr>
+<div>
+Galeria
+</div>
 
-<th>Tipo</th>
-<th>Descrição</th>
-<th>Valor</th>
-<th>Data</th>
-<th>Ação</th>
+<div>
+Sobre a empresa
+</div>
 
-</tr>
+<div>
+Contato
+</div>
 
-</thead>
+<div>
+Configurações
+</div>
 
-<tbody id="tabelaFinanceiro"></tbody>
+</aside>
 
-</table>
+
+<div class="panel">
+
+<h3>
+Visão geral
+</h3>
+
+
+<div class="stats">
+
+<div class="stat">
+
+<small>
+Serviços cadastrados
+</small>
+
+<strong>
+3
+</strong>
+
+</div>
+
+
+<div class="stat">
+
+<small>
+Fotos na galeria
+</small>
+
+<strong>
+8
+</strong>
+
+</div>
+
+
+<div class="stat">
+
+<small>
+Site
+</small>
+
+<strong>
+Ativo
+</strong>
+
+</div>
+
+</div>
+
+</div>
 
 </div>
 
@@ -920,1931 +967,21 @@ onclick="abrirModalFinanceiro()">
 </main>
 
 
-<!-- ================================
-     MODAL CLIENTE
-================================ -->
+<footer>
 
-<div id="modalCliente" class="modal">
+<div class="foot">
 
-<div class="modal-box">
+<span>
+© 2026 MinhaEmpresa
+</span>
 
-<div class="modal-topo">
-
-<h2 id="tituloModalCliente">
-Novo cliente
-</h2>
-
-<button class="fechar" onclick="fecharModais()">
-×
-</button>
+<span>
+Site modelo
+</span>
 
 </div>
 
-
-<div class="modal-corpo">
-
-<input type="hidden" id="clienteId">
-
-<div class="form-grid">
-
-<div class="campo">
-
-<label>Nome</label>
-
-<input id="clienteNome">
-
-</div>
-
-
-<div class="campo">
-
-<label>WhatsApp</label>
-
-<input id="clienteWhatsapp">
-
-</div>
-
-
-<div class="campo">
-
-<label>Cidade / Endereço</label>
-
-<input id="clienteCidade">
-
-</div>
-
-</div>
-
-</div>
-
-
-<div class="form-acoes">
-
-<button
-id="btnSalvarCliente"
-class="btn btn-roxo"
-onclick="salvarCliente()">
-Salvar
-</button>
-
-<button
-class="btn btn-cinza"
-onclick="fecharModais()">
-Cancelar
-</button>
-
-</div>
-
-</div>
-
-</div>
-
-
-<!-- ================================
-     MODAL AGENDAMENTO
-================================ -->
-
-<div id="modalAgendamento" class="modal">
-
-<div class="modal-box">
-
-<div class="modal-topo">
-
-<h2 id="tituloModalAgendamento">
-Novo agendamento
-</h2>
-
-<button class="fechar" onclick="fecharModais()">
-×
-</button>
-
-</div>
-
-
-<div class="modal-corpo">
-
-<input type="hidden" id="agId">
-
-<div class="form-grid">
-
-<div class="campo">
-
-<label>Cliente</label>
-
-<input id="agNome">
-
-</div>
-
-
-<div class="campo">
-
-<label>WhatsApp</label>
-
-<input id="agWhatsapp">
-
-</div>
-
-
-<div class="campo">
-
-<label>Aparelho</label>
-
-<input id="agAparelho">
-
-</div>
-
-
-<div class="campo">
-
-<label>Data</label>
-
-<input id="agData" type="date">
-
-</div>
-
-
-<div class="campo">
-
-<label>Hora</label>
-
-<input id="agHora" type="time">
-
-</div>
-
-
-<div class="campo">
-
-<label>Status</label>
-
-<select id="agStatus">
-
-<option value="aguardando">Aguardando</option>
-<option value="confirmado">Confirmado</option>
-<option value="concluido">Concluído</option>
-<option value="cancelado">Cancelado</option>
-
-</select>
-
-</div>
-
-</div>
-
-
-<div class="campo" style="margin-top:15px;">
-
-<label>Defeito / serviço</label>
-
-<textarea id="agDefeito"></textarea>
-
-</div>
-
-</div>
-
-
-<div class="form-acoes">
-
-<button
-id="btnSalvarAgendamento"
-class="btn btn-roxo"
-onclick="salvarAgendamento()">
-Salvar agendamento
-</button>
-
-<button
-class="btn btn-cinza"
-onclick="fecharModais()">
-Cancelar
-</button>
-
-</div>
-
-</div>
-
-</div>
-
-
-<!-- ================================
-     MODAL FINANCEIRO
-================================ -->
-
-<div id="modalFinanceiro" class="modal">
-
-<div class="modal-box">
-
-<div class="modal-topo">
-
-<h2 id="tituloModalFinanceiro">
-Nova movimentação
-</h2>
-
-<button class="fechar" onclick="fecharModais()">
-×
-</button>
-
-</div>
-
-
-<div class="modal-corpo">
-
-<input type="hidden" id="finId">
-
-<div class="form-grid">
-
-<div class="campo">
-
-<label>Tipo</label>
-
-<select id="finTipo">
-
-<option value="entrada">Entrada</option>
-<option value="saida">Saída</option>
-
-</select>
-
-</div>
-
-
-<div class="campo">
-
-<label>Valor</label>
-
-<input
-id="finValor"
-type="number"
-step="0.01"
->
-
-</div>
-
-</div>
-
-
-<div class="campo" style="margin-top:15px;">
-
-<label>Descrição</label>
-
-<input id="finDescricao">
-
-</div>
-
-</div>
-
-
-<div class="form-acoes">
-
-<button
-id="btnSalvarFinanceiro"
-class="btn btn-roxo"
-onclick="salvarFinanceiro()">
-Salvar
-</button>
-
-<button
-class="btn btn-cinza"
-onclick="fecharModais()">
-Cancelar
-</button>
-
-</div>
-
-</div>
-
-</div>
-
-
-<div id="toast" class="toast"></div>
-
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-<script>
-
-/* =========================================
-   SUPABASE
-========================================= */
-
-const SUPABASE_URL =
-"https://xcncqpjxghujwbyklhel.supabase.co";
-
-const SUPABASE_KEY =
-"sb_publishable_xJqknenrg3H20jeGum1bkg_Ir-GLZsl";
-
-const supabaseClient =
-window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_KEY
-);
-
-
-/* =========================================
-   DADOS
-========================================= */
-
-let agendamentos = [];
-let clientes = [];
-let movimentacoes = [];
-
-let dataCalendario = new Date();
-
-let diaSelecionado =
-dataCalendario.getFullYear() +
-"-" +
-String(dataCalendario.getMonth()+1).padStart(2,"0") +
-"-" +
-String(dataCalendario.getDate()).padStart(2,"0");
-
-let carregando = false;
-
-
-/* =========================================
-   MENSAGEM
-========================================= */
-
-function mensagem(msg){
-
-    const toast =
-    document.getElementById("toast");
-
-    toast.innerText = msg;
-
-    toast.classList.add("mostrar");
-
-    setTimeout(() => {
-
-        toast.classList.remove("mostrar");
-
-    },3000);
-}
-
-
-/* =========================================
-   FORMATAÇÃO
-========================================= */
-
-function moeda(valor){
-
-    return Number(valor || 0)
-    .toLocaleString("pt-BR",{
-        style:"currency",
-        currency:"BRL"
-    });
-}
-
-
-/* =========================================
-   CALENDÁRIO
-========================================= */
-
-function renderizarCalendario(){
-
-    const ano =
-    dataCalendario.getFullYear();
-
-    const mes =
-    dataCalendario.getMonth();
-
-    document.getElementById("mesAno").innerText =
-    dataCalendario.toLocaleDateString(
-        "pt-BR",
-        {
-            month:"long",
-            year:"numeric"
-        }
-    );
-
-    const primeiroDia =
-    new Date(ano,mes,1).getDay();
-
-    const ultimoDia =
-    new Date(ano,mes+1,0).getDate();
-
-    const diasMesAnterior =
-    new Date(ano,mes,0).getDate();
-
-    const container =
-    document.getElementById("diasCalendario");
-
-    container.innerHTML = "";
-
-
-    for(let i=primeiroDia-1;i>=0;i--){
-
-        container.appendChild(
-            criarDia(
-                diasMesAnterior-i,
-                true,
-                new Date(
-                    ano,
-                    mes-1,
-                    diasMesAnterior-i
-                )
-            )
-        );
-
-    }
-
-
-    for(let d=1;d<=ultimoDia;d++){
-
-        container.appendChild(
-            criarDia(
-                d,
-                false,
-                new Date(ano,mes,d)
-            )
-        );
-
-    }
-
-
-    const total =
-    container.children.length;
-
-    const faltam =
-    (7-(total%7))%7;
-
-
-    for(let d=1;d<=faltam;d++){
-
-        container.appendChild(
-            criarDia(
-                d,
-                true,
-                new Date(ano,mes+1,d)
-            )
-        );
-
-    }
-
-}
-
-
-function criarDia(numero,outroMes,data){
-
-    const div =
-    document.createElement("div");
-
-    div.className = "dia";
-
-
-    const dataISO =
-    data.getFullYear() +
-    "-" +
-    String(data.getMonth()+1).padStart(2,"0") +
-    "-" +
-    String(data.getDate()).padStart(2,"0");
-
-
-    if(outroMes)
-        div.classList.add("outro-mes");
-
-
-    const hoje = new Date();
-
-    const hojeISO =
-    hoje.getFullYear() +
-    "-" +
-    String(hoje.getMonth()+1).padStart(2,"0") +
-    "-" +
-    String(hoje.getDate()).padStart(2,"0");
-
-
-    if(dataISO === hojeISO)
-        div.classList.add("hoje");
-
-
-    if(dataISO === diaSelecionado)
-        div.classList.add("selecionado");
-
-
-    div.innerHTML =
-    `<div class="numero">${numero}</div>`;
-
-
-    const temAgendamento =
-    agendamentos.some(
-        item => item.data === dataISO
-    );
-
-
-    if(temAgendamento){
-
-        const bolinha =
-        document.createElement("div");
-
-        bolinha.className =
-        "bolinha-agendamento";
-
-        div.appendChild(bolinha);
-
-    }
-
-
-    div.onclick = () => {
-
-        diaSelecionado = dataISO;
-
-        mostrarAgendamentosDoDia();
-
-        renderizarCalendario();
-
-    };
-
-
-    return div;
-}
-
-
-function mesAnterior(){
-
-    dataCalendario.setMonth(
-        dataCalendario.getMonth()-1
-    );
-
-    renderizarCalendario();
-
-}
-
-
-function mesProximo(){
-
-    dataCalendario.setMonth(
-        dataCalendario.getMonth()+1
-    );
-
-    renderizarCalendario();
-
-}
-
-
-function irParaHoje(){
-
-    dataCalendario = new Date();
-
-    diaSelecionado =
-    dataCalendario.getFullYear() +
-    "-" +
-    String(dataCalendario.getMonth()+1).padStart(2,"0") +
-    "-" +
-    String(dataCalendario.getDate()).padStart(2,"0");
-
-    renderizarCalendario();
-
-    mostrarAgendamentosDoDia();
-
-}
-
-
-/* =========================================
-   STATUS
-========================================= */
-
-function classeStatus(status){
-
-    switch(
-        (status || "").toLowerCase()
-    ){
-
-        case "confirmado":
-            return "confirmado";
-
-        case "concluido":
-            return "concluido";
-
-        case "cancelado":
-            return "cancelado";
-
-        default:
-            return "aguardando";
-    }
-
-}
-
-
-/* =========================================
-   AGENDAMENTOS DO DIA
-========================================= */
-
-function mostrarAgendamentosDoDia(){
-
-    const lista =
-    document.getElementById("listaDia");
-
-    const titulo =
-    document.getElementById("tituloDia");
-
-
-    const eventos =
-    agendamentos
-    .filter(
-        item => item.data === diaSelecionado
-    )
-    .sort(
-        (a,b) =>
-        (a.hora || "")
-        .localeCompare(b.hora || "")
-    );
-
-
-    const data =
-    new Date(
-        diaSelecionado + "T12:00:00"
-    );
-
-
-    titulo.innerText =
-    "Agendamentos de " +
-    data.toLocaleDateString("pt-BR");
-
-
-    lista.innerHTML = "";
-
-
-    if(!eventos.length){
-
-        lista.innerHTML = `
-        <div class="sem-agendamento">
-            Nenhum agendamento para este dia.
-        </div>`;
-
-        return;
-    }
-
-
-    eventos.forEach(item => {
-
-        const div =
-        document.createElement("div");
-
-        div.className =
-        "agendamento-item";
-
-
-        div.innerHTML = `
-
-            <strong>
-                ⏰ ${item.hora || "--:--"} —
-                ${item.nome || "Cliente"}
-            </strong>
-
-            <div class="agendamento-info">
-                📱 ${item.whatsapp || "Sem WhatsApp"}
-            </div>
-
-            <div class="agendamento-info">
-                🔧 ${item.aparelho || "Serviço"}
-            </div>
-
-            <div class="agendamento-info">
-                📝 ${item.defeito || ""}
-            </div>
-
-            <div style="margin-top:8px;">
-
-                <span class="status ${classeStatus(item.status)}">
-                    ${item.status || "aguardando"}
-                </span>
-
-            </div>
-
-            <div class="acoes-os">
-
-                <button
-                    class="btn btn-editar"
-                    onclick="editarAgendamento('${item.id}')">
-                    ✏️ Editar
-                </button>
-
-                <button
-                    class="btn btn-vermelho"
-                    onclick="excluirAgendamento('${item.id}')">
-                    🗑️ Excluir
-                </button>
-
-            </div>
-
-        `;
-
-        lista.appendChild(div);
-
-    });
-
-}
-
-
-/* =========================================
-   NAVEGAÇÃO
-========================================= */
-
-function abrirTela(id,botao){
-
-    document.querySelectorAll(".tela")
-    .forEach(
-        tela =>
-        tela.classList.remove("ativa")
-    );
-
-
-    document
-    .getElementById(id)
-    .classList.add("ativa");
-
-
-    document.querySelectorAll("nav button")
-    .forEach(
-        btn =>
-        btn.classList.remove("active")
-    );
-
-
-    botao.classList.add("active");
-
-}
-
-
-/* =========================================
-   MODAIS
-========================================= */
-
-function fecharModais(){
-
-    document.querySelectorAll(".modal")
-    .forEach(
-        modal =>
-        modal.classList.remove("aberto")
-    );
-
-}
-
-
-/* =========================================
-   CLIENTE
-========================================= */
-
-function abrirModalCliente(){
-
-    document
-    .getElementById("modalCliente")
-    .classList.add("aberto");
-
-
-    document
-    .getElementById("tituloModalCliente")
-    .innerText =
-    "Novo cliente";
-
-
-    document
-    .getElementById("btnSalvarCliente")
-    .innerText =
-    "Salvar";
-
-
-    document.getElementById("clienteId").value = "";
-    document.getElementById("clienteNome").value = "";
-    document.getElementById("clienteWhatsapp").value = "";
-    document.getElementById("clienteCidade").value = "";
-
-}
-
-
-function editarCliente(id){
-
-    const cliente =
-    clientes.find(
-        c =>
-        String(c.id) === String(id)
-    );
-
-
-    if(!cliente){
-
-        mensagem("Cliente não encontrado.");
-
-        return;
-    }
-
-
-    document
-    .getElementById("modalCliente")
-    .classList.add("aberto");
-
-
-    document
-    .getElementById("tituloModalCliente")
-    .innerText =
-    "Editar cliente";
-
-
-    document
-    .getElementById("btnSalvarCliente")
-    .innerText =
-    "💾 Salvar alterações";
-
-
-    document.getElementById("clienteId").value =
-    cliente.id;
-
-    document.getElementById("clienteNome").value =
-    cliente.nome || "";
-
-    document.getElementById("clienteWhatsapp").value =
-    cliente.whatsapp || "";
-
-    document.getElementById("clienteCidade").value =
-    cliente.cidade || "";
-
-}
-
-
-async function salvarCliente(){
-
-    const id =
-    document
-    .getElementById("clienteId")
-    .value;
-
-
-    const nome =
-    document
-    .getElementById("clienteNome")
-    .value
-    .trim();
-
-
-    if(!nome){
-
-        mensagem(
-            "Digite o nome do cliente."
-        );
-
-        return;
-    }
-
-
-    const dados = {
-
-        nome: nome,
-
-        whatsapp:
-        document
-        .getElementById("clienteWhatsapp")
-        .value,
-
-        cidade:
-        document
-        .getElementById("clienteCidade")
-        .value
-
-    };
-
-
-    let resultado;
-
-
-    if(id){
-
-        resultado =
-        await supabaseClient
-        .from("clientes")
-        .update(dados)
-        .eq("id",id);
-
-    }else{
-
-        dados.data =
-        new Date()
-        .toLocaleDateString("pt-BR");
-
-        resultado =
-        await supabaseClient
-        .from("clientes")
-        .insert([dados]);
-
-    }
-
-
-    if(resultado.error){
-
-        console.error(resultado.error);
-
-        mensagem(
-            id
-            ? "Erro ao atualizar cliente."
-            : "Erro ao salvar cliente."
-        );
-
-        return;
-    }
-
-
-    fecharModais();
-
-
-    mensagem(
-        id
-        ? "✅ Cliente atualizado!"
-        : "✅ Cliente cadastrado!"
-    );
-
-
-    await carregarTudo();
-
-}
-
-
-async function excluirCliente(id){
-
-    const cliente =
-    clientes.find(
-        c =>
-        String(c.id) === String(id)
-    );
-
-
-    if(!cliente){
-
-        mensagem("Cliente não encontrado.");
-
-        return;
-    }
-
-
-    const confirmar =
-    confirm(
-        "⚠️ Tem certeza que deseja excluir este cliente?\n\n" +
-        "Cliente: " +
-        (cliente.nome || "Não informado")
-    );
-
-
-    if(!confirmar)
-        return;
-
-
-    const {error} =
-    await supabaseClient
-    .from("clientes")
-    .delete()
-    .eq("id",id);
-
-
-    if(error){
-
-        console.error(error);
-
-        mensagem(
-            "Erro ao excluir cliente."
-        );
-
-        return;
-    }
-
-
-    mensagem(
-        "🗑️ Cliente excluído com sucesso!"
-    );
-
-
-    await carregarTudo();
-
-}
-
-
-/* =========================================
-   FILTRAR CLIENTES
-========================================= */
-
-function filtrarClientes(){
-
-    const busca =
-    document
-    .getElementById("buscarCliente")
-    .value
-    .toLowerCase();
-
-
-    const tabela =
-    document
-    .getElementById("tabelaClientes");
-
-
-    tabela.innerHTML = "";
-
-
-    clientes
-    .filter(
-        c =>
-        (c.nome || "")
-        .toLowerCase()
-        .includes(busca)
-    )
-    .forEach(cliente => {
-
-        const tr =
-        document.createElement("tr");
-
-
-        tr.innerHTML = `
-
-            <td>${cliente.nome || "-"}</td>
-
-            <td>${cliente.whatsapp || "-"}</td>
-
-            <td>${cliente.cidade || "-"}</td>
-
-            <td>${cliente.data || "-"}</td>
-
-            <td>
-
-                <div class="acoes-os">
-
-                    <button
-                        class="btn btn-editar"
-                        onclick="editarCliente('${cliente.id}')">
-                        ✏️ Editar
-                    </button>
-
-                    <button
-                        class="btn btn-vermelho"
-                        onclick="excluirCliente('${cliente.id}')">
-                        🗑️ Excluir
-                    </button>
-
-                </div>
-
-            </td>
-
-        `;
-
-
-        tabela.appendChild(tr);
-
-    });
-
-}
-
-
-/* =========================================
-   AGENDAMENTO
-========================================= */
-
-function abrirModalAgendamento(){
-
-    document
-    .getElementById("modalAgendamento")
-    .classList.add("aberto");
-
-
-    document
-    .getElementById("tituloModalAgendamento")
-    .innerText =
-    "Novo agendamento";
-
-
-    document
-    .getElementById("btnSalvarAgendamento")
-    .innerText =
-    "Salvar agendamento";
-
-
-    document.getElementById("agId").value = "";
-    document.getElementById("agNome").value = "";
-    document.getElementById("agWhatsapp").value = "";
-    document.getElementById("agAparelho").value = "";
-    document.getElementById("agHora").value = "";
-    document.getElementById("agDefeito").value = "";
-    document.getElementById("agStatus").value = "aguardando";
-    document.getElementById("agData").value = diaSelecionado;
-
-}
-
-
-function editarAgendamento(id){
-
-    const item =
-    agendamentos.find(
-        ag =>
-        String(ag.id) === String(id)
-    );
-
-
-    if(!item){
-
-        mensagem("OS não encontrada.");
-
-        return;
-    }
-
-
-    document
-    .getElementById("modalAgendamento")
-    .classList.add("aberto");
-
-
-    document
-    .getElementById("tituloModalAgendamento")
-    .innerText =
-    "Editar OS";
-
-
-    document
-    .getElementById("btnSalvarAgendamento")
-    .innerText =
-    "💾 Salvar alterações";
-
-
-    document.getElementById("agId").value =
-    item.id;
-
-    document.getElementById("agNome").value =
-    item.nome || "";
-
-    document.getElementById("agWhatsapp").value =
-    item.whatsapp || "";
-
-    document.getElementById("agAparelho").value =
-    item.aparelho || "";
-
-    document.getElementById("agData").value =
-    item.data || "";
-
-    document.getElementById("agHora").value =
-    item.hora || "";
-
-    document.getElementById("agDefeito").value =
-    item.defeito || "";
-
-    document.getElementById("agStatus").value =
-    item.status || "aguardando";
-
-}
-
-
-async function salvarAgendamento(){
-
-    const id =
-    document
-    .getElementById("agId")
-    .value;
-
-
-    const nome =
-    document
-    .getElementById("agNome")
-    .value
-    .trim();
-
-
-    if(!nome){
-
-        mensagem(
-            "Preencha o nome do cliente."
-        );
-
-        return;
-    }
-
-
-    const dados = {
-
-        nome: nome,
-
-        whatsapp:
-        document
-        .getElementById("agWhatsapp")
-        .value,
-
-        aparelho:
-        document
-        .getElementById("agAparelho")
-        .value,
-
-        data:
-        document
-        .getElementById("agData")
-        .value || null,
-
-        hora:
-        document
-        .getElementById("agHora")
-        .value || null,
-
-        defeito:
-        document
-        .getElementById("agDefeito")
-        .value,
-
-        status:
-        document
-        .getElementById("agStatus")
-        .value
-
-    };
-
-
-    let resultado;
-
-
-    if(id){
-
-        resultado =
-        await supabaseClient
-        .from("agendamentos")
-        .update(dados)
-        .eq("id",id);
-
-    }else{
-
-        resultado =
-        await supabaseClient
-        .from("agendamentos")
-        .insert([dados]);
-
-    }
-
-
-    if(resultado.error){
-
-        console.error(resultado.error);
-
-        mensagem(
-            id
-            ? "Erro ao atualizar OS."
-            : "Erro ao salvar agendamento."
-        );
-
-        return;
-    }
-
-
-    fecharModais();
-
-
-    mensagem(
-        id
-        ? "✅ OS atualizada com sucesso!"
-        : "✅ Agendamento salvo!"
-    );
-
-
-    await carregarTudo();
-
-}
-
-
-async function excluirAgendamento(id){
-
-    const item =
-    agendamentos.find(
-        ag =>
-        String(ag.id) === String(id)
-    );
-
-
-    if(!item){
-
-        mensagem("OS não encontrada.");
-
-        return;
-    }
-
-
-    const confirmar =
-    confirm(
-        "⚠️ Tem certeza que deseja excluir esta OS?\n\n" +
-        "Cliente: " +
-        (item.nome || "Não informado") +
-        "\nData: " +
-        (item.data || "Não informada") +
-        "\nHora: " +
-        (item.hora || "Não informada")
-    );
-
-
-    if(!confirmar)
-        return;
-
-
-    const {error} =
-    await supabaseClient
-    .from("agendamentos")
-    .delete()
-    .eq("id",id);
-
-
-    if(error){
-
-        console.error(error);
-
-        mensagem(
-            "Erro ao excluir a OS."
-        );
-
-        return;
-    }
-
-
-    mensagem(
-        "🗑️ OS excluída com sucesso!"
-    );
-
-
-    await carregarTudo();
-
-}
-
-
-/* =========================================
-   FINANCEIRO
-========================================= */
-
-function abrirModalFinanceiro(){
-
-    document
-    .getElementById("modalFinanceiro")
-    .classList.add("aberto");
-
-
-    document
-    .getElementById("tituloModalFinanceiro")
-    .innerText =
-    "Nova movimentação";
-
-
-    document
-    .getElementById("btnSalvarFinanceiro")
-    .innerText =
-    "Salvar";
-
-
-    document.getElementById("finId").value = "";
-    document.getElementById("finTipo").value = "entrada";
-    document.getElementById("finValor").value = "";
-    document.getElementById("finDescricao").value = "";
-
-}
-
-
-function editarFinanceiro(id){
-
-    const item =
-    movimentacoes.find(
-        m =>
-        String(m.id) === String(id)
-    );
-
-
-    if(!item){
-
-        mensagem(
-            "Movimentação não encontrada."
-        );
-
-        return;
-    }
-
-
-    document
-    .getElementById("modalFinanceiro")
-    .classList.add("aberto");
-
-
-    document
-    .getElementById("tituloModalFinanceiro")
-    .innerText =
-    "Editar movimentação";
-
-
-    document
-    .getElementById("btnSalvarFinanceiro")
-    .innerText =
-    "💾 Salvar alterações";
-
-
-    document.getElementById("finId").value =
-    item.id;
-
-    document.getElementById("finTipo").value =
-    item.tipo || "entrada";
-
-    document.getElementById("finValor").value =
-    item.valor || "";
-
-    document.getElementById("finDescricao").value =
-    item.descricao || "";
-
-}
-
-
-async function salvarFinanceiro(){
-
-    const id =
-    document
-    .getElementById("finId")
-    .value;
-
-
-    const valor =
-    parseFloat(
-        document
-        .getElementById("finValor")
-        .value
-    );
-
-
-    if(!valor || valor <= 0){
-
-        mensagem(
-            "Informe um valor válido."
-        );
-
-        return;
-    }
-
-
-    const dados = {
-
-        tipo:
-        document
-        .getElementById("finTipo")
-        .value,
-
-        valor:valor,
-
-        descricao:
-        document
-        .getElementById("finDescricao")
-        .value
-
-    };
-
-
-    let resultado;
-
-
-    if(id){
-
-        resultado =
-        await supabaseClient
-        .from("movimentacoes")
-        .update(dados)
-        .eq("id",id);
-
-    }else{
-
-        dados.data =
-        new Date()
-        .toLocaleDateString("pt-BR");
-
-        resultado =
-        await supabaseClient
-        .from("movimentacoes")
-        .insert([dados]);
-
-    }
-
-
-    if(resultado.error){
-
-        console.error(resultado.error);
-
-        mensagem(
-            id
-            ? "Erro ao atualizar movimentação."
-            : "Erro ao registrar movimentação."
-        );
-
-        return;
-    }
-
-
-    fecharModais();
-
-
-    mensagem(
-        id
-        ? "✅ Movimentação atualizada!"
-        : "✅ Movimentação registrada!"
-    );
-
-
-    await carregarTudo();
-
-}
-
-
-async function excluirFinanceiro(id){
-
-    const item =
-    movimentacoes.find(
-        m =>
-        String(m.id) === String(id)
-    );
-
-
-    if(!item){
-
-        mensagem(
-            "Movimentação não encontrada."
-        );
-
-        return;
-    }
-
-
-    const confirmar =
-    confirm(
-        "⚠️ Tem certeza que deseja excluir esta movimentação?\n\n" +
-        "Descrição: " +
-        (item.descricao || "Sem descrição") +
-        "\nValor: " +
-        moeda(item.valor)
-    );
-
-
-    if(!confirmar)
-        return;
-
-
-    const {error} =
-    await supabaseClient
-    .from("movimentacoes")
-    .delete()
-    .eq("id",id);
-
-
-    if(error){
-
-        console.error(error);
-
-        mensagem(
-            "Erro ao excluir movimentação."
-        );
-
-        return;
-    }
-
-
-    mensagem(
-        "🗑️ Movimentação excluída!"
-    );
-
-
-    await carregarTudo();
-
-}
-
-
-/* =========================================
-   CARREGAR DADOS
-========================================= */
-
-async function carregarTudo(){
-
-    if(carregando)
-        return;
-
-
-    if(document.querySelector(".modal.aberto"))
-        return;
-
-
-    carregando = true;
-
-
-    try{
-
-        const [
-            clientesResult,
-            agendamentosResult,
-            movimentacoesResult
-        ] = await Promise.all([
-
-            supabaseClient
-            .from("clientes")
-            .select("*")
-            .order("id",{ascending:false}),
-
-
-            supabaseClient
-            .from("agendamentos")
-            .select("*")
-            .order("data",{ascending:true})
-            .order("hora",{ascending:true}),
-
-
-            supabaseClient
-            .from("movimentacoes")
-            .select("*")
-            .order("id",{ascending:false})
-
-        ]);
-
-
-        if(clientesResult.error)
-            throw clientesResult.error;
-
-
-        if(agendamentosResult.error)
-            throw agendamentosResult.error;
-
-
-        if(movimentacoesResult.error)
-            throw movimentacoesResult.error;
-
-
-        clientes =
-        clientesResult.data || [];
-
-
-        agendamentos =
-        agendamentosResult.data || [];
-
-
-        movimentacoes =
-        movimentacoesResult.data || [];
-
-
-        /* ==========================
-           TOTAIS
-        ========================== */
-
-        const entradas =
-        movimentacoes
-        .filter(
-            m =>
-            m.tipo === "entrada"
-        )
-        .reduce(
-            (acc,m) =>
-            acc +
-            (parseFloat(m.valor) || 0),
-            0
-        );
-
-
-        const saidas =
-        movimentacoes
-        .filter(
-            m =>
-            m.tipo === "saida"
-        )
-        .reduce(
-            (acc,m) =>
-            acc +
-            (parseFloat(m.valor) || 0),
-            0
-        );
-
-
-        const saldo =
-        entradas - saidas;
-
-
-        document
-        .getElementById("totalClientes")
-        .innerText =
-        clientes.length;
-
-
-        document
-        .getElementById("totalAgendamentos")
-        .innerText =
-        agendamentos.length;
-
-
-        document
-        .getElementById("totalPendentes")
-        .innerText =
-        agendamentos.filter(
-            a =>
-            a.status === "aguardando"
-        ).length;
-
-
-        document
-        .getElementById("totalSaldo")
-        .innerText =
-        moeda(saldo);
-
-
-        /* ==========================
-           CALENDÁRIO
-        ========================== */
-
-        renderizarCalendario();
-
-        mostrarAgendamentosDoDia();
-
-
-        /* ==========================
-           CLIENTES
-        ========================== */
-
-        filtrarClientes();
-
-
-        /* ==========================
-           TABELA INÍCIO
-        ========================== */
-
-        const tabelaInicio =
-        document
-        .getElementById("tabelaInicio");
-
-
-        tabelaInicio.innerHTML = "";
-
-
-        agendamentos
-        .slice(0,5)
-        .forEach(item => {
-
-            const tr =
-            document.createElement("tr");
-
-
-            tr.innerHTML = `
-
-                <td>${item.nome || "-"}</td>
-
-                <td>${item.aparelho || "-"}</td>
-
-                <td>${item.data || "-"}</td>
-
-                <td>${item.hora || "-"}</td>
-
-                <td>
-
-                    <span class="status ${classeStatus(item.status)}">
-                        ${item.status || "aguardando"}
-                    </span>
-
-                </td>
-
-                <td>
-
-                    <div class="acoes-os">
-
-                        <button
-                            class="btn btn-editar"
-                            onclick="editarAgendamento('${item.id}')">
-                            ✏️
-                        </button>
-
-                        <button
-                            class="btn btn-vermelho"
-                            onclick="excluirAgendamento('${item.id}')">
-                            🗑️
-                        </button>
-
-                    </div>
-
-                </td>
-
-            `;
-
-
-            tabelaInicio.appendChild(tr);
-
-        });
-
-
-        /* ==========================
-           FINANCEIRO
-        ========================== */
-
-        const tabelaFin =
-        document
-        .getElementById("tabelaFinanceiro");
-
-
-        tabelaFin.innerHTML = "";
-
-
-        movimentacoes.forEach(item => {
-
-            const valor =
-            parseFloat(item.valor) || 0;
-
-
-            const tr =
-            document.createElement("tr");
-
-
-            tr.innerHTML = `
-
-                <td>
-                    <span class="status ${
-                        item.tipo === "entrada"
-                        ? "concluido"
-                        : "cancelado"
-                    }">
-                        ${item.tipo || "-"}
-                    </span>
-                </td>
-
-                <td>
-                    ${item.descricao || "-"}
-                </td>
-
-                <td>
-                    ${moeda(valor)}
-                </td>
-
-                <td>
-                    ${item.data || "-"}
-                </td>
-
-                <td>
-
-                    <div class="acoes-os">
-
-                        <button
-                            class="btn btn-editar"
-                            onclick="editarFinanceiro('${item.id}')">
-                            ✏️ Editar
-                        </button>
-
-                        <button
-                            class="btn btn-vermelho"
-                            onclick="excluirFinanceiro('${item.id}')">
-                            🗑️ Excluir
-                        </button>
-
-                    </div>
-
-                </td>
-
-            `;
-
-
-            tabelaFin.appendChild(tr);
-
-        });
-
-
-        /* ==========================
-           CARDS FINANCEIRO
-        ========================== */
-
-        document
-        .getElementById("financeiroEntradas")
-        .innerText =
-        moeda(entradas);
-
-
-        document
-        .getElementById("financeiroSaidas")
-        .innerText =
-        moeda(saidas);
-
-
-        document
-        .getElementById("financeiroSaldo")
-        .innerText =
-        moeda(saldo);
-
-
-    }catch(error){
-
-        console.error(
-            "Erro ao carregar dados:",
-            error
-        );
-
-    }finally{
-
-        carregando = false;
-
-    }
-
-}
-
-
-/* =========================================
-   INICIALIZAÇÃO
-========================================= */
-
-renderizarCalendario();
-
-mostrarAgendamentosDoDia();
-
-carregarTudo();
-
-
-/* =========================================
-   ATUALIZAÇÃO AUTOMÁTICA
-========================================= */
-
-setInterval(() => {
-
-    carregarTudo();
-
-},2000);
-
-</script>
+</footer>
 
 </body>
 </html>
