@@ -2,553 +2,539 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Minha Empresa</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Comunidade+ — Demo</title>
 
 <style>
-*{
-    box-sizing:border-box;
-    margin:0;
-    padding:0;
+:root{
+ --primary:#ff5a1f;
+ --primary2:#ff8a00;
+ --dark:#111318;
+ --dark2:#1b1e25;
+ --bg:#f5f6f8;
+ --white:#fff;
+ --text:#20232a;
+ --muted:#747985;
+ --green:#20b26b;
+ --red:#e53935;
+ --border:#e6e7eb;
+ --shadow:0 8px 25px rgba(0,0,0,.07);
 }
 
-html{
-    scroll-behavior:smooth;
-}
+*{box-sizing:border-box;margin:0;padding:0}
 
 body{
-    font-family:Arial, sans-serif;
-    background:#f6f7fb;
-    color:#171923;
-    line-height:1.5;
+ font-family:Arial,Helvetica,sans-serif;
+ background:var(--bg);
+ color:var(--text);
 }
 
-a{
-    text-decoration:none;
-    color:inherit;
-}
+button,input,select{font:inherit}
 
-/* HEADER */
+button{cursor:pointer;border:0}
+
+a{text-decoration:none;color:inherit}
 
 header{
-    position:sticky;
-    top:0;
-    z-index:10;
-    background:#fff;
-    border-bottom:1px solid #e8e9ef;
+ position:sticky;
+ top:0;
+ z-index:100;
+ background:var(--dark);
+ color:#fff;
+ box-shadow:0 3px 15px #0002;
 }
 
 .nav{
-    max-width:1180px;
-    height:72px;
-    margin:auto;
-    padding:0 22px;
-
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
+ max-width:1200px;
+ margin:auto;
+ min-height:68px;
+ padding:10px 18px;
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+ gap:20px;
 }
 
 .logo{
-    font-size:24px;
-    font-weight:800;
+ font-size:24px;
+ font-weight:900;
+ white-space:nowrap;
 }
 
-.logo span{
-    color:#2563eb;
+.logo span{color:var(--primary)}
+
+.navlinks{
+ display:flex;
+ gap:20px;
+ align-items:center;
 }
 
-nav{
-    display:flex;
-    gap:28px;
-    font-size:14px;
-    font-weight:600;
+.navlinks a{
+ color:#ccc;
+ font-size:14px;
+ cursor:pointer;
 }
 
-nav a:hover{
-    color:#2563eb;
+.navlinks a:hover{color:#fff}
+
+.menu{
+ display:none;
+ background:none;
+ color:#fff;
+ font-size:25px;
 }
 
-/* BOTÕES */
-
-.btn{
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-
-    padding:13px 20px;
-
-    border-radius:10px;
-    font-weight:700;
-
-    border:0;
-    cursor:pointer;
+.login{
+ background:var(--primary);
+ color:#fff;
+ padding:10px 16px;
+ border-radius:9px;
+ font-weight:bold;
 }
 
-.primary{
-    background:#2563eb;
-    color:#fff;
+.page{
+ display:none;
+ min-height:calc(100vh - 68px);
 }
 
-.secondary{
-    background:#eef3ff;
-    color:#2563eb;
-}
-
-/* HERO */
+.page.active{display:block}
 
 .hero{
-    background:linear-gradient(135deg,#111827,#1f2937);
-    color:white;
+ background:
+ linear-gradient(120deg,#111318ee,#111318dd),
+ radial-gradient(circle at right,#ff5a1f,transparent 50%);
+ color:#fff;
 }
 
 .hero-inner{
-    max-width:1180px;
-    margin:auto;
-
-    padding:92px 22px 100px;
-
-    display:grid;
-    grid-template-columns:1.1fr .9fr;
-    gap:55px;
-
-    align-items:center;
+ max-width:1200px;
+ margin:auto;
+ padding:70px 20px;
 }
 
-.tag{
-    display:inline-block;
-
-    background:#ffffff18;
-    border:1px solid #ffffff25;
-
-    padding:7px 12px;
-
-    border-radius:30px;
-
-    font-size:12px;
-    font-weight:700;
-
-    margin-bottom:20px;
+.hero h1{
+ font-size:clamp(35px,6vw,62px);
+ max-width:760px;
+ line-height:1.05;
 }
 
-h1{
-    font-size:clamp(42px,6vw,68px);
-    line-height:1.02;
-
-    letter-spacing:-3px;
-
-    margin-bottom:22px;
-}
+.hero h1 span{color:var(--primary)}
 
 .hero p{
-    font-size:18px;
-    color:#d1d5db;
-
-    max-width:590px;
-
-    margin-bottom:30px;
+ margin:20px 0 30px;
+ max-width:650px;
+ color:#ccc;
+ line-height:1.6;
 }
 
-.actions{
-    display:flex;
-    gap:12px;
-    flex-wrap:wrap;
+.search{
+ background:#fff;
+ max-width:720px;
+ padding:7px;
+ border-radius:13px;
+ display:flex;
 }
 
-.hero-card{
-    height:350px;
-
-    border-radius:22px;
-
-    background:linear-gradient(145deg,#374151,#111827);
-
-    border:1px solid #ffffff18;
-
-    display:flex;
-    align-items:center;
-    justify-content:center;
-
-    box-shadow:0 25px 70px #0005;
+.search input{
+ flex:1;
+ border:0;
+ outline:0;
+ padding:14px;
 }
 
-.hero-card div{
-    text-align:center;
-    color:#9ca3af;
+.search button{
+ background:var(--primary);
+ color:#fff;
+ padding:0 22px;
+ border-radius:9px;
+ font-weight:bold;
 }
 
-.hero-card strong{
-    display:block;
-
-    font-size:70px;
-
-    color:#fff;
+.container{
+ max-width:1200px;
+ margin:auto;
+ padding:40px 20px;
 }
 
-/* SEÇÕES */
-
-section{
-    max-width:1180px;
-    margin:auto;
-
-    padding:78px 22px;
+.title{
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ gap:15px;
+ margin-bottom:20px;
 }
 
-.eyebrow{
-    font-size:12px;
+.title h2{font-size:25px}
 
-    text-transform:uppercase;
-
-    letter-spacing:2px;
-
-    color:#2563eb;
-
-    font-weight:800;
-
-    margin-bottom:9px;
+.title a{
+ color:var(--primary);
+ font-size:14px;
+ cursor:pointer;
 }
-
-h2{
-    font-size:36px;
-
-    letter-spacing:-1.5px;
-
-    margin-bottom:12px;
-}
-
-.section-head{
-    margin-bottom:32px;
-}
-
-.section-head p{
-    color:#69707d;
-
-    max-width:650px;
-}
-
-/* SERVIÇOS */
 
 .grid{
-    display:grid;
-
-    grid-template-columns:repeat(3,1fr);
-
-    gap:18px;
+ display:grid;
+ grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+ gap:18px;
 }
 
 .card{
-    background:#fff;
-
-    border:1px solid #e7e9ef;
-
-    border-radius:16px;
-
-    padding:25px;
-
-    box-shadow:0 8px 30px #11182708;
+ background:#fff;
+ border-radius:16px;
+ overflow:hidden;
+ box-shadow:var(--shadow);
+ border:1px solid var(--border);
 }
 
-.icon{
-    width:46px;
-    height:46px;
-
-    border-radius:12px;
-
-    background:#eef3ff;
-
-    color:#2563eb;
-
-    display:grid;
-    place-items:center;
-
-    font-size:15px;
-    font-weight:bold;
-
-    margin-bottom:17px;
+.card-img{
+ height:150px;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ font-size:55px;
+ background:linear-gradient(135deg,#252932,#555b66);
 }
 
-.card h3{
-    font-size:19px;
+.card-body{padding:18px}
 
-    margin-bottom:7px;
+.card-body h3{margin-bottom:7px}
+
+.card-body p{
+ color:var(--muted);
+ font-size:14px;
+ line-height:1.5;
 }
 
-.card p{
-    color:#6b7280;
-
-    font-size:14px;
+.card-bottom{
+ padding:0 18px 18px;
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
 }
 
-/* SOBRE */
-
-.about{
-    background:#fff;
+.btn{
+ background:var(--primary);
+ color:#fff;
+ padding:10px 15px;
+ border-radius:9px;
+ font-weight:bold;
+ font-size:13px;
 }
 
-.about-inner{
-    max-width:1180px;
-
-    margin:auto;
-
-    padding:78px 22px;
-
-    display:grid;
-
-    grid-template-columns:1fr 1fr;
-
-    gap:65px;
-
-    align-items:center;
+.btn.secondary{
+ background:#eee;
+ color:#333;
 }
 
-.mock-photo{
-    height:330px;
+.btn.green{background:var(--green)}
 
-    border-radius:20px;
-
-    background:linear-gradient(
-        135deg,
-        #dbeafe,
-        #e5e7eb
-    );
-
-    display:grid;
-
-    place-items:center;
-
-    color:#64748b;
-
-    font-weight:700;
+.status{
+ display:inline-flex;
+ align-items:center;
+ gap:6px;
+ margin-top:12px;
+ color:var(--green);
+ font-size:12px;
 }
 
-.checks{
-    display:grid;
-
-    gap:13px;
-
-    margin-top:22px;
+.status:before{
+ content:"";
+ width:8px;
+ height:8px;
+ background:var(--green);
+ border-radius:50%;
 }
 
-.checks span{
-    color:#2563eb;
-
-    font-weight:900;
-
-    margin-right:8px;
+.categories{
+ display:grid;
+ grid-template-columns:repeat(auto-fit,minmax(110px,1fr));
+ gap:13px;
 }
 
-/* GALERIA */
-
-.gallery{
-    grid-template-columns:repeat(3,1fr);
+.category{
+ background:#fff;
+ padding:20px 10px;
+ border-radius:14px;
+ text-align:center;
+ box-shadow:var(--shadow);
+ cursor:pointer;
 }
 
-.photo{
-    height:210px;
+.category:hover{transform:translateY(-3px)}
 
-    border-radius:15px;
+.category div{font-size:30px;margin-bottom:8px}
 
-    background:linear-gradient(
-        135deg,
-        #dbeafe,
-        #cbd5e1
-    );
-
-    display:grid;
-
-    place-items:center;
-
-    color:#64748b;
-
-    font-size:13px;
+.offer{
+ padding:23px;
+ min-height:170px;
+ border-radius:16px;
+ color:#fff;
+ background:linear-gradient(135deg,#ff5a1f,#ff8a00);
+ display:flex;
+ flex-direction:column;
+ justify-content:space-between;
 }
 
-/* CONTATO */
-
-.contact{
-    background:#111827;
-
-    color:#fff;
-
-    max-width:none;
+.offer button{
+ align-self:flex-start;
+ background:#fff;
+ color:var(--primary);
+ padding:9px 14px;
+ border-radius:8px;
+ font-weight:bold;
 }
 
-.contact-inner{
-    max-width:1180px;
-
-    margin:auto;
-
-    padding:78px 22px;
-
-    display:flex;
-
-    justify-content:space-between;
-
-    gap:30px;
-
-    align-items:center;
+.service{
+ padding:20px;
 }
 
-.contact p{
-    color:#cbd5e1;
-
-    max-width:620px;
+.service-top{
+ display:flex;
+ align-items:center;
+ gap:13px;
 }
 
-/* PAINEL */
-
-.admin{
-    background:#eef1f7;
+.avatar{
+ width:55px;
+ height:55px;
+ border-radius:50%;
+ background:#eee;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ font-size:25px;
 }
 
-.admin-wrap{
-    max-width:1180px;
-
-    margin:auto;
-
-    padding:70px 22px;
+.service-bottom{
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ margin-top:20px;
 }
 
-.admin-top{
-    display:flex;
-
-    justify-content:space-between;
-
-    align-items:center;
-
-    margin-bottom:25px;
+.classified-img{
+ height:170px;
+ background:#ddd;
+ display:flex;
+ justify-content:center;
+ align-items:center;
+ font-size:55px;
 }
 
-.admin-grid{
-    display:grid;
-
-    grid-template-columns:220px 1fr;
-
-    gap:18px;
+.price{
+ color:var(--primary);
+ font-size:20px;
+ font-weight:bold;
+ margin-top:10px;
 }
 
-.side,
+.event{
+ padding:20px;
+ display:flex;
+ gap:17px;
+}
+
+.date{
+ width:65px;
+ height:70px;
+ flex:none;
+ background:#fff0e9;
+ color:var(--primary);
+ border-radius:12px;
+ display:flex;
+ flex-direction:column;
+ align-items:center;
+ justify-content:center;
+}
+
+.date strong{font-size:25px}
+
+.health{
+ border-left:5px solid var(--green);
+ padding:22px;
+}
+
+.health h3{margin-bottom:8px}
+
+.health p{
+ color:var(--muted);
+ line-height:1.5;
+ font-size:14px;
+}
+
+.health small{
+ display:block;
+ margin-top:12px;
+ color:var(--green);
+ font-weight:bold;
+}
+
+.notice{
+ background:#fff7e8;
+ border:1px solid #ffe0a6;
+ border-radius:15px;
+ padding:18px;
+ margin-bottom:20px;
+}
+
 .panel{
-    background:#fff;
-
-    border:1px solid #e3e6ed;
-
-    border-radius:15px;
-
-    padding:18px;
+ background:#fff;
+ border:1px solid var(--border);
+ border-radius:16px;
+ padding:25px;
+ box-shadow:var(--shadow);
 }
 
-.side div{
-    padding:12px;
-
-    border-radius:9px;
-
-    font-weight:600;
-
-    font-size:14px;
+.form{
+ display:grid;
+ gap:13px;
+ max-width:600px;
 }
 
-.side .active{
-    background:#eef3ff;
-
-    color:#2563eb;
+.form input,
+.form textarea,
+.form select{
+ width:100%;
+ padding:13px;
+ border:1px solid var(--border);
+ border-radius:9px;
+ outline:none;
 }
 
-.panel h3{
-    margin-bottom:18px;
+.form textarea{
+ min-height:130px;
+ resize:vertical;
 }
 
-.stats{
-    display:grid;
-
-    grid-template-columns:repeat(3,1fr);
-
-    gap:12px;
+.filterbar{
+ display:flex;
+ flex-wrap:wrap;
+ gap:10px;
+ margin-bottom:20px;
 }
 
-.stat{
-    border:1px solid #e7e9ef;
-
-    border-radius:12px;
-
-    padding:18px;
+.filterbar input,
+.filterbar select{
+ padding:11px;
+ border:1px solid var(--border);
+ border-radius:9px;
+ background:#fff;
+ outline:none;
 }
 
-.stat small{
-    color:#737b88;
+.detail{
+ max-width:850px;
+ margin:auto;
 }
 
-.stat strong{
-    display:block;
-
-    font-size:27px;
-
-    margin-top:5px;
+.detail-img{
+ height:260px;
+ border-radius:18px;
+ background:linear-gradient(135deg,#252932,#555b66);
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ font-size:90px;
+ margin-bottom:25px;
 }
 
-/* FOOTER */
+.back{
+ display:inline-block;
+ color:var(--primary);
+ margin-bottom:20px;
+ cursor:pointer;
+}
+
+.cart{
+ position:fixed;
+ right:20px;
+ bottom:20px;
+ background:var(--dark);
+ color:#fff;
+ padding:15px 20px;
+ border-radius:50px;
+ box-shadow:0 8px 25px #0004;
+ z-index:80;
+ display:none;
+}
+
+.cart.show{display:block}
 
 footer{
-    background:#0b1120;
-
-    color:#9ca3af;
-
-    padding:28px 22px;
-
-    font-size:13px;
+ background:var(--dark);
+ color:#fff;
+ margin-top:40px;
 }
 
-.foot{
-    max-width:1180px;
-
-    margin:auto;
-
-    display:flex;
-
-    justify-content:space-between;
+.footer{
+ max-width:1200px;
+ margin:auto;
+ padding:40px 20px;
+ display:grid;
+ grid-template-columns:2fr 1fr 1fr 1fr;
+ gap:25px;
 }
 
-/* CELULAR */
+.footer p,.footer a{
+ color:#999;
+ font-size:13px;
+ line-height:2;
+ display:block;
+ cursor:pointer;
+}
 
-@media(max-width:800px){
+.copy{
+ border-top:1px solid #292c33;
+ text-align:center;
+ padding:18px;
+ color:#777;
+ font-size:12px;
+}
 
-    nav{
-        display:none;
-    }
+.toast{
+ position:fixed;
+ bottom:25px;
+ left:50%;
+ transform:translateX(-50%);
+ background:#111318;
+ color:#fff;
+ padding:13px 20px;
+ border-radius:10px;
+ display:none;
+ z-index:999;
+}
 
-    .hero-inner,
-    .about-inner{
-        grid-template-columns:1fr;
-    }
+@media(max-width:750px){
 
-    .hero-card{
-        height:250px;
-    }
+ .navlinks{display:none}
+ .menu{display:block}
 
-    .grid,
-    .gallery{
-        grid-template-columns:1fr;
-    }
+ .nav{
+  flex-wrap:wrap;
+ }
 
-    .contact-inner{
-        display:block;
-    }
+ .navlinks.mobile{
+  display:flex;
+  width:100%;
+  flex-direction:column;
+  align-items:flex-start;
+  padding:10px 0;
+ }
 
-    .contact .btn{
-        margin-top:20px;
-    }
+ .hero-inner{padding:50px 20px}
 
-    .admin-grid{
-        grid-template-columns:1fr;
-    }
+ .search{flex-direction:column}
 
-    .stats{
-        grid-template-columns:1fr;
-    }
+ .search button{padding:13px}
 
-    h1{
-        letter-spacing:-2px;
-    }
+ .footer{
+  grid-template-columns:1fr 1fr;
+ }
+
+}
+
+@media(max-width:450px){
+ .footer{grid-template-columns:1fr}
 }
 </style>
 </head>
@@ -559,429 +545,1171 @@ footer{
 
 <div class="nav">
 
-<div class="logo">
-Minha<span>Empresa</span>
-</div>
+ <div class="logo" onclick="go('home')">
+   Comunidade<span>+</span>
+ </div>
 
-<nav>
-<a href="#inicio">Início</a>
-<a href="#servicos">Serviços</a>
-<a href="#sobre">Sobre</a>
-<a href="#galeria">Galeria</a>
-<a href="#contato">Contato</a>
-</nav>
+ <button class="menu" onclick="toggleMenu()">☰</button>
 
-<a class="btn primary" href="#contato">
-Fale conosco
-</a>
+ <nav class="navlinks" id="navlinks">
+   <a onclick="go('lojas')">Lojas</a>
+   <a onclick="go('ofertas')">Ofertas</a>
+   <a onclick="go('servicos')">Serviços</a>
+   <a onclick="go('classificados')">Classificados</a>
+   <a onclick="go('eventos')">Eventos</a>
+   <a onclick="go('saude')">Saúde</a>
+ </nav>
+
+ <button class="login" onclick="go('anuncie')">
+   Anuncie
+ </button>
 
 </div>
 
 </header>
 
 
-<main>
+<!-- ================= HOME ================= -->
 
-<!-- HERO -->
+<section class="page active" id="home">
 
-<section class="hero" id="inicio">
+ <div class="hero">
 
-<div class="hero-inner">
+  <div class="hero-inner">
 
-<div>
+   <h1>
+    Tudo da sua comunidade
+    <span>em um só lugar.</span>
+   </h1>
 
-<span class="tag">
-QUALIDADE • CONFIANÇA • EXPERIÊNCIA
-</span>
+   <p>
+    Encontre lojas, ofertas, serviços, classificados,
+    eventos e informações importantes perto de você.
+   </p>
 
-<h1>
-Seu negócio merece uma presença profissional.
-</h1>
+   <div class="search">
+    <input id="homeSearch"
+           placeholder="O que você está procurando?">
 
-<p>
-Um site moderno, rápido e adaptado para celular.
-Ideal para empresas, profissionais e negócios locais.
-</p>
+    <button onclick="globalSearch()">
+      🔎 Buscar
+    </button>
+   </div>
 
-<div class="actions">
+  </div>
 
-<a class="btn primary" href="#contato">
-Solicitar orçamento
-</a>
-
-<a class="btn secondary" href="#servicos">
-Ver serviços
-</a>
-
-</div>
-
-</div>
+ </div>
 
 
-<div class="hero-card">
+ <div class="container">
 
-<div>
+  <div class="title">
+   <h2>O que você procura?</h2>
+  </div>
 
-<strong>IMG</strong>
+  <div class="categories">
 
-Área para imagem/banner
+   <div class="category" onclick="go('lojas')">
+    <div>🍔</div>
+    <strong>Comida</strong>
+   </div>
 
-</div>
+   <div class="category" onclick="go('lojas')">
+    <div>🛒</div>
+    <strong>Mercados</strong>
+   </div>
 
-</div>
+   <div class="category" onclick="go('servicos')">
+    <div>🔧</div>
+    <strong>Serviços</strong>
+   </div>
 
-</div>
+   <div class="category" onclick="go('classificados')">
+    <div>📱</div>
+    <strong>Eletrônicos</strong>
+   </div>
+
+   <div class="category" onclick="go('classificados')">
+    <div>🏍️</div>
+    <strong>Motos</strong>
+   </div>
+
+   <div class="category" onclick="go('classificados')">
+    <div>🛋️</div>
+    <strong>Móveis</strong>
+   </div>
+
+   <div class="category" onclick="go('eventos')">
+    <div>🎉</div>
+    <strong>Eventos</strong>
+   </div>
+
+   <div class="category" onclick="go('saude')">
+    <div>🏥</div>
+    <strong>Saúde</strong>
+   </div>
+
+  </div>
+
+ </div>
+
+
+ <div class="container">
+
+  <div class="title">
+   <h2>🔥 Ofertas em destaque</h2>
+   <a onclick="go('ofertas')">Ver todas →</a>
+  </div>
+
+  <div class="grid">
+
+   <div class="offer">
+    <small>OFERTA DO DIA</small>
+    <h3>Combo X-Burguer</h3>
+    <strong>R$ 19,90</strong>
+    <button onclick="buy('Combo X-Burguer')">
+     Ver oferta
+    </button>
+   </div>
+
+   <div class="offer">
+    <small>PROMOÇÃO</small>
+    <h3>Pizza grande</h3>
+    <strong>R$ 39,90</strong>
+    <button onclick="buy('Pizza Grande')">
+     Ver oferta
+    </button>
+   </div>
+
+   <div class="offer">
+    <small>CUPOM</small>
+    <h3>15% OFF no mercado</h3>
+    <strong>COMUNIDADE15</strong>
+    <button onclick="toast('Cupom copiado!')">
+     Aproveitar
+    </button>
+   </div>
+
+  </div>
+
+ </div>
+
+
+ <div class="container">
+
+  <div class="title">
+   <h2>🏥 Comunicado de saúde</h2>
+   <a onclick="go('saude')">Ver comunicados →</a>
+  </div>
+
+  <div class="panel health">
+
+   <h3>Campanha de vacinação</h3>
+
+   <p>
+    Confira os locais, datas e horários da campanha
+    de vacinação da comunidade.
+   </p>
+
+   <small>
+    Informação de interesse público
+   </small>
+
+  </div>
+
+ </div>
 
 </section>
 
 
-<!-- SERVIÇOS -->
+<!-- ================= LOJAS ================= -->
 
-<section id="servicos">
+<section class="page" id="lojas">
 
-<div class="section-head">
+ <div class="container">
 
-<div class="eyebrow">
-O que fazemos
-</div>
+  <div class="title">
+   <h2>🏪 Lojas</h2>
+   <button class="btn" onclick="go('home')">Início</button>
+  </div>
 
-<h2>
-Serviços
-</h2>
+  <div class="filterbar">
 
-<p>
-Os conteúdos abaixo poderão futuramente ser alterados
-pelo cliente através do painel administrativo.
-</p>
+   <input
+    id="storeFilter"
+    oninput="filterCards('storeFilter','store')"
+    placeholder="Pesquisar loja...">
 
-</div>
+   <select onchange="toast('Filtro aplicado')">
+    <option>Todas categorias</option>
+    <option>Restaurantes</option>
+    <option>Mercados</option>
+    <option>Comércios</option>
+   </select>
 
+   <select onchange="toast('Ordenação aplicada')">
+    <option>Mais relevantes</option>
+    <option>Melhor avaliadas</option>
+    <option>Mais próximas</option>
+   </select>
 
-<div class="grid">
-
-<article class="card">
-
-<div class="icon">
-01
-</div>
-
-<h3>
-Serviço principal
-</h3>
-
-<p>
-Descrição curta do serviço oferecido pela empresa.
-</p>
-
-</article>
+  </div>
 
 
-<article class="card">
+  <div class="grid" id="stores">
 
-<div class="icon">
-02
-</div>
-
-<h3>
-Serviço especializado
-</h3>
-
-<p>
-Apresente aqui outro serviço ou solução importante.
-</p>
-
-</article>
-
-
-<article class="card">
-
-<div class="icon">
-03
-</div>
-
-<h3>
-Atendimento personalizado
-</h3>
-
-<p>
-Explique rapidamente o diferencial do atendimento.
-</p>
-
-</article>
-
-</div>
-
-</section>
+   <div class="card store">
+    <div class="card-img">🍔</div>
+    <div class="card-body">
+     <h3>Big Lanches</h3>
+     <p>Hambúrgueres e lanches</p>
+     <span class="status">Aberto agora</span>
+    </div>
+    <div class="card-bottom">
+     ★ 4.8
+     <button class="btn" onclick="storeDetail('Big Lanches')">
+      Ver loja
+     </button>
+    </div>
+   </div>
 
 
-<!-- SOBRE -->
-
-<div class="about" id="sobre">
-
-<div class="about-inner">
-
-<div class="mock-photo">
-FOTO DA EMPRESA
-</div>
-
-
-<div>
-
-<div class="eyebrow">
-Sobre nós
-</div>
-
-<h2>
-Uma empresa feita para atender você.
-</h2>
-
-<p style="color:#69707d">
-
-Espaço para apresentar a história,
-experiência e diferenciais da empresa.
-
-</p>
+   <div class="card store">
+    <div class="card-img">🍕</div>
+    <div class="card-body">
+     <h3>Pizza House</h3>
+     <p>Pizzas e bebidas</p>
+     <span class="status">Aberto agora</span>
+    </div>
+    <div class="card-bottom">
+     ★ 4.7
+     <button class="btn" onclick="storeDetail('Pizza House')">
+      Ver loja
+     </button>
+    </div>
+   </div>
 
 
-<div class="checks">
-
-<div>
-<span>✓</span>
-Atendimento de qualidade
-</div>
-
-<div>
-<span>✓</span>
-Profissionais preparados
-</div>
-
-<div>
-<span>✓</span>
-Compromisso com o cliente
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-</div>
+   <div class="card store">
+    <div class="card-img">🛒</div>
+    <div class="card-body">
+     <h3>Mercadinho Central</h3>
+     <p>Mercado e conveniência</p>
+     <span class="status">Aberto agora</span>
+    </div>
+    <div class="card-bottom">
+     ★ 4.9
+     <button class="btn" onclick="storeDetail('Mercadinho Central')">
+      Ver loja
+     </button>
+    </div>
+   </div>
 
 
-<!-- GALERIA -->
+   <div class="card store">
+    <div class="card-img">🥤</div>
+    <div class="card-body">
+     <h3>Point Drinks</h3>
+     <p>Bebidas e conveniência</p>
+     <span class="status">Aberto agora</span>
+    </div>
+    <div class="card-bottom">
+     ★ 4.6
+     <button class="btn" onclick="storeDetail('Point Drinks')">
+      Ver loja
+     </button>
+    </div>
+   </div>
 
-<section id="galeria">
+  </div>
 
-<div class="section-head">
-
-<div class="eyebrow">
-Portfólio
-</div>
-
-<h2>
-Galeria
-</h2>
-
-<p>
-Fotos dos trabalhos, produtos ou instalações.
-</p>
-
-</div>
-
-
-<div class="grid gallery">
-
-<div class="photo">
-FOTO 01
-</div>
-
-<div class="photo">
-FOTO 02
-</div>
-
-<div class="photo">
-FOTO 03
-</div>
-
-</div>
+ </div>
 
 </section>
 
 
-<!-- CONTATO -->
+<!-- ================= OFERTAS ================= -->
 
-<section
-class="contact"
-id="contato"
-style="max-width:none"
->
+<section class="page" id="ofertas">
 
-<div class="contact-inner">
+ <div class="container">
 
-<div>
+  <div class="title">
+   <h2>🔥 Ofertas</h2>
+   <button class="btn secondary" onclick="go('home')">
+    Voltar
+   </button>
+  </div>
 
-<div
-class="eyebrow"
-style="color:#60a5fa"
->
-Contato
-</div>
+  <div class="grid">
 
-<h2>
-Vamos conversar?
-</h2>
+   <div class="offer">
+    <small>BIG LANCHES</small>
+    <h3>Combo X-Burguer</h3>
+    <strong>R$ 19,90</strong>
+    <button onclick="buy('Combo X-Burguer')">
+     Pedir
+    </button>
+   </div>
 
-<p>
-Entre em contato para solicitar um orçamento
-ou tirar suas dúvidas.
-</p>
+   <div class="offer">
+    <small>PIZZA HOUSE</small>
+    <h3>Pizza grande especial</h3>
+    <strong>R$ 39,90</strong>
+    <button onclick="buy('Pizza Grande')">
+     Pedir
+    </button>
+   </div>
 
-</div>
+   <div class="offer">
+    <small>MERCADINHO</small>
+    <h3>15% de desconto</h3>
+    <strong>COMUNIDADE15</strong>
+    <button onclick="toast('Cupom copiado!')">
+     Copiar cupom
+    </button>
+   </div>
+
+  </div>
+
+ </div>
+
+</section>
 
 
-<a class="btn primary" href="#">
-WhatsApp
-</a>
+<!-- ================= SERVIÇOS ================= -->
 
-</div>
+<section class="page" id="servicos">
+
+ <div class="container">
+
+  <div class="title">
+   <h2>🔧 Serviços locais</h2>
+   <button class="btn secondary" onclick="go('home')">
+    Voltar
+   </button>
+  </div>
+
+  <div class="filterbar">
+
+   <input placeholder="Pesquisar serviço..."
+          oninput="filterCards('serviceFilter','service')"
+          id="serviceFilter">
+
+   <select>
+    <option>Todos os serviços</option>
+    <option>Eletricista</option>
+    <option>Técnico</option>
+    <option>Beleza</option>
+    <option>Mecânico</option>
+   </select>
+
+  </div>
+
+
+  <div class="grid">
+
+   <div class="card service">
+    <div class="service-top">
+     <div class="avatar">⚡</div>
+     <div>
+      <h3>João Eletricista</h3>
+      <p>Instalações elétricas</p>
+     </div>
+    </div>
+
+    <div class="service-bottom">
+     ★ 5.0
+     <button class="btn" onclick="contact('João Eletricista')">
+      Contato
+     </button>
+    </div>
+   </div>
+
+
+   <div class="card service">
+    <div class="service-top">
+     <div class="avatar">🔧</div>
+     <div>
+      <h3>Tech Cell</h3>
+      <p>Assistência técnica</p>
+     </div>
+    </div>
+
+    <div class="service-bottom">
+     ★ 4.9
+     <button class="btn" onclick="contact('Tech Cell')">
+      Contato
+     </button>
+    </div>
+   </div>
+
+
+   <div class="card service">
+    <div class="service-top">
+     <div class="avatar">💇</div>
+     <div>
+      <h3>Studio Bella</h3>
+      <p>Beleza e estética</p>
+     </div>
+    </div>
+
+    <div class="service-bottom">
+     ★ 4.8
+     <button class="btn" onclick="contact('Studio Bella')">
+      Contato
+     </button>
+    </div>
+   </div>
+
+
+   <div class="card service">
+    <div class="service-top">
+     <div class="avatar">🔩</div>
+     <div>
+      <h3>Auto Center</h3>
+      <p>Mecânica automotiva</p>
+     </div>
+    </div>
+
+    <div class="service-bottom">
+     ★ 4.7
+     <button class="btn" onclick="contact('Auto Center')">
+      Contato
+     </button>
+    </div>
+   </div>
+
+  </div>
+
+ </div>
 
 </section>
 
 
-<!-- PAINEL DEMONSTRAÇÃO -->
+<!-- ================= CLASSIFICADOS ================= -->
 
-<section class="admin" id="painel">
+<section class="page" id="classificados">
 
-<div class="admin-wrap">
+ <div class="container">
 
-<div class="admin-top">
+  <div class="title">
+   <h2>🛒 Classificados</h2>
 
-<div>
-
-<div class="eyebrow">
-Demonstração
-</div>
-
-<h2>
-Painel administrativo
-</h2>
-
-</div>
-
-<button class="btn primary">
-Salvar alterações
-</button>
-
-</div>
+   <button class="btn" onclick="go('publicar')">
+    + Publicar anúncio
+   </button>
+  </div>
 
 
-<div class="admin-grid">
+  <div class="filterbar">
 
-<aside class="side">
+   <input
+    placeholder="O que você procura?"
+    oninput="filterCards('classifiedFilter','classified')"
+    id="classifiedFilter">
 
-<div class="active">
-Dashboard
-</div>
+   <select>
+    <option>Todas categorias</option>
+    <option>Celulares</option>
+    <option>Motos</option>
+    <option>Móveis</option>
+    <option>Eletrônicos</option>
+   </select>
 
-<div>
-Serviços
-</div>
-
-<div>
-Galeria
-</div>
-
-<div>
-Sobre a empresa
-</div>
-
-<div>
-Contato
-</div>
-
-<div>
-Configurações
-</div>
-
-</aside>
+  </div>
 
 
-<div class="panel">
+  <div class="grid">
 
-<h3>
-Visão geral
-</h3>
-
-
-<div class="stats">
-
-<div class="stat">
-
-<small>
-Serviços cadastrados
-</small>
-
-<strong>
-3
-</strong>
-
-</div>
+   <div class="card classified">
+    <div class="classified-img">📱</div>
+    <div class="card-body">
+     <h3>Celular Samsung</h3>
+     <p>Usado • Bom estado</p>
+     <div class="price">R$ 650</div>
+     <br>
+     <button class="btn" onclick="classifiedDetail('Celular Samsung')">
+      Ver anúncio
+     </button>
+    </div>
+   </div>
 
 
-<div class="stat">
+   <div class="card classified">
+    <div class="classified-img">🏍️</div>
+    <div class="card-body">
+     <h3>Moto 125cc</h3>
+     <p>Documentação em dia</p>
+     <div class="price">R$ 7.500</div>
+     <br>
+     <button class="btn" onclick="classifiedDetail('Moto 125cc')">
+      Ver anúncio
+     </button>
+    </div>
+   </div>
 
-<small>
-Fotos na galeria
-</small>
 
-<strong>
-8
-</strong>
+   <div class="card classified">
+    <div class="classified-img">🛋️</div>
+    <div class="card-body">
+     <h3>Sofá 3 lugares</h3>
+     <p>Usado • Conservado</p>
+     <div class="price">R$ 400</div>
+     <br>
+     <button class="btn" onclick="classifiedDetail('Sofá 3 lugares')">
+      Ver anúncio
+     </button>
+    </div>
+   </div>
 
-</div>
 
+   <div class="card classified">
+    <div class="classified-img">📺</div>
+    <div class="card-body">
+     <h3>Smart TV 43"</h3>
+     <p>Funcionando perfeitamente</p>
+     <div class="price">R$ 1.100</div>
+     <br>
+     <button class="btn" onclick="classifiedDetail('Smart TV 43')">
+      Ver anúncio
+     </button>
+    </div>
+   </div>
 
-<div class="stat">
+  </div>
 
-<small>
-Site
-</small>
-
-<strong>
-Ativo
-</strong>
-
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-</div>
+ </div>
 
 </section>
 
-</main>
+
+<!-- ================= EVENTOS ================= -->
+
+<section class="page" id="eventos">
+
+ <div class="container">
+
+  <div class="title">
+   <h2>🎉 Eventos</h2>
+   <button class="btn" onclick="go('anuncie')">
+    Divulgar evento
+   </button>
+  </div>
+
+
+  <div class="grid">
+
+   <div class="card event">
+
+    <div class="date">
+     <strong>12</strong>
+     OUT
+    </div>
+
+    <div>
+     <h3>Festival da Comunidade</h3>
+     <p>🎵 Música • 🍔 Gastronomia • 🎉 Diversão</p>
+     <br>
+     <small>📍 Praça Central</small>
+     <br><br>
+     <button class="btn" onclick="eventDetail('Festival da Comunidade')">
+      Ver evento
+     </button>
+    </div>
+
+   </div>
+
+
+   <div class="card event">
+
+    <div class="date">
+     <strong>18</strong>
+     OUT
+    </div>
+
+    <div>
+     <h3>Feira de Negócios</h3>
+     <p>Comércio local e empreendedores</p>
+     <br>
+     <small>📍 Centro Comunitário</small>
+     <br><br>
+     <button class="btn" onclick="eventDetail('Feira de Negócios')">
+      Ver evento
+     </button>
+    </div>
+
+   </div>
+
+
+   <div class="card event">
+
+    <div class="date">
+     <strong>25</strong>
+     OUT
+    </div>
+
+    <div>
+     <h3>Campeonato Comunitário</h3>
+     <p>⚽ Esporte e lazer</p>
+     <br>
+     <small>📍 Campo Municipal</small>
+     <br><br>
+     <button class="btn" onclick="eventDetail('Campeonato Comunitário')">
+      Ver evento
+     </button>
+    </div>
+
+   </div>
+
+  </div>
+
+ </div>
+
+</section>
+
+
+<!-- ================= SAÚDE ================= -->
+
+<section class="page" id="saude">
+
+ <div class="container">
+
+  <div class="title">
+   <h2>🏥 Saúde & Comunidade</h2>
+   <span style="color:#20b26b;font-weight:bold">
+    Área gratuita
+   </span>
+  </div>
+
+
+  <div class="notice">
+   <strong>📢 Espaço de utilidade pública</strong>
+   <p style="margin-top:8px;color:#666">
+    Área destinada à divulgação de comunicados e informações
+    de interesse da comunidade.
+   </p>
+  </div>
+
+
+  <div class="grid">
+
+   <div class="card health">
+
+    <h3>💉 Campanha de vacinação</h3>
+
+    <p>
+     Confira os locais e horários da campanha de vacinação.
+    </p>
+
+    <small>
+     Atualizado recentemente
+    </small>
+
+    <br><br>
+
+    <button class="btn"
+     onclick="healthDetail('Campanha de vacinação')">
+     Ver comunicado
+    </button>
+
+   </div>
+
+
+   <div class="card health">
+
+    <h3>🩸 Doação de sangue</h3>
+
+    <p>
+     Campanha de incentivo à doação de sangue.
+    </p>
+
+    <small>
+     Informação pública
+    </small>
+
+    <br><br>
+
+    <button class="btn"
+     onclick="healthDetail('Doação de sangue')">
+     Ver comunicado
+    </button>
+
+   </div>
+
+
+   <div class="card health">
+
+    <h3>🦟 Combate à dengue</h3>
+
+    <p>
+     Orientações e ações de prevenção contra a dengue.
+    </p>
+
+    <small>
+     Informação pública
+    </small>
+
+    <br><br>
+
+    <button class="btn"
+     onclick="healthDetail('Combate à dengue')">
+     Ver comunicado
+    </button>
+
+   </div>
+
+  </div>
+
+ </div>
+
+</section>
+
+
+<!-- ================= ANUNCIE ================= -->
+
+<section class="page" id="anuncie">
+
+ <div class="container">
+
+  <div class="title">
+   <h2>📢 Divulgue seu negócio</h2>
+  </div>
+
+
+  <div class="panel">
+
+   <h3>Coloque sua empresa em destaque</h3>
+
+   <p style="margin:10px 0 25px;color:#777">
+    Alcance pessoas da comunidade através do portal.
+   </p>
+
+
+   <div class="grid" style="margin-bottom:30px">
+
+    <div class="card-body" style="border:1px solid #eee;border-radius:12px">
+     <h3>🥉 Básico</h3>
+     <p>Perfil da empresa e contato.</p>
+     <br>
+     <strong>Grátis</strong>
+    </div>
+
+    <div class="card-body" style="border:2px solid #ff5a1f;border-radius:12px">
+     <h3>🥈 Destaque</h3>
+     <p>Apareça em posições privilegiadas.</p>
+     <br>
+     <strong>R$ 19,90/mês</strong>
+    </div>
+
+    <div class="card-body" style="border:1px solid #eee;border-radius:12px">
+     <h3>🥇 Premium</h3>
+     <p>Destaques + ofertas + publicidade.</p>
+     <br>
+     <strong>R$ 39,90/mês</strong>
+    </div>
+
+   </div>
+
+
+   <form class="form" onsubmit="submitAd(event)">
+
+    <input placeholder="Nome da empresa" required>
+
+    <input placeholder="WhatsApp" required>
+
+    <select required>
+     <option value="">Tipo de divulgação</option>
+     <option>Loja</option>
+     <option>Serviço</option>
+     <option>Evento</option>
+     <option>Banner</option>
+     <option>Oferta</option>
+    </select>
+
+    <textarea placeholder="Conte um pouco sobre o negócio"></textarea>
+
+    <button class="btn">
+     Solicitar divulgação
+    </button>
+
+   </form>
+
+  </div>
+
+ </div>
+
+</section>
+
+
+<!-- ================= PUBLICAR ================= -->
+
+<section class="page" id="publicar">
+
+ <div class="container">
+
+  <div class="title">
+   <h2>📦 Publicar classificado</h2>
+  </div>
+
+  <div class="panel">
+
+   <form class="form" onsubmit="publish(event)">
+
+    <input placeholder="Título do anúncio" required>
+
+    <input placeholder="Preço" required>
+
+    <select required>
+     <option value="">Categoria</option>
+     <option>Celular</option>
+     <option>Moto</option>
+     <option>Móvel</option>
+     <option>Eletrônico</option>
+     <option>Outros</option>
+    </select>
+
+    <textarea
+     placeholder="Descrição do produto"
+     required></textarea>
+
+    <input placeholder="WhatsApp para contato" required>
+
+    <button class="btn">
+     Publicar anúncio
+    </button>
+
+   </form>
+
+  </div>
+
+ </div>
+
+</section>
+
+
+<!-- ================= DETALHES ================= -->
+
+<section class="page" id="detalhe">
+
+ <div class="container">
+
+  <div class="detail">
+
+   <a class="back" onclick="go('lojas')">
+    ← Voltar
+   </a>
+
+   <div class="detail-img" id="detailIcon">
+    🍔
+   </div>
+
+   <div class="panel">
+
+    <h1 id="detailTitle">
+     Big Lanches
+    </h1>
+
+    <p id="detailText"
+       style="color:#777;margin:12px 0 25px;line-height:1.6">
+     Lanches, hambúrgueres e bebidas.
+    </p>
+
+    <div class="grid">
+
+     <div>
+      <strong>⭐ 4.8</strong>
+      <p style="color:#777">Avaliação</p>
+     </div>
+
+     <div>
+      <strong>🟢 Aberto</strong>
+      <p style="color:#777">Status</p>
+     </div>
+
+     <div>
+      <strong>📍 Local</strong>
+      <p style="color:#777">Comunidade</p>
+     </div>
+
+    </div>
+
+    <br>
+
+    <button class="btn"
+      onclick="buy('Pedido demonstrativo')">
+      Fazer pedido
+    </button>
+
+   </div>
+
+  </div>
+
+ </div>
+
+</section>
+
+
+<div class="cart" id="cart">
+ 🛒 <span id="cartText">1 item</span>
+</div>
+
+
+<div class="toast" id="toast"></div>
 
 
 <footer>
 
-<div class="foot">
+ <div class="footer">
 
-<span>
-© 2026 MinhaEmpresa
-</span>
+  <div>
+   <h3>Comunidade<span style="color:#ff5a1f">+</span></h3>
+   <p>
+    O portal comercial e comunitário.
+   </p>
+  </div>
 
-<span>
-Site modelo
-</span>
+  <div>
+   <h3>Explorar</h3>
+   <a onclick="go('lojas')">Lojas</a>
+   <a onclick="go('ofertas')">Ofertas</a>
+   <a onclick="go('servicos')">Serviços</a>
+   <a onclick="go('classificados')">Classificados</a>
+  </div>
 
-</div>
+  <div>
+   <h3>Comunidade</h3>
+   <a onclick="go('eventos')">Eventos</a>
+   <a onclick="go('saude')">Saúde</a>
+   <a onclick="go('anuncie')">Anuncie</a>
+  </div>
+
+  <div>
+   <h3>Ajuda</h3>
+   <a onclick="toast('Central de ajuda')">Ajuda</a>
+   <a onclick="toast('Termos de uso')">Termos</a>
+   <a onclick="toast('Política de privacidade')">Privacidade</a>
+  </div>
+
+ </div>
+
+ <div class="copy">
+  © 2026 Comunidade+ — Demonstração
+ </div>
 
 </footer>
+
+
+<script>
+
+let cartCount=0;
+
+
+/* NAVEGAÇÃO */
+
+function go(page){
+
+ document.querySelectorAll(".page")
+   .forEach(p=>p.classList.remove("active"));
+
+ const target=document.getElementById(page);
+
+ if(target){
+   target.classList.add("active");
+   window.scrollTo({top:0,behavior:"smooth"});
+ }
+
+ document.getElementById("navlinks")
+   .classList.remove("mobile");
+}
+
+
+/* MENU MOBILE */
+
+function toggleMenu(){
+
+ document.getElementById("navlinks")
+   .classList.toggle("mobile");
+
+}
+
+
+/* TOAST */
+
+function toast(message){
+
+ const box=document.getElementById("toast");
+
+ box.textContent=message;
+ box.style.display="block";
+
+ clearTimeout(window.toastTimer);
+
+ window.toastTimer=setTimeout(()=>{
+   box.style.display="none";
+ },2500);
+
+}
+
+
+/* BUSCA */
+
+function globalSearch(){
+
+ const value=
+ document.getElementById("homeSearch").value.trim();
+
+ if(!value){
+   toast("Digite algo para pesquisar.");
+   return;
+ }
+
+ toast("Pesquisando por: "+value);
+
+ setTimeout(()=>{
+   go("lojas");
+ },700);
+
+}
+
+
+/* LOJA */
+
+function storeDetail(name){
+
+ document.getElementById("detailTitle").textContent=name;
+
+ document.getElementById("detailText").textContent=
+   "Página demonstrativa da loja. Aqui ficarão produtos, ofertas, horário, localização, avaliações e pedidos.";
+
+ document.getElementById("detailIcon").textContent="🏪";
+
+ go("detalhe");
+
+}
+
+
+/* CLASSIFICADO */
+
+function classifiedDetail(name){
+
+ document.getElementById("detailTitle").textContent=name;
+
+ document.getElementById("detailText").textContent=
+   "Página demonstrativa do anúncio. Aqui poderão aparecer fotos, descrição, preço, localização e contato do anunciante.";
+
+ document.getElementById("detailIcon").textContent="🛒";
+
+ go("detalhe");
+
+}
+
+
+/* EVENTO */
+
+function eventDetail(name){
+
+ document.getElementById("detailTitle").textContent=name;
+
+ document.getElementById("detailText").textContent=
+   "Página demonstrativa do evento com informações, data, local, descrição e contato.";
+
+ document.getElementById("detailIcon").textContent="🎉";
+
+ go("detalhe");
+
+}
+
+
+/* SAÚDE */
+
+function healthDetail(name){
+
+ document.getElementById("detailTitle").textContent=name;
+
+ document.getElementById("detailText").textContent=
+   "Comunicado demonstrativo. Em uma versão real, esta área poderá receber textos, datas, locais e links oficiais.";
+
+ document.getElementById("detailIcon").textContent="🏥";
+
+ go("detalhe");
+
+}
+
+
+/* PEDIDO */
+
+function buy(item){
+
+ cartCount++;
+
+ document.getElementById("cart")
+   .classList.add("show");
+
+ document.getElementById("cartText").textContent=
+   cartCount+" item"+(cartCount>1?"s":"");
+
+ toast(item+" adicionado ao pedido.");
+
+}
+
+
+/* CONTATO */
+
+function contact(name){
+
+ toast("Abrindo contato de "+name+"...");
+
+}
+
+
+/* PUBLICAÇÃO */
+
+function publish(event){
+
+ event.preventDefault();
+
+ toast("Anúncio publicado na demonstração!");
+
+ setTimeout(()=>{
+   go("classificados");
+ },1000);
+
+}
+
+
+/* ANÚNCIO */
+
+function submitAd(event){
+
+ event.preventDefault();
+
+ toast("Solicitação enviada!");
+
+}
+
+
+/* FILTRO */
+
+function filterCards(inputId,className){
+
+ const value=
+   document.getElementById(inputId)
+   .value.toLowerCase();
+
+ document.querySelectorAll("."+className)
+ .forEach(card=>{
+
+   card.style.display=
+     card.innerText.toLowerCase().includes(value)
+     ? ""
+     : "none";
+
+ });
+
+}
+
+</script>
 
 </body>
 </html>
