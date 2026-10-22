@@ -1,1715 +1,770 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Comunidade+ — Demo</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>John Motos | PDV</title>
 
 <style>
-:root{
- --primary:#ff5a1f;
- --primary2:#ff8a00;
- --dark:#111318;
- --dark2:#1b1e25;
- --bg:#f5f6f8;
- --white:#fff;
- --text:#20232a;
- --muted:#747985;
- --green:#20b26b;
- --red:#e53935;
- --border:#e6e7eb;
- --shadow:0 8px 25px rgba(0,0,0,.07);
+:root {
+  --bg:#0b0f16;
+  --panel:#121925;
+  --panel2:#182233;
+  --border:#29354a;
+  --text:#edf2f7;
+  --muted:#93a2b8;
+  --purple:#7068f5;
+  --green:#22c55e;
+  --red:#fb7185;
+  --yellow:#fbbf24;
 }
-
-*{box-sizing:border-box;margin:0;padding:0}
-
-body{
- font-family:Arial,Helvetica,sans-serif;
- background:var(--bg);
- color:var(--text);
+* {box-sizing:border-box}
+body {
+  margin:0;background:var(--bg);color:var(--text);
+  font-family:Arial,Helvetica,sans-serif;font-size:14px;
 }
-
-button,input,select{font:inherit}
-
-button{cursor:pointer;border:0}
-
-a{text-decoration:none;color:inherit}
-
-header{
- position:sticky;
- top:0;
- z-index:100;
- background:var(--dark);
- color:#fff;
- box-shadow:0 3px 15px #0002;
+button,input,select {font:inherit}
+button {cursor:pointer}
+.app {max-width:1450px;margin:auto;padding:18px}
+header {
+  display:flex;justify-content:space-between;align-items:center;
+  gap:15px;flex-wrap:wrap;margin-bottom:20px;
 }
-
-.nav{
- max-width:1200px;
- margin:auto;
- min-height:68px;
- padding:10px 18px;
- display:flex;
- align-items:center;
- justify-content:space-between;
- gap:20px;
+.brand {display:flex;align-items:center;gap:12px}
+.logo {
+  width:48px;height:48px;border-radius:14px;
+  display:grid;place-items:center;font-size:23px;font-weight:bold;
+  background:linear-gradient(135deg,#6366f1,#a855f7);
 }
-
-.logo{
- font-size:24px;
- font-weight:900;
- white-space:nowrap;
+h1 {font-size:20px;margin:0;letter-spacing:1px}
+.subtitle {color:var(--muted);font-size:12px;margin-top:5px}
+.header-right {display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.status {color:#86efac;background:#10251b;border:1px solid #28543a;
+  border-radius:10px;padding:10px}
+nav {
+  display:flex;gap:8px;overflow-x:auto;padding-bottom:14px;
+  border-bottom:1px solid var(--border);margin-bottom:22px;
 }
-
-.logo span{color:var(--primary)}
-
-.navlinks{
- display:flex;
- gap:20px;
- align-items:center;
+.nav-btn {
+  white-space:nowrap;padding:11px 14px;border-radius:10px;
+  border:1px solid var(--border);background:var(--panel);color:#cbd5e1;
 }
-
-.navlinks a{
- color:#ccc;
- font-size:14px;
- cursor:pointer;
+.nav-btn.active,.nav-btn:hover {
+  background:#292854;border-color:var(--purple);color:white;
 }
-
-.navlinks a:hover{color:#fff}
-
-.menu{
- display:none;
- background:none;
- color:#fff;
- font-size:25px;
+h2 {font-size:21px;margin:0}
+h3 {font-size:15px;margin:0}
+.muted {color:var(--muted)}
+.small {font-size:12px}
+.section-head {
+  display:flex;align-items:center;justify-content:space-between;
+  gap:12px;flex-wrap:wrap;margin-bottom:16px;
 }
-
-.login{
- background:var(--primary);
- color:#fff;
- padding:10px 16px;
- border-radius:9px;
- font-weight:bold;
+.section-head p {color:var(--muted);margin:6px 0 0}
+.stats {
+  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:12px;margin-bottom:18px;
 }
-
-.page{
- display:none;
- min-height:calc(100vh - 68px);
+.stat,.panel {
+  background:var(--panel);border:1px solid var(--border);
+  border-radius:15px;
 }
-
-.page.active{display:block}
-
-.hero{
- background:
- linear-gradient(120deg,#111318ee,#111318dd),
- radial-gradient(circle at right,#ff5a1f,transparent 50%);
- color:#fff;
+.stat {padding:16px;min-width:0}
+.stat-label {color:var(--muted);font-size:12px}
+.stat-value {font-size:25px;font-weight:bold;margin-top:10px;overflow-wrap:anywhere}
+.stat-desc {font-size:11px;color:var(--muted);margin-top:5px}
+.layout {
+  display:grid;grid-template-columns:minmax(0,1.2fr) minmax(320px,.8fr);
+  gap:16px;align-items:start;
 }
-
-.hero-inner{
- max-width:1200px;
- margin:auto;
- padding:70px 20px;
+.panel {overflow:hidden;min-width:0}
+.panel-head {
+  padding:15px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+  gap:10px;flex-wrap:wrap;
 }
-
-.hero h1{
- font-size:clamp(35px,6vw,62px);
- max-width:760px;
- line-height:1.05;
+.panel-body {padding:15px}
+input,select {
+  width:100%;padding:11px 12px;border-radius:9px;
+  background:#0b111c;color:var(--text);border:1px solid var(--border);
+  outline:none;min-width:0;
 }
-
-.hero h1 span{color:var(--primary)}
-
-.hero p{
- margin:20px 0 30px;
- max-width:650px;
- color:#ccc;
- line-height:1.6;
+input:focus,select:focus {border-color:var(--purple)}
+.search {max-width:320px}
+.btn {
+  padding:10px 13px;border-radius:9px;border:0;
+  font-weight:bold;display:inline-flex;justify-content:center;
+  align-items:center;gap:6px;
 }
-
-.search{
- background:#fff;
- max-width:720px;
- padding:7px;
- border-radius:13px;
- display:flex;
+.primary {background:var(--purple);color:white}
+.primary:hover {filter:brightness(1.12)}
+.secondary {background:#202c40;color:#e2e8f0;border:1px solid #34445d}
+.danger {background:#3b1d29;color:#fecdd3;border:1px solid #6a293c}
+.success {background:#14532d;color:white}
+.btn:disabled {opacity:.4;cursor:not-allowed}
+.btn-sm {padding:7px 9px;font-size:12px}
+.full {width:100%;margin-top:12px}
+.products {
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;
 }
-
-.search input{
- flex:1;
- border:0;
- outline:0;
- padding:14px;
+.product {
+  background:#151e2b;border:1px solid var(--border);
+  border-radius:12px;padding:13px;display:flex;flex-direction:column;gap:11px;
 }
-
-.search button{
- background:var(--primary);
- color:#fff;
- padding:0 22px;
- border-radius:9px;
- font-weight:bold;
+.product-top {display:flex;justify-content:space-between;gap:8px}
+.product-icon {
+  width:38px;height:38px;background:#252e43;border-radius:10px;
+  display:grid;place-items:center;font-size:20px;
 }
-
-.container{
- max-width:1200px;
- margin:auto;
- padding:40px 20px;
+.product-name {font-weight:bold;line-height:1.4}
+.product-code {font-size:11px;color:var(--muted);margin-top:5px}
+.stock {font-size:11px;color:#86efac;white-space:nowrap}
+.stock.low {color:var(--yellow)}
+.stock.out {color:var(--red)}
+.product-bottom {
+  display:flex;align-items:center;justify-content:space-between;
+  gap:8px;margin-top:auto;
 }
-
-.title{
- display:flex;
- justify-content:space-between;
- align-items:center;
- gap:15px;
- margin-bottom:20px;
+.price {font-size:17px;font-weight:bold}
+.cart-items {max-height:350px;overflow:auto}
+.cart-item {
+  display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;
+  padding:13px 0;border-bottom:1px solid var(--border);
 }
-
-.title h2{font-size:25px}
-
-.title a{
- color:var(--primary);
- font-size:14px;
- cursor:pointer;
+.cart-item:last-child {border-bottom:0}
+.cart-item strong {font-size:13px}
+.qty {display:flex;align-items:center;gap:9px;margin-top:9px}
+.qty button {
+  width:26px;height:26px;border:1px solid var(--border);
+  background:#263248;color:white;border-radius:7px;
 }
-
-.grid{
- display:grid;
- grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
- gap:18px;
+.cart-right {text-align:right}
+.cart-right strong {display:block;margin-bottom:8px}
+.empty {padding:30px 10px;text-align:center;color:var(--muted)}
+.summary {border-top:1px solid var(--border);padding-top:14px;margin-top:12px}
+.sumrow {display:flex;justify-content:space-between;margin:9px 0;color:#bdc8d9}
+.sumrow.total {font-size:23px;font-weight:bold;color:white;margin-top:14px}
+label {display:block;color:var(--muted);font-size:12px;margin:14px 0 7px}
+.hint {font-size:11px;color:var(--muted);line-height:1.5}
+.table-wrap {overflow:auto}
+table {width:100%;border-collapse:collapse;min-width:650px}
+th,td {padding:12px 14px;text-align:left;border-bottom:1px solid var(--border)}
+th {font-size:11px;color:var(--muted);background:#101722}
+td {font-size:13px}
+.badge {padding:5px 8px;border-radius:20px;background:#243147;font-size:11px}
+.badge.green {background:#123522;color:#86efac}
+.badge.yellow {background:#3b3015;color:#fde68a}
+.badge.red {background:#3b1d29;color:#fecdd3}
+.module {
+  padding:35px 20px;text-align:center;
 }
-
-.card{
- background:#fff;
- border-radius:16px;
- overflow:hidden;
- box-shadow:var(--shadow);
- border:1px solid var(--border);
+.module .emoji {font-size:40px;margin-bottom:12px}
+.module p {max-width:500px;margin:12px auto 20px;color:var(--muted);line-height:1.6}
+.toast {
+  display:none;position:fixed;bottom:18px;right:18px;z-index:10;
+  max-width:calc(100% - 36px);padding:14px 17px;border-radius:11px;
+  background:#163522;border:1px solid #2e6841;color:#bbf7d0;
+  box-shadow:0 10px 30px #0008;
 }
-
-.card-img{
- height:150px;
- display:flex;
- align-items:center;
- justify-content:center;
- font-size:55px;
- background:linear-gradient(135deg,#252932,#555b66);
+footer {text-align:center;color:#64748b;font-size:11px;padding:25px 0 8px}
+@media(max-width:900px) {
+  .layout {grid-template-columns:1fr}
+  .stats {grid-template-columns:repeat(2,minmax(0,1fr))}
 }
-
-.card-body{padding:18px}
-
-.card-body h3{margin-bottom:7px}
-
-.card-body p{
- color:var(--muted);
- font-size:14px;
- line-height:1.5;
-}
-
-.card-bottom{
- padding:0 18px 18px;
- display:flex;
- align-items:center;
- justify-content:space-between;
-}
-
-.btn{
- background:var(--primary);
- color:#fff;
- padding:10px 15px;
- border-radius:9px;
- font-weight:bold;
- font-size:13px;
-}
-
-.btn.secondary{
- background:#eee;
- color:#333;
-}
-
-.btn.green{background:var(--green)}
-
-.status{
- display:inline-flex;
- align-items:center;
- gap:6px;
- margin-top:12px;
- color:var(--green);
- font-size:12px;
-}
-
-.status:before{
- content:"";
- width:8px;
- height:8px;
- background:var(--green);
- border-radius:50%;
-}
-
-.categories{
- display:grid;
- grid-template-columns:repeat(auto-fit,minmax(110px,1fr));
- gap:13px;
-}
-
-.category{
- background:#fff;
- padding:20px 10px;
- border-radius:14px;
- text-align:center;
- box-shadow:var(--shadow);
- cursor:pointer;
-}
-
-.category:hover{transform:translateY(-3px)}
-
-.category div{font-size:30px;margin-bottom:8px}
-
-.offer{
- padding:23px;
- min-height:170px;
- border-radius:16px;
- color:#fff;
- background:linear-gradient(135deg,#ff5a1f,#ff8a00);
- display:flex;
- flex-direction:column;
- justify-content:space-between;
-}
-
-.offer button{
- align-self:flex-start;
- background:#fff;
- color:var(--primary);
- padding:9px 14px;
- border-radius:8px;
- font-weight:bold;
-}
-
-.service{
- padding:20px;
-}
-
-.service-top{
- display:flex;
- align-items:center;
- gap:13px;
-}
-
-.avatar{
- width:55px;
- height:55px;
- border-radius:50%;
- background:#eee;
- display:flex;
- align-items:center;
- justify-content:center;
- font-size:25px;
-}
-
-.service-bottom{
- display:flex;
- justify-content:space-between;
- align-items:center;
- margin-top:20px;
-}
-
-.classified-img{
- height:170px;
- background:#ddd;
- display:flex;
- justify-content:center;
- align-items:center;
- font-size:55px;
-}
-
-.price{
- color:var(--primary);
- font-size:20px;
- font-weight:bold;
- margin-top:10px;
-}
-
-.event{
- padding:20px;
- display:flex;
- gap:17px;
-}
-
-.date{
- width:65px;
- height:70px;
- flex:none;
- background:#fff0e9;
- color:var(--primary);
- border-radius:12px;
- display:flex;
- flex-direction:column;
- align-items:center;
- justify-content:center;
-}
-
-.date strong{font-size:25px}
-
-.health{
- border-left:5px solid var(--green);
- padding:22px;
-}
-
-.health h3{margin-bottom:8px}
-
-.health p{
- color:var(--muted);
- line-height:1.5;
- font-size:14px;
-}
-
-.health small{
- display:block;
- margin-top:12px;
- color:var(--green);
- font-weight:bold;
-}
-
-.notice{
- background:#fff7e8;
- border:1px solid #ffe0a6;
- border-radius:15px;
- padding:18px;
- margin-bottom:20px;
-}
-
-.panel{
- background:#fff;
- border:1px solid var(--border);
- border-radius:16px;
- padding:25px;
- box-shadow:var(--shadow);
-}
-
-.form{
- display:grid;
- gap:13px;
- max-width:600px;
-}
-
-.form input,
-.form textarea,
-.form select{
- width:100%;
- padding:13px;
- border:1px solid var(--border);
- border-radius:9px;
- outline:none;
-}
-
-.form textarea{
- min-height:130px;
- resize:vertical;
-}
-
-.filterbar{
- display:flex;
- flex-wrap:wrap;
- gap:10px;
- margin-bottom:20px;
-}
-
-.filterbar input,
-.filterbar select{
- padding:11px;
- border:1px solid var(--border);
- border-radius:9px;
- background:#fff;
- outline:none;
-}
-
-.detail{
- max-width:850px;
- margin:auto;
-}
-
-.detail-img{
- height:260px;
- border-radius:18px;
- background:linear-gradient(135deg,#252932,#555b66);
- display:flex;
- align-items:center;
- justify-content:center;
- font-size:90px;
- margin-bottom:25px;
-}
-
-.back{
- display:inline-block;
- color:var(--primary);
- margin-bottom:20px;
- cursor:pointer;
-}
-
-.cart{
- position:fixed;
- right:20px;
- bottom:20px;
- background:var(--dark);
- color:#fff;
- padding:15px 20px;
- border-radius:50px;
- box-shadow:0 8px 25px #0004;
- z-index:80;
- display:none;
-}
-
-.cart.show{display:block}
-
-footer{
- background:var(--dark);
- color:#fff;
- margin-top:40px;
-}
-
-.footer{
- max-width:1200px;
- margin:auto;
- padding:40px 20px;
- display:grid;
- grid-template-columns:2fr 1fr 1fr 1fr;
- gap:25px;
-}
-
-.footer p,.footer a{
- color:#999;
- font-size:13px;
- line-height:2;
- display:block;
- cursor:pointer;
-}
-
-.copy{
- border-top:1px solid #292c33;
- text-align:center;
- padding:18px;
- color:#777;
- font-size:12px;
-}
-
-.toast{
- position:fixed;
- bottom:25px;
- left:50%;
- transform:translateX(-50%);
- background:#111318;
- color:#fff;
- padding:13px 20px;
- border-radius:10px;
- display:none;
- z-index:999;
-}
-
-@media(max-width:750px){
-
- .navlinks{display:none}
- .menu{display:block}
-
- .nav{
-  flex-wrap:wrap;
- }
-
- .navlinks.mobile{
-  display:flex;
-  width:100%;
-  flex-direction:column;
-  align-items:flex-start;
-  padding:10px 0;
- }
-
- .hero-inner{padding:50px 20px}
-
- .search{flex-direction:column}
-
- .search button{padding:13px}
-
- .footer{
-  grid-template-columns:1fr 1fr;
- }
-
-}
-
-@media(max-width:450px){
- .footer{grid-template-columns:1fr}
+@media(max-width:520px) {
+  .app {padding:12px}
+  .products {grid-template-columns:1fr}
+  .stat {padding:12px}
+  .stat-value {font-size:21px}
+  .panel-body,.panel-head {padding:12px}
+  .search {max-width:100%}
+  h1 {font-size:17px}
 }
 </style>
 </head>
 
 <body>
+<div class="app">
 
 <header>
-
-<div class="nav">
-
- <div class="logo" onclick="go('home')">
-   Comunidade<span>+</span>
- </div>
-
- <button class="menu" onclick="toggleMenu()">☰</button>
-
- <nav class="navlinks" id="navlinks">
-   <a onclick="go('lojas')">Lojas</a>
-   <a onclick="go('ofertas')">Ofertas</a>
-   <a onclick="go('servicos')">Serviços</a>
-   <a onclick="go('classificados')">Classificados</a>
-   <a onclick="go('eventos')">Eventos</a>
-   <a onclick="go('saude')">Saúde</a>
- </nav>
-
- <button class="login" onclick="go('anuncie')">
-   Anuncie
- </button>
-
-</div>
-
+  <div class="brand">
+    <div class="logo">JM</div>
+    <div>
+      <h1>JOHN MOTOS</h1>
+      <div class="subtitle">Sistema de gestão · Ponto de venda</div>
+    </div>
+  </div>
+  <div class="header-right">
+    <span class="muted small" id="today"></span>
+    <span class="status" id="cashStatus">● Caixa aberto</span>
+    <button class="btn secondary btn-sm" id="toggleCash">Fechar caixa</button>
+  </div>
 </header>
 
-
-<!-- ================= HOME ================= -->
-
-<section class="page active" id="home">
-
- <div class="hero">
-
-  <div class="hero-inner">
-
-   <h1>
-    Tudo da sua comunidade
-    <span>em um só lugar.</span>
-   </h1>
-
-   <p>
-    Encontre lojas, ofertas, serviços, classificados,
-    eventos e informações importantes perto de você.
-   </p>
-
-   <div class="search">
-    <input id="homeSearch"
-           placeholder="O que você está procurando?">
-
-    <button onclick="globalSearch()">
-      🔎 Buscar
-    </button>
-   </div>
-
-  </div>
-
- </div>
-
-
- <div class="container">
-
-  <div class="title">
-   <h2>O que você procura?</h2>
-  </div>
-
-  <div class="categories">
-
-   <div class="category" onclick="go('lojas')">
-    <div>🍔</div>
-    <strong>Comida</strong>
-   </div>
-
-   <div class="category" onclick="go('lojas')">
-    <div>🛒</div>
-    <strong>Mercados</strong>
-   </div>
-
-   <div class="category" onclick="go('servicos')">
-    <div>🔧</div>
-    <strong>Serviços</strong>
-   </div>
-
-   <div class="category" onclick="go('classificados')">
-    <div>📱</div>
-    <strong>Eletrônicos</strong>
-   </div>
-
-   <div class="category" onclick="go('classificados')">
-    <div>🏍️</div>
-    <strong>Motos</strong>
-   </div>
-
-   <div class="category" onclick="go('classificados')">
-    <div>🛋️</div>
-    <strong>Móveis</strong>
-   </div>
-
-   <div class="category" onclick="go('eventos')">
-    <div>🎉</div>
-    <strong>Eventos</strong>
-   </div>
-
-   <div class="category" onclick="go('saude')">
-    <div>🏥</div>
-    <strong>Saúde</strong>
-   </div>
-
-  </div>
-
- </div>
-
-
- <div class="container">
-
-  <div class="title">
-   <h2>🔥 Ofertas em destaque</h2>
-   <a onclick="go('ofertas')">Ver todas →</a>
-  </div>
-
-  <div class="grid">
-
-   <div class="offer">
-    <small>OFERTA DO DIA</small>
-    <h3>Combo X-Burguer</h3>
-    <strong>R$ 19,90</strong>
-    <button onclick="buy('Combo X-Burguer')">
-     Ver oferta
-    </button>
-   </div>
-
-   <div class="offer">
-    <small>PROMOÇÃO</small>
-    <h3>Pizza grande</h3>
-    <strong>R$ 39,90</strong>
-    <button onclick="buy('Pizza Grande')">
-     Ver oferta
-    </button>
-   </div>
-
-   <div class="offer">
-    <small>CUPOM</small>
-    <h3>15% OFF no mercado</h3>
-    <strong>COMUNIDADE15</strong>
-    <button onclick="toast('Cupom copiado!')">
-     Aproveitar
-    </button>
-   </div>
-
-  </div>
-
- </div>
-
-
- <div class="container">
-
-  <div class="title">
-   <h2>🏥 Comunicado de saúde</h2>
-   <a onclick="go('saude')">Ver comunicados →</a>
-  </div>
-
-  <div class="panel health">
-
-   <h3>Campanha de vacinação</h3>
-
-   <p>
-    Confira os locais, datas e horários da campanha
-    de vacinação da comunidade.
-   </p>
-
-   <small>
-    Informação de interesse público
-   </small>
-
-  </div>
-
- </div>
-
-</section>
-
-
-<!-- ================= LOJAS ================= -->
-
-<section class="page" id="lojas">
-
- <div class="container">
-
-  <div class="title">
-   <h2>🏪 Lojas</h2>
-   <button class="btn" onclick="go('home')">Início</button>
-  </div>
-
-  <div class="filterbar">
-
-   <input
-    id="storeFilter"
-    oninput="filterCards('storeFilter','store')"
-    placeholder="Pesquisar loja...">
-
-   <select onchange="toast('Filtro aplicado')">
-    <option>Todas categorias</option>
-    <option>Restaurantes</option>
-    <option>Mercados</option>
-    <option>Comércios</option>
-   </select>
-
-   <select onchange="toast('Ordenação aplicada')">
-    <option>Mais relevantes</option>
-    <option>Melhor avaliadas</option>
-    <option>Mais próximas</option>
-   </select>
-
-  </div>
-
-
-  <div class="grid" id="stores">
-
-   <div class="card store">
-    <div class="card-img">🍔</div>
-    <div class="card-body">
-     <h3>Big Lanches</h3>
-     <p>Hambúrgueres e lanches</p>
-     <span class="status">Aberto agora</span>
-    </div>
-    <div class="card-bottom">
-     ★ 4.8
-     <button class="btn" onclick="storeDetail('Big Lanches')">
-      Ver loja
-     </button>
-    </div>
-   </div>
-
-
-   <div class="card store">
-    <div class="card-img">🍕</div>
-    <div class="card-body">
-     <h3>Pizza House</h3>
-     <p>Pizzas e bebidas</p>
-     <span class="status">Aberto agora</span>
-    </div>
-    <div class="card-bottom">
-     ★ 4.7
-     <button class="btn" onclick="storeDetail('Pizza House')">
-      Ver loja
-     </button>
-    </div>
-   </div>
-
-
-   <div class="card store">
-    <div class="card-img">🛒</div>
-    <div class="card-body">
-     <h3>Mercadinho Central</h3>
-     <p>Mercado e conveniência</p>
-     <span class="status">Aberto agora</span>
-    </div>
-    <div class="card-bottom">
-     ★ 4.9
-     <button class="btn" onclick="storeDetail('Mercadinho Central')">
-      Ver loja
-     </button>
-    </div>
-   </div>
-
-
-   <div class="card store">
-    <div class="card-img">🥤</div>
-    <div class="card-body">
-     <h3>Point Drinks</h3>
-     <p>Bebidas e conveniência</p>
-     <span class="status">Aberto agora</span>
-    </div>
-    <div class="card-bottom">
-     ★ 4.6
-     <button class="btn" onclick="storeDetail('Point Drinks')">
-      Ver loja
-     </button>
-    </div>
-   </div>
-
-  </div>
-
- </div>
-
-</section>
-
-
-<!-- ================= OFERTAS ================= -->
-
-<section class="page" id="ofertas">
-
- <div class="container">
-
-  <div class="title">
-   <h2>🔥 Ofertas</h2>
-   <button class="btn secondary" onclick="go('home')">
-    Voltar
-   </button>
-  </div>
-
-  <div class="grid">
-
-   <div class="offer">
-    <small>BIG LANCHES</small>
-    <h3>Combo X-Burguer</h3>
-    <strong>R$ 19,90</strong>
-    <button onclick="buy('Combo X-Burguer')">
-     Pedir
-    </button>
-   </div>
-
-   <div class="offer">
-    <small>PIZZA HOUSE</small>
-    <h3>Pizza grande especial</h3>
-    <strong>R$ 39,90</strong>
-    <button onclick="buy('Pizza Grande')">
-     Pedir
-    </button>
-   </div>
-
-   <div class="offer">
-    <small>MERCADINHO</small>
-    <h3>15% de desconto</h3>
-    <strong>COMUNIDADE15</strong>
-    <button onclick="toast('Cupom copiado!')">
-     Copiar cupom
-    </button>
-   </div>
-
-  </div>
-
- </div>
-
-</section>
-
-
-<!-- ================= SERVIÇOS ================= -->
-
-<section class="page" id="servicos">
-
- <div class="container">
-
-  <div class="title">
-   <h2>🔧 Serviços locais</h2>
-   <button class="btn secondary" onclick="go('home')">
-    Voltar
-   </button>
-  </div>
-
-  <div class="filterbar">
-
-   <input placeholder="Pesquisar serviço..."
-          oninput="filterCards('serviceFilter','service')"
-          id="serviceFilter">
-
-   <select>
-    <option>Todos os serviços</option>
-    <option>Eletricista</option>
-    <option>Técnico</option>
-    <option>Beleza</option>
-    <option>Mecânico</option>
-   </select>
-
-  </div>
-
-
-  <div class="grid">
-
-   <div class="card service">
-    <div class="service-top">
-     <div class="avatar">⚡</div>
-     <div>
-      <h3>João Eletricista</h3>
-      <p>Instalações elétricas</p>
-     </div>
-    </div>
-
-    <div class="service-bottom">
-     ★ 5.0
-     <button class="btn" onclick="contact('João Eletricista')">
-      Contato
-     </button>
-    </div>
-   </div>
-
-
-   <div class="card service">
-    <div class="service-top">
-     <div class="avatar">🔧</div>
-     <div>
-      <h3>Tech Cell</h3>
-      <p>Assistência técnica</p>
-     </div>
-    </div>
-
-    <div class="service-bottom">
-     ★ 4.9
-     <button class="btn" onclick="contact('Tech Cell')">
-      Contato
-     </button>
-    </div>
-   </div>
-
-
-   <div class="card service">
-    <div class="service-top">
-     <div class="avatar">💇</div>
-     <div>
-      <h3>Studio Bella</h3>
-      <p>Beleza e estética</p>
-     </div>
-    </div>
-
-    <div class="service-bottom">
-     ★ 4.8
-     <button class="btn" onclick="contact('Studio Bella')">
-      Contato
-     </button>
-    </div>
-   </div>
-
-
-   <div class="card service">
-    <div class="service-top">
-     <div class="avatar">🔩</div>
-     <div>
-      <h3>Auto Center</h3>
-      <p>Mecânica automotiva</p>
-     </div>
-    </div>
-
-    <div class="service-bottom">
-     ★ 4.7
-     <button class="btn" onclick="contact('Auto Center')">
-      Contato
-     </button>
-    </div>
-   </div>
-
-  </div>
-
- </div>
-
-</section>
-
-
-<!-- ================= CLASSIFICADOS ================= -->
-
-<section class="page" id="classificados">
-
- <div class="container">
-
-  <div class="title">
-   <h2>🛒 Classificados</h2>
-
-   <button class="btn" onclick="go('publicar')">
-    + Publicar anúncio
-   </button>
-  </div>
-
-
-  <div class="filterbar">
-
-   <input
-    placeholder="O que você procura?"
-    oninput="filterCards('classifiedFilter','classified')"
-    id="classifiedFilter">
-
-   <select>
-    <option>Todas categorias</option>
-    <option>Celulares</option>
-    <option>Motos</option>
-    <option>Móveis</option>
-    <option>Eletrônicos</option>
-   </select>
-
-  </div>
-
-
-  <div class="grid">
-
-   <div class="card classified">
-    <div class="classified-img">📱</div>
-    <div class="card-body">
-     <h3>Celular Samsung</h3>
-     <p>Usado • Bom estado</p>
-     <div class="price">R$ 650</div>
-     <br>
-     <button class="btn" onclick="classifiedDetail('Celular Samsung')">
-      Ver anúncio
-     </button>
-    </div>
-   </div>
-
-
-   <div class="card classified">
-    <div class="classified-img">🏍️</div>
-    <div class="card-body">
-     <h3>Moto 125cc</h3>
-     <p>Documentação em dia</p>
-     <div class="price">R$ 7.500</div>
-     <br>
-     <button class="btn" onclick="classifiedDetail('Moto 125cc')">
-      Ver anúncio
-     </button>
-    </div>
-   </div>
-
-
-   <div class="card classified">
-    <div class="classified-img">🛋️</div>
-    <div class="card-body">
-     <h3>Sofá 3 lugares</h3>
-     <p>Usado • Conservado</p>
-     <div class="price">R$ 400</div>
-     <br>
-     <button class="btn" onclick="classifiedDetail('Sofá 3 lugares')">
-      Ver anúncio
-     </button>
-    </div>
-   </div>
-
-
-   <div class="card classified">
-    <div class="classified-img">📺</div>
-    <div class="card-body">
-     <h3>Smart TV 43"</h3>
-     <p>Funcionando perfeitamente</p>
-     <div class="price">R$ 1.100</div>
-     <br>
-     <button class="btn" onclick="classifiedDetail('Smart TV 43')">
-      Ver anúncio
-     </button>
-    </div>
-   </div>
-
-  </div>
-
- </div>
-
-</section>
-
-
-<!-- ================= EVENTOS ================= -->
-
-<section class="page" id="eventos">
-
- <div class="container">
-
-  <div class="title">
-   <h2>🎉 Eventos</h2>
-   <button class="btn" onclick="go('anuncie')">
-    Divulgar evento
-   </button>
-  </div>
-
-
-  <div class="grid">
-
-   <div class="card event">
-
-    <div class="date">
-     <strong>12</strong>
-     OUT
-    </div>
-
-    <div>
-     <h3>Festival da Comunidade</h3>
-     <p>🎵 Música • 🍔 Gastronomia • 🎉 Diversão</p>
-     <br>
-     <small>📍 Praça Central</small>
-     <br><br>
-     <button class="btn" onclick="eventDetail('Festival da Comunidade')">
-      Ver evento
-     </button>
-    </div>
-
-   </div>
-
-
-   <div class="card event">
-
-    <div class="date">
-     <strong>18</strong>
-     OUT
-    </div>
-
-    <div>
-     <h3>Feira de Negócios</h3>
-     <p>Comércio local e empreendedores</p>
-     <br>
-     <small>📍 Centro Comunitário</small>
-     <br><br>
-     <button class="btn" onclick="eventDetail('Feira de Negócios')">
-      Ver evento
-     </button>
-    </div>
-
-   </div>
-
-
-   <div class="card event">
-
-    <div class="date">
-     <strong>25</strong>
-     OUT
-    </div>
-
-    <div>
-     <h3>Campeonato Comunitário</h3>
-     <p>⚽ Esporte e lazer</p>
-     <br>
-     <small>📍 Campo Municipal</small>
-     <br><br>
-     <button class="btn" onclick="eventDetail('Campeonato Comunitário')">
-      Ver evento
-     </button>
-    </div>
-
-   </div>
-
-  </div>
-
- </div>
-
-</section>
-
-
-<!-- ================= SAÚDE ================= -->
-
-<section class="page" id="saude">
-
- <div class="container">
-
-  <div class="title">
-   <h2>🏥 Saúde & Comunidade</h2>
-   <span style="color:#20b26b;font-weight:bold">
-    Área gratuita
-   </span>
-  </div>
-
-
-  <div class="notice">
-   <strong>📢 Espaço de utilidade pública</strong>
-   <p style="margin-top:8px;color:#666">
-    Área destinada à divulgação de comunicados e informações
-    de interesse da comunidade.
-   </p>
-  </div>
-
-
-  <div class="grid">
-
-   <div class="card health">
-
-    <h3>💉 Campanha de vacinação</h3>
-
-    <p>
-     Confira os locais e horários da campanha de vacinação.
-    </p>
-
-    <small>
-     Atualizado recentemente
-    </small>
-
-    <br><br>
-
-    <button class="btn"
-     onclick="healthDetail('Campanha de vacinação')">
-     Ver comunicado
-    </button>
-
-   </div>
-
-
-   <div class="card health">
-
-    <h3>🩸 Doação de sangue</h3>
-
-    <p>
-     Campanha de incentivo à doação de sangue.
-    </p>
-
-    <small>
-     Informação pública
-    </small>
-
-    <br><br>
-
-    <button class="btn"
-     onclick="healthDetail('Doação de sangue')">
-     Ver comunicado
-    </button>
-
-   </div>
-
-
-   <div class="card health">
-
-    <h3>🦟 Combate à dengue</h3>
-
-    <p>
-     Orientações e ações de prevenção contra a dengue.
-    </p>
-
-    <small>
-     Informação pública
-    </small>
-
-    <br><br>
-
-    <button class="btn"
-     onclick="healthDetail('Combate à dengue')">
-     Ver comunicado
-    </button>
-
-   </div>
-
-  </div>
-
- </div>
-
-</section>
-
-
-<!-- ================= ANUNCIE ================= -->
-
-<section class="page" id="anuncie">
-
- <div class="container">
-
-  <div class="title">
-   <h2>📢 Divulgue seu negócio</h2>
-  </div>
-
-
-  <div class="panel">
-
-   <h3>Coloque sua empresa em destaque</h3>
-
-   <p style="margin:10px 0 25px;color:#777">
-    Alcance pessoas da comunidade através do portal.
-   </p>
-
-
-   <div class="grid" style="margin-bottom:30px">
-
-    <div class="card-body" style="border:1px solid #eee;border-radius:12px">
-     <h3>🥉 Básico</h3>
-     <p>Perfil da empresa e contato.</p>
-     <br>
-     <strong>Grátis</strong>
-    </div>
-
-    <div class="card-body" style="border:2px solid #ff5a1f;border-radius:12px">
-     <h3>🥈 Destaque</h3>
-     <p>Apareça em posições privilegiadas.</p>
-     <br>
-     <strong>R$ 19,90/mês</strong>
-    </div>
-
-    <div class="card-body" style="border:1px solid #eee;border-radius:12px">
-     <h3>🥇 Premium</h3>
-     <p>Destaques + ofertas + publicidade.</p>
-     <br>
-     <strong>R$ 39,90/mês</strong>
-    </div>
-
-   </div>
-
-
-   <form class="form" onsubmit="submitAd(event)">
-
-    <input placeholder="Nome da empresa" required>
-
-    <input placeholder="WhatsApp" required>
-
-    <select required>
-     <option value="">Tipo de divulgação</option>
-     <option>Loja</option>
-     <option>Serviço</option>
-     <option>Evento</option>
-     <option>Banner</option>
-     <option>Oferta</option>
-    </select>
-
-    <textarea placeholder="Conte um pouco sobre o negócio"></textarea>
-
-    <button class="btn">
-     Solicitar divulgação
-    </button>
-
-   </form>
-
-  </div>
-
- </div>
-
-</section>
-
-
-<!-- ================= PUBLICAR ================= -->
-
-<section class="page" id="publicar">
-
- <div class="container">
-
-  <div class="title">
-   <h2>📦 Publicar classificado</h2>
-  </div>
-
-  <div class="panel">
-
-   <form class="form" onsubmit="publish(event)">
-
-    <input placeholder="Título do anúncio" required>
-
-    <input placeholder="Preço" required>
-
-    <select required>
-     <option value="">Categoria</option>
-     <option>Celular</option>
-     <option>Moto</option>
-     <option>Móvel</option>
-     <option>Eletrônico</option>
-     <option>Outros</option>
-    </select>
-
-    <textarea
-     placeholder="Descrição do produto"
-     required></textarea>
-
-    <input placeholder="WhatsApp para contato" required>
-
-    <button class="btn">
-     Publicar anúncio
-    </button>
-
-   </form>
-
-  </div>
-
- </div>
-
-</section>
-
-
-<!-- ================= DETALHES ================= -->
-
-<section class="page" id="detalhe">
-
- <div class="container">
-
-  <div class="detail">
-
-   <a class="back" onclick="go('lojas')">
-    ← Voltar
-   </a>
-
-   <div class="detail-img" id="detailIcon">
-    🍔
-   </div>
-
-   <div class="panel">
-
-    <h1 id="detailTitle">
-     Big Lanches
-    </h1>
-
-    <p id="detailText"
-       style="color:#777;margin:12px 0 25px;line-height:1.6">
-     Lanches, hambúrgueres e bebidas.
-    </p>
-
-    <div class="grid">
-
-     <div>
-      <strong>⭐ 4.8</strong>
-      <p style="color:#777">Avaliação</p>
-     </div>
-
-     <div>
-      <strong>🟢 Aberto</strong>
-      <p style="color:#777">Status</p>
-     </div>
-
-     <div>
-      <strong>📍 Local</strong>
-      <p style="color:#777">Comunidade</p>
-     </div>
-
-    </div>
-
-    <br>
-
-    <button class="btn"
-      onclick="buy('Pedido demonstrativo')">
-      Fazer pedido
-    </button>
-
-   </div>
-
-  </div>
-
- </div>
-
-</section>
-
-
-<div class="cart" id="cart">
- 🛒 <span id="cartText">1 item</span>
+<nav>
+  <button class="nav-btn active" data-page="pdv">🛒 PDV</button>
+  <button class="nav-btn" data-page="estoque">📦 Estoque</button>
+  <button class="nav-btn" data-page="os">🧾 Ordens de serviço</button>
+  <button class="nav-btn" data-page="clientes">👥 Clientes</button>
+  <button class="nav-btn" data-page="veiculos">🏍️ Veículos</button>
+  <button class="nav-btn" data-page="caixa">💵 Caixa</button>
+  <button class="nav-btn" data-page="relatorios">📊 Relatórios</button>
+</nav>
+
+<main id="main"></main>
+
+<footer>John Motos · Sistema local · Dados salvos neste navegador</footer>
 </div>
-
 
 <div class="toast" id="toast"></div>
 
-
-<footer>
-
- <div class="footer">
-
-  <div>
-   <h3>Comunidade<span style="color:#ff5a1f">+</span></h3>
-   <p>
-    O portal comercial e comunitário.
-   </p>
-  </div>
-
-  <div>
-   <h3>Explorar</h3>
-   <a onclick="go('lojas')">Lojas</a>
-   <a onclick="go('ofertas')">Ofertas</a>
-   <a onclick="go('servicos')">Serviços</a>
-   <a onclick="go('classificados')">Classificados</a>
-  </div>
-
-  <div>
-   <h3>Comunidade</h3>
-   <a onclick="go('eventos')">Eventos</a>
-   <a onclick="go('saude')">Saúde</a>
-   <a onclick="go('anuncie')">Anuncie</a>
-  </div>
-
-  <div>
-   <h3>Ajuda</h3>
-   <a onclick="toast('Central de ajuda')">Ajuda</a>
-   <a onclick="toast('Termos de uso')">Termos</a>
-   <a onclick="toast('Política de privacidade')">Privacidade</a>
-  </div>
-
- </div>
-
- <div class="copy">
-  © 2026 Comunidade+ — Demonstração
- </div>
-
-</footer>
-
-
 <script>
+(() => {
+"use strict";
 
-let cartCount=0;
+const KEY = "john_motos_sistema_v1";
 
+const initialProducts = [
+ {id:1,sku:"PEC-001",name:"Pastilha de freio CG 160",category:"Freios",price:35,cost:18,stock:12,min:4,icon:"🧩"},
+ {id:2,sku:"PEC-002",name:"Filtro de óleo Titan 150",category:"Filtros",price:22,cost:10,stock:2,min:5,icon:"🛢️"},
+ {id:3,sku:"PEC-003",name:"Vela de ignição NGK",category:"Motor",price:28,cost:14,stock:18,min:5,icon:"⚡"},
+ {id:4,sku:"PEC-004",name:"Cabo de embreagem CG",category:"Cabos",price:32,cost:16,stock:7,min:3,icon:"〰️"},
+ {id:5,sku:"PEC-005",name:"Kit relação CG 160",category:"Transmissão",price:145,cost:92,stock:4,min:2,icon:"⚙️"},
+ {id:6,sku:"PEC-006",name:"Lâmpada farol H4",category:"Elétrica",price:25,cost:11,stock:0,min:4,icon:"💡"},
+ {id:7,sku:"PEC-007",name:"Câmara de ar aro 18",category:"Pneus",price:38,cost:21,stock:9,min:3,icon:"⭕"},
+ {id:8,sku:"PEC-008",name:"Óleo 10W30 1 litro",category:"Lubrificantes",price:39,cost:25,stock:15,min:5,icon:"🛢️"}
+];
 
-/* NAVEGAÇÃO */
+function freshData() {
+ return {
+   products:initialProducts.map(p=>({...p})),
+   sales:[],
+   movements:[],
+   cashOpen:true,
+   nextSaleId:1
+ };
+}
 
-function go(page){
+function loadData() {
+ try {
+   const raw=localStorage.getItem(KEY);
+   if(!raw) return freshData();
+   const data=JSON.parse(raw);
+   if(!Array.isArray(data.products)||!Array.isArray(data.sales)) return freshData();
+   return data;
+ } catch(e) {
+   return freshData();
+ }
+}
 
- document.querySelectorAll(".page")
-   .forEach(p=>p.classList.remove("active"));
+let db=loadData();
+let cart=[];
+let page="pdv";
+let search="";
+let payment="Pix";
+let toastTimer;
 
- const target=document.getElementById(page);
+const $ = id => document.getElementById(id);
+const money = n => Number(n||0).toLocaleString("pt-BR",{
+ style:"currency",currency:"BRL"
+});
+const esc = value => String(value??"").replace(/[&<>"']/g,c=>({
+ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+})[c]);
 
- if(target){
-   target.classList.add("active");
-   window.scrollTo({top:0,behavior:"smooth"});
+function save() {
+ try {
+   localStorage.setItem(KEY,JSON.stringify(db));
+ } catch(e) {
+   notify("Não foi possível salvar. Verifique o espaço do navegador.");
+ }
+}
+
+function notify(message) {
+ const el=$("toast");
+ el.textContent=message;
+ el.style.display="block";
+ clearTimeout(toastTimer);
+ toastTimer=setTimeout(()=>el.style.display="none",3000);
+}
+
+function dateToday() {
+ return new Date().toLocaleDateString("pt-BR",{
+ weekday:"short",day:"2-digit",month:"short",year:"numeric"
+ });
+}
+
+function salesToday() {
+ const now=new Date();
+ return db.sales.filter(s=>{
+   const d=new Date(s.date);
+   return d.getFullYear()===now.getFullYear()
+    && d.getMonth()===now.getMonth()
+    && d.getDate()===now.getDate();
+ });
+}
+
+function totalCart() {
+ return cart.reduce((sum,item)=>sum+item.price*item.qty,0);
+}
+
+function updateHeader() {
+ $("today").textContent=dateToday();
+ $("cashStatus").innerHTML=db.cashOpen
+   ?'<span style="color:#86efac">● Caixa aberto</span>'
+   :'<span style="color:#fb7185">● Caixa fechado</span>';
+ $("toggleCash").textContent=db.cashOpen?"Fechar caixa":"Abrir caixa";
+}
+
+function setPage(next) {
+ page=next;
+ document.querySelectorAll(".nav-btn").forEach(b=>{
+   b.classList.toggle("active",b.dataset.page===page);
+ });
+ render();
+}
+
+function render() {
+ updateHeader();
+ if(page==="pdv") $("main").innerHTML=renderPDV();
+ else if(page==="estoque") $("main").innerHTML=renderStock();
+ else if(page==="caixa") $("main").innerHTML=renderCash();
+ else if(page==="relatorios") $("main").innerHTML=renderReports();
+ else $("main").innerHTML=renderModule(page);
+ bindPage();
+}
+
+function renderPDV() {
+ const today=salesToday();
+ const revenue=today.reduce((s,v)=>s+v.total,0);
+ const low=db.products.filter(p=>p.stock<=p.min).length;
+ const filtered=db.products.filter(p=>
+   (p.name+" "+p.sku+" "+p.category).toLowerCase().includes(search.toLowerCase())
+ );
+
+ return `
+ <div class="section-head">
+  <div><h2>Ponto de venda</h2>
+   <p>Venda de peças com baixa automática no estoque.</p>
+  </div>
+  <button class="btn secondary" id="clearSearch">Limpar busca</button>
+ </div>
+
+ <div class="stats">
+  <div class="stat"><div class="stat-label">Vendas hoje</div>
+   <div class="stat-value">${today.length}</div><div class="stat-desc">Vendas finalizadas</div></div>
+  <div class="stat"><div class="stat-label">Faturamento hoje</div>
+   <div class="stat-value">${money(revenue)}</div><div class="stat-desc">Total bruto</div></div>
+  <div class="stat"><div class="stat-label">Produtos cadastrados</div>
+   <div class="stat-value">${db.products.length}</div><div class="stat-desc">Itens no catálogo</div></div>
+  <div class="stat"><div class="stat-label">Estoque baixo</div>
+   <div class="stat-value">${low}</div><div class="stat-desc">Precisam de atenção</div></div>
+ </div>
+
+ <div class="layout">
+  <section class="panel">
+   <div class="panel-head">
+    <h3>Produtos</h3>
+    <input class="search" id="productSearch" placeholder="Buscar nome ou código..."
+      value="${esc(search)}">
+   </div>
+   <div class="panel-body">
+    <div class="products">
+    ${filtered.length?filtered.map(p=>`
+     <article class="product">
+      <div class="product-top">
+       <div class="product-icon">${p.icon||"📦"}</div>
+       <span class="stock ${p.stock===0?"out":p.stock<=p.min?"low":""}">
+        ${p.stock===0?"Sem estoque":p.stock+" un."}
+       </span>
+      </div>
+      <div>
+       <div class="product-name">${esc(p.name)}</div>
+       <div class="product-code">${esc(p.sku)} · ${esc(p.category)}</div>
+      </div>
+      <div class="product-bottom">
+       <span class="price">${money(p.price)}</span>
+       <button class="btn primary btn-sm add-product" data-id="${p.id}"
+        ${p.stock<=0||!db.cashOpen?"disabled":""}>＋ Adicionar</button>
+      </div>
+     </article>
+    `).join(""):'<div class="empty">Nenhum produto encontrado.</div>'}
+    </div>
+   </div>
+  </section>
+
+  <section class="panel">
+   <div class="panel-head">
+    <h3>🛒 Carrinho</h3>
+    <button class="btn secondary btn-sm" id="emptyCart" ${cart.length?"":"disabled"}>Esvaziar</button>
+   </div>
+   <div class="panel-body">
+    <div class="cart-items">
+    ${cart.length?cart.map(i=>`
+     <div class="cart-item">
+      <div>
+       <strong>${esc(i.name)}</strong><br>
+       <span class="muted small">${money(i.price)} / unidade</span>
+       <div class="qty">
+        <button data-action="minus" data-id="${i.id}">−</button>
+        <span>${i.qty}</span>
+        <button data-action="plus" data-id="${i.id}">＋</button>
+       </div>
+      </div>
+      <div class="cart-right">
+       <strong>${money(i.price*i.qty)}</strong>
+       <button class="btn danger btn-sm" data-action="remove" data-id="${i.id}">Remover</button>
+      </div>
+     </div>
+    `).join(""):'<div class="empty">🛒<br><br>Carrinho vazio.<br><span class="small">Adicione produtos para começar.</span></div>'}
+    </div>
+
+    <div class="summary">
+     <div class="sumrow"><span>Subtotal</span><strong>${money(totalCart())}</strong></div>
+     <div class="sumrow"><span>Desconto</span><strong>${money(0)}</strong></div>
+     <div class="sumrow total"><span>Total</span><span>${money(totalCart())}</span></div>
+     <label for="payment">Forma de pagamento</label>
+     <select id="payment" ${!db.cashOpen?"disabled":""}>
+      ${["Pix","Dinheiro","Cartão de débito","Cartão de crédito","Transferência"].map(p=>
+       `<option ${payment===p?"selected":""}>${p}</option>`
+      ).join("")}
+     </select>
+     <button class="btn primary full" id="finishSale"
+      ${!cart.length||!db.cashOpen?"disabled":""}>
+      ✓ Finalizar venda · ${money(totalCart())}
+     </button>
+     <p class="hint">${db.cashOpen
+       ?"Ao confirmar, o estoque será atualizado e a venda entrará no caixa."
+       :"O caixa está fechado. Abra-o para vender."}</p>
+    </div>
+   </div>
+  </section>
+ </div>`;
+}
+
+function renderStockRows(products) {
+ if(!products.length) return '<tr><td colspan="8">Nenhum produto encontrado.</td></tr>';
+ return products.map(p=>`
+  <tr>
+   <td>${esc(p.sku)}</td>
+   <td><strong>${esc(p.name)}</strong></td>
+   <td>${esc(p.category)}</td>
+   <td>${p.stock}</td>
+   <td>${money(p.cost)}</td>
+   <td>${money(p.price)}</td>
+   <td><span class="badge ${p.stock===0?"red":p.stock<=p.min?"yellow":"green"}">
+    ${p.stock===0?"Sem estoque":p.stock<=p.min?"Estoque baixo":"Disponível"}
+   </span></td>
+   <td><button class="btn secondary btn-sm edit-product" data-id="${p.id}">Editar</button></td>
+  </tr>
+ `).join("");
+}
+
+function renderStock() {
+ const units=db.products.reduce((s,p)=>s+p.stock,0);
+ const cost=db.products.reduce((s,p)=>s+p.cost*p.stock,0);
+ const low=db.products.filter(p=>p.stock<=p.min).length;
+
+ return `
+ <div class="section-head">
+  <div><h2>Estoque</h2><p>O saldo é atualizado a cada venda confirmada no PDV.</p></div>
+  <button class="btn primary" id="newProduct">＋ Novo produto</button>
+ </div>
+ <div class="stats">
+  <div class="stat"><div class="stat-label">Produtos</div><div class="stat-value">${db.products.length}</div></div>
+  <div class="stat"><div class="stat-label">Unidades em estoque</div><div class="stat-value">${units}</div></div>
+  <div class="stat"><div class="stat-label">Valor em custo</div><div class="stat-value">${money(cost)}</div></div>
+  <div class="stat"><div class="stat-label">Estoque baixo</div><div class="stat-value">${low}</div></div>
+ </div>
+ <section class="panel">
+  <div class="panel-head"><h3>Produtos cadastrados</h3>
+   <input class="search" id="stockSearch" placeholder="Filtrar produtos...">
+  </div>
+  <div class="table-wrap"><table>
+   <thead><tr><th>Código</th><th>Produto</th><th>Categoria</th><th>Qtd.</th>
+   <th>Custo</th><th>Venda</th><th>Status</th><th>Ações</th></tr></thead>
+   <tbody id="stockRows">${renderStockRows(db.products)}</tbody>
+  </table></div>
+ </section>
+ <p class="hint">Os produtos iniciais são apenas exemplos. Cadastre os produtos reais antes de usar nas vendas.</p>`;
+}
+
+function renderCash() {
+ const sales=salesToday();
+ const total=sales.reduce((s,v)=>s+v.total,0);
+ const byPayment={};
+ sales.forEach(s=>byPayment[s.payment]=(byPayment[s.payment]||0)+s.total);
+
+ return `
+ <div class="section-head"><div><h2>Caixa</h2>
+ <p>Entradas registradas pelo PDV.</p></div>
+ <span class="badge ${db.cashOpen?"green":"red"}">${db.cashOpen?"Aberto":"Fechado"}</span></div>
+
+ <div class="stats">
+  <div class="stat"><div class="stat-label">Vendas de hoje</div><div class="stat-value">${money(total)}</div></div>
+  <div class="stat"><div class="stat-label">Dinheiro</div><div class="stat-value">${money(byPayment["Dinheiro"]||0)}</div></div>
+  <div class="stat"><div class="stat-label">Pix</div><div class="stat-value">${money(byPayment["Pix"]||0)}</div></div>
+  <div class="stat"><div class="stat-label">Cartões</div><div class="stat-value">${money((byPayment["Cartão de débito"]||0)+(byPayment["Cartão de crédito"]||0))}</div></div>
+ </div>
+
+ <section class="panel">
+  <div class="panel-head"><h3>Vendas registradas</h3>
+   <button class="btn secondary btn-sm" id="exportSales">Exportar CSV</button>
+  </div>
+  <div class="table-wrap"><table>
+   <thead><tr><th>Número</th><th>Data</th><th>Itens</th><th>Pagamento</th><th>Total</th></tr></thead>
+   <tbody>
+   ${db.sales.slice().reverse().map(s=>`
+    <tr>
+     <td>#${String(s.id).padStart(5,"0")}</td>
+     <td>${new Date(s.date).toLocaleString("pt-BR")}</td>
+     <td>${s.items.reduce((n,i)=>n+i.qty,0)}</td>
+     <td>${esc(s.payment)}</td><td><strong>${money(s.total)}</strong></td>
+    </tr>
+   `).join("")||'<tr><td colspan="5" class="empty">Nenhuma venda registrada.</td></tr>'}
+   </tbody>
+  </table></div>
+ </section>
+ <p class="hint">Este módulo registra vendas. Despesas, retiradas, sangria e conferência física do dinheiro ainda precisam ser implementadas.</p>`;
+}
+
+function renderReports() {
+ const total=db.sales.reduce((s,v)=>s+v.total,0);
+ const cost=db.sales.reduce((s,v)=>s+v.items.reduce((a,i)=>a+i.cost*i.qty,0),0);
+ const ranking={};
+ db.sales.forEach(s=>s.items.forEach(i=>ranking[i.name]=(ranking[i.name]||0)+i.qty));
+ const top=Object.entries(ranking).sort((a,b)=>b[1]-a[1]);
+
+ return `
+ <div class="section-head"><div><h2>Relatórios</h2>
+ <p>Resumo das vendas registradas neste navegador.</p></div>
+ <button class="btn secondary" id="exportSales">Exportar CSV</button></div>
+ <div class="stats">
+  <div class="stat"><div class="stat-label">Vendas</div><div class="stat-value">${db.sales.length}</div></div>
+  <div class="stat"><div class="stat-label">Faturamento bruto</div><div class="stat-value">${money(total)}</div></div>
+  <div class="stat"><div class="stat-label">Custo estimado</div><div class="stat-value">${money(cost)}</div></div>
+  <div class="stat"><div class="stat-label">Margem bruta estimada</div><div class="stat-value">${money(total-cost)}</div></div>
+ </div>
+ <section class="panel">
+  <div class="panel-head"><h3>Produtos mais vendidos</h3></div>
+  <div class="table-wrap"><table><thead><tr><th>Produto</th><th>Unidades vendidas</th></tr></thead>
+  <tbody>${top.map(([name,qty])=>`<tr><td>${esc(name)}</td><td>${qty}</td></tr>`).join("")||'<tr><td colspan="2">Ainda não há vendas.</td></tr>'}</tbody></table></div>
+ </section>
+ <p class="hint">A margem não é lucro líquido: não considera despesas, impostos nem taxas de cartão.</p>`;
+}
+
+function renderModule(which) {
+ const modules={
+  os:["🧾","Ordens de serviço","Cadastro de serviços, mão de obra, peças utilizadas e andamento de cada atendimento."],
+  clientes:["👥","Clientes","Cadastro de clientes e histórico de compras e serviços."],
+  veiculos:["🏍️","Veículos","Cadastro das motos, placas, modelos e histórico de manutenção."]
+ };
+ const m=modules[which]||["🔧","Módulo","Área de gestão."];
+ return `<section class="panel module">
+  <div class="emoji">${m[0]}</div><h2>${m[1]}</h2>
+  <p>${m[2]}</p><span class="badge">Módulo ainda não implementado</span><br><br>
+  <button class="btn primary" id="backPDV">Voltar ao PDV</button>
+ </section>`;
+}
+
+function addToCart(id) {
+ const p=db.products.find(p=>p.id===id);
+ if(!p||p.stock<=0||!db.cashOpen) return;
+ const item=cart.find(i=>i.id===id);
+ if(item) {
+   if(item.qty>=p.stock) return notify("Quantidade maior que o estoque disponível.");
+   item.qty++;
+ } else {
+   cart.push({id:p.id,name:p.name,price:p.price,cost:p.cost,qty:1});
+ }
+ render();
+}
+
+function cartAction(action,id) {
+ const item=cart.find(i=>i.id===id);
+ const product=db.products.find(p=>p.id===id);
+ if(!item) return;
+
+ if(action==="remove") cart=cart.filter(i=>i.id!==id);
+ if(action==="minus") {
+   item.qty--;
+   if(item.qty<=0) cart=cart.filter(i=>i.id!==id);
+ }
+ if(action==="plus") {
+   if(item.qty>=product.stock) return notify("Estoque insuficiente.");
+   item.qty++;
+ }
+ render();
+}
+
+function finishSale() {
+ if(!db.cashOpen) return notify("O caixa está fechado.");
+ if(!cart.length) return;
+
+ for(const item of cart) {
+   const product=db.products.find(p=>p.id===item.id);
+   if(!product||product.stock<item.qty)
+     return notify("Estoque insuficiente para "+item.name+".");
  }
 
- document.getElementById("navlinks")
-   .classList.remove("mobile");
-}
-
-
-/* MENU MOBILE */
-
-function toggleMenu(){
-
- document.getElementById("navlinks")
-   .classList.toggle("mobile");
-
-}
-
-
-/* TOAST */
-
-function toast(message){
-
- const box=document.getElementById("toast");
-
- box.textContent=message;
- box.style.display="block";
-
- clearTimeout(window.toastTimer);
-
- window.toastTimer=setTimeout(()=>{
-   box.style.display="none";
- },2500);
-
-}
-
-
-/* BUSCA */
-
-function globalSearch(){
-
- const value=
- document.getElementById("homeSearch").value.trim();
-
- if(!value){
-   toast("Digite algo para pesquisar.");
-   return;
- }
-
- toast("Pesquisando por: "+value);
-
- setTimeout(()=>{
-   go("lojas");
- },700);
-
-}
-
-
-/* LOJA */
-
-function storeDetail(name){
-
- document.getElementById("detailTitle").textContent=name;
-
- document.getElementById("detailText").textContent=
-   "Página demonstrativa da loja. Aqui ficarão produtos, ofertas, horário, localização, avaliações e pedidos.";
-
- document.getElementById("detailIcon").textContent="🏪";
-
- go("detalhe");
-
-}
-
-
-/* CLASSIFICADO */
-
-function classifiedDetail(name){
-
- document.getElementById("detailTitle").textContent=name;
-
- document.getElementById("detailText").textContent=
-   "Página demonstrativa do anúncio. Aqui poderão aparecer fotos, descrição, preço, localização e contato do anunciante.";
-
- document.getElementById("detailIcon").textContent="🛒";
-
- go("detalhe");
-
-}
-
-
-/* EVENTO */
-
-function eventDetail(name){
-
- document.getElementById("detailTitle").textContent=name;
-
- document.getElementById("detailText").textContent=
-   "Página demonstrativa do evento com informações, data, local, descrição e contato.";
-
- document.getElementById("detailIcon").textContent="🎉";
-
- go("detalhe");
-
-}
-
-
-/* SAÚDE */
-
-function healthDetail(name){
-
- document.getElementById("detailTitle").textContent=name;
-
- document.getElementById("detailText").textContent=
-   "Comunicado demonstrativo. Em uma versão real, esta área poderá receber textos, datas, locais e links oficiais.";
-
- document.getElementById("detailIcon").textContent="🏥";
-
- go("detalhe");
-
-}
-
-
-/* PEDIDO */
-
-function buy(item){
-
- cartCount++;
-
- document.getElementById("cart")
-   .classList.add("show");
-
- document.getElementById("cartText").textContent=
-   cartCount+" item"+(cartCount>1?"s":"");
-
- toast(item+" adicionado ao pedido.");
-
-}
-
-
-/* CONTATO */
-
-function contact(name){
-
- toast("Abrindo contato de "+name+"...");
-
-}
-
-
-/* PUBLICAÇÃO */
-
-function publish(event){
-
- event.preventDefault();
-
- toast("Anúncio publicado na demonstração!");
-
- setTimeout(()=>{
-   go("classificados");
- },1000);
-
-}
-
-
-/* ANÚNCIO */
-
-function submitAd(event){
-
- event.preventDefault();
-
- toast("Solicitação enviada!");
-
-}
-
-
-/* FILTRO */
-
-function filterCards(inputId,className){
-
- const value=
-   document.getElementById(inputId)
-   .value.toLowerCase();
-
- document.querySelectorAll("."+className)
- .forEach(card=>{
-
-   card.style.display=
-     card.innerText.toLowerCase().includes(value)
-     ? ""
-     : "none";
-
+ if(!confirm("Confirmar venda de "+money(totalCart())+"?")) return;
+
+ const items=cart.map(i=>({...i}));
+ const sale={
+   id:db.nextSaleId++,
+   date:new Date().toISOString(),
+   payment,
+   items,
+   total:items.reduce((s,i)=>s+i.price*i.qty,0)
+ };
+
+ items.forEach(i=>{
+   const product=db.products.find(p=>p.id===i.id);
+   product.stock-=i.qty;
+   db.movements.push({
+     date:sale.date,productId:product.id,
+     type:"saida_venda",quantity:i.qty,saleId:sale.id
+   });
  });
 
+ db.sales.push(sale);
+ save();
+ cart=[];
+ search="";
+ render();
+ notify("Venda registrada. Estoque atualizado automaticamente.");
 }
 
-</script>
+function toggleCash() {
+ if(db.cashOpen) {
+   if(!confirm("Fechar o caixa? As vendas ficarão bloqueadas.")) return;
+   db.cashOpen=false;
+ } else {
+   if(!confirm("Abrir o caixa para novas vendas?")) return;
+   db.cashOpen=true;
+ }
+ save();
+ render();
+}
 
+function productForm(id) {
+ const old=id?db.products.find(p=>p.id===id):null;
+ const ask=(label,value)=>prompt(label,value??"");
+ const name=ask("Nome do produto:",old?.name||"");
+ if(name===null)return;
+ if(!name.trim())return notify("Informe o nome.");
+
+ const sku=ask("Código do produto:",old?.sku||"PEC-"+String(Date.now()).slice(-6));
+ if(sku===null)return;
+ const category=ask("Categoria:",old?.category||"Geral");
+ if(category===null)return;
+ const price=ask("Preço de venda (R$):",old?.price??"0");
+ if(price===null)return;
+ const cost=ask("Custo unitário (R$):",old?.cost??"0");
+ if(cost===null)return;
+ const stock=ask("Quantidade atual:",old?.stock??"0");
+ if(stock===null)return;
+ const min=ask("Estoque mínimo:",old?.min??"2");
+ if(min===null)return;
+
+ const num=v=>Number(String(v).replace(",","."));
+ const values=[num(price),num(cost),num(stock),num(min)];
+
+ if(values.some(v=>!Number.isFinite(v)||v<0)||
+    !Number.isInteger(values[2])||!Number.isInteger(values[3]))
+   return notify("Confira os valores informados.");
+
+ const product={
+   id:old?old.id:Math.max(0,...db.products.map(p=>p.id))+1,
+   name:name.trim(),sku:sku.trim(),category:category.trim(),
+   price:values[0],cost:values[1],stock:values[2],min:values[3],
+   icon:old?.icon||"📦"
+ };
+
+ if(old) Object.assign(old,product);
+ else db.products.push(product);
+
+ save();
+ render();
+ notify("Produto salvo.");
+}
+
+function exportSales() {
+ if(!db.sales.length)return notify("Não há vendas para exportar.");
+ const rows=[["Venda","Data","Produto","Código","Quantidade","Preço","Custo","Pagamento","Total"]];
+ db.sales.forEach(s=>s.items.forEach(i=>{
+   const p=db.products.find(p=>p.id===i.id);
+   rows.push([
+    s.id,new Date(s.date).toLocaleString("pt-BR"),i.name,
+    p?.sku||"",i.qty,i.price,i.cost,s.payment,s.total
+   ]);
+ }));
+ const csv=rows.map(row=>row.map(v=>
+   '"'+String(v??"").replace(/"/g,'""')+'"'
+ ).join(";")).join("\r\n");
+ const blob=new Blob(["\ufeff"+csv],{type:"text/csv;charset=utf-8"});
+ const url=URL.createObjectURL(blob);
+ const a=document.createElement("a");
+ a.href=url;a.download="john-motos-vendas.csv";a.click();
+ URL.revokeObjectURL(url);
+}
+
+function bindPage() {
+ document.querySelectorAll(".nav-btn").forEach(b=>{
+   b.onclick=()=>setPage(b.dataset.page);
+ });
+
+ const searchInput=$("productSearch");
+ if(searchInput) {
+   searchInput.oninput=e=>{
+     search=e.target.value;
+     const start=e.target.selectionStart;
+     render();
+     const next=$("productSearch");
+     next.focus();
+     next.setSelectionRange(start,start);
+   };
+ }
+
+ if($("clearSearch")) $("clearSearch").onclick=()=>{search="";render();};
+ document.querySelectorAll(".add-product").forEach(b=>{
+   b.onclick=()=>addToCart(Number(b.dataset.id));
+ });
+ document.querySelectorAll("[data-action]").forEach(b=>{
+   b.onclick=()=>cartAction(b.dataset.action,Number(b.dataset.id));
+ });
+ if($("emptyCart")) $("emptyCart").onclick=()=>{cart=[];render();};
+ if($("payment")) $("payment").onchange=e=>payment=e.target.value;
+ if($("finishSale")) $("finishSale").onclick=finishSale;
+ if($("toggleCash")) $("toggleCash").onclick=toggleCash;
+ if($("newProduct")) $("newProduct").onclick=()=>productForm();
+
+ if($("stockSearch")) {
+   $("stockSearch").oninput=e=>{
+     const q=e.target.value.toLowerCase();
+     $("stockRows").innerHTML=renderStockRows(db.products.filter(p=>
+       (p.name+" "+p.sku+" "+p.category).toLowerCase().includes(q)
+     ));
+     bindEdits();
+   };
+ }
+ bindEdits();
+
+ if($("backPDV")) $("backPDV").onclick=()=>setPage("pdv");
+ document.querySelectorAll("#exportSales").forEach(b=>b.onclick=exportSales);
+}
+
+function bindEdits() {
+ document.querySelectorAll(".edit-product").forEach(b=>{
+   b.onclick=()=>productForm(Number(b.dataset.id));
+ });
+}
+
+$("toggleCash").onclick=toggleCash;
+render();
+
+})();
+</script>
 </body>
 </html>
