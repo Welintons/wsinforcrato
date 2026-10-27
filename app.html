@@ -42,42 +42,45 @@
 </head>
 <body class="h-full flex flex-col md:flex-row text-slate-800 dark:text-slate-100 dark:bg-slate-900 transition-colors duration-200 overflow-x-hidden">
 
+    <!-- Overlay escura para mobile quando o menu estiver aberto -->
+    <div id="sidebarOverlay" onclick="toggleSidebar()" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-20 hidden md:hidden transition-opacity"></div>
+
     <!-- Sidebar Retrátil / Lateral -->
-    <aside id="sidebar" class="w-full md:w-64 bg-white dark:bg-slate-800 border-r border-slate-200 dark:border-slate-700 flex flex-col z-30 shrink-0 shadow-sm transition-all duration-300">
-        <div class="h-16 px-4 border-b border-slate-200 dark:border-slate-700 flex items-center justify-between">
+    <aside id="sidebar" class="fixed md:static inset-y-0 left-0 w-64 bg-white dark:bg-slate-800 border-r border-slate-200 dark:border-slate-700 flex flex-col z-30 shrink-0 shadow-sm -translate-x-full md:translate-x-0 transition-all duration-300">
+        <div class="h-16 px-4 border-b border-slate-200 dark:border-slate-700 flex items-center justify-between shrink-0">
             <div class="flex items-center gap-3 overflow-hidden">
                 <div class="w-9 h-9 rounded-xl bg-brand-500 text-white flex items-center justify-center font-bold text-lg shadow-md shadow-brand-500/25 shrink-0">
                     <i class="fa-solid fa-house-chimney-user"></i>
                 </div>
-                <div class="sidebar-label transition-opacity duration-200">
+                <div class="sidebar-label transition-opacity duration-200 truncate">
                     <h1 class="font-bold text-sm leading-tight text-slate-900 dark:text-white truncate">Gestão Residencial</h1>
                     <p class="text-[10px] text-slate-500 dark:text-slate-400">Supabase Conectado</p>
                 </div>
             </div>
-            <button onclick="toggleSidebar()" class="hidden md:flex p-1.5 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors" title="Recolher menu">
+            <button onclick="toggleSidebar()" class="hidden md:flex p-1.5 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors shrink-0" title="Recolher/Expandir menu">
                 <i id="sidebarToggleIcon" class="fa-solid fa-chevron-left text-xs"></i>
             </button>
         </div>
 
         <nav class="flex-1 p-3 space-y-1.5 overflow-y-auto" aria-label="Seções do sistema">
             <button type="button" class="finance-tab w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700/60 font-semibold text-xs transition-all is-active" data-tab="visao" aria-selected="true">
-                <i class="fa-solid fa-chart-line text-base w-5 text-center"></i><span class="sidebar-label">Visão Geral</span>
+                <i class="fa-solid fa-chart-line text-base w-5 text-center shrink-0"></i><span class="sidebar-label truncate">Visão Geral</span>
             </button>
             <button type="button" class="finance-tab w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700/60 font-semibold text-xs transition-all" data-tab="caixas" aria-selected="false">
-                <i class="fa-solid fa-boxes-stacked text-base w-5 text-center"></i><span class="sidebar-label">Caixas Financeiras</span>
+                <i class="fa-solid fa-boxes-stacked text-base w-5 text-center shrink-0"></i><span class="sidebar-label truncate">Caixas Financeiras</span>
             </button>
             <button type="button" class="finance-tab w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700/60 font-semibold text-xs transition-all" data-tab="despensa" aria-selected="false">
-                <i class="fa-solid fa-basket-shopping text-base w-5 text-center"></i><span class="sidebar-label">Despensa & Mantimentos</span>
+                <i class="fa-solid fa-basket-shopping text-base w-5 text-center shrink-0"></i><span class="sidebar-label truncate">Despensa & Mantimentos</span>
             </button>
             <button type="button" class="finance-tab w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700/60 font-semibold text-xs transition-all" data-tab="relatorios" aria-selected="false">
-                <i class="fa-solid fa-chart-pie text-base w-5 text-center"></i><span class="sidebar-label">Relatórios & Gráficos</span>
+                <i class="fa-solid fa-chart-pie text-base w-5 text-center shrink-0"></i><span class="sidebar-label truncate">Relatórios & Gráficos</span>
             </button>
             <button type="button" class="finance-tab w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700/60 font-semibold text-xs transition-all" data-tab="historico" aria-selected="false">
-                <i class="fa-solid fa-clock-rotate-left text-base w-5 text-center"></i><span class="sidebar-label">Histórico & Compras</span>
+                <i class="fa-solid fa-clock-rotate-left text-base w-5 text-center shrink-0"></i><span class="sidebar-label truncate">Histórico & Compras</span>
             </button>
         </nav>
 
-        <div class="p-3 border-t border-slate-200 dark:border-slate-700 text-[10px] text-slate-400 text-center sidebar-label">
+        <div class="p-3 border-t border-slate-200 dark:border-slate-700 text-[10px] text-slate-400 text-center sidebar-label shrink-0">
             <span id="dbStatusIndicator" class="text-amber-500 font-bold"><i class="fa-solid fa-circle text-[8px]"></i> Configurar Supabase</span>
         </div>
     </aside>
@@ -86,9 +89,9 @@
     <div class="flex-1 flex flex-col min-w-0 h-full overflow-y-auto">
         <header class="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 sticky top-0 z-20 shadow-sm">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-                <div class="flex items-center gap-2">
-                    <button onclick="toggleSidebar()" class="md:hidden p-2 rounded-lg bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300">
-                        <i class="fa-solid fa-bars"></i>
+                <div class="flex items-center gap-3">
+                    <button onclick="toggleSidebar()" class="md:hidden p-2 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-600 dark:text-slate-300 transition-colors" title="Abrir menu">
+                        <i class="fa-solid fa-bars text-base"></i>
                     </button>
                     <span id="currentTitle" class="font-bold text-sm text-slate-800 dark:text-white uppercase tracking-wider">Visão Geral</span>
                 </div>
@@ -316,7 +319,7 @@
         </div>
     </div>
 
-    <!-- Demais Modais (Caixa, Transação, Mantimento, Preset, etc) -->
+    <!-- Demais Modais -->
     <div id="boxModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white dark:bg-slate-800 w-full max-w-md rounded-2xl shadow-xl overflow-hidden border border-slate-200 dark:border-slate-700">
             <div class="p-5 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center">
@@ -629,14 +632,18 @@
 
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
             const labels = document.querySelectorAll('.sidebar-label');
             const toggleIcon = document.getElementById('sidebarToggleIcon');
 
+            // No mobile, abre/fecha com deslizamento e fundo escuro
             if (window.innerWidth < 768) {
                 sidebar.classList.toggle('-translate-x-full');
+                overlay.classList.toggle('hidden');
                 return;
             }
 
+            // No desktop, alterna estado retrátil (mini sidebar com apenas ícones)
             isSidebarCollapsed = !isSidebarCollapsed;
             if (isSidebarCollapsed) {
                 sidebar.classList.remove('w-64');
@@ -674,8 +681,10 @@
                         p.classList.toggle('active', active);
                     });
 
+                    // Em telas menores, fecha o menu automaticamente ao selecionar uma aba
                     if (window.innerWidth < 768) {
                         document.getElementById('sidebar').classList.add('-translate-x-full');
+                        document.getElementById('sidebarOverlay').classList.add('hidden');
                     }
                 });
             });
@@ -1397,7 +1406,7 @@
             if (!confirm('Deseja aplicar este modelo? Suas caixas atuais serão substituídas.')) return;
             if (key === '50-30-20') {
                 if (supabaseClient) {
-                    await supabaseClient.from('caixas_financeiras').delete().neq('id', 'abc'); // limpa tudo
+                    await supabaseClient.from('caixas_financeiras').delete().neq('id', 'abc');
                     const presets = [
                         { id: 'p1', name: 'Supermercado & Despensa', pct: 50, balance: 0, target: 1500, is_reserve: false, icon: 'fa-basket-shopping', color: '#16a34a' },
                         { id: 'p2', name: 'Lazer e Estilo de Vida', pct: 30, balance: 0, target: 1000, is_reserve: false, icon: 'fa-gamepad', color: '#ec4899' },
