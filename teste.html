@@ -1,19 +1,11 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WS Infor - Serviços & Agendamentos</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- React & ReactDOM -->
-    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-    <!-- Babel for JSX -->
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <script src="https://unpkg.com/lucide-react/dist/umd/lucide-react.js"></script>
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -27,430 +19,283 @@
         }
     </script>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen font-sans antialiased">
-    <div id="root"></div>
+<body class="bg-slate-950 text-slate-100 min-h-screen font-sans antialiased flex flex-col">
 
-    <script type="text/babel">
-        const { useState, useEffect } = React;
-        const { 
-            Wrench, ShoppingBag, Calendar, Clock, User, Phone, MapPin, 
-            CheckCircle, Plus, Trash2, Tag, ChevronRight, MessageSquare, Menu, X, ShieldCheck 
-        } = lucideReact;
+    <!-- Top Navigation -->
+    <header class="bg-slate-900 border-b border-slate-800 sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('catalog')">
+                <div class="bg-blue-600 p-2 rounded-xl text-white shadow-lg shadow-blue-500/30 font-bold">
+                    WS
+                </div>
+                <div>
+                    <h1 class="text-lg font-bold text-white tracking-wide">WS INFOR</h1>
+                    <p class="text-xs text-blue-400 font-medium">Serviços & Soluções Tecnológicas</p>
+                </div>
+            </div>
 
-        function App() {
-            const [activeTab, setActiveTab] = useState('catalog');
-            const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+            <!-- Desktop Menu -->
+            <nav class="hidden md:flex items-center space-x-1">
+                <button onclick="switchTab('catalog')" id="btn-catalog" class="px-4 py-2 rounded-lg text-sm font-medium transition bg-blue-600 text-white shadow-md">
+                    Catálogo & Vitrine
+                </button>
+                <button onclick="switchTab('booking')" id="btn-booking" class="px-4 py-2 rounded-lg text-sm font-medium transition text-slate-300 hover:bg-slate-800">
+                    Agendar Visita
+                </button>
+                <button onclick="switchTab('admin')" id="btn-admin" class="px-4 py-2 rounded-lg text-sm font-medium transition text-slate-300 hover:bg-slate-800">
+                    Meus Agendamentos (<span id="appt-count">0</span>)
+                </button>
+            </nav>
+
+            <!-- Mobile menu button -->
+            <button class="md:hidden text-slate-300 p-2" onclick="toggleMobileMenu()">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+            </button>
+        </div>
+
+        <!-- Mobile Menu Dropdown -->
+        <div id="mobile-menu" class="hidden md:hidden bg-slate-900 border-b border-slate-800 px-4 pt-2 pb-4 space-y-2">
+            <button onclick="switchTab('catalog'); toggleMobileMenu();" class="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-slate-300">Catálogo & Vitrine</button>
+            <button onclick="switchTab('booking'); toggleMobileMenu();" class="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-slate-300">Agendar Visita</button>
+            <button onclick="switchTab('admin'); toggleMobileMenu();" class="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-slate-300">Agendamentos</button>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="flex-1 max-w-6xl w-full mx-auto p-4 md:p-6">
+        
+        <!-- TAB 1: CATALOG / SHOWCASE -->
+        <section id="tab-catalog" class="space-y-6">
+            <div class="bg-gradient-to-r from-blue-900/40 via-slate-900 to-slate-900 border border-blue-500/20 rounded-2xl p-6 md:p-8 shadow-xl">
+                <span class="bg-blue-500/20 text-blue-400 text-xs font-semibold px-3 py-1 rounded-full border border-blue-500/30">Soluções Rápidas & Garantidas</span>
+                <h2 class="text-2xl md:text-3xl font-extrabold text-white mt-3">Precisando de suporte técnico ou serviços especializados?</h2>
+                <p class="text-slate-300 mt-2 max-w-2xl text-sm md:text-base">Confira nossos principais serviços e produtos abaixo. Escolha o que você precisa e agende sua visita com total praticidade.</p>
+                <div class="mt-6 flex flex-wrap gap-3">
+                    <button onclick="switchTab('booking')" class="bg-blue-600 hover:bg-blue-500 text-white font-medium px-5 py-2.5 rounded-xl transition shadow-lg shadow-blue-600/30">
+                        Agendar Atendimento Agora
+                    </button>
+                    <a href="https://wa.me/" target="_blank" rel="noreferrer" class="bg-slate-800 hover:bg-slate-700 text-slate-200 font-medium px-5 py-2.5 rounded-xl transition border border-slate-700">
+                        Falar no WhatsApp
+                    </a>
+                </div>
+            </div>
+
+            <div>
+                <h3 class="text-xl font-bold text-white mb-4">Nossos Serviços & Produtos</h3>
+                <div id="products-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Preenchido via JavaScript -->
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 2: BOOKING FORM -->
+        <section id="tab-booking" class="hidden max-w-2xl mx-auto bg-slate-900 border border-slate-800 rounded-2xl p-6 md:p-8 shadow-xl">
+            <div class="text-center mb-6">
+                <h2 class="text-2xl font-bold text-white">Solicitar Agendamento</h2>
+                <p class="text-slate-400 text-sm mt-1">Preencha os dados abaixo para reservar o seu atendimento com a WS Infor.</p>
+            </div>
+
+            <form id="booking-form" onsubmit="handleBookingSubmit(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Serviço Desejado *</label>
+                    <select id="form-service" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-blue-500" required>
+                        <option value="">Selecione um serviço...</option>
+                    </select>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Seu Nome *</label>
+                        <input type="text" id="form-name" placeholder="Nome completo" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-blue-500" required>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">WhatsApp / Telefone *</label>
+                        <input type="tel" id="form-phone" placeholder="(00) 00000-0000" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-blue-500" required>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Endereço / Local de Atendimento *</label>
+                    <input type="text" id="form-address" placeholder="Rua, Número, Bairro e Cidade" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-blue-500" required>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Data Desejada *</label>
+                        <input type="date" id="form-date" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-blue-500" required>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Horário Preferencial *</label>
+                        <select id="form-time" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-blue-500" required>
+                            <option value="">Selecione o turno/horário</option>
+                            <option value="Manhã (08:00 - 12:00)">Manhã (08:00 - 12:00)</option>
+                            <option value="Tarde (13:00 - 18:00)">Tarde (13:00 - 18:00)</option>
+                            <option value="Horário Comercial Específico">Combinar horário específico</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Observações ou Detalhes do Problema</label>
+                    <textarea id="form-notes" rows="3" placeholder="Descreva brevemente o defeito..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-4 text-white text-sm focus:outline-none focus:border-blue-500 resize-none"></textarea>
+                </div>
+
+                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3.5 rounded-xl transition shadow-lg shadow-blue-600/30">
+                    Confirmar Agendamento
+                </button>
+            </form>
+        </section>
+
+        <!-- TAB 3: ADMIN / APPOINTMENTS LIST -->
+        <section id="tab-admin" class="hidden space-y-6">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h2 class="text-2xl font-bold text-white">Agendamentos Recebidos</h2>
+                    <p class="text-slate-400 text-sm">Gerencie os pedidos de visita e serviços solicitados.</p>
+                </div>
+            </div>
+            <div id="appointments-list" class="space-y-4">
+                <!-- Preenchido via JavaScript -->
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-800 bg-slate-900 mt-auto py-6 text-center text-xs text-slate-500">
+        <p>© 2026 WS Infor - Todos os direitos reservados.</p>
+    </footer>
+
+    <!-- Script de lógica -->
+    <script>
+        const products = [
+            { id: 1, title: 'Manutenção de Computadores & Notebooks', category: 'Serviço', price: 'A partir de R$ 80', desc: 'Formatação, limpeza profunda, troca de peças, otimização de sistema e remoção de vírus.', image: 'https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?auto=format&fit=crop&w=600&q=80' },
+            { id: 2, title: 'Instalação de Câmeras de Segurança (CFTV)', category: 'Serviço', price: 'Sob Consulta', desc: 'Projeto e instalação completa de sistemas de segurança residencial e comercial com acesso pelo celular.', image: 'https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=600&q=80' },
+            { id: 3, title: 'Montagem de Móveis & Instalações', category: 'Serviço', price: 'A partir de R$ 60', desc: 'Montagem de móveis em geral e pequenas instalações elétricas e residenciais com garantia.', image: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=600&q=80' },
+            { id: 4, title: 'Reparo de Eletrodomésticos (Ventiladores & Som)', category: 'Serviço', price: 'Orçamento Grátis', desc: 'Conserto especializado em ventiladores, caixas de som, micro-ondas e eletrodomésticos de linha branca.', image: 'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=600&q=80' },
+            { id: 5, title: 'Suporte Técnico e Redes Wi-Fi', category: 'Serviço', price: 'R$ 90', desc: 'Configuração de roteadores, repetidores, melhoria de sinal Wi-Fi e cabeamento estruturado.', image: 'https://images.unsplash.com/photo-1544197150-b99a580bb7a8?auto=format&fit=crop&w=600&q=80' },
+            { id: 6, title: 'Acessórios de Informática & Cabos', category: 'Produto', price: 'Variados', desc: 'Cabos HDMI, fontes, mouses, teclados, pendrives e periféricos em geral à pronta entrega.', image: 'https://images.unsplash.com/photo-1526738549149-8e07eca6c147?auto=format&fit=crop&w=600&q=80' }
+        ];
+
+        let appointments = JSON.parse(localStorage.getItem('ws_appointments') || '[]');
+
+        function renderProducts() {
+            const grid = document.getElementById('products-grid');
+            const select = document.getElementById('form-service');
             
-            // Catálogo inicial (Você pode editar ou puxar do Supabase)
-            const [products, setProducts] = useState([
-                { id: 1, title: 'Manutenção de Computadores & Notebooks', category: 'Serviço', price: 'A partir de R$ 80', desc: 'Formatação, limpeza profunda, troca de peças, otimização de sistema e remoção de vírus.', image: 'https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?auto=format&fit=crop&w=600&q=80' },
-                { id: 2, title: 'Instalação de Câmeras de Segurança (CFTV)', category: 'Serviço', price: 'Sob Consulta', desc: 'Projeto e instalação completa de sistemas de segurança residencial e comercial com acesso pelo celular.', image: 'https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=600&q=80' },
-                { id: 3, title: 'Montagem de Móveis & Instalações', category: 'Serviço', price: 'A partir de R$ 60', desc: 'Montagem de móveis em geral e pequenas instalações elétricas e residenciais com garantia.', image: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=600&q=80' },
-                { id: 4, title: 'Reparo de Eletrodomésticos (Ventiladores & Som)', category: 'Serviço', price: 'Orçamento Grátis', desc: 'Conserto especializado em ventiladores, caixas de som, micro-ondas e eletrodomésticos de linha branca.', image: 'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=600&q=80' },
-                { id: 5, title: 'Suporte Técnico e Redes Wi-Fi', category: 'Serviço', price: 'R$ 90', desc: 'Configuração de roteadores, repetidores, melhoria de sinal Wi-Fi e cabeamento estruturado.', image: 'https://images.unsplash.com/photo-1544197150-b99a580bb7a8?auto=format&fit=crop&w=600&q=80' },
-                { id: 6, title: 'Acessórios de Informática & Cabos', category: 'Produto', price: 'Variados', desc: 'Cabos HDMI, fontes, mouses, teclados, pendrives e periféricos em geral à pronta entrega.', image: 'https://images.unsplash.com/photo-1526738549149-8e07eca6c147?auto=format&fit=crop&w=600&q=80' }
-            ]);
-
-            // Agendamentos salvos
-            const [appointments, setAppointments] = useState(() => {
-                const saved = localStorage.getItem('ws_appointments');
-                return saved ? JSON.parse(saved) : [];
-            });
-
-            // Formulário de agendamento
-            const [form, setForm] = useState({
-                serviceName: '',
-                clientName: '',
-                phone: '',
-                address: '',
-                date: '',
-                time: '',
-                notes: ''
-            });
-
-            const [successModal, setSuccessModal] = useState(false);
-
-            useEffect(() => {
-                localStorage.setItem('ws_appointments', JSON.stringify(appointments));
-            }, [appointments]);
-
-            const handleSelectServiceForBooking = (serviceTitle) => {
-                setForm(prev => ({ ...prev, serviceName: serviceTitle }));
-                setActiveTab('booking');
-            };
-
-            const handleBookingSubmit = (e) => {
-                e.preventDefault();
-                if (!form.serviceName || !form.clientName || !form.phone || !form.date || !form.time) {
-                    alert('Por favor, preencha os campos obrigatórios!');
-                    return;
-                }
-
-                const newAppt = {
-                    id: Date.now(),
-                    ...form,
-                    createdAt: new Date().toLocaleDateString('pt-BR')
-                };
-
-                setAppointments([newAppt, ...appointments]);
-                setSuccessModal(true);
-                setForm({ serviceName: '', clientName: '', phone: '', address: '', date: '', time: '', notes: '' });
-            };
-
-            return (
-                <div className="flex flex-col min-h-screen">
-                    {/* Top Navigation */}
-                    <header className="bg-slate-900 border-b border-slate-800 sticky top-0 z-50">
-                        <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
-                            <div className="flex items-center space-x-3 cursor-pointer" onClick={() => setActiveTab('catalog')}>
-                                <div className="bg-blue-600 p-2 rounded-xl text-white shadow-lg shadow-blue-500/30">
-                                    <Wrench className="w-6 h-6" />
-                                </div>
-                                <div>
-                                    <h1 className="text-lg font-bold text-white tracking-wide">WS INFOR</h1>
-                                    <p className="text-xs text-blue-400 font-medium">Serviços & Soluções Tecnológicas</p>
-                                </div>
+            grid.innerHTML = products.map(p => `
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden flex flex-col shadow-lg">
+                    <div class="h-48 overflow-hidden relative">
+                        <img src="${p.image}" alt="${p.title}" class="w-full h-full object-cover">
+                        <span class="absolute top-3 left-3 bg-slate-900/80 text-xs font-semibold px-2.5 py-1 rounded-lg text-blue-400 border border-slate-700">${p.category}</span>
+                    </div>
+                    <div class="p-5 flex-1 flex flex-col justify-between">
+                        <div>
+                            <h4 class="font-bold text-white text-lg">${p.title}</h4>
+                            <p class="text-slate-400 text-sm mt-2">${p.desc}</p>
+                        </div>
+                        <div class="mt-5 pt-4 border-t border-slate-800 flex items-center justify-between">
+                            <div>
+                                <span class="text-xs text-slate-400 block">Valor</span>
+                                <span class="text-emerald-400 font-bold text-base">${p.price}</span>
                             </div>
-
-                            {/* Desktop Menu */}
-                            <nav className="hidden md:flex items-center space-x-1">
-                                <button 
-                                    onClick={() => setActiveTab('catalog')} 
-                                    className={`px-4 py-2 rounded-lg text-sm font-medium transition flex items-center space-x-2 ${activeTab === 'catalog' ? 'bg-blue-600 text-white shadow-md' : 'text-slate-300 hover:bg-slate-800'}`}
-                                >
-                                    <ShoppingBag className="w-4 h-4" />
-                                    <span>Catálogo & Vitrine</span>
-                                </button>
-                                <button 
-                                    onClick={() => setActiveTab('booking')} 
-                                    className={`px-4 py-2 rounded-lg text-sm font-medium transition flex items-center space-x-2 ${activeTab === 'booking' ? 'bg-blue-600 text-white shadow-md' : 'text-slate-300 hover:bg-slate-800'}`}
-                                >
-                                    <Calendar className="w-4 h-4" />
-                                    <span>Agendar Visita</span>
-                                </button>
-                                <button 
-                                    onClick={() => setActiveTab('admin')} 
-                                    className={`px-4 py-2 rounded-lg text-sm font-medium transition flex items-center space-x-2 ${activeTab === 'admin' ? 'bg-blue-600 text-white shadow-md' : 'text-slate-300 hover:bg-slate-800'}`}
-                                >
-                                    <ShieldCheck className="w-4 h-4" />
-                                    <span>Meus Agendamentos ({appointments.length})</span>
-                                </button>
-                            </nav>
-
-                            {/* Mobile menu button */}
-                            <button className="md:hidden text-slate-300 p-2" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
-                                {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+                            <button onclick="selectService('${p.title}')" class="bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold px-4 py-2.5 rounded-xl transition">
+                                Agendar
                             </button>
                         </div>
-
-                        {/* Mobile Menu Dropdown */}
-                        {mobileMenuOpen && (
-                            <div className="md:hidden bg-slate-900 border-b border-slate-800 px-4 pt-2 pb-4 space-y-2">
-                                <button onClick={() => { setActiveTab('catalog'); setMobileMenuOpen(false); }} className={`w-full text-left px-3 py-2 rounded-lg text-sm font-medium flex items-center space-x-2 ${activeTab === 'catalog' ? 'bg-blue-600 text-white' : 'text-slate-300'}`}>
-                                    <ShoppingBag className="w-4 h-4" /> <span>Catálogo & Vitrine</span>
-                                </button>
-                                <button onClick={() => { setActiveTab('booking'); setMobileMenuOpen(false); }} className={`w-full text-left px-3 py-2 rounded-lg text-sm font-medium flex items-center space-x-2 ${activeTab === 'booking' ? 'bg-blue-600 text-white' : 'text-slate-300'}`}>
-                                    <Calendar className="w-4 h-4" /> <span>Agendar Visita</span>
-                                </button>
-                                <button onClick={() => { setActiveTab('admin'); setMobileMenuOpen(false); }} className={`w-full text-left px-3 py-2 rounded-lg text-sm font-medium flex items-center space-x-2 ${activeTab === 'admin' ? 'bg-blue-600 text-white' : 'text-slate-300'}`}>
-                                    <ShieldCheck className="w-4 h-4" /> <span>Agendamentos ({appointments.length})</span>
-                                </button>
-                            </div>
-                        )}
-                    </header>
-
-                    {/* Main Content Container */}
-                    <main className="flex-1 max-w-6xl w-full mx-auto p-4 md:p-6">
-                        
-                        {/* TAB 1: CATALOG / SHOWCASE */}
-                        {activeTab === 'catalog' && (
-                            <div className="space-y-6">
-                                <div className="bg-gradient-to-r from-blue-900/40 via-slate-900 to-slate-900 border border-blue-500/20 rounded-2xl p-6 md:p-8 shadow-xl">
-                                    <span className="bg-blue-500/20 text-blue-400 text-xs font-semibold px-3 py-1 rounded-full border border-blue-500/30">Soluções Rápidas & Garantidas</span>
-                                    <h2 className="text-2xl md:text-3xl font-extrabold text-white mt-3">Precisando de suporte técnico ou serviços especializados?</h2>
-                                    <p className="text-slate-300 mt-2 max-w-2xl text-sm md:text-base">Confira nossos principais serviços e produtos abaixo. Escolha o que você precisa e agende sua visita com total praticidade.</p>
-                                    <div className="mt-6 flex flex-wrap gap-3">
-                                        <button onClick={() => setActiveTab('booking')} className="bg-blue-600 hover:bg-blue-500 text-white font-medium px-5 py-2.5 rounded-xl transition shadow-lg shadow-blue-600/30 flex items-center space-x-2">
-                                            <Calendar className="w-4 h-4" />
-                                            <span>Agendar Atendimento Agora</span>
-                                        </button>
-                                        <a href="https://wa.me/" target="_blank" rel="noreferrer" className="bg-slate-800 hover:bg-slate-700 text-slate-200 font-medium px-5 py-2.5 rounded-xl transition border border-slate-700 flex items-center space-x-2">
-                                            <MessageSquare className="w-4 h-4 text-emerald-400" />
-                                            <span>Falar no WhatsApp</span>
-                                        </a>
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <div className="flex items-center justify-between mb-4">
-                                        <h3 className="text-xl font-bold text-white flex items-center space-x-2">
-                                            <Tag className="w-5 h-5 text-blue-500" />
-                                            <span>Nossos Serviços & Produtos</span>
-                                        </h3>
-                                        <span className="text-xs text-slate-400 font-medium">{products.length} itens disponíveis</span>
-                                    </div>
-
-                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                        {products.map(item => (
-                                            <div key={item.id} className="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden hover:border-slate-700 transition flex flex-col shadow-lg group">
-                                                <div className="h-48 overflow-hidden relative">
-                                                    <img src={item.image} alt={item.title} className="w-full h-full object-cover group-hover:scale-105 transition duration-300" />
-                                                    <span className="absolute top-3 left-3 bg-slate-900/80 backdrop-blur-md text-xs font-semibold px-2.5 py-1 rounded-lg text-blue-400 border border-slate-700">
-                                                        {item.category}
-                                                    </span>
-                                                </div>
-                                                <div className="p-5 flex-1 flex flex-col justify-between">
-                                                    <div>
-                                                        <h4 className="font-bold text-white text-lg group-hover:text-blue-400 transition">{item.title}</h4>
-                                                        <p className="text-slate-400 text-sm mt-2 line-clamp-3">{item.desc}</p>
-                                                    </div>
-                                                    <div className="mt-5 pt-4 border-t border-slate-800 flex items-center justify-between">
-                                                        <div>
-                                                            <span className="text-xs text-slate-400 block">Valor estimado</span>
-                                                            <span className="text-emerald-400 font-bold text-base">{item.price}</span>
-                                                        </div>
-                                                        <button 
-                                                            onClick={() => handleSelectServiceForBooking(item.title)}
-                                                            className="bg-blue-600/20 hover:bg-blue-600 text-blue-400 hover:text-white text-xs font-semibold px-4 py-2.5 rounded-xl transition border border-blue-500/30 flex items-center space-x-1"
-                                                        >
-                                                            <span>Agendar</span>
-                                                            <ChevronRight className="w-3.5 h-3.5" />
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
-                            </div>
-                        )}
-
-                        {/* TAB 2: BOOKING FORM */}
-                        {activeTab === 'booking' && (
-                            <div className="max-w-2xl mx-auto bg-slate-900 border border-slate-800 rounded-2xl p-6 md:p-8 shadow-xl">
-                                <div className="text-center mb-6">
-                                    <div className="bg-blue-600/20 text-blue-400 w-12 h-12 rounded-2xl flex items-center justify-center mx-auto mb-3 border border-blue-500/30">
-                                        <Calendar className="w-6 h-6" />
-                                    </div>
-                                    <h2 className="text-2xl font-bold text-white">Solicitar Agendamento</h2>
-                                    <p className="text-slate-400 text-sm mt-1">Preencha os dados abaixo para reservar o seu atendimento com a WS Infor.</p>
-                                </div>
-
-                                <form onSubmit={handleBookingSubmit} className="space-y-4">
-                                    <div>
-                                        <label className="block text-xs font-semibold text-slate-300 uppercase mb-1">Serviço Desejado *</label>
-                                        <select 
-                                            value={form.serviceName}
-                                            onChange={e => setForm({...form, serviceName: e.target.value})}
-                                            className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-blue-500"
-                                            required
-                                        >
-                                            <option value="">Selecione um serviço...</option>
-                                            {products.map(p => (
-                                                <option key={p.id} value={p.title}>{p.title} ({p.category})</option>
-                                            ))}
-                                            <option value="Outro Serviço / Orçamento Personalizado">Outro Serviço / Orçamento Personalizado</option>
-                                        </select>
-                                    </div>
-
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                        <div>
-                                            <label className="block text-xs font-semibold text-slate-300 uppercase mb-1">Seu Nome *</label>
-                                            <div className="relative">
-                                                <User className="w-4 h-4 text-slate-500 absolute left-3.5 top-3.5" />
-                                                <input 
-                                                    type="text" 
-                                                    placeholder="Nome completo"
-                                                    value={form.clientName}
-                                                    onChange={e => setForm({...form, clientName: e.target.value})}
-                                                    className="w-full bg-slate-950 border border-slate-800 rounded-xl pl-10 pr-4 py-3 text-white text-sm focus:outline-none focus:border-blue-500"
-                                                    required
-                                                />
-                                            </div>
-                                        </div>
-
-                                        <div>
-                                            <label className="block text-xs font-semibold text-slate-300 uppercase mb-1">WhatsApp / Telefone *</label>
-                                            <div className="relative">
-                                                <Phone className="w-4 h-4 text-slate-500 absolute left-3.5 top-3.5" />
-                                                <input 
-                                                    type="tel" 
-                                                    placeholder="(00) 00000-0000"
-                                                    value={form.phone}
-                                                    onChange={e => setForm({...form, phone: e.target.value})}
-                                                    className="w-full bg-slate-950 border border-slate-800 rounded-xl pl-10 pr-4 py-3 text-white text-sm focus:outline-none focus:border-blue-500"
-                                                    required
-                                                />
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div>
-                                        <label className="block text-xs font-semibold text-slate-300 uppercase mb-1">Endereço / Local de Atendimento *</label>
-                                        <div className="relative">
-                                            <MapPin className="w-4 h-4 text-slate-500 absolute left-3.5 top-3.5" />
-                                            <input 
-                                                type="text" 
-                                                placeholder="Rua, Número, Bairro e Cidade"
-                                                value={form.address}
-                                                onChange={e => setForm({...form, address: e.target.value})}
-                                                className="w-full bg-slate-950 border border-slate-800 rounded-xl pl-10 pr-4 py-3 text-white text-sm focus:outline-none focus:border-blue-500"
-                                                required
-                                            />
-                                        </div>
-                                    </div>
-
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                        <div>
-                                            <label className="block text-xs font-semibold text-slate-300 uppercase mb-1">Data Desejada *</label>
-                                            <input 
-                                                type="date" 
-                                                value={form.date}
-                                                onChange={e => setForm({...form, date: e.target.value})}
-                                                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-blue-500"
-                                                required
-                                            />
-                                        </div>
-
-                                        <div>
-                                            <label className="block text-xs font-semibold text-slate-300 uppercase mb-1">Horário Preferencial *</label>
-                                            <select 
-                                                value={form.time}
-                                                onChange={e => setForm({...form, time: e.target.value})}
-                                                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-blue-500"
-                                                required
-                                            >
-                                                <option value="">Selecione o turno/horário</option>
-                                                <option value="Manhã (08:00 - 12:00)">Manhã (08:00 - 12:00)</option>
-                                                <option value="Tarde (13:00 - 18:00)">Tarde (13:00 - 18:00)</option>
-                                                <option value="Horário Comercial Específico">Combinar horário específico</option>
-                                            </select>
-                                        </div>
-                                    </div>
-
-                                    <div>
-                                        <label className="block text-xs font-semibold text-slate-300 uppercase mb-1">Observações ou Detalhes do Problema</label>
-                                        <textarea 
-                                            rows="3"
-                                            placeholder="Descreva brevemente o defeito ou o que precisa ser feito..."
-                                            value={form.notes}
-                                            onChange={e => setForm({...form, notes: e.target.value})}
-                                            className="w-full bg-slate-950 border border-slate-800 rounded-xl p-4 text-white text-sm focus:outline-none focus:border-blue-500 resize-none"
-                                        ></textarea>
-                                    </div>
-
-                                    <button 
-                                        type="submit"
-                                        className="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3.5 rounded-xl transition shadow-lg shadow-blue-600/30 flex items-center justify-center space-x-2"
-                                    >
-                                        <CheckCircle className="w-5 h-5" />
-                                        <span>Confirmar Agendamento</span>
-                                    </button>
-                                </form>
-                            </div>
-                        )}
-
-                        {/* TAB 3: ADMIN / APPOINTMENTS LIST */}
-                        {activeTab === 'admin' && (
-                            <div className="space-y-6">
-                                <div className="flex items-center justify-between">
-                                    <div>
-                                        <h2 className="text-2xl font-bold text-white">Agendamentos Recebidos</h2>
-                                        <p className="text-slate-400 text-sm">Gerencie os pedidos de visita e serviços solicitados.</p>
-                                    </div>
-                                    <span className="bg-blue-500/20 text-blue-400 border border-blue-500/30 text-xs font-semibold px-3 py-1.5 rounded-xl">
-                                        Total: {appointments.length}
-                                    </span>
-                                </div>
-
-                                {appointments.length === 0 ? (
-                                    <div className="text-center py-16 bg-slate-900 border border-slate-800 rounded-2xl">
-                                        <Calendar className="w-12 h-12 text-slate-600 mx-auto mb-3" />
-                                        <p className="text-slate-400 font-medium">Nenhum agendamento registrado até o momento.</p>
-                                        <button onClick={() => setActiveTab('catalog')} className="mt-4 text-xs bg-blue-600 text-white px-4 py-2 rounded-xl">
-                                            Ver Catálogo
-                                        </button>
-                                    </div>
-                                ) : (
-                                    <div className="grid grid-cols-1 gap-4">
-                                        {appointments.map(app => (
-                                            <div key={app.id} className="bg-slate-900 border border-slate-800 rounded-2xl p-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
-                                                <div className="space-y-2">
-                                                    <div className="flex items-center space-x-2">
-                                                        <span className="bg-blue-600/20 text-blue-400 text-xs font-bold px-2.5 py-1 rounded-lg border border-blue-500/30">
-                                                            {app.serviceName}
-                                                        </span>
-                                                        <span className="text-xs text-slate-500">Solicitado em: {app.createdAt}</span>
-                                                    </div>
-                                                    <h3 className="text-lg font-bold text-white flex items-center space-x-2">
-                                                        <User className="w-4 h-4 text-blue-400" />
-                                                        <span>{app.clientName}</span>
-                                                    </h3>
-                                                    <div className="flex flex-wrap gap-4 text-xs text-slate-300">
-                                                        <span className="flex items-center space-x-1"><Phone className="w-3.5 h-3.5 text-emerald-400" /> <span>{app.phone}</span></span>
-                                                        <span className="flex items-center space-x-1"><MapPin className="w-3.5 h-3.5 text-rose-400" /> <span>{app.address}</span></span>
-                                                        <span className="flex items-center space-x-1"><Clock className="w-3.5 h-3.5 text-amber-400" /> <span>{app.date} ({app.time})</span></span>
-                                                    </div>
-                                                    {app.notes && <p className="text-xs bg-slate-950 p-3 rounded-xl text-slate-400 border border-slate-800">Obs: {app.notes}</p>}
-                                                </div>
-
-                                                <div className="flex items-center space-x-2 self-end md:self-center">
-                                                    <a 
-                                                        href={`https://wa.me/55${app.phone.replace(/\D/g, '')}?text=Olá%20${encodeURIComponent(app.clientName)},%20recebi%20seu%20pedido%20de%20agendamento%20para%20o%20serviço:%20${encodeURIComponent(app.serviceName)}.`} 
-                                                        target="_blank" 
-                                                        rel="noreferrer"
-                                                        className="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold px-4 py-2.5 rounded-xl transition flex items-center space-x-1"
-                                                    >
-                                                        <MessageSquare className="w-3.5 h-3.5" />
-                                                        <span>Chamar no ZAP</span>
-                                                    </a>
-                                                    <button 
-                                                        onClick={() => {
-                                                            if (confirm('Deseja excluir este agendamento?')) {
-                                                                setAppointments(appointments.filter(a => a.id !== app.id));
-                                                            }
-                                                        }}
-                                                        className="bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 p-2.5 rounded-xl transition border border-rose-500/20"
-                                                    >
-                                                        <Trash2 className="w-4 h-4" />
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        ))}
-                                    </div>
-                                )}
-                            </div>
-                        )}
-                    </main>
-
-                    {/* Success Modal */}
-                    {successModal && (
-                        <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-                            <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 max-w-sm w-full text-center space-y-4 shadow-2xl">
-                                <div className="bg-emerald-500/20 text-emerald-400 w-16 h-16 rounded-full flex items-center justify-center mx-auto border border-emerald-500/30">
-                                    <CheckCircle className="w-8 h-8" />
-                                </div>
-                                <h3 className="text-xl font-bold text-white">Agendamento Realizado!</h3>
-                                <p className="text-slate-300 text-sm">Seu pedido foi registrado com sucesso. Entraremos em contato em breve para confirmar os detalhes.</p>
-                                <button 
-                                    onClick={() => { setSuccessModal(false); setActiveTab('admin'); }}
-                                    className="w-full bg-blue-600 hover:bg-blue-500 text-white font-semibold py-3 rounded-xl transition text-sm"
-                                >
-                                    Ver Meus Agendamentos
-                                </button>
-                            </div>
-                        </div>
-                    )}
-
-                    {/* Footer */}
-                    <footer className="border-t border-slate-800 bg-slate-900 mt-auto py-6 text-center text-xs text-slate-500">
-                        <p>© 2026 WS Infor - Todos os direitos reservados. Desenvolvido sob medida.</p>
-                    </footer>
+                    </div>
                 </div>
-            );
+            `).join('');
+
+            select.innerHTML = '<option value="">Selecione um serviço...</option>' + 
+                products.map(p => `<option value="${p.title}">${p.title} (${p.category})</option>`).join('') +
+                '<option value="Outro Serviço / Orçamento Personalizado">Outro Serviço / Orçamento Personalizado</option>';
         }
 
-        ReactDOM.render(<App />, document.getElementById('root'));
+        function renderAppointments() {
+            const list = document.getElementById('appointments-list');
+            document.getElementById('appt-count').innerText = appointments.length;
+
+            if (appointments.length === 0) {
+                list.innerHTML = `<div class="text-center py-16 bg-slate-900 border border-slate-800 rounded-2xl text-slate-400">Nenhum agendamento registrado.</div>`;
+                return;
+            }
+
+            list.innerHTML = appointments.map(app => `
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div class="space-y-1">
+                        <span class="bg-blue-600/20 text-blue-400 text-xs font-bold px-2 py-0.5 rounded border border-blue-500/30">${app.serviceName}</span>
+                        <h3 class="text-lg font-bold text-white mt-1">${app.clientName}</h3>
+                        <p class="text-xs text-slate-300">📞 ${app.phone} | 📍 ${app.address} | 📅 ${app.date} (${app.time})</p>
+                        ${app.notes ? `<p class="text-xs bg-slate-950 p-2 rounded text-slate-400 mt-1">Obs: ${app.notes}</p>` : ''}
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <a href="https://wa.me/55${app.phone.replace(/\D/g, '')}?text=Olá%20${encodeURIComponent(app.clientName)},%20recebi%20seu%20agendamento!" target="_blank" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold px-4 py-2 rounded-xl">
+                            WhatsApp
+                        </a>
+                        <button onclick="deleteAppt(${app.id})" class="bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 text-xs px-3 py-2 rounded-xl">Excluir</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function switchTab(tab) {
+            ['catalog', 'booking', 'admin'].forEach(t => {
+                document.getElementById(`tab-${t}`).classList.add('hidden');
+                const btn = document.getElementById(`btn-${t}`);
+                if(btn) {
+                    btn.classList.remove('bg-blue-600', 'text-white', 'shadow-md');
+                    btn.classList.add('text-slate-300', 'hover:bg-slate-800');
+                }
+            });
+            document.getElementById(`tab-${tab}`).classList.remove('hidden');
+            const activeBtn = document.getElementById(`btn-${tab}`);
+            if(activeBtn) {
+                activeBtn.classList.add('bg-blue-600', 'text-white', 'shadow-md');
+                activeBtn.classList.remove('text-slate-300', 'hover:bg-slate-800');
+            }
+        }
+
+        function selectService(title) {
+            document.getElementById('form-service').value = title;
+            switchTab('booking');
+        }
+
+        function handleBookingSubmit(e) {
+            e.preventDefault();
+            const newAppt = {
+                id: Date.now(),
+                serviceName: document.getElementById('form-service').value,
+                clientName: document.getElementById('form-name').value,
+                phone: document.getElementById('form-phone').value,
+                address: document.getElementById('form-address').value,
+                date: document.getElementById('form-date').value,
+                time: document.getElementById('form-time').value,
+                notes: document.getElementById('form-notes').value,
+                createdAt: new Date().toLocaleDateString('pt-BR')
+            };
+
+            appointments.unshift(newAppt);
+            localStorage.setItem('ws_appointments', JSON.stringify(appointments));
+            renderAppointments();
+            alert('Agendamento realizado com sucesso!');
+            document.getElementById('booking-form').reset();
+            switchTab('admin');
+        }
+
+        function deleteAppt(id) {
+            if(confirm('Deseja excluir este agendamento?')) {
+                appointments = appointments.filter(a => a.id !== id);
+                localStorage.setItem('ws_appointments', JSON.stringify(appointments));
+                renderAppointments();
+            }
+        }
+
+        function toggleMobileMenu() {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        }
+
+        renderProducts();
+        renderAppointments();
     </script>
 </body>
 </html>
