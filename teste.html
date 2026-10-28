@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agenda de Visitas Técnicas - WS Soluções</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Supabase JS Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen p-4 sm:p-8 font-sans">
+    <div class="max-w-5xl mx-auto">
+        <header class="mb-8 text-center">
+            <h1 class="text-3xl font-bold text-sky-400 tracking-tight">🛠️ WS Soluções - Agenda de Visitas</h1>
+            <p class="text-slate-400 text-sm mt-1">Gerenciamento inteligente de horários com bloqueio automático e alerta no Telegram</p>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Formulário de Cadastro -->
+            <div class="lg:col-span-1 bg-slate-800 p-6 rounded-2xl shadow-xl border border-slate-700">
+                <h2 class="text-lg font-semibold mb-4 text-sky-300 flex items-center gap-2">
+                    <span>📅</span> Novo Agendamento
+                </h2>
+                <form id="formAgendamento" class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-medium text-slate-300 mb-1">Nome do Cliente</label>
+                        <input type="text" id="cliente_nome" required class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm focus:outline-none focus:border-sky-500 text-white" placeholder="Ex: João Silva">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-300 mb-1">Telefone / WhatsApp</label>
+                        <input type="text" id="cliente_telefone" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm focus:outline-none focus:border-sky-500 text-white" placeholder="(88) 99999-9999">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-300 mb-1">Serviço / Equipamento</label>
+                        <input type="text" id="servico" required class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm focus:outline-none focus:border-sky-500 text-white" placeholder="Ex: Forro PVC / Câmeras">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-300 mb-1">Endereço</label>
+                        <input type="text" id="endereco" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm focus:outline-none focus:border-sky-500 text-white" placeholder="Rua, Bairro, Nº">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-300 mb-1">Data e Hora (Expediente: 09h às 21h)</label>
+                        <input type="datetime-local" id="data_hora_visita" required class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm focus:outline-none focus:border-sky-500 text-white">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-300 mb-1">Duração Estimada do Serviço</label>
+                        <select id="duracao_horas" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm focus:outline-none focus:border-sky-500 text-white">
+                            <option value="1">1 Hora</option>
+                            <option value="2" selected>2 Horas (Padrão)</option>
+                            <option value="3">3 Horas (Instalação maior)</option>
+                            <option value="4">4 Horas (Serviço Completo)</option>
+                        </select>
+                        <span class="text-[10px] text-slate-400 mt-1 block">Bloqueia automaticamente as horas seguintes na agenda.</span>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-300 mb-1">Observações</label>
+                        <textarea id="observacoes" rows="2" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm focus:outline-none focus:border-sky-500 text-white" placeholder="Detalhes adicionais..."></textarea>
+                    </div>
+                    <button type="submit" class="w-full bg-sky-600 hover:bg-sky-500 font-semibold py-2.5 rounded-lg transition text-sm shadow-md text-white">
+                        🚀 Agendar Visita & Notificar
+                    </button>
+                </form>
+            </div>
+
+            <!-- Lista de Agendamentos e Status de Horários -->
+            <div class="lg:col-span-2 space-y-6">
+                <!-- Seção de Próximos Agendamentos -->
+                <div class="bg-slate-800 p-6 rounded-2xl shadow-xl border border-slate-700">
+                    <h2 class="text-lg font-semibold mb-4 text-sky-300 flex items-center justify-between">
+                        <span>📋 Visitas Agendadas</span>
+                        <span id="totalAgendamentos" class="text-xs bg-slate-700 px-2.5 py-1 rounded-full text-slate-300">0 cadastradas</span>
+                    </h2>
+                    <div id="listaAgendamentos" class="space-y-3 overflow-y-auto max-h-[380px] pr-1">
+                        <p class="text-slate-400 text-sm">Carregando agendamentos...</p>
+                    </div>
+                </div>
+
+                <!-- Painel de Regras Ativas -->
+                <div class="bg-slate-800/80 p-4 rounded-2xl border border-slate-700/80 text-xs text-slate-300 flex items-center justify-between">
+                    <div>
+                        <span class="font-bold text-sky-400">⚡ Regra de Bloqueio Ativa:</span> Expediente das 09:00 às 21:00. O sistema valida conflitos de horário com base na duração do serviço.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ⚠️ Substitua pelas suas credenciais reais do Supabase aqui
+        const SUPABASE_URL = 'SUA_SUPABASE_URL_AQUI';
+        const SUPABASE_KEY = 'SUA_SUPABASE_KEY_AQUI';
+
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        async function carregarAgendamentos() {
+            const container = document.getElementById('listaAgendamentos');
+            
+            const { data, error } = await supabaseClient
+                .from('agendamentos_visitas')
+                .select('*')
+                .order('data_hora_visita', { ascending: true });
+            
+            if (error) {
+                container.innerHTML = `<p class="text-red-400 text-sm">Erro ao carregar dados do Supabase. Verifique a URL e a Key no código.</p>`;
+                return;
+            }
+
+            if (!data || data.length === 0) {
+                container.innerHTML = `<p class="text-slate-400 text-sm">Nenhum agendamento registrado até o momento.</p>`;
+                document.getElementById('totalAgendamentos').innerText = '0 cadastradas';
+                return;
+            }
+
+            document.getElementById('totalAgendamentos').innerText = `${data.length} cadastradas`;
+
+            container.innerHTML = data.map(item => {
+                const dataInicio = new Date(item.data_hora_visita);
+                const dataFormatada = dataInicio.toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' });
+                
+                return `
+                    <div class="bg-slate-900 p-4 rounded-xl border border-slate-700 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                        <div class="space-y-1">
+                            <div class="flex items-center gap-2">
+                                <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-sky-900/80 text-sky-300 uppercase">${item.status || 'pendente'}</span>
+                                <span class="text-xs text-slate-400">🕒 ${dataFormatada}</span>
+                            </div>
+                            <h3 class="font-bold text-white text-sm">${item.cliente_nome} - <span class="text-sky-400">${item.servico}</span></h3>
+                            <p class="text-xs text-slate-400">📍 ${item.endereco || 'Endereço não informado'} | 📞 ${item.cliente_telefone || 'Sem tel'}</p>
+                            ${item.observacoes ? `<p class="text-[11px] text-slate-400 italic">Obs: ${item.observacoes}</p>` : ''}
+                        </div>
+                        <button onclick="excluirAgendamento('${item.id}')" class="text-xs bg-red-900/40 hover:bg-red-800 text-red-300 px-3 py-1.5 rounded-lg transition border border-red-800/50">
+                            Excluir
+                        </button>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        document.getElementById('formAgendamento').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const dataHoraStr = document.getElementById('data_hora_visita').value;
+            const dataHora = new Date(dataHoraStr);
+            const hora = dataHora.getHours();
+            const duracao = parseInt(document.getElementById('duracao_horas').value);
+
+            // Validação de Expediente (09h às 21h)
+            if (hora < 9 || (hora + duracao) > 21) {
+                alert('⚠️ O horário selecionado ultrapassa o expediente permitido (09:00 às 21:00) considerando a duração do serviço.');
+                return;
+            }
+
+            // Validação de conflito de horário com base na duração
+            const { data: agendamentosExistentes } = await supabaseClient
+                .from('agendamentos_visitas')
+                .select('data_hora_visita, observacoes')
+                .neq('status', 'cancelado');
+
+            if (agendamentosExistentes) {
+                const novoInicio = dataHora.getTime();
+                const novoFim = novoInicio + (duracao * 3600 * 1000);
+
+                for (let ag of agendamentosExistentes) {
+                    const agInicio = new Date(ag.data_hora_visita).getTime();
+                    const agFim = agInicio + (2 * 3600 * 1000); // Padrão de 2h de bloqueio base
+
+                    if (novoInicio < agFim && novoFim > agInicio) {
+                        alert('❌ Conflito de horário! Já existe um atendimento alocado nessa faixa de tempo.');
+                        return;
+                    }
+                }
+            }
+
+            const novoAgendamento = {
+                cliente_nome: document.getElementById('cliente_nome').value,
+                cliente_telefone: document.getElementById('cliente_telefone').value,
+                servico: document.getElementById('servico').value,
+                endereco: document.getElementById('endereco').value,
+                data_hora_visita: dataHoraStr,
+                observacoes: (document.getElementById('observacoes').value || '') + ` (Duração: ${duracao}h)`,
+                status: 'pendente'
+            };
+
+            const { error } = await supabaseClient
+                .from('agendamentos_visitas')
+                .insert([novoAgendamento]);
+
+            if (error) {
+                alert('Erro ao salvar no Supabase: ' + error.message);
+            } else {
+                alert('✅ Agendamento realizado com sucesso! O Telegram foi notificado.');
+                document.getElementById('formAgendamento').reset();
+                carregarAgendamentos();
+            }
+        });
+
+        async function excluirAgendamento(id) {
+            if (!confirm('Deseja realmente remover este agendamento?')) return;
+
+            const { error } = await supabaseClient
+                .from('agendamentos_visitas')
+                .delete()
+                .eq('id', id);
+
+            if (error) {
+                alert('Erro ao excluir: ' + error.message);
+            } else {
+                carregarAgendamentos();
+            }
+        }
+
+        // Carrega a listagem ao iniciar
+        carregarAgendamentos();
+    </script>
+</body>
+</html>
