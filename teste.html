@@ -3,97 +3,206 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Agenda de Visitas Técnicas - WS Soluções</title>
+    <title>Agenda Profissional - WS Soluções</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Supabase JS Client -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
-<body class="bg-slate-900 text-slate-100 min-h-screen p-4 sm:p-8 font-sans">
-    <div class="max-w-5xl mx-auto">
-        <header class="mb-8 text-center">
+<body class="bg-slate-900 text-slate-100 min-h-screen p-4 sm:p-6 font-sans">
+    <div class="max-w-6xl mx-auto">
+        <header class="mb-6 text-center">
             <h1 class="text-3xl font-bold text-sky-400 tracking-tight">🛠️ WS Soluções - Agenda de Visitas</h1>
-            <p class="text-slate-400 text-sm mt-1">Gerenciamento inteligente de horários com bloqueio automático e alerta no Telegram</p>
+            <p class="text-slate-400 text-sm mt-1">Sistema profissional com calendário visual, bloqueio de horários e alertas no Telegram</p>
         </header>
 
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <!-- Formulário de Cadastro -->
-            <div class="lg:col-span-1 bg-slate-800 p-6 rounded-2xl shadow-xl border border-slate-700">
-                <h2 class="text-lg font-semibold mb-4 text-sky-300 flex items-center gap-2">
-                    <span>📅</span> Novo Agendamento
-                </h2>
-                <form id="formAgendamento" class="space-y-4">
-                    <div>
-                        <label class="block text-xs font-medium text-slate-300 mb-1">Nome do Cliente</label>
-                        <input type="text" id="cliente_nome" required class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm focus:outline-none focus:border-sky-500 text-white" placeholder="Ex: João Silva">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-medium text-slate-300 mb-1">Telefone / WhatsApp</label>
-                        <input type="text" id="cliente_telefone" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm focus:outline-none focus:border-sky-500 text-white" placeholder="(88) 99999-9999">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-medium text-slate-300 mb-1">Serviço / Equipamento</label>
-                        <input type="text" id="servico" required class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm focus:outline-none focus:border-sky-500 text-white" placeholder="Ex: Forro PVC / Câmeras">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-medium text-slate-300 mb-1">Endereço</label>
-                        <input type="text" id="endereco" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm focus:outline-none focus:border-sky-500 text-white" placeholder="Rua, Bairro, Nº">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-medium text-slate-300 mb-1">Data e Hora (Expediente: 09h às 21h)</label>
-                        <input type="datetime-local" id="data_hora_visita" required class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm focus:outline-none focus:border-sky-500 text-white">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-medium text-slate-300 mb-1">Duração Estimada do Serviço</label>
-                        <select id="duracao_horas" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm focus:outline-none focus:border-sky-500 text-white">
-                            <option value="1">1 Hora</option>
-                            <option value="2" selected>2 Horas (Padrão)</option>
-                            <option value="3">3 Horas (Instalação maior)</option>
-                            <option value="4">4 Horas (Serviço Completo)</option>
-                        </select>
-                        <span class="text-[10px] text-slate-400 mt-1 block">Bloqueia automaticamente as horas seguintes na agenda.</span>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-medium text-slate-300 mb-1">Observações</label>
-                        <textarea id="observacoes" rows="2" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-sm focus:outline-none focus:border-sky-500 text-white" placeholder="Detalhes adicionais..."></textarea>
-                    </div>
-                    <button type="submit" class="w-full bg-sky-600 hover:bg-sky-500 font-semibold py-2.5 rounded-lg transition text-sm shadow-md text-white">
-                        🚀 Agendar Visita & Notificar
-                    </button>
-                </form>
-            </div>
-
-            <!-- Lista de Agendamentos e Status de Horários -->
-            <div class="lg:col-span-2 space-y-6">
-                <!-- Seção de Próximos Agendamentos -->
-                <div class="bg-slate-800 p-6 rounded-2xl shadow-xl border border-slate-700">
-                    <h2 class="text-lg font-semibold mb-4 text-sky-300 flex items-center justify-between">
-                        <span>📋 Visitas Agendadas</span>
-                        <span id="totalAgendamentos" class="text-xs bg-slate-700 px-2.5 py-1 rounded-full text-slate-300">0 cadastradas</span>
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            
+            <!-- Coluna Esquerda: Calendário e Horários Livres -->
+            <div class="lg:col-span-7 bg-slate-800 p-5 rounded-2xl shadow-xl border border-slate-700 space-y-5">
+                <div class="flex items-center justify-between">
+                    <h2 class="text-lg font-semibold text-sky-300 flex items-center gap-2">
+                        <span>📅</span> Selecione a Data e Horário
                     </h2>
-                    <div id="listaAgendamentos" class="space-y-3 overflow-y-auto max-h-[380px] pr-1">
-                        <p class="text-slate-400 text-sm">Carregando agendamentos...</p>
+                    <input type="date" id="dataSelecionada" class="bg-slate-900 border border-slate-700 text-white rounded-lg p-2 text-xs focus:outline-none focus:border-sky-500">
+                </div>
+
+                <!-- Grade de Horários (Expediente das 09h às 21h) -->
+                <div>
+                    <p class="text-xs text-slate-400 mb-2">Horários disponíveis para o dia escolhido (Bloqueio automático ativo):</p>
+                    <div id="gradeHorarios" class="grid grid-cols-3 sm:grid-cols-4 gap-2">
+                        <!-- Os slots de horários serão injetados via JavaScript -->
+                        <span class="text-xs text-slate-500 col-span-full py-4 text-center">Selecione uma data acima para carregar os horários.</span>
                     </div>
                 </div>
 
-                <!-- Painel de Regras Ativas -->
-                <div class="bg-slate-800/80 p-4 rounded-2xl border border-slate-700/80 text-xs text-slate-300 flex items-center justify-between">
-                    <div>
-                        <span class="font-bold text-sky-400">⚡ Regra de Bloqueio Ativa:</span> Expediente das 09:00 às 21:00. O sistema valida conflitos de horário com base na duração do serviço.
+                <!-- Status Selecionado -->
+                <div id="infoSelecao" class="bg-slate-900/60 p-3 rounded-xl border border-slate-700 text-xs text-slate-300 hidden">
+                    <span class="text-sky-400 font-bold">Horário Escolhido:</span> <span id="txtHorarioEscolhido" class="text-white font-semibold">-</span>
+                </div>
+            </div>
+
+            <!-- Coluna Direita: Formulário de Confirmação & Lista -->
+            <div class="lg:col-span-5 space-y-6">
+                <!-- Formulário -->
+                <div class="bg-slate-800 p-5 rounded-2xl shadow-xl border border-slate-700">
+                    <h2 class="text-lg font-semibold mb-3 text-sky-300 flex items-center gap-2">
+                        <span>✍️</span> Dados do Atendimento
+                    </h2>
+                    <form id="formAgendamento" class="space-y-3">
+                        <div>
+                            <label class="block text-[11px] font-medium text-slate-300 mb-1">Nome do Cliente</label>
+                            <input type="text" id="cliente_nome" required class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-xs text-white focus:outline-none focus:border-sky-500" placeholder="Ex: Maria Silva">
+                        </div>
+                        <div class="grid grid-cols-2 gap-2">
+                            <div>
+                                <label class="block text-[11px] font-medium text-slate-300 mb-1">Telefone / WhatsApp</label>
+                                <input type="text" id="cliente_telefone" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-xs text-white focus:outline-none focus:border-sky-500" placeholder="(88) 99999-9999">
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-medium text-slate-300 mb-1">Duração do Serviço</label>
+                                <select id="duracao_horas" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-xs text-white focus:outline-none focus:border-sky-500">
+                                    <option value="1">1 Hora</option>
+                                    <option value="2" selected>2 Horas</option>
+                                    <option value="3">3 Horas</option>
+                                    <option value="4">4 Horas</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-medium text-slate-300 mb-1">Serviço / Equipamento</label>
+                            <input type="text" id="servico" required class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-xs text-white focus:outline-none focus:border-sky-500" placeholder="Ex: Instalação Forro PVC">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-medium text-slate-300 mb-1">Endereço</label>
+                            <input type="text" id="endereco" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-xs text-white focus:outline-none focus:border-sky-500" placeholder="Rua, Bairro, Nº">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-medium text-slate-300 mb-1">Observações</label>
+                            <textarea id="observacoes" rows="1" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 text-xs text-white focus:outline-none focus:border-sky-500" placeholder="Detalhes..."></textarea>
+                        </div>
+                        <button type="submit" id="btnSalvar" disabled class="w-full bg-slate-700 text-slate-400 font-semibold py-2 rounded-lg transition text-xs shadow-md cursor-not-allowed">
+                            Selecione um horário na agenda ⬆️
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Próximos Agendamentos -->
+                <div class="bg-slate-800 p-5 rounded-2xl shadow-xl border border-slate-700">
+                    <h2 class="text-md font-semibold mb-3 text-sky-300 flex items-center justify-between">
+                        <span>📋 Agendados</span>
+                        <span id="totalAgendamentos" class="text-[10px] bg-slate-700 px-2 py-0.5 rounded-full text-slate-300">0</span>
+                    </h2>
+                    <div id="listaAgendamentos" class="space-y-2 overflow-y-auto max-h-[220px] pr-1">
+                        <p class="text-slate-400 text-xs">Carregando...</p>
                     </div>
                 </div>
             </div>
+
         </div>
     </div>
 
     <script>
-        // ⚠️ Substitua pelas suas credenciais reais do Supabase aqui
+        // ⚠️ Substitua pelas suas credenciais reais do Supabase
         const SUPABASE_URL = 'SUA_SUPABASE_URL_AQUI';
         const SUPABASE_KEY = 'SUA_SUPABASE_KEY_AQUI';
 
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        async function carregarAgendamentos() {
+        let horarioSelecionadoGlobal = null;
+
+        // Inicializa o input de data com o dia de hoje
+        const inputData = document.getElementById('dataSelecionada');
+        const hoje = new Date().toISOString().split('T')[0];
+        inputData.value = hoje;
+        inputData.min = hoje;
+
+        inputData.addEventListener('change', carregarHorariosDisponiveis);
+
+        async function carregarHorariosDisponiveis() {
+            const dataEscolhida = inputData.value;
+            const duracao = parseInt(document.getElementById('duracao_horas').value);
+            const grade = document.getElementById('gradeHorarios');
+            
+            if (!dataEscolhida) return;
+
+            grade.innerHTML = `<span class="text-xs text-slate-400 col-span-full text-center py-4">Verificando disponibilidade...</span>`;
+
+            // Busca agendamentos já existentes para essa data
+            const { data: agendamentos, error } = await supabaseClient
+                .from('agendamentos_visitas')
+                .select('data_hora_visita, observacoes')
+                .neq('status', 'cancelado');
+
+            // Expediente das 09:00 às 21:00
+            const horasExpediente = [9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20];
+            let htmlSlots = '';
+
+            horasExpediente.forEach(hora => {
+                const horaStr = hora.toString().padStart(2, '0') + ':00';
+                const dataHoraSlotStr = `${dataEscolhida}T${horaStr}:00`;
+                const slotTime = new Date(dataHoraSlotStr).getTime();
+                
+                let ocupado = false;
+
+                // Valida se a hora ultrapassa o limite das 21h considerando a duração
+                if ((hora + duracao) > 21) {
+                    ocupado = true;
+                }
+
+                // Verifica conflitos com agendamentos salvos
+                if (agendamentos) {
+                    agendamentos.forEach(ag => {
+                        const agInicio = new Date(ag.data_hora_visita).getTime();
+                        // Tenta extrair a duração da observação ou assume 2h padrão
+                        let agDuracao = 2;
+                        if (ag.observacoes && ag.observacoes.includes('Duração:')) {
+                            const match = ag.observacoes.match(/Duração: (\d+)h/);
+                            if (match) agDuracao = parseInt(match[1]);
+                        }
+                        const agFim = agInicio + (agDuracao * 3600 * 1000);
+                        
+                        const slotFim = slotTime + (duracao * 3600 * 1000);
+
+                        // Se houver sobreposição de faixa horária
+                        if (slotTime < agFim && slotFim > agInicio) {
+                            ocupado = true;
+                        }
+                    });
+                }
+
+                if (ocupado) {
+                    htmlSlots += `
+                        <div class="bg-slate-900/40 border border-slate-800 text-slate-600 rounded-lg p-2.5 text-center text-xs font-semibold cursor-not-allowed opacity-50">
+                            ${horaStr} <br/><span class="text-[9px] font-normal">Ocupado</span>
+                        </div>
+                    `;
+                } else {
+                    htmlSlots += `
+                        <div onclick="selecionarHorario('${dataHoraSlotStr}', '${horaStr}')" class="bg-slate-900 hover:bg-sky-600/30 border border-slate-700 hover:border-sky-500 text-slate-200 rounded-lg p-2.5 text-center text-xs font-semibold cursor-pointer transition shadow-sm">
+                            ${horaStr} <br/><span class="text-[9px] text-sky-400 font-normal">Disponível</span>
+                        </div>
+                    `;
+                }
+            });
+
+            grade.innerHTML = htmlSlots;
+        }
+
+        function selecionarHorario(dataHoraStr, horaFormatada) {
+            horarioSelecionadoGlobal = dataHoraStr;
+            
+            document.getElementById('infoSelecao').classList.remove('hidden');
+            document.getElementById('txtHorarioEscolhido').innerText = `${inputData.value.split('-').reverse().join('/')} às ${horaFormatada}`;
+            
+            const btn = document.getElementById('btnSalvar');
+            btn.disabled = false;
+            btn.classList.remove('bg-slate-700', 'text-slate-400', 'cursor-not-allowed');
+            btn.classList.add('bg-sky-600', 'hover:bg-sky-500', 'text-white');
+            btn.innerText = '🚀 Confirmar Agendamento & Notificar';
+        }
+
+        async function carregarListaAgendamentos() {
             const container = document.getElementById('listaAgendamentos');
             
             const { data, error } = await supabaseClient
@@ -101,37 +210,23 @@
                 .select('*')
                 .order('data_hora_visita', { ascending: true });
             
-            if (error) {
-                container.innerHTML = `<p class="text-red-400 text-sm">Erro ao carregar dados do Supabase. Verifique a URL e a Key no código.</p>`;
+            if (error || !data || data.length === 0) {
+                container.innerHTML = `<p class="text-slate-400 text-xs">Nenhum agendamento ativo.</p>`;
+                document.getElementById('totalAgendamentos').innerText = '0';
                 return;
             }
 
-            if (!data || data.length === 0) {
-                container.innerHTML = `<p class="text-slate-400 text-sm">Nenhum agendamento registrado até o momento.</p>`;
-                document.getElementById('totalAgendamentos').innerText = '0 cadastradas';
-                return;
-            }
-
-            document.getElementById('totalAgendamentos').innerText = `${data.length} cadastradas`;
+            document.getElementById('totalAgendamentos').innerText = data.length;
 
             container.innerHTML = data.map(item => {
-                const dataInicio = new Date(item.data_hora_visita);
-                const dataFormatada = dataInicio.toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' });
-                
+                const dt = new Date(item.data_hora_visita);
+                const formatada = dt.toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' });
                 return `
-                    <div class="bg-slate-900 p-4 rounded-xl border border-slate-700 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
-                        <div class="space-y-1">
-                            <div class="flex items-center gap-2">
-                                <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-sky-900/80 text-sky-300 uppercase">${item.status || 'pendente'}</span>
-                                <span class="text-xs text-slate-400">🕒 ${dataFormatada}</span>
-                            </div>
-                            <h3 class="font-bold text-white text-sm">${item.cliente_nome} - <span class="text-sky-400">${item.servico}</span></h3>
-                            <p class="text-xs text-slate-400">📍 ${item.endereco || 'Endereço não informado'} | 📞 ${item.cliente_telefone || 'Sem tel'}</p>
-                            ${item.observacoes ? `<p class="text-[11px] text-slate-400 italic">Obs: ${item.observacoes}</p>` : ''}
+                    <div class="bg-slate-900 p-2.5 rounded-xl border border-slate-700 flex justify-between items-center text-xs">
+                        <div>
+                            <span class="text-sky-400 font-bold">${formatada}</span> - <span class="text-white">${item.cliente_nome}</span> (${item.servico})
                         </div>
-                        <button onclick="excluirAgendamento('${item.id}')" class="text-xs bg-red-900/40 hover:bg-red-800 text-red-300 px-3 py-1.5 rounded-lg transition border border-red-800/50">
-                            Excluir
-                        </button>
+                        <button onclick="excluir('${item.id}')" class="text-red-400 hover:text-red-300 px-2 py-1 text-[10px]">✕</button>
                     </div>
                 `;
             }).join('');
@@ -139,45 +234,16 @@
 
         document.getElementById('formAgendamento').addEventListener('submit', async (e) => {
             e.preventDefault();
+            if (!horarioSelecionadoGlobal) return;
 
-            const dataHoraStr = document.getElementById('data_hora_visita').value;
-            const dataHora = new Date(dataHoraStr);
-            const hora = dataHora.getHours();
             const duracao = parseInt(document.getElementById('duracao_horas').value);
-
-            // Validação de Expediente (09h às 21h)
-            if (hora < 9 || (hora + duracao) > 21) {
-                alert('⚠️ O horário selecionado ultrapassa o expediente permitido (09:00 às 21:00) considerando a duração do serviço.');
-                return;
-            }
-
-            // Validação de conflito de horário com base na duração
-            const { data: agendamentosExistentes } = await supabaseClient
-                .from('agendamentos_visitas')
-                .select('data_hora_visita, observacoes')
-                .neq('status', 'cancelado');
-
-            if (agendamentosExistentes) {
-                const novoInicio = dataHora.getTime();
-                const novoFim = novoInicio + (duracao * 3600 * 1000);
-
-                for (let ag of agendamentosExistentes) {
-                    const agInicio = new Date(ag.data_hora_visita).getTime();
-                    const agFim = agInicio + (2 * 3600 * 1000); // Padrão de 2h de bloqueio base
-
-                    if (novoInicio < agFim && novoFim > agInicio) {
-                        alert('❌ Conflito de horário! Já existe um atendimento alocado nessa faixa de tempo.');
-                        return;
-                    }
-                }
-            }
 
             const novoAgendamento = {
                 cliente_nome: document.getElementById('cliente_nome').value,
                 cliente_telefone: document.getElementById('cliente_telefone').value,
                 servico: document.getElementById('servico').value,
                 endereco: document.getElementById('endereco').value,
-                data_hora_visita: dataHoraStr,
+                data_hora_visita: horarioSelecionadoGlobal,
                 observacoes: (document.getElementById('observacoes').value || '') + ` (Duração: ${duracao}h)`,
                 status: 'pendente'
             };
@@ -187,31 +253,34 @@
                 .insert([novoAgendamento]);
 
             if (error) {
-                alert('Erro ao salvar no Supabase: ' + error.message);
+                alert('Erro ao salvar: ' + error.message);
             } else {
-                alert('✅ Agendamento realizado com sucesso! O Telegram foi notificado.');
+                alert('✅ Agendamento salvo! O Telegram foi disparado.');
                 document.getElementById('formAgendamento').reset();
-                carregarAgendamentos();
+                horarioSelecionadoGlobal = null;
+                document.getElementById('infoSelecao').classList.add('hidden');
+                
+                const btn = document.getElementById('btnSalvar');
+                btn.disabled = true;
+                btn.classList.add('bg-slate-700', 'text-slate-400', 'cursor-not-allowed');
+                btn.classList.remove('bg-sky-600', 'hover:bg-sky-500', 'text-white');
+                btn.innerText = 'Selecione um horário na agenda ⬆️';
+
+                carregarHorariosDisponiveis();
+                carregarListaAgendamentos();
             }
         });
 
-        async function excluirAgendamento(id) {
-            if (!confirm('Deseja realmente remover este agendamento?')) return;
-
-            const { error } = await supabaseClient
-                .from('agendamentos_visitas')
-                .delete()
-                .eq('id', id);
-
-            if (error) {
-                alert('Erro ao excluir: ' + error.message);
-            } else {
-                carregarAgendamentos();
-            }
+        async function excluir(id) {
+            if (!confirm('Deseja excluir este agendamento?')) return;
+            await supabaseClient.from('agendamentos_visitas').delete().eq('id', id);
+            carregarHorariosDisponiveis();
+            carregarListaAgendamentos();
         }
 
-        // Carrega a listagem ao iniciar
-        carregarAgendamentos();
+        // Inicializa dados ao abrir
+        carregarHorariosDisponiveis();
+        carregarListaAgendamentos();
     </script>
 </body>
 </html>
