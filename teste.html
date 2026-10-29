@@ -1,301 +1,193 @@
 <!DOCTYPE html>
-<html lang="pt-BR" class="dark">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WS Infor - Serviços & Agendamentos</title>
-    <!-- Tailwind CSS -->
+    <title>Vitrine Digital | Loja Exemplo</title>
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
-            darkMode: 'class',
             theme: {
                 extend: {
                     colors: {
-                        brand: { 500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8' }
+                        darkBg: '#0b0f19',
+                        cardBg: '#131c2e',
+                        neonCyan: '#06b6d4',
+                        neonBlue: '#3b82f6'
                     }
                 }
             }
         }
     </script>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen font-sans antialiased flex flex-col">
+<body class="bg-darkBg text-gray-100 min-h-screen font-sans">
 
-    <!-- Top Navigation -->
-    <header class="bg-slate-900 border-b border-slate-800 sticky top-0 z-50">
-        <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
-            <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('catalog')">
-                <div class="bg-blue-600 p-2 rounded-xl text-white shadow-lg shadow-blue-500/30 font-bold">
+    <!-- CABEÇALHO DA LOJA -->
+    <header class="bg-cardBg border-b border-gray-800 sticky top-0 z-50 shadow-lg">
+        <div class="max-w-4xl mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <div class="w-12 h-12 rounded-full bg-gradient-to-tr from-neonCyan to-neonBlue flex items-center justify-center text-darkBg font-bold text-xl shadow-[0_0_15px_rgba(6,182,212,0.4)]">
                     WS
                 </div>
                 <div>
-                    <h1 class="text-lg font-bold text-white tracking-wide">WS INFOR</h1>
-                    <p class="text-xs text-blue-400 font-medium">Serviços & Soluções Tecnológicas</p>
+                    <h1 class="font-bold text-lg text-white">Eletrônicos & Acessórios</h1>
+                    <span class="text-xs text-neonCyan flex items-center gap-1">
+                        <span class="w-2 h-2 rounded-full bg-neonCyan animate-pulse"></span> Aberto agora
+                    </span>
                 </div>
             </div>
-
-            <!-- Desktop Menu -->
-            <nav class="hidden md:flex items-center space-x-1">
-                <button onclick="switchTab('catalog')" id="btn-catalog" class="px-4 py-2 rounded-lg text-sm font-medium transition bg-blue-600 text-white shadow-md">
-                    Catálogo & Vitrine
-                </button>
-                <button onclick="switchTab('booking')" id="btn-booking" class="px-4 py-2 rounded-lg text-sm font-medium transition text-slate-300 hover:bg-slate-800">
-                    Agendar Visita
-                </button>
-                <button onclick="switchTab('admin')" id="btn-admin" class="px-4 py-2 rounded-lg text-sm font-medium transition text-slate-300 hover:bg-slate-800">
-                    Meus Agendamentos (<span id="appt-count">0</span>)
-                </button>
-            </nav>
-
-            <!-- Mobile menu button -->
-            <button class="md:hidden text-slate-300 p-2" onclick="toggleMobileMenu()">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+            <!-- Botão do Carrinho -->
+            <button onclick="toggleCart()" class="relative bg-cardBg border border-gray-700 hover:border-neonCyan p-2.5 rounded-xl transition flex items-center gap-2">
+                🛒 <span id="cart-count" class="bg-neonCyan text-darkBg text-xs font-bold px-2 py-0.5 rounded-full">0</span>
             </button>
-        </div>
-
-        <!-- Mobile Menu Dropdown -->
-        <div id="mobile-menu" class="hidden md:hidden bg-slate-900 border-b border-slate-800 px-4 pt-2 pb-4 space-y-2">
-            <button onclick="switchTab('catalog'); toggleMobileMenu();" class="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-slate-300">Catálogo & Vitrine</button>
-            <button onclick="switchTab('booking'); toggleMobileMenu();" class="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-slate-300">Agendar Visita</button>
-            <button onclick="switchTab('admin'); toggleMobileMenu();" class="w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-slate-300">Agendamentos</button>
         </div>
     </header>
 
-    <!-- Main Content Container -->
-    <main class="flex-1 max-w-6xl w-full mx-auto p-4 md:p-6">
-        
-        <!-- TAB 1: CATALOG / SHOWCASE -->
-        <section id="tab-catalog" class="space-y-6">
-            <div class="bg-gradient-to-r from-blue-900/40 via-slate-900 to-slate-900 border border-blue-500/20 rounded-2xl p-6 md:p-8 shadow-xl">
-                <span class="bg-blue-500/20 text-blue-400 text-xs font-semibold px-3 py-1 rounded-full border border-blue-500/30">Soluções Rápidas & Garantidas</span>
-                <h2 class="text-2xl md:text-3xl font-extrabold text-white mt-3">Precisando de suporte técnico ou serviços especializados?</h2>
-                <p class="text-slate-300 mt-2 max-w-2xl text-sm md:text-base">Confira nossos principais serviços e produtos abaixo. Escolha o que você precisa e agende sua visita com total praticidade.</p>
-                <div class="mt-6 flex flex-wrap gap-3">
-                    <button onclick="switchTab('booking')" class="bg-blue-600 hover:bg-blue-500 text-white font-medium px-5 py-2.5 rounded-xl transition shadow-lg shadow-blue-600/30">
-                        Agendar Atendimento Agora
+    <!-- CONTEÚDO PRINCIPAL (VITRINE) -->
+    <main class="max-w-4xl mx-auto px-4 py-6">
+        <div class="mb-6">
+            <h2 class="text-xl font-bold text-white mb-1">Catálogo de Produtos</h2>
+            <p class="text-xs text-gray-400">Escolha seus itens e finalize o pedido direto pelo celular.</p>
+        </div>
+
+        <!-- GRID DE PRODUTOS -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4" id="product-grid">
+            <!-- Produto 1 -->
+            <div class="bg-cardBg border border-gray-800 rounded-2xl p-4 flex flex-col justify-between hover:border-neonCyan/50 transition shadow-md">
+                <div>
+                    <div class="w-full h-36 bg-gray-800 rounded-xl mb-3 flex items-center justify-center text-2xl">📱</div>
+                    <h3 class="font-semibold text-white">Suporte Veicular Magnético</h3>
+                    <p class="text-xs text-gray-400 mt-1">Suporte forte com rotação 360° para qualquer painel de carro.</p>
+                </div>
+                <div class="mt-4 flex items-center justify-between">
+                    <span class="text-neonCyan font-bold text-lg">R$ 45,00</span>
+                    <button onclick="addToCart('Suporte Veicular Magnético', 45.00)" class="bg-gradient-to-r from-neonCyan to-neonBlue text-darkBg font-bold text-xs px-4 py-2 rounded-xl hover:opacity-95 transition shadow-[0_0_10px_rgba(6,182,212,0.3)]">
+                        Adicionar
                     </button>
-                    <a href="https://wa.me/" target="_blank" rel="noreferrer" class="bg-slate-800 hover:bg-slate-700 text-slate-200 font-medium px-5 py-2.5 rounded-xl transition border border-slate-700">
-                        Falar no WhatsApp
-                    </a>
                 </div>
             </div>
 
-            <div>
-                <h3 class="text-xl font-bold text-white mb-4">Nossos Serviços & Produtos</h3>
-                <div id="products-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <!-- Preenchido via JavaScript -->
-                </div>
-            </div>
-        </section>
-
-        <!-- TAB 2: BOOKING FORM -->
-        <section id="tab-booking" class="hidden max-w-2xl mx-auto bg-slate-900 border border-slate-800 rounded-2xl p-6 md:p-8 shadow-xl">
-            <div class="text-center mb-6">
-                <h2 class="text-2xl font-bold text-white">Solicitar Agendamento</h2>
-                <p class="text-slate-400 text-sm mt-1">Preencha os dados abaixo para reservar o seu atendimento com a WS Infor.</p>
-            </div>
-
-            <form id="booking-form" onsubmit="handleBookingSubmit(event)" class="space-y-4">
+            <!-- Produto 2 -->
+            <div class="bg-cardBg border border-gray-800 rounded-2xl p-4 flex flex-col justify-between hover:border-neonCyan/50 transition shadow-md">
                 <div>
-                    <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Serviço Desejado *</label>
-                    <select id="form-service" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-blue-500" required>
-                        <option value="">Selecione um serviço...</option>
-                    </select>
+                    <div class="w-full h-36 bg-gray-800 rounded-xl mb-3 flex items-center justify-center text-2xl">⚡</div>
+                    <h3 class="font-semibold text-white">Carregador Turbo 20W Type-C</h3>
+                    <p class="text-xs text-gray-400 mt-1">Carregamento ultrarrápido compatível com várias marcas.</p>
                 </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Seu Nome *</label>
-                        <input type="text" id="form-name" placeholder="Nome completo" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-blue-500" required>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">WhatsApp / Telefone *</label>
-                        <input type="tel" id="form-phone" placeholder="(00) 00000-0000" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-blue-500" required>
-                    </div>
-                </div>
-
-                <div>
-                    <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Endereço / Local de Atendimento *</label>
-                    <input type="text" id="form-address" placeholder="Rua, Número, Bairro e Cidade" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-blue-500" required>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Data Desejada *</label>
-                        <input type="date" id="form-date" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-blue-500" required>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Horário Preferencial *</label>
-                        <select id="form-time" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-blue-500" required>
-                            <option value="">Selecione o turno/horário</option>
-                            <option value="Manhã (08:00 - 12:00)">Manhã (08:00 - 12:00)</option>
-                            <option value="Tarde (13:00 - 18:00)">Tarde (13:00 - 18:00)</option>
-                            <option value="Horário Comercial Específico">Combinar horário específico</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div>
-                    <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Observações ou Detalhes do Problema</label>
-                    <textarea id="form-notes" rows="3" placeholder="Descreva brevemente o defeito..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-4 text-white text-sm focus:outline-none focus:border-blue-500 resize-none"></textarea>
-                </div>
-
-                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3.5 rounded-xl transition shadow-lg shadow-blue-600/30">
-                    Confirmar Agendamento
-                </button>
-            </form>
-        </section>
-
-        <!-- TAB 3: ADMIN / APPOINTMENTS LIST -->
-        <section id="tab-admin" class="hidden space-y-6">
-            <div class="flex items-center justify-between">
-                <div>
-                    <h2 class="text-2xl font-bold text-white">Agendamentos Recebidos</h2>
-                    <p class="text-slate-400 text-sm">Gerencie os pedidos de visita e serviços solicitados.</p>
+                <div class="mt-4 flex items-center justify-between">
+                    <span class="text-neonCyan font-bold text-lg">R$ 65,00</span>
+                    <button onclick="addToCart('Carregador Turbo 20W Type-C', 65.00)" class="bg-gradient-to-r from-neonCyan to-neonBlue text-darkBg font-bold text-xs px-4 py-2 rounded-xl hover:opacity-95 transition shadow-[0_0_10px_rgba(6,182,212,0.3)]">
+                        Adicionar
+                    </button>
                 </div>
             </div>
-            <div id="appointments-list" class="space-y-4">
-                <!-- Preenchido via JavaScript -->
-            </div>
-        </section>
+        </div>
     </main>
 
-    <!-- Footer -->
-    <footer class="border-t border-slate-800 bg-slate-900 mt-auto py-6 text-center text-xs text-slate-500">
-        <p>© 2026 WS Infor - Todos os direitos reservados.</p>
-    </footer>
-
-    <!-- Script de lógica -->
-    <script>
-        const products = [
-            { id: 1, title: 'Manutenção de Computadores & Notebooks', category: 'Serviço', price: 'A partir de R$ 80', desc: 'Formatação, limpeza profunda, troca de peças, otimização de sistema e remoção de vírus.', image: 'https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?auto=format&fit=crop&w=600&q=80' },
-            { id: 2, title: 'Instalação de Câmeras de Segurança (CFTV)', category: 'Serviço', price: 'Sob Consulta', desc: 'Projeto e instalação completa de sistemas de segurança residencial e comercial com acesso pelo celular.', image: 'https://images.unsplash.com/photo-1557597774-9d273605dfa9?auto=format&fit=crop&w=600&q=80' },
-            { id: 3, title: 'Montagem de Móveis & Instalações', category: 'Serviço', price: 'A partir de R$ 60', desc: 'Montagem de móveis em geral e pequenas instalações elétricas e residenciais com garantia.', image: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=600&q=80' },
-            { id: 4, title: 'Reparo de Eletrodomésticos (Ventiladores & Som)', category: 'Serviço', price: 'Orçamento Grátis', desc: 'Conserto especializado em ventiladores, caixas de som, micro-ondas e eletrodomésticos de linha branca.', image: 'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=600&q=80' },
-            { id: 5, title: 'Suporte Técnico e Redes Wi-Fi', category: 'Serviço', price: 'R$ 90', desc: 'Configuração de roteadores, repetidores, melhoria de sinal Wi-Fi e cabeamento estruturado.', image: 'https://images.unsplash.com/photo-1544197150-b99a580bb7a8?auto=format&fit=crop&w=600&q=80' },
-            { id: 6, title: 'Acessórios de Informática & Cabos', category: 'Produto', price: 'Variados', desc: 'Cabos HDMI, fontes, mouses, teclados, pendrives e periféricos em geral à pronta entrega.', image: 'https://images.unsplash.com/photo-1526738549149-8e07eca6c147?auto=format&fit=crop&w=600&q=80' }
-        ];
-
-        let appointments = JSON.parse(localStorage.getItem('ws_appointments') || '[]');
-
-        function renderProducts() {
-            const grid = document.getElementById('products-grid');
-            const select = document.getElementById('form-service');
-            
-            grid.innerHTML = products.map(p => `
-                <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden flex flex-col shadow-lg">
-                    <div class="h-48 overflow-hidden relative">
-                        <img src="${p.image}" alt="${p.title}" class="w-full h-full object-cover">
-                        <span class="absolute top-3 left-3 bg-slate-900/80 text-xs font-semibold px-2.5 py-1 rounded-lg text-blue-400 border border-slate-700">${p.category}</span>
-                    </div>
-                    <div class="p-5 flex-1 flex flex-col justify-between">
-                        <div>
-                            <h4 class="font-bold text-white text-lg">${p.title}</h4>
-                            <p class="text-slate-400 text-sm mt-2">${p.desc}</p>
-                        </div>
-                        <div class="mt-5 pt-4 border-t border-slate-800 flex items-center justify-between">
-                            <div>
-                                <span class="text-xs text-slate-400 block">Valor</span>
-                                <span class="text-emerald-400 font-bold text-base">${p.price}</span>
-                            </div>
-                            <button onclick="selectService('${p.title}')" class="bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold px-4 py-2.5 rounded-xl transition">
-                                Agendar
-                            </button>
-                        </div>
-                    </div>
+    <!-- MODAL / PAINEL DO CARRINHO -->
+    <div id="cart-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden z-50 flex justify-end">
+        <div class="bg-cardBg w-full max-w-md h-full p-5 flex flex-col justify-between border-l border-gray-800">
+            <div>
+                <div class="flex justify-between items-center mb-6 border-b border-gray-800 pb-3">
+                    <h3 class="font-bold text-lg text-white">Seu Carrinho</h3>
+                    <button onclick="toggleCart()" class="text-gray-400 hover:text-white text-lg">✕</button>
                 </div>
-            `).join('');
+                <!-- Lista de Itens no Carrinho -->
+                <div id="cart-items" class="space-y-3 overflow-y-auto max-h-[50vh]">
+                    <p class="text-xs text-gray-500 text-center py-4">Seu carrinho está vazio.</p>
+                </div>
+            </div>
 
-            select.innerHTML = '<option value="">Selecione um serviço...</option>' + 
-                products.map(p => `<option value="${p.title}">${p.title} (${p.category})</option>`).join('') +
-                '<option value="Outro Serviço / Orçamento Personalizado">Outro Serviço / Orçamento Personalizado</option>';
+            <!-- Rodapé do Carrinho -->
+            <div class="border-t border-gray-800 pt-4 space-y-3">
+                <div class="flex justify-between text-sm font-semibold">
+                    <span>Total:</span>
+                    <span id="cart-total" class="text-neonCyan">R$ 0,00</span>
+                </div>
+                <button onclick="checkout()" class="w-full bg-emerald-500 hover:bg-emerald-400 text-darkBg font-bold py-3 rounded-xl transition shadow-[0_0_15px_rgba(16,185,129,0.3)]">
+                    Finalizar Pedido via Telegram 🚀
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCRIPT DE LÓGICA SIMPLES -->
+    <script>
+        let cart = [];
+
+        function toggleCart() {
+            const modal = document.getElementById('cart-modal');
+            modal.classList.toggle('hidden');
         }
 
-        function renderAppointments() {
-            const list = document.getElementById('appointments-list');
-            document.getElementById('appt-count').innerText = appointments.length;
+        function addToCart(name, price) {
+            const existing = cart.find(item => item.name === name);
+            if (existing) {
+                existing.quantity += 1;
+            } else {
+                cart.push({ name, price, quantity: 1 });
+            }
+            updateCartUI();
+        }
 
-            if (appointments.length === 0) {
-                list.innerHTML = `<div class="text-center py-16 bg-slate-900 border border-slate-800 rounded-2xl text-slate-400">Nenhum agendamento registrado.</div>`;
+        function updateCartUI() {
+            const countEl = document.getElementById('cart-count');
+            const itemsEl = document.getElementById('cart-items');
+            const totalEl = document.getElementById('cart-total');
+
+            const totalCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+            countEl.textContent = totalCount;
+
+            if (cart.length === 0) {
+                itemsEl.innerHTML = '<p class="text-xs text-gray-500 text-center py-4">Seu carrinho está vazio.</p>';
+                totalEl.textContent = 'R$ 0,00';
                 return;
             }
 
-            list.innerHTML = appointments.map(app => `
-                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
-                    <div class="space-y-1">
-                        <span class="bg-blue-600/20 text-blue-400 text-xs font-bold px-2 py-0.5 rounded border border-blue-500/30">${app.serviceName}</span>
-                        <h3 class="text-lg font-bold text-white mt-1">${app.clientName}</h3>
-                        <p class="text-xs text-slate-300">📞 ${app.phone} | 📍 ${app.address} | 📅 ${app.date} (${app.time})</p>
-                        ${app.notes ? `<p class="text-xs bg-slate-950 p-2 rounded text-slate-400 mt-1">Obs: ${app.notes}</p>` : ''}
+            let html = '';
+            let total = 0;
+            cart.forEach((item, index) => {
+                total += item.price * item.quantity;
+                html += `
+                    <div class="flex justify-between items-center bg-darkBg p-3 rounded-xl border border-gray-800 text-sm">
+                        <div>
+                            <p class="font-semibold text-white">${item.name}</p>
+                            <p class="text-xs text-gray-400">Qtd: ${item.quantity} x R$ ${item.price.toFixed(2)}</p>
+                        </div>
+                        <button onclick="removeItem(${index})" class="text-red-400 hover:text-red-300 text-xs font-bold px-2 py-1">Remover</button>
                     </div>
-                    <div class="flex items-center space-x-2">
-                        <a href="https://wa.me/55${app.phone.replace(/\D/g, '')}?text=Olá%20${encodeURIComponent(app.clientName)},%20recebi%20seu%20agendamento!" target="_blank" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold px-4 py-2 rounded-xl">
-                            WhatsApp
-                        </a>
-                        <button onclick="deleteAppt(${app.id})" class="bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 text-xs px-3 py-2 rounded-xl">Excluir</button>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function switchTab(tab) {
-            ['catalog', 'booking', 'admin'].forEach(t => {
-                document.getElementById(`tab-${t}`).classList.add('hidden');
-                const btn = document.getElementById(`btn-${t}`);
-                if(btn) {
-                    btn.classList.remove('bg-blue-600', 'text-white', 'shadow-md');
-                    btn.classList.add('text-slate-300', 'hover:bg-slate-800');
-                }
+                `;
             });
-            document.getElementById(`tab-${tab}`).classList.remove('hidden');
-            const activeBtn = document.getElementById(`btn-${tab}`);
-            if(activeBtn) {
-                activeBtn.classList.add('bg-blue-600', 'text-white', 'shadow-md');
-                activeBtn.classList.remove('text-slate-300', 'hover:bg-slate-800');
+
+            itemsEl.innerHTML = html;
+            totalEl.textContent = `R$ ${total.toFixed(2)}`;
+        }
+
+        function removeItem(index) {
+            cart.splice(index, 1);
+            updateCartUI();
+        }
+
+        function checkout() {
+            if (cart.length === 0) {
+                alert('Adicione itens ao carrinho antes de finalizar!');
+                return;
             }
+            let message = "🛍️ *NOVO PEDIDO RECEBIDO*\\n\\n";
+            let total = 0;
+            cart.forEach(item => {
+                message += `- ${item.quantity}x ${item.name} (R$ ${(item.price * item.quantity).toFixed(2)})\\n`;
+                total += item.price * item.quantity;
+            });
+            message += `\\n💰 *Total:* R$ ${total.toFixed(2)}`;
+            
+            // Simulação de disparo para o bot / whatsapp
+            alert("Pedido gerado com sucesso! Aqui estaria o gatilho para enviar ao Telegram do lojista:\\n\\n" + message);
+            cart = [];
+            updateCartUI();
+            toggleCart();
         }
-
-        function selectService(title) {
-            document.getElementById('form-service').value = title;
-            switchTab('booking');
-        }
-
-        function handleBookingSubmit(e) {
-            e.preventDefault();
-            const newAppt = {
-                id: Date.now(),
-                serviceName: document.getElementById('form-service').value,
-                clientName: document.getElementById('form-name').value,
-                phone: document.getElementById('form-phone').value,
-                address: document.getElementById('form-address').value,
-                date: document.getElementById('form-date').value,
-                time: document.getElementById('form-time').value,
-                notes: document.getElementById('form-notes').value,
-                createdAt: new Date().toLocaleDateString('pt-BR')
-            };
-
-            appointments.unshift(newAppt);
-            localStorage.setItem('ws_appointments', JSON.stringify(appointments));
-            renderAppointments();
-            alert('Agendamento realizado com sucesso!');
-            document.getElementById('booking-form').reset();
-            switchTab('admin');
-        }
-
-        function deleteAppt(id) {
-            if(confirm('Deseja excluir este agendamento?')) {
-                appointments = appointments.filter(a => a.id !== id);
-                localStorage.setItem('ws_appointments', JSON.stringify(appointments));
-                renderAppointments();
-            }
-        }
-
-        function toggleMobileMenu() {
-            document.getElementById('mobile-menu').classList.toggle('hidden');
-        }
-
-        renderProducts();
-        renderAppointments();
     </script>
 </body>
 </html>
