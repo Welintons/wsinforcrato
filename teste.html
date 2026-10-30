@@ -98,7 +98,6 @@
 
                 <!-- Ações Rápidas & Configurações -->
                 <div class="flex items-center gap-2">
-                    <!-- Botão Desfazer Última Transação -->
                     <button id="btnDesfazer" onclick="desfazerUltimaTransacao()" disabled title="Desfazer última transação realizada" class="p-2 rounded-lg bg-slate-100 dark:bg-slate-700 text-slate-400 dark:text-slate-500 transition-all font-bold flex items-center gap-1.5 text-xs disabled:opacity-40 disabled:cursor-not-allowed hover:bg-slate-200 dark:hover:bg-slate-600">
                         <i class="fa-solid fa-rotate-left text-base"></i> <span class="hidden sm:inline">Desfazer</span>
                     </button>
@@ -533,7 +532,6 @@
         let isSidebarCollapsed = false;
         let supabaseClient = null;
 
-        // Variável de controle para o botão "Desfazer"
         let ultimaTransacaoRealizada = null;
 
         let appState = {
@@ -603,7 +601,6 @@
             showToast('Conexão configurada com sucesso!', 'success');
         }
 
-        // CARREGAR DADOS DO SUPABASE
         async function loadFromSupabase() {
             if (!supabaseClient) return;
             try {
@@ -1028,7 +1025,7 @@
                 const dateStr = new Date(item.timestamp).toLocaleDateString('pt-BR', { hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit' });
                 
                 return `
-                    <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-xs space-y-1">
+                    <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-xs space-y-2">
                         <div class="flex items-center justify-between">
                             <div class="flex items-center gap-2">
                                 <div class="w-6 h-6 rounded-lg flex items-center justify-center text-[10px] ${isDeposit ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300' : 'bg-rose-100 text-rose-700 dark:bg-rose-900/40 dark:text-rose-300'}">
@@ -1040,9 +1037,11 @@
                                 ${item.amount > 0 ? (isDeposit ? '+' : '-') + formatBRL(item.amount) : 'Registro'}
                             </span>
                         </div>
-                        <div class="flex justify-between items-center text-[10px] text-slate-400">
-                            <span>${escapeHtml(item.description || (isDeposit ? 'Aporte' : 'Gasto'))}</span>
-                            <span>${dateStr}</span>
+                        <div class="flex justify-between items-center text-[10px] text-slate-400 border-t border-slate-200 dark:border-slate-800 pt-2">
+                            <span>${escapeHtml(item.description || (isDeposit ? 'Aporte' : 'Gasto'))} • ${dateStr}</span>
+                            <button onclick="desfazerMovimentacaoHistorico('${item.id}')" class="px-2.5 py-1 rounded-lg bg-rose-50 hover:bg-rose-100 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 font-bold transition-all flex items-center gap-1">
+                                <i class="fa-solid fa-rotate-left"></i> Desfazer Transferência
+                            </button>
                         </div>
                     </div>
                 `;
@@ -1085,7 +1084,6 @@
                 return;
             }
 
-            // Validação de Duplicidade para Aporte Global (últimos 2 minutos)
             if (ultimaTransacaoRealizada && 
                 ultimaTransacaoRealizada.tipo === 'global_deposit' && 
                 ultimaTransacaoRealizada.amount === totalDeposit && 
@@ -1168,7 +1166,6 @@
                 }]);
             }
 
-            // Guarda estado para a função "Desfazer"
             ultimaTransacaoRealizada = {
                 tipo: 'global_deposit',
                 amount: totalDeposit,
@@ -1256,7 +1253,6 @@
                 return;
             }
 
-            // Verificação de valor duplicado (recente < 2 min na mesma caixa e tipo)
             if (ultimaTransacaoRealizada &&
                 ultimaTransacaoRealizada.tipo === 'box_tx' &&
                 ultimaTransacaoRealizada.boxId === boxId &&
@@ -1279,7 +1275,6 @@
                 }]);
             }
 
-            // Registra para o botão "Desfazer"
             ultimaTransacaoRealizada = {
                 tipo: 'box_tx',
                 boxId: box.id,
@@ -1296,23 +1291,63 @@
             showToast(`${type === 'deposit' ? 'Aporte' : 'Gasto'} registrado!`, 'success');
         }
 
-        // FUNÇÃO DE DESFAZER ÚLTIMA TRANSAÇÃO
         async function desfazerUltimaTransacao() {
             if (!ultimaTransacaoRealizada) return;
-
             if (!confirm("Deseja realmente desfazer a última transação realizada?")) return;
+            await executarEstorno(ultimaTransacaoRealizada);
+        }
+
+        async function desfazerMovimentacaoHistorico(historicoId) {
+            const item = appState.history.find(h => h.id === historicoId);
+            if (!item) return;
+            if (!confirm(`Deseja desfazer a transferência/movimentação de ${formatBRL(item.amount)} (${item.boxName})?`)) return;
 
             try {
-                if (ultimaTransacaoRealizada.tipo === 'box_tx') {
-                    const box = appState.boxes.find(b => b.id === ultimaTransacaoRealizada.boxId);
+                if (item.boxName === 'Aporte Global Inteligente') {
+                    showToast("Para aportes globais, utilize o botão principal ou refaça o ajuste necessário.", "info");
+                    return;
+                }
+
+                const box = appState.boxes.find(b => b.name === item.boxName);
+                if (box) {
+                    // Se foi depósito, estorna tirando o valor. Se foi retirada, estorna recolocando.
+                    if (item.type === 'deposit') {
+                        box.balance = Math.max(0, box.balance - item.amount);
+                    } else {
+                        box.balance += item.amount;
+                    }
+
+                    if (supabaseClient) {
+                        await supabaseClient.from('caixas_financeiras').update({ balance: box.balance }).eq('id', box.id);
+                        await supabaseClient.from('historico_movimentacoes').delete().eq('id', item.id);
+                    }
+                }
+
+                if (ultimaTransacaoRealizada && ultimaTransacaoRealizada.historicoId === historicoId) {
+                    ultimaTransacaoRealizada = null;
+                    atualizarBotaoDesfazerUI(false);
+                }
+
+                loadFromSupabase();
+                showToast("Movimentação estornada com sucesso!", "success");
+            } catch (err) {
+                console.error(err);
+                showToast("Erro ao desfazer movimentação.", "error");
+            }
+        }
+
+        async function executarEstorno(transacao) {
+            try {
+                if (transacao.tipo === 'box_tx') {
+                    const box = appState.boxes.find(b => b.id === transacao.boxId);
                     if (box) {
-                        box.balance = ultimaTransacaoRealizada.saldoAnterior;
+                        box.balance = transacao.saldoAnterior;
                         if (supabaseClient) {
                             await supabaseClient.from('caixas_financeiras').update({ balance: box.balance }).eq('id', box.id);
                         }
                     }
-                } else if (ultimaTransacaoRealizada.tipo === 'global_deposit') {
-                    for (let snapshotBox of ultimaTransacaoRealizada.snapshot) {
+                } else if (transacao.tipo === 'global_deposit') {
+                    for (let snapshotBox of transacao.snapshot) {
                         const box = appState.boxes.find(b => b.id === snapshotBox.id);
                         if (box) {
                             box.balance = snapshotBox.balance;
@@ -1323,15 +1358,14 @@
                     }
                 }
 
-                // Remove do histórico no Supabase se houver ID
-                if (supabaseClient && ultimaTransacaoRealizada.historicoId) {
-                    await supabaseClient.from('historico_movimentacoes').delete().eq('id', ultimaTransacaoRealizada.historicoId);
+                if (supabaseClient && transacao.historicoId) {
+                    await supabaseClient.from('historico_movimentacoes').delete().eq('id', transacao.historicoId);
                 }
 
                 ultimaTransacaoRealizada = null;
                 atualizarBotaoDesfazerUI(false);
                 loadFromSupabase();
-                showToast("Última transação desfeita com sucesso!", "success");
+                showToast("Transação desfeita com sucesso!", "success");
             } catch (err) {
                 console.error(err);
                 showToast("Erro ao desfazer transação.", "error");
