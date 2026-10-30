@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+html_content = '''<!DOCTYPE html>
 <html lang="pt-BR" class="h-full bg-slate-50">
 <head>
     <meta charset="UTF-8">
@@ -98,9 +98,6 @@
 
                 <!-- Ações Rápidas & Configurações -->
                 <div class="flex items-center gap-2">
-                    <button id="btnDesfazer" onclick="desfazerUltimaTransacao()" disabled title="Desfazer última transação realizada" class="p-2 rounded-lg bg-slate-100 dark:bg-slate-700 text-slate-400 dark:text-slate-500 transition-all font-bold flex items-center gap-1.5 text-xs disabled:opacity-40 disabled:cursor-not-allowed hover:bg-slate-200 dark:hover:bg-slate-600">
-                        <i class="fa-solid fa-rotate-left text-base"></i> <span class="hidden sm:inline">Desfazer</span>
-                    </button>
                     <button onclick="openConfigModal()" title="Configurar Supabase" class="p-2 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600 text-brand-600 dark:text-brand-400 transition-all font-bold flex items-center gap-1.5 text-xs">
                         <i class="fa-solid fa-gear text-base"></i> <span class="hidden sm:inline">Supabase</span>
                     </button>
@@ -235,7 +232,7 @@
                             <i class="fa-solid fa-plus"></i> Novo Item / Mantimento
                         </button>
                     </div>
-                    <div id="pantryContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+                    <div id="pantryContainer" class="space-y-6"></div>
                     <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm space-y-3">
                         <div class="flex items-center justify-between">
                             <h3 class="text-sm font-bold text-slate-800 dark:text-white flex items-center gap-2">
@@ -429,6 +426,16 @@
                     <input type="text" id="pantryNameInput" required placeholder="Ex: Arroz, Óleo de Soja..."
                         class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 focus:outline-none text-slate-800 dark:text-white text-sm">
                 </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Categoria (Zona)</label>
+                    <select id="pantryCategoryInput" required class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 text-slate-800 dark:text-white text-xs font-bold">
+                        <option value="Despensa Seca">Despensa Seca (Arroz, Feijão, Óleo...)</option>
+                        <option value="Matinais & Café">Matinais & Café (Café, Açúcar, Biscoito...)</option>
+                        <option value="Limpeza & Lavanderia">Limpeza & Lavanderia (Sabão, Desinfetante...)</option>
+                        <option value="Higiene Pessoal">Higiene Pessoal (Papel Higiênico, Sabonete...)</option>
+                        <option value="Frios & Outros">Frios & Outros (Demais itens)</option>
+                    </select>
+                </div>
                 <div class="grid grid-cols-3 gap-2">
                     <div>
                         <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Qtd Atual</label>
@@ -532,8 +539,6 @@
         let isSidebarCollapsed = false;
         let supabaseClient = null;
 
-        let ultimaTransacaoRealizada = null;
-
         let appState = {
             boxes: [],
             pantry: [],
@@ -601,6 +606,7 @@
             showToast('Conexão configurada com sucesso!', 'success');
         }
 
+        // CARREGAR DADOS DO SUPABASE
         async function loadFromSupabase() {
             if (!supabaseClient) return;
             try {
@@ -620,7 +626,7 @@
                 }));
 
                 appState.pantry = (pantryRes.data || []).map(p => ({
-                    id: p.id, name: p.name, qty: p.qty, ideal: p.ideal, unit: p.unit, boxId: p.box_id
+                    id: p.id, name: p.name, category: p.category || 'Despensa Seca', qty: p.qty, ideal: p.ideal, unit: p.unit, boxId: p.box_id
                 }));
 
                 appState.history = (historyRes.data || []).map(h => ({
@@ -889,7 +895,7 @@
             const container = document.getElementById('pantryContainer');
             if (appState.pantry.length === 0) {
                 container.innerHTML = `
-                    <div class="sm:col-span-3 text-center py-10 bg-white dark:bg-slate-800 rounded-2xl border border-dashed border-slate-300 dark:border-slate-700">
+                    <div class="text-center py-10 bg-white dark:bg-slate-800 rounded-2xl border border-dashed border-slate-300 dark:border-slate-700">
                         <i class="fa-solid fa-basket-shopping text-4xl text-slate-300 dark:text-slate-600 mb-2"></i>
                         <p class="text-slate-500 text-sm font-medium">Nenhum mantimento cadastrado</p>
                         <button onclick="openPantryModal()" class="mt-3 text-xs text-brand-600 font-bold hover:underline">+ Adicionar primeiro item</button>
@@ -898,58 +904,88 @@
                 return;
             }
 
-            container.innerHTML = appState.pantry.map(item => {
-                const isCritical = item.qty <= 0;
-                const isLow = item.qty > 0 && item.qty < item.ideal;
-                const linkedBox = appState.boxes.find(b => b.id === item.boxId);
+            // Agrupar mantimentos por categoria
+            const categories = [
+                { name: 'Despensa Seca', icon: 'fa-wheat-awn', color: 'text-amber-500' },
+                { name: 'Matinais & Café', icon: 'fa-mug-hot', color: 'text-orange-500' },
+                { name: 'Limpeza & Lavanderia', icon: 'fa-pump-soap', color: 'text-blue-500' },
+                { name: 'Higiene Pessoal', icon: 'fa-pump-medical', color: 'text-emerald-500' },
+                { name: 'Frios & Outros', icon: 'fa-box-archive', color: 'text-purple-500' }
+            ];
 
-                let badgeClass = 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/50 dark:text-emerald-300';
-                let badgeText = 'Estoque OK';
-                if (isCritical) {
-                    badgeClass = 'bg-rose-100 text-rose-800 dark:bg-rose-900/50 dark:text-rose-300 animate-pulse';
-                    badgeText = 'Esgotado!';
-                } else if (isLow) {
-                    badgeClass = 'bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-300';
-                    badgeText = 'Baixo';
-                }
+            let htmlOutput = '';
 
-                return `
-                <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl border ${isCritical ? 'border-rose-400 dark:border-rose-500/50' : (isLow ? 'border-amber-300' : 'border-slate-200 dark:border-slate-700')} shadow-sm flex flex-col justify-between transition-all relative">
-                    <div>
-                        <div class="flex items-start justify-between">
-                            <div>
-                                <span class="px-2 py-0.5 text-[10px] font-bold rounded-md ${badgeClass}">${badgeText}</span>
-                                <h3 class="font-bold text-slate-800 dark:text-white text-base mt-1">${escapeHtml(item.name)}</h3>
-                                ${linkedBox ? `<span class="text-[10px] text-slate-400 flex items-center gap-1 mt-0.5"><i class="fa-solid fa-box text-[9px]" style="color:${linkedBox.color}"></i> Caixa: ${escapeHtml(linkedBox.name)}</span>` : ''}
+            categories.forEach(cat => {
+                const itemsInCat = appState.pantry.filter(p => (p.category || 'Despensa Seca') === cat.name);
+                if (itemsInCat.length === 0) return;
+
+                htmlOutput += `
+                    <div class="space-y-3">
+                        <div class="flex items-center gap-2 pb-2 border-b border-slate-200 dark:border-slate-700">
+                            <i class="fa-solid ${cat.icon} ${cat.color} text-sm"></i>
+                            <h3 class="font-bold text-sm text-slate-800 dark:text-white uppercase tracking-wider">${cat.name}</h3>
+                            <span class="text-xs px-2 py-0.5 bg-slate-100 dark:bg-slate-700 rounded-full font-semibold text-slate-500 dark:text-slate-400">${itemsInCat.length}</span>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                `;
+
+                htmlOutput += itemsInCat.map(item => {
+                    const isCritical = item.qty <= 0;
+                    const isLow = item.qty > 0 && item.qty < item.ideal;
+                    const linkedBox = appState.boxes.find(b => b.id === item.boxId);
+
+                    let badgeClass = 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/50 dark:text-emerald-300';
+                    let badgeText = 'Estoque OK';
+                    if (isCritical) {
+                        badgeClass = 'bg-rose-100 text-rose-800 dark:bg-rose-900/50 dark:text-rose-300 animate-pulse';
+                        badgeText = 'Esgotado!';
+                    } else if (isLow) {
+                        badgeClass = 'bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-300';
+                        badgeText = 'Baixo';
+                    }
+
+                    return `
+                    <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl border ${isCritical ? 'border-rose-400 dark:border-rose-500/50' : (isLow ? 'border-amber-300' : 'border-slate-200 dark:border-slate-700')} shadow-sm flex flex-col justify-between transition-all relative">
+                        <div>
+                            <div class="flex items-start justify-between">
+                                <div>
+                                    <span class="px-2 py-0.5 text-[10px] font-bold rounded-md ${badgeClass}">${badgeText}</span>
+                                    <h4 class="font-bold text-slate-800 dark:text-white text-base mt-1">${escapeHtml(item.name)}</h4>
+                                    ${linkedBox ? `<span class="text-[10px] text-slate-400 flex items-center gap-1 mt-0.5"><i class="fa-solid fa-box text-[9px]" style="color:${linkedBox.color}"></i> Caixa: ${escapeHtml(linkedBox.name)}</span>` : ''}
+                                </div>
+                                <div class="flex items-center gap-1">
+                                    <button onclick="editPantryItem('${item.id}')" title="Editar" class="p-1.5 text-slate-400 hover:text-slate-600 text-xs rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700"><i class="fa-solid fa-pen"></i></button>
+                                    <button onclick="deletePantryItem('${item.id}')" title="Excluir" class="p-1.5 text-slate-400 hover:text-rose-500 text-xs rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700"><i class="fa-solid fa-trash-can"></i></button>
+                                </div>
                             </div>
-                            <div class="flex items-center gap-1">
-                                <button onclick="editPantryItem('${item.id}')" title="Editar" class="p-1.5 text-slate-400 hover:text-slate-600 text-xs rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700"><i class="fa-solid fa-pen"></i></button>
-                                <button onclick="deletePantryItem('${item.id}')" title="Excluir" class="p-1.5 text-slate-400 hover:text-rose-500 text-xs rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700"><i class="fa-solid fa-trash-can"></i></button>
+
+                            <div class="mt-4 flex items-baseline justify-between bg-slate-50 dark:bg-slate-900 p-3 rounded-xl border border-slate-100 dark:border-slate-700">
+                                <div>
+                                    <span class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold block">Quantidade Atual</span>
+                                    <span class="text-2xl font-extrabold text-slate-800 dark:text-white">${item.qty} <span class="text-xs font-normal text-slate-500">${item.unit}</span></span>
+                                </div>
+                                <div class="text-right">
+                                    <span class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold block">Ideal p/ Casa</span>
+                                    <span class="text-sm font-bold text-slate-600 dark:text-slate-300">${item.ideal} ${item.unit}</span>
+                                </div>
                             </div>
                         </div>
 
-                        <div class="mt-4 flex items-baseline justify-between bg-slate-50 dark:bg-slate-900 p-3 rounded-xl border border-slate-100 dark:border-slate-700">
-                            <div>
-                                <span class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold block">Quantidade Atual</span>
-                                <span class="text-2xl font-extrabold text-slate-800 dark:text-white">${item.qty} <span class="text-xs font-normal text-slate-500">${item.unit}</span></span>
-                            </div>
-                            <div class="text-right">
-                                <span class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold block">Ideal p/ Casa</span>
-                                <span class="text-sm font-bold text-slate-600 dark:text-slate-300">${item.ideal} ${item.unit}</span>
+                        <div class="mt-4 pt-3 border-t border-slate-100 dark:border-slate-700/60 flex items-center justify-between gap-2">
+                            <span class="text-xs text-slate-400">Consumo Rápido:</span>
+                            <div class="flex gap-1.5">
+                                <button onclick="updatePantryQty('${item.id}', -1)" title="Consumir 1" class="w-8 h-8 rounded-lg bg-rose-50 hover:bg-rose-100 dark:bg-rose-950/40 text-rose-600 font-bold text-xs flex items-center justify-center transition-all"><i class="fa-solid fa-minus"></i></button>
+                                <button onclick="updatePantryQty('${item.id}', 1)" title="Repor 1" class="w-8 h-8 rounded-lg bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-950/40 text-emerald-600 font-bold text-xs flex items-center justify-center transition-all"><i class="fa-solid fa-plus"></i></button>
                             </div>
                         </div>
                     </div>
+                `;
+                }).join('');
 
-                    <div class="mt-4 pt-3 border-t border-slate-100 dark:border-slate-700/60 flex items-center justify-between gap-2">
-                        <span class="text-xs text-slate-400">Consumo Rápido:</span>
-                        <div class="flex gap-1.5">
-                            <button onclick="updatePantryQty('${item.id}', -1)" title="Consumir 1" class="w-8 h-8 rounded-lg bg-rose-50 hover:bg-rose-100 dark:bg-rose-950/40 text-rose-600 font-bold text-xs flex items-center justify-center transition-all"><i class="fa-solid fa-minus"></i></button>
-                            <button onclick="updatePantryQty('${item.id}', 1)" title="Repor 1" class="w-8 h-8 rounded-lg bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-950/40 text-emerald-600 font-bold text-xs flex items-center justify-center transition-all"><i class="fa-solid fa-plus"></i></button>
-                        </div>
-                    </div>
-                </div>
-            `;
-            }).join('');
+                htmlOutput += `</div></div>`;
+            });
+
+            container.innerHTML = htmlOutput;
         }
 
         function renderShoppingList() {
@@ -975,7 +1011,7 @@
                                 <i class="fa-solid fa-cart-shopping"></i>
                             </div>
                             <div>
-                                <h4 class="font-bold text-slate-800 dark:text-white">${escapeHtml(item.name)}</h4>
+                                <h4 class="font-bold text-slate-800 dark:text-white">${escapeHtml(item.name)} <span class="text-[10px] font-normal text-slate-400">(${escapeHtml(item.category || 'Despensa Seca')})</span></h4>
                                 <span class="text-[10px] text-slate-400">Faltam: <strong>${missing} ${item.unit}</strong> (Atual: ${item.qty} / Ideal: ${item.ideal}) ${linkedBox ? '• Caixa: ' + linkedBox.name : ''}</span>
                             </div>
                         </div>
@@ -1025,7 +1061,7 @@
                 const dateStr = new Date(item.timestamp).toLocaleDateString('pt-BR', { hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit' });
                 
                 return `
-                    <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-xs space-y-2">
+                    <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-xs space-y-1">
                         <div class="flex items-center justify-between">
                             <div class="flex items-center gap-2">
                                 <div class="w-6 h-6 rounded-lg flex items-center justify-center text-[10px] ${isDeposit ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300' : 'bg-rose-100 text-rose-700 dark:bg-rose-900/40 dark:text-rose-300'}">
@@ -1037,11 +1073,9 @@
                                 ${item.amount > 0 ? (isDeposit ? '+' : '-') + formatBRL(item.amount) : 'Registro'}
                             </span>
                         </div>
-                        <div class="flex justify-between items-center text-[10px] text-slate-400 border-t border-slate-200 dark:border-slate-800 pt-2">
-                            <span>${escapeHtml(item.description || (isDeposit ? 'Aporte' : 'Gasto'))} • ${dateStr}</span>
-                            <button onclick="desfazerMovimentacaoHistorico('${item.id}')" class="px-2.5 py-1 rounded-lg bg-rose-50 hover:bg-rose-100 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 font-bold transition-all flex items-center gap-1">
-                                <i class="fa-solid fa-rotate-left"></i> Desfazer Transferência
-                            </button>
+                        <div class="flex justify-between items-center text-[10px] text-slate-400">
+                            <span>${escapeHtml(item.description || (isDeposit ? 'Aporte' : 'Gasto'))}</span>
+                            <span>${dateStr}</span>
                         </div>
                     </div>
                 `;
@@ -1082,15 +1116,6 @@
             if (appState.boxes.length === 0) {
                 showToast('Crie ao menos uma caixa primeiro!', 'error');
                 return;
-            }
-
-            if (ultimaTransacaoRealizada && 
-                ultimaTransacaoRealizada.tipo === 'global_deposit' && 
-                ultimaTransacaoRealizada.amount === totalDeposit && 
-                (new Date().getTime() - ultimaTransacaoRealizada.timestamp < 120000)) {
-                if (!confirm(`Atenção: Você acabou de realizar um aporte global de ${formatBRL(totalDeposit)} há poucos instantes.\n\nDeseja realmente repetir este valor duplicado?`)) {
-                    return;
-                }
             }
 
             let remainingDeposit = totalDeposit;
@@ -1146,8 +1171,6 @@
                 if (!newlyFilledInThisRound) { remainingDeposit = 0; break; }
             }
 
-            let snapshotAnterior = JSON.parse(JSON.stringify(appState.boxes));
-
             for (let box of appState.boxes) {
                 const addedAmount = allocations[box.id] || 0;
                 if (addedAmount > 0) {
@@ -1158,22 +1181,12 @@
                 }
             }
 
-            let histId = 'h_' + Date.now();
             if (supabaseClient) {
                 await supabaseClient.from('historico_movimentacoes').insert([{
-                    id: histId, box_name: 'Aporte Global Inteligente', type: 'deposit', amount: totalDeposit,
+                    id: 'h_' + Date.now(), box_name: 'Aporte Global Inteligente', type: 'deposit', amount: totalDeposit,
                     description: overflowOccurred ? 'Com redistribuição por transbordamento' : 'Proporcional por porcentagem', timestamp: new Date().toISOString()
                 }]);
             }
-
-            ultimaTransacaoRealizada = {
-                tipo: 'global_deposit',
-                amount: totalDeposit,
-                historicoId: histId,
-                snapshot: snapshotAnterior,
-                timestamp: new Date().getTime()
-            };
-            atualizarBotaoDesfazerUI(true);
 
             loadFromSupabase();
             input.value = '';
@@ -1253,139 +1266,18 @@
                 return;
             }
 
-            if (ultimaTransacaoRealizada &&
-                ultimaTransacaoRealizada.tipo === 'box_tx' &&
-                ultimaTransacaoRealizada.boxId === boxId &&
-                ultimaTransacaoRealizada.txType === type &&
-                ultimaTransacaoRealizada.amount === amount &&
-                (new Date().getTime() - ultimaTransacaoRealizada.timestamp < 120000)) {
-                if (!confirm(`Atenção: Você acabou de realizar uma transação de ${formatBRL(amount)} (${type === 'deposit' ? 'Entrada' : 'Saída'}) nesta mesma caixa há poucos instantes.\n\nDeseja realmente repetir este valor duplicado?`)) {
-                    return;
-                }
-            }
-
-            let saldoAnteriorBox = box.balance;
             box.balance = type === 'deposit' ? box.balance + amount : box.balance - amount;
 
-            let histId = 'h_' + Date.now();
             if (supabaseClient) {
                 await supabaseClient.from('caixas_financeiras').update({ balance: box.balance }).eq('id', box.id);
                 await supabaseClient.from('historico_movimentacoes').insert([{
-                    id: histId, box_name: box.name, type: type, amount: amount, description: desc, timestamp: new Date().toISOString()
+                    id: 'h_' + Date.now(), box_name: box.name, type: type, amount: amount, description: desc, timestamp: new Date().toISOString()
                 }]);
             }
-
-            ultimaTransacaoRealizada = {
-                tipo: 'box_tx',
-                boxId: box.id,
-                txType: type,
-                amount: amount,
-                saldoAnterior: saldoAnteriorBox,
-                historicoId: histId,
-                timestamp: new Date().getTime()
-            };
-            atualizarBotaoDesfazerUI(true);
 
             loadFromSupabase();
             closeTxModal();
             showToast(`${type === 'deposit' ? 'Aporte' : 'Gasto'} registrado!`, 'success');
-        }
-
-        async function desfazerUltimaTransacao() {
-            if (!ultimaTransacaoRealizada) return;
-            if (!confirm("Deseja realmente desfazer a última transação realizada?")) return;
-            await executarEstorno(ultimaTransacaoRealizada);
-        }
-
-        async function desfazerMovimentacaoHistorico(historicoId) {
-            const item = appState.history.find(h => h.id === historicoId);
-            if (!item) return;
-            if (!confirm(`Deseja desfazer a movimentação de ${formatBRL(item.amount)} (${item.boxName})?`)) return;
-
-            try {
-                // Força o apagamento do registro no Supabase (se falhar por política RLS, o app continua atualizando a caixa)
-                if (supabaseClient) {
-                    await supabaseClient.from('historico_movimentacoes').delete().eq('id', item.id);
-                }
-
-                if (item.boxName === 'Aporte Global Inteligente') {
-                    showToast("Registro removido do histórico. Atualize os saldos das caixas manualmente se necessário.", "info");
-                    loadFromSupabase();
-                    return;
-                }
-
-                const box = appState.boxes.find(b => b.name === item.boxName);
-                if (box) {
-                    if (item.type === 'deposit') {
-                        box.balance = Math.max(0, box.balance - item.amount);
-                    } else {
-                        box.balance += item.amount;
-                    }
-
-                    if (supabaseClient) {
-                        await supabaseClient.from('caixas_financeiras').update({ balance: box.balance }).eq('id', box.id);
-                    }
-                }
-
-                if (ultimaTransacaoRealizada && ultimaTransacaoRealizada.historicoId === historicoId) {
-                    ultimaTransacaoRealizada = null;
-                    atualizarBotaoDesfazerUI(false);
-                }
-
-                loadFromSupabase();
-                showToast("Movimentação desfeita com sucesso!", "success");
-            } catch (err) {
-                console.error(err);
-                showToast("Erro ao desfazer movimentação.", "error");
-            }
-        }
-
-        async function executarEstorno(transacao) {
-            try {
-                if (transacao.tipo === 'box_tx') {
-                    const box = appState.boxes.find(b => b.id === transacao.boxId);
-                    if (box) {
-                        box.balance = transacao.saldoAnterior;
-                        if (supabaseClient) {
-                            await supabaseClient.from('caixas_financeiras').update({ balance: box.balance }).eq('id', box.id);
-                        }
-                    }
-                } else if (transacao.tipo === 'global_deposit') {
-                    for (let snapshotBox of transacao.snapshot) {
-                        const box = appState.boxes.find(b => b.id === snapshotBox.id);
-                        if (box) {
-                            box.balance = snapshotBox.balance;
-                            if (supabaseClient) {
-                                await supabaseClient.from('caixas_financeiras').update({ balance: box.balance }).eq('id', box.id);
-                            }
-                        }
-                    }
-                }
-
-                if (supabaseClient && transacao.historicoId) {
-                    await supabaseClient.from('historico_movimentacoes').delete().eq('id', transacao.historicoId);
-                }
-
-                ultimaTransacaoRealizada = null;
-                atualizarBotaoDesfazerUI(false);
-                loadFromSupabase();
-                showToast("Transação desfeita com sucesso!", "success");
-            } catch (err) {
-                console.error(err);
-                showToast("Erro ao desfazer transação.", "error");
-            }
-        }
-
-        function atualizarBotaoDesfazerUI(ativo) {
-            const btn = document.getElementById('btnDesfazer');
-            if (!btn) return;
-            if (ativo) {
-                btn.disabled = false;
-                btn.className = 'p-2 rounded-lg bg-amber-500 hover:bg-amber-600 text-white transition-all font-bold flex items-center gap-1.5 text-xs shadow-sm';
-            } else {
-                btn.disabled = true;
-                btn.className = 'p-2 rounded-lg bg-slate-100 dark:bg-slate-700 text-slate-400 dark:text-slate-500 transition-all font-bold flex items-center gap-1.5 text-xs disabled:opacity-40 disabled:cursor-not-allowed';
-            }
         }
 
         function openBoxModal(boxId = null) {
@@ -1486,6 +1378,7 @@
                 if (!item) return;
                 modalTitle.innerText = 'Editar Mantimento';
                 document.getElementById('pantryNameInput').value = item.name;
+                document.getElementById('pantryCategoryInput').value = item.category || 'Despensa Seca';
                 document.getElementById('pantryQtyInput').value = item.qty;
                 document.getElementById('pantryIdealInput').value = item.ideal;
                 document.getElementById('pantryUnitInput').value = item.unit;
@@ -1493,6 +1386,7 @@
             } else {
                 modalTitle.innerText = 'Adicionar Mantimento';
                 document.getElementById('pantryNameInput').value = '';
+                document.getElementById('pantryCategoryInput').value = 'Despensa Seca';
                 document.getElementById('pantryQtyInput').value = '1';
                 document.getElementById('pantryIdealInput').value = '3';
                 document.getElementById('pantryUnitInput').value = 'un';
@@ -1507,6 +1401,7 @@
             e.preventDefault();
             const id = document.getElementById('pantryIdInput').value;
             const name = document.getElementById('pantryNameInput').value.trim();
+            const category = document.getElementById('pantryCategoryInput').value;
             const qty = parseInt(document.getElementById('pantryQtyInput').value) || 0;
             const ideal = parseInt(document.getElementById('pantryIdealInput').value) || 1;
             const unit = document.getElementById('pantryUnitInput').value;
@@ -1514,7 +1409,7 @@
 
             if (!name) return;
 
-            const itemData = { name, qty, ideal, unit, box_id: boxId };
+            const itemData = { name, category, qty, ideal, unit, box_id: boxId };
 
             if (supabaseClient) {
                 if (id) {
@@ -1641,4 +1536,8 @@
         }
     </script>
 </body>
-</html>
+</html>'''
+
+with open('/mnt/data/gestao_residencial_v2.html', 'w', encoding='utf-8') as f:
+    f.write(html_content)
+
