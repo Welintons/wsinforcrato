@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="pt-BR" class="h-full bg-slate-900">
+<html lang="pt-BR" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WS Soluções | Elétrica, Tecnologia & Instalações</title>
-    <!-- Tailwind CSS -->
+    <title>StreamVibe - Preview</title>
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -13,589 +13,154 @@
                 extend: {
                     colors: {
                         brand: {
-                            50: '#f0fdf4',
-                            100: '#dcfce7',
-                            500: '#22c55e',
-                            600: '#16a34a',
-                            700: '#15803d',
+                            500: '#f43f5e',
+                            600: '#e11d48',
+                            700: '#be123c',
                         }
                     }
                 }
             }
         }
     </script>
-    <!-- FontAwesome icons -->
+    <!-- FontAwesome para ícones -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Font Inter -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Inter', sans-serif; }
-        .ws-pane { min-width: 0; animation: paneIn .2s cubic-bezier(0.16, 1, 0.3, 1); }
-        .ws-pane[hidden] { display: none !important; }
-        @keyframes paneIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
-        #sidebar { transition: width 0.25s cubic-bezier(0.4, 0, 0.2, 1), transform 0.25s cubic-bezier(0.4, 0, 0.2, 1); }
-        .glass-card {
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-        }
-        .dark .glass-card {
-            background: rgba(30, 41, 59, 0.85);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-        }
-        .glass-header {
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-        }
-        .dark .glass-header {
-            background: rgba(30, 41, 59, 0.8);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-        }
-    </style>
 </head>
-<body class="h-full flex flex-col md:flex-row text-slate-800 dark:text-slate-100 bg-slate-50 dark:bg-slate-950 transition-colors duration-200 overflow-x-hidden">
+<body class="bg-zinc-950 text-zinc-100 font-sans antialiased min-h-screen flex flex-col">
 
-    <!-- Overlay mobile -->
-    <div id="sidebarOverlay" onclick="toggleSidebar()" class="fixed inset-0 bg-slate-950/60 backdrop-blur-xs z-20 hidden md:hidden transition-opacity"></div>
+    <!-- Header / Navbar -->
+    <header class="sticky top-0 z-50 bg-zinc-900/80 backdrop-blur-md border-b border-zinc-800">
+        <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+            <!-- Logo -->
+            <div class="flex items-center space-x-2">
+                <i class="fa-solid fa-fire text-brand-500 text-2xl"></i>
+                <span class="text-xl font-black tracking-wider bg-gradient-to-r from-brand-500 to-orange-500 bg-clip-text text-transparent">STREAMVIBE</span>
+            </div>
 
-    <!-- Sidebar / Menu Lateral -->
-    <aside id="sidebar" class="fixed md:static inset-y-0 left-0 w-64 bg-white dark:bg-slate-900 border-r border-slate-200/80 dark:border-slate-800 flex flex-col z-30 shrink-0 shadow-sm -translate-x-full md:translate-x-0 transition-all duration-300">
-        <div class="h-16 px-4 border-b border-slate-200/80 dark:border-slate-800 flex items-center justify-between shrink-0">
-            <div class="flex items-center gap-3 overflow-hidden">
-                <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-brand-500 to-emerald-700 text-white flex items-center justify-center font-bold text-lg shadow-md shadow-brand-500/20 shrink-0">
-                    <i class="fa-solid fa-bolt-lightning"></i>
-                </div>
-                <div class="sidebar-label transition-opacity duration-200 truncate">
-                    <h1 class="font-bold text-sm leading-tight text-slate-900 dark:text-white truncate">WS Soluções</h1>
-                    <p class="text-[10px] text-brand-600 dark:text-brand-400 font-medium">Serviços Técnicos Especializados</p>
+            <!-- Barra de Pesquisa Central -->
+            <div class="hidden md:flex items-center flex-1 max-w-md mx-8">
+                <div class="relative w-full">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-zinc-400">
+                        <i class="fa-solid fa-search"></i>
+                    </span>
+                    <input type="text" placeholder="Buscar vídeos, modelos, categorias..." class="w-full bg-zinc-950 text-sm text-zinc-200 pl-10 pr-4 py-2 rounded-full border border-zinc-800 focus:outline-none focus:border-brand-500 transition">
                 </div>
             </div>
-            <button onclick="toggleSidebar()" class="hidden md:flex p-1.5 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors shrink-0" title="Recolher/Expandir menu">
-                <i id="sidebarToggleIcon" class="fa-solid fa-chevron-left text-xs"></i>
-            </button>
-        </div>
 
-        <nav class="flex-1 p-3 space-y-1.5 overflow-y-auto" aria-label="Navegação do site">
-            <button type="button" class="ws-tab w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 font-semibold text-xs transition-all is-active" data-tab="inicio" aria-selected="true">
-                <i class="fa-solid fa-house text-base w-5 text-center shrink-0"></i><span class="sidebar-label truncate">Início / Apresentação</span>
-            </button>
-            <button type="button" class="ws-tab w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 font-semibold text-xs transition-all" data-tab="servicos" aria-selected="false">
-                <i class="fa-solid fa-screwdriver-wrench text-base w-5 text-center shrink-0"></i><span class="sidebar-label truncate">Nossos Serviços</span>
-            </button>
-            <button type="button" class="ws-tab w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 font-semibold text-xs transition-all" data-tab="agendamentos" aria-selected="false">
-                <i class="fa-solid fa-calendar-check text-base w-5 text-center shrink-0"></i><span class="sidebar-label truncate">Agendamentos</span>
-            </button>
-            <button type="button" class="ws-tab w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 font-semibold text-xs transition-all" data-tab="contato" aria-selected="false">
-                <i class="fa-solid fa-headset text-base w-5 text-center shrink-0"></i><span class="sidebar-label truncate">Contato & Orçamento</span>
-            </button>
-        </nav>
-
-        <div class="p-3 border-t border-slate-200/80 dark:border-slate-800 text-[10px] text-slate-400 text-center sidebar-label shrink-0">
-            <span class="text-emerald-500 font-bold"><i class="fa-solid fa-circle text-[8px]"></i> Crato & Juazeiro do Norte</span>
+            <!-- Ações do Usuário -->
+            <div class="flex items-center space-x-3">
+                <button class="hidden sm:inline-flex items-center px-4 py-2 text-sm font-medium text-zinc-300 hover:text-white transition">
+                    <i class="fa-solid fa-crown text-yellow-500 mr-2"></i> Seja VIP
+                </button>
+                <button class="bg-brand-600 hover:bg-brand-700 text-white px-4 py-2 rounded-full text-sm font-semibold transition shadow-lg shadow-brand-600/20">
+                    Entrar / Assinar
+                </button>
+            </div>
         </div>
-    </aside>
+    </header>
 
     <!-- Conteúdo Principal -->
-    <div class="flex-1 flex flex-col min-w-0 h-full overflow-y-auto">
-        <header class="glass-header border-b border-slate-200/80 dark:border-slate-800 sticky top-0 z-20 shadow-xs">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-                <div class="flex items-center gap-3">
-                    <button onclick="toggleSidebar()" class="md:hidden p-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition-colors" title="Abrir menu">
-                        <i class="fa-solid fa-bars text-base"></i>
-                    </button>
-                    <span id="currentTitle" class="font-bold text-sm text-slate-800 dark:text-white uppercase tracking-wider">Início</span>
-                </div>
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 py-6">
+        
+        <!-- Filtros Rápidos / Categorias -->
+        <div class="flex items-center space-x-2 overflow-x-auto pb-4 mb-6 scrollbar-none">
+            <button class="bg-brand-600 text-white px-4 py-1.5 rounded-full text-sm font-medium whitespace-nowrap shadow">Destaques</button>
+            <button class="bg-zinc-900 hover:bg-zinc-800 text-zinc-300 px-4 py-1.5 rounded-full text-sm font-medium whitespace-nowrap transition border border-zinc-800">Mais Recentes</button>
+            <button class="bg-zinc-900 hover:bg-zinc-800 text-zinc-300 px-4 py-1.5 rounded-full text-sm font-medium whitespace-nowrap transition border border-zinc-800">Mais Populares</button>
+            <button class="bg-zinc-900 hover:bg-zinc-800 text-zinc-300 px-4 py-1.5 rounded-full text-sm font-medium whitespace-nowrap transition border border-zinc-800">Modelos Verificadas</button>
+            <button class="bg-zinc-900 hover:bg-zinc-800 text-zinc-300 px-4 py-1.5 rounded-full text-sm font-medium whitespace-nowrap transition border border-zinc-800">4K Ultra HD</button>
+        </div>
 
-                <div class="flex items-center gap-2">
-                    <button onclick="switchTab('agendamentos')" class="py-2 px-3.5 bg-brand-600 hover:bg-brand-700 text-white font-bold text-xs rounded-xl shadow-md shadow-brand-600/25 transition-all flex items-center gap-1.5">
-                        <i class="fa-solid fa-calendar-plus"></i> <span class="hidden sm:inline">Agendar Serviço</span>
-                    </button>
-                    <button id="themeToggleBtn" onclick="toggleTheme()" class="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition-all shadow-xs">
-                        <i class="fa-solid fa-moon dark:hidden"></i>
-                        <i class="fa-solid fa-sun hidden dark:block text-amber-400"></i>
-                    </button>
+        <!-- Grid de Vídeos / Conteúdo -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+
+            <!-- Card 1 -->
+            <div class="group bg-zinc-900/60 rounded-xl overflow-hidden border border-zinc-800 hover:border-zinc-700 transition flex flex-col">
+                <div class="relative aspect-video overflow-hidden bg-zinc-950">
+                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80" alt="Thumbnail" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+                    <span class="absolute bottom-2 right-2 bg-black/80 text-xs px-2 py-0.5 rounded font-semibold text-zinc-200">14:25</span>
+                    <span class="absolute top-2 left-2 bg-brand-600 text-white text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider">HD</span>
+                </div>
+                <div class="p-3 flex flex-col flex-1 justify-between">
+                    <div>
+                        <h3 class="font-semibold text-sm line-clamp-2 text-zinc-100 group-hover:text-brand-400 transition">Sessão Exclusiva no Estúdio - Bastidores e Produção Completa</h3>
+                    </div>
+                    <div class="mt-3 flex items-center justify-between text-xs text-zinc-400 pt-2 border-t border-zinc-800/60">
+                        <span class="flex items-center text-zinc-300">
+                            <i class="fa-solid fa-circle-check text-brand-500 mr-1"></i> Helena Vance
+                        </span>
+                        <span>42.1k views</span>
+                    </div>
                 </div>
             </div>
-        </header>
 
-        <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
-            <div class="ws-tab-panes space-y-6">
-
-                <!-- PANE 1: INÍCIO -->
-                <section class="ws-pane active space-y-6" data-pane="inicio">
-                    <div class="bg-gradient-to-br from-brand-600 via-emerald-700 to-slate-900 text-white p-8 sm:p-12 rounded-3xl shadow-xl relative overflow-hidden">
-                        <div class="absolute -right-6 -bottom-6 text-white/10 text-9xl font-bold pointer-events-none"><i class="fa-solid fa-screwdriver-wrench"></i></div>
-                        <div class="max-w-2xl space-y-4 relative z-10">
-                            <span class="px-3 py-1 text-xs font-bold uppercase tracking-wider bg-white/20 rounded-full backdrop-blur-md">Excelência Técnica & Soluções Residenciais</span>
-                            <h2 class="text-3xl sm:text-5xl font-extrabold tracking-tight leading-tight">WS Soluções & Tecnologia</h2>
-                            <p class="text-emerald-100 text-sm sm:text-base leading-relaxed">
-                                Atendimento especializado em instalações elétricas, segurança eletrônica, suporte em TI (WS Infor) e reparos estruturais em Crato, Juazeiro do Norte e região.
-                            </p>
-                            <div class="pt-4 flex flex-wrap gap-3">
-                                <button onclick="switchTab('agendamentos')" class="py-3 px-6 bg-white text-emerald-900 font-bold text-xs rounded-2xl shadow-lg hover:bg-emerald-50 transition-all flex items-center gap-2">
-                                    <i class="fa-solid fa-calendar-check text-brand-600"></i> Solicitar Agendamento
-                                </button>
-                                <button onclick="switchTab('servicos')" class="py-3 px-6 bg-emerald-800/60 hover:bg-emerald-800 text-white font-bold text-xs rounded-2xl backdrop-blur-md border border-white/20 transition-all flex items-center gap-2">
-                                    <i class="fa-solid fa-list-check"></i> Conhecer Serviços
-                                </button>
-                            </div>
-                        </div>
+            <!-- Card 2 -->
+            <div class="group bg-zinc-900/60 rounded-xl overflow-hidden border border-zinc-800 hover:border-zinc-700 transition flex flex-col">
+                <div class="relative aspect-video overflow-hidden bg-zinc-950">
+                    <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=600&q=80" alt="Thumbnail" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+                    <span class="absolute bottom-2 right-2 bg-black/80 text-xs px-2 py-0.5 rounded font-semibold text-zinc-200">22:10</span>
+                    <span class="absolute top-2 left-2 bg-yellow-600 text-white text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider">VIP</span>
+                </div>
+                <div class="p-3 flex flex-col flex-1 justify-between">
+                    <div>
+                        <h3 class="font-semibold text-sm line-clamp-2 text-zinc-100 group-hover:text-brand-400 transition">Encontro Privado na cobertura - Parte 1</h3>
                     </div>
-
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                        <div class="glass-card p-5 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-sm space-y-2">
-                            <div class="w-10 h-10 rounded-2xl bg-amber-100 dark:bg-amber-950 text-amber-600 dark:text-amber-400 flex items-center justify-center font-bold">
-                                <i class="fa-solid fa-bolt text-lg"></i>
-                            </div>
-                            <h3 class="font-bold text-sm text-slate-800 dark:text-white">Elétrica Residencial</h3>
-                            <p class="text-xs text-slate-500 dark:text-slate-400">Instalações, quadros de distribuição, disjuntores e correção de redes.</p>
-                        </div>
-                        <div class="glass-card p-5 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-sm space-y-2">
-                            <div class="w-10 h-10 rounded-2xl bg-blue-100 dark:bg-blue-950 text-blue-600 dark:text-blue-400 flex items-center justify-center font-bold">
-                                <i class="fa-solid fa-video text-lg"></i>
-                            </div>
-                            <h3 class="font-bold text-sm text-slate-800 dark:text-white">Segurança Eletrônica</h3>
-                            <p class="text-xs text-slate-500 dark:text-slate-400">Instalação e configuração de câmeras CFTV, DVR/NVR e alarmes.</p>
-                        </div>
-                        <div class="glass-card p-5 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-sm space-y-2">
-                            <div class="w-10 h-10 rounded-2xl bg-emerald-100 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400 flex items-center justify-center font-bold">
-                                <i class="fa-solid fa-computer text-lg"></i>
-                            </div>
-                            <h3 class="font-bold text-sm text-slate-800 dark:text-white">TI & WS Infor</h3>
-                            <p class="text-xs text-slate-500 dark:text-slate-400">Manutenção de computadores, redes e softwares sob medida.</p>
-                        </div>
-                        <div class="glass-card p-5 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-sm space-y-2">
-                            <div class="w-10 h-10 rounded-2xl bg-purple-100 dark:bg-purple-950 text-purple-600 dark:text-purple-400 flex items-center justify-center font-bold">
-                                <i class="fa-solid fa-hammer text-lg"></i>
-                            </div>
-                            <h3 class="font-bold text-sm text-slate-800 dark:text-white">Instalações & Manutenção</h3>
-                            <p class="text-xs text-slate-500 dark:text-slate-400">Forros de PVC, montagem de móveis, fixações e reparos gerais.</p>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- PANE 2: NOSSOS SERVIÇOS -->
-                <section class="ws-pane space-y-6" data-pane="servicos" hidden>
-                    <div class="glass-card p-6 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                        <div>
-                            <h2 class="text-lg font-bold text-slate-800 dark:text-white flex items-center gap-2">
-                                <i class="fa-solid fa-screwdriver-wrench text-brand-500"></i> Catálogo Completo de Serviços
-                            </h2>
-                            <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Soluções profissionais e técnicas para sua casa ou comércio</p>
-                        </div>
-                        <button onclick="switchTab('agendamentos')" class="py-2.5 px-4 bg-brand-600 hover:bg-brand-700 text-white font-bold text-xs rounded-xl shadow-md transition-all">
-                            Agendar um Serviço
-                        </button>
-                    </div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-                        <div class="glass-card p-6 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-sm flex flex-col justify-between">
-                            <div>
-                                <span class="px-2.5 py-1 text-[10px] font-bold rounded-lg bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300">Elétrica</span>
-                                <h3 class="font-bold text-slate-800 dark:text-white text-base mt-2.5">Instalações e Reformas Elétricas</h3>
-                                <p class="text-xs text-slate-500 dark:text-slate-400 mt-2 leading-relaxed">Correção de fiação, instalação de disjuntores, tomadas, luminárias e quadros de distribuição.</p>
-                            </div>
-                            <div class="mt-6 pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
-                                <span class="text-xs font-semibold text-slate-400">Residencial & Comercial</span>
-                                <button onclick="selectServiceForBooking('Instalações e Reformas Elétricas')" class="text-xs text-brand-600 dark:text-brand-400 font-bold hover:underline">Agendar &rarr;</button>
-                            </div>
-                        </div>
-
-                        <div class="glass-card p-6 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-sm flex flex-col justify-between">
-                            <div>
-                                <span class="px-2.5 py-1 text-[10px] font-bold rounded-lg bg-blue-100 text-blue-800 dark:bg-blue-950 dark:text-blue-300">Segurança</span>
-                                <h3 class="font-bold text-slate-800 dark:text-white text-base mt-2.5">Câmeras de Segurança (CFTV)</h3>
-                                <p class="text-xs text-slate-500 dark:text-slate-400 mt-2 leading-relaxed">Instalação e configuração de sistemas de monitoramento por câmeras (DVR/NVR) com acesso pelo celular.</p>
-                            </div>
-                            <div class="mt-6 pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
-                                <span class="text-xs font-semibold text-slate-400">Monitoramento 24h</span>
-                                <button onclick="selectServiceForBooking('Câmeras de Segurança (CFTV)')" class="text-xs text-brand-600 dark:text-brand-400 font-bold hover:underline">Agendar &rarr;</button>
-                            </div>
-                        </div>
-
-                        <div class="glass-card p-6 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-sm flex flex-col justify-between">
-                            <div>
-                                <span class="px-2.5 py-1 text-[10px] font-bold rounded-lg bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300">Tecnologia (WS Infor)</span>
-                                <h3 class="font-bold text-slate-800 dark:text-white text-base mt-2.5">Manutenção de PCs & Redes</h3>
-                                <p class="text-xs text-slate-500 dark:text-slate-400 mt-2 leading-relaxed">Formatação, reparos em hardware, diagnóstico de micro-componentes, configuração de redes e roteadores.</p>
-                            </div>
-                            <div class="mt-6 pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
-                                <span class="text-xs font-semibold text-slate-400">Suporte Técnico</span>
-                                <button onclick="selectServiceForBooking('Manutenção de PCs & Redes')" class="text-xs text-brand-600 dark:text-brand-400 font-bold hover:underline">Agendar &rarr;</button>
-                            </div>
-                        </div>
-
-                        <div class="glass-card p-6 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-sm flex flex-col justify-between">
-                            <div>
-                                <span class="px-2.5 py-1 text-[10px] font-bold rounded-lg bg-purple-100 text-purple-800 dark:bg-purple-950 dark:text-purple-300">Instalação</span>
-                                <h3 class="font-bold text-slate-800 dark:text-white text-base mt-2.5">Forros de PVC & Acabamentos</h3>
-                                <p class="text-xs text-slate-500 dark:text-slate-400 mt-2 leading-relaxed">Instalação estruturada de forros de PVC em ambientes residenciais e comerciais com acabamento de alto padrão.</p>
-                            </div>
-                            <div class="mt-6 pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
-                                <span class="text-xs font-semibold text-slate-400">Serviço Especializado</span>
-                                <button onclick="selectServiceForBooking('Forros de PVC & Acabamentos')" class="text-xs text-brand-600 dark:text-brand-400 font-bold hover:underline">Agendar &rarr;</button>
-                            </div>
-                        </div>
-
-                        <div class="glass-card p-6 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-sm flex flex-col justify-between">
-                            <div>
-                                <span class="px-2.5 py-1 text-[10px] font-bold rounded-lg bg-orange-100 text-orange-800 dark:bg-orange-950 dark:text-orange-300">Montagem</span>
-                                <h3 class="font-bold text-slate-800 dark:text-white text-base mt-2.5">Montagem de Móveis & Fixações</h3>
-                                <p class="text-xs text-slate-500 dark:text-slate-400 mt-2 leading-relaxed">Montagem de móveis em geral, instalação de suportes de TV, prateleiras, quadros e cortinas.</p>
-                            </div>
-                            <div class="mt-6 pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
-                                <span class="text-xs font-semibold text-slate-400">Serviço Rápido</span>
-                                <button onclick="selectServiceForBooking('Montagem de Móveis & Fixações')" class="text-xs text-brand-600 dark:text-brand-400 font-bold hover:underline">Agendar &rarr;</button>
-                            </div>
-                        </div>
-
-                        <div class="glass-card p-6 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-sm flex flex-col justify-between">
-                            <div>
-                                <span class="px-2.5 py-1 text-[10px] font-bold rounded-lg bg-rose-100 text-rose-800 dark:bg-rose-950 dark:text-rose-300">Manutenção</span>
-                                <h3 class="font-bold text-slate-800 dark:text-white text-base mt-2.5">Reparos & Pequenas Manutenções</h3>
-                                <p class="text-xs text-slate-500 dark:text-slate-400 mt-2 leading-relaxed">Conserto de eletrodomésticos portáteis (micro-ondas, ventiladores) e manutenções gerais.</p>
-                            </div>
-                            <div class="mt-6 pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
-                                <span class="text-xs font-semibold text-slate-400">Soluções Domésticas</span>
-                                <button onclick="selectServiceForBooking('Reparos & Pequenas Manutenções')" class="text-xs text-brand-600 dark:text-brand-400 font-bold hover:underline">Agendar &rarr;</button>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- PANE 3: AGENDAMENTOS -->
-                <section class="ws-pane space-y-6" data-pane="agendamentos" hidden>
-                    <div class="glass-card p-6 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-sm">
-                        <div class="flex items-center justify-between mb-4">
-                            <div>
-                                <h2 class="text-lg font-bold text-slate-800 dark:text-white flex items-center gap-2">
-                                    <i class="fa-solid fa-calendar-check text-brand-500"></i> Central de Agendamentos & Solicitações
-                                </h2>
-                                <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Preencha os dados abaixo para solicitar um orçamento ou atendimento técnico</p>
-                            </div>
-                        </div>
-
-                        <form onsubmit="handleBookingSubmit(event)" class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
-                            <div>
-                                <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1.5">Seu Nome / Contato</label>
-                                <input type="text" id="clientNameInput" required placeholder="Ex: João Silva"
-                                    class="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 text-xs text-slate-800 dark:text-white shadow-xs">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1.5">Telefone / WhatsApp</label>
-                                <input type="text" id="clientPhoneInput" required placeholder="(88) 99999-9999"
-                                    class="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 text-xs text-slate-800 dark:text-white shadow-xs">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1.5">Serviço Desejado</label>
-                                <select id="serviceSelectInput" required class="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 text-xs font-bold text-slate-800 dark:text-white shadow-xs">
-                                    <option value="Instalações e Reformas Elétricas">Instalações e Reformas Elétricas</option>
-                                    <option value="Câmeras de Segurança (CFTV)">Câmeras de Segurança (CFTV)</option>
-                                    <option value="Manutenção de PCs & Redes">Manutenção de PCs & Redes (WS Infor)</option>
-                                    <option value="Forros de PVC & Acabamentos">Forros de PVC & Acabamentos</option>
-                                    <option value="Montagem de Móveis & Fixações">Montagem de Móveis & Fixações</option>
-                                    <option value="Reparos & Pequenas Manutenções">Reparos & Pequenas Manutenções</option>
-                                    <option value="Outro Serviço / Orçamento Geral">Outro Serviço / Orçamento Geral</option>
-                                </select>
-                            </div>
-                            <div class="grid grid-cols-2 gap-2">
-                                <div>
-                                    <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1.5">Data Preferida</label>
-                                    <input type="date" id="bookingDateInput" required
-                                        class="w-full px-3 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 text-xs text-slate-800 dark:text-white shadow-xs">
-                                </div>
-                                <div>
-                                    <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1.5">Período</label>
-                                    <select id="bookingTimeInput" class="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 text-xs font-bold text-slate-800 dark:text-white shadow-xs">
-                                        <option value="Manhã">Manhã (08h - 12h)</option>
-                                        <option value="Tarde">Tarde (13h - 18h)</option>
-                                        <option value="Urgente / Combinar">Urgente / A Combinar</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="sm:col-span-2">
-                                <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1.5">Endereço / Bairro & Detalhes do Problema</label>
-                                <textarea id="bookingDescInput" rows="3" placeholder="Informe o bairro (Crato ou Juazeiro) e descreva o serviço necessário..."
-                                    class="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 text-xs text-slate-800 dark:text-white shadow-xs"></textarea>
-                            </div>
-                            <div class="sm:col-span-2 pt-2 flex justify-end">
-                                <button type="submit" class="py-3 px-6 bg-brand-600 hover:bg-brand-700 text-white font-bold text-xs rounded-xl shadow-md shadow-brand-600/20 transition-all flex items-center gap-2">
-                                    <i class="fa-solid fa-paper-plane"></i> Enviar Solicitação de Agendamento
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-
-                    <div class="glass-card p-6 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-sm space-y-4">
-                        <div class="flex items-center justify-between">
-                            <h3 class="text-sm font-bold text-slate-800 dark:text-white flex items-center gap-2">
-                                <i class="fa-solid fa-list-check text-emerald-500"></i> Agendamentos Solicitados
-                            </h3>
-                            <span id="bookingCountBadge" class="text-xs px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 font-bold text-slate-600 dark:text-slate-300">0 agendamentos</span>
-                        </div>
-                        <div id="bookingsListContainer" class="space-y-3">
-                            <div class="text-center py-6 text-slate-400 text-xs italic">Nenhum agendamento registrado no momento.</div>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- PANE 4: CONTATO -->
-                <section class="ws-pane space-y-6" data-pane="contato" hidden>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div class="glass-card p-8 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-sm space-y-6 flex flex-col justify-between">
-                            <div class="space-y-4">
-                                <span class="px-3 py-1 text-xs font-bold uppercase tracking-wider bg-brand-100 text-brand-800 dark:bg-brand-950 dark:text-brand-300 rounded-full">Fale Conosco</span>
-                                <h2 class="text-2xl font-extrabold text-slate-800 dark:text-white">Pronto para resolver seu problema técnico?</h2>
-                                <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
-                                    Atendimento ágil para residências e comércios em Crato, Juazeiro do Norte e toda a região do Cariri. Tire dúvidas ou solicite um orçamento direto.
-                                </p>
-                                <div class="space-y-3 pt-2">
-                                    <div class="flex items-center gap-3 text-xs text-slate-700 dark:text-slate-300 font-medium">
-                                        <div class="w-8 h-8 rounded-xl bg-emerald-100 dark:bg-emerald-950 text-emerald-600 flex items-center justify-center"><i class="fa-solid fa-location-dot"></i></div>
-                                        <span>Crato & Juazeiro do Norte - Ceará</span>
-                                    </div>
-                                    <div class="flex items-center gap-3 text-xs text-slate-700 dark:text-slate-300 font-medium">
-                                        <div class="w-8 h-8 rounded-xl bg-emerald-100 dark:bg-emerald-950 text-emerald-600 flex items-center justify-center"><i class="fa-solid fa-key"></i></div>
-                                        <span>Chave Pix (CPF): <strong>07622950319</strong></span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="pt-4">
-                                <a href="https://wa.me/5588999999999?text=Olá!%20Gostaria%20de%20solicitar%20um%20orçamento%20na%20WS%20Soluções." target="_blank"
-                                    class="w-full py-3.5 px-6 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-2xl shadow-lg shadow-emerald-600/20 transition-all flex items-center justify-center gap-2">
-                                    <i class="fa-brands fa-whatsapp text-base"></i> Atendimento Direto via WhatsApp
-                                </a>
-                            </div>
-                        </div>
-
-                        <div class="glass-card p-8 rounded-3xl border border-slate-200/80 dark:border-slate-800 shadow-sm space-y-4">
-                            <h3 class="text-base font-bold text-slate-800 dark:text-white">Por que escolher a WS Soluções?</h3>
-                            <ul class="space-y-3 text-xs text-slate-600 dark:text-slate-300">
-                                <li class="flex items-start gap-2.5">
-                                    <i class="fa-solid fa-circle-check text-brand-500 mt-0.5"></i>
-                                    <span><strong>Multidisciplinar:</strong> Elétrica, redes, CFTV e reparos gerais em um só lugar.</span>
-                                </li>
-                                <li class="flex items-start gap-2.5">
-                                    <i class="fa-solid fa-circle-check text-brand-500 mt-0.5"></i>
-                                    <span><strong>Agilidade:</strong> Atendimento rápido com foco na solução definitiva do problema.</span>
-                                </li>
-                                <li class="flex items-start gap-2.5">
-                                    <i class="fa-solid fa-circle-check text-brand-500 mt-0.5"></i>
-                                    <span><strong>Garantia de Qualidade:</strong> Rigor técnico em instalações residenciais e comerciais.</span>
-                                </li>
-                                <li class="flex items-start gap-2.5">
-                                    <i class="fa-solid fa-circle-check text-brand-500 mt-0.5"></i>
-                                    <span><strong>Transparência:</strong> Orçamento claro e facilitado via Pix.</span>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </section>
-
-            </div>
-        </main>
-    </div>
-
-    <!-- Toast Container -->
-    <div id="toastContainer" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
-
-    <!-- JavaScript App Logic -->
-    <script>
-        let isSidebarCollapsed = false;
-        let bookingsState = [];
-
-        window.onload = function() {
-            setupTabs();
-            loadBookings();
-            
-            const savedTheme = localStorage.getItem('app_theme');
-            if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-                document.documentElement.classList.add('dark');
-            } else {
-                document.documentElement.classList.remove('dark');
-            }
-        };
-
-        function toggleSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            const overlay = document.getElementById('sidebarOverlay');
-            const labels = document.querySelectorAll('.sidebar-label');
-            const toggleIcon = document.getElementById('sidebarToggleIcon');
-
-            if (window.innerWidth < 768) {
-                sidebar.classList.toggle('-translate-x-full');
-                overlay.classList.toggle('hidden');
-                return;
-            }
-
-            isSidebarCollapsed = !isSidebarCollapsed;
-            if (isSidebarCollapsed) {
-                sidebar.classList.remove('w-64');
-                sidebar.classList.add('w-20');
-                labels.forEach(el => el.classList.add('hidden'));
-                if (toggleIcon) toggleIcon.className = 'fa-solid fa-chevron-right text-xs';
-            } else {
-                sidebar.classList.remove('w-20');
-                sidebar.classList.add('w-64');
-                labels.forEach(el => el.classList.remove('hidden'));
-                if (toggleIcon) toggleIcon.className = 'fa-solid fa-chevron-left text-xs';
-            }
-        }
-
-        function setupTabs() {
-            const tabs = document.querySelectorAll('.ws-tab');
-            const panes = document.querySelectorAll('.ws-pane');
-            const titleEl = document.getElementById('currentTitle');
-
-            tabs.forEach(tab => {
-                tab.addEventListener('click', () => {
-                    const target = tab.dataset.tab;
-                    tabs.forEach(t => {
-                        const active = t === tab;
-                        t.classList.toggle('is-active', active);
-                        t.setAttribute('aria-selected', String(active));
-                        if (active) {
-                            const spanText = t.querySelector('span:not(.sidebar-label)') || t.querySelector('span');
-                            if (titleEl && spanText) titleEl.innerText = spanText.innerText;
-                        }
-                    });
-                    panes.forEach(p => {
-                        const active = p.dataset.pane === target;
-                        p.hidden = !active;
-                        p.classList.toggle('active', active);
-                    });
-
-                    if (window.innerWidth < 768) {
-                        document.getElementById('sidebar').classList.add('-translate-x-full');
-                        document.getElementById('sidebarOverlay').classList.add('hidden');
-                    }
-                });
-            });
-        }
-
-        function switchTab(tabName) {
-            const btn = document.querySelector(`[data-tab="${tabName}"]`);
-            if (btn) btn.click();
-        }
-
-        function toggleTheme() {
-            if (document.documentElement.classList.contains('dark')) {
-                document.documentElement.classList.remove('dark');
-                localStorage.setItem('app_theme', 'light');
-            } else {
-                document.documentElement.classList.add('dark');
-                localStorage.setItem('app_theme', 'dark');
-            }
-        }
-
-        function selectServiceForBooking(serviceName) {
-            switchTab('agendamentos');
-            const select = document.getElementById('serviceSelectInput');
-            if (select) {
-                for (let i = 0; i < select.options.length; i++) {
-                    if (select.options[i].value === serviceName) {
-                        select.selectedIndex = i;
-                        break;
-                    }
-                }
-            }
-            showToast(`Serviço selecionado para agendamento!`, 'success');
-        }
-
-        function handleBookingSubmit(e) {
-            e.preventDefault();
-            const name = document.getElementById('clientNameInput').value.trim();
-            const phone = document.getElementById('clientPhoneInput').value.trim();
-            const service = document.getElementById('serviceSelectInput').value;
-            const date = document.getElementById('bookingDateInput').value;
-            const time = document.getElementById('bookingTimeInput').value;
-            const desc = document.getElementById('bookingDescInput').value.trim();
-
-            if (!name || !phone || !date) return;
-
-            const newBooking = {
-                id: 'b_' + Date.now(),
-                name,
-                phone,
-                service,
-                date,
-                time,
-                desc,
-                status: 'Pendente',
-                createdAt: new Date().toISOString()
-            };
-
-            bookingsState.unshift(newBooking);
-            localStorage.setItem('ws_bookings', JSON.stringify(bookingsState));
-            renderBookings();
-
-            e.target.reset();
-            showToast('Agendamento solicitado com sucesso!', 'success');
-        }
-
-        function loadBookings() {
-            const saved = localStorage.getItem('ws_bookings');
-            if (saved) {
-                try { bookingsState = JSON.parse(saved); } catch(e) { bookingsState = []; }
-            }
-            renderBookings();
-        }
-
-        function renderBookings() {
-            const container = document.getElementById('bookingsListContainer');
-            const badge = document.getElementById('bookingCountBadge');
-            badge.innerText = `${bookingsState.length} agendamento(s)`;
-
-            if (bookingsState.length === 0) {
-                container.innerHTML = `<div class="text-center py-8 text-slate-400 text-xs italic">Nenhum agendamento registrado no momento.</div>`;
-                return;
-            }
-
-            container.innerHTML = bookingsState.map(b => `
-                <div class="p-4 rounded-2xl bg-slate-50/80 dark:bg-slate-900/80 border border-slate-200/80 dark:border-slate-800 text-xs space-y-2 shadow-xs">
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center gap-2.5">
-                            <div class="w-8 h-8 rounded-xl bg-brand-100 dark:bg-brand-950 text-brand-600 dark:text-brand-400 flex items-center justify-center font-bold">
-                                <i class="fa-solid fa-calendar-days"></i>
-                            </div>
-                            <div>
-                                <h4 class="font-bold text-slate-800 dark:text-white text-sm">${escapeHtml(b.name)} <span class="text-[11px] font-normal text-slate-400">(${escapeHtml(b.phone)})</span></h4>
-                                <span class="text-xs font-semibold text-brand-600 dark:text-brand-400">${escapeHtml(b.service)}</span>
-                            </div>
-                        </div>
-                        <span class="px-2.5 py-1 text-[10px] font-bold rounded-lg bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300">${b.status}</span>
-                    </div>
-                    <div class="text-slate-500 dark:text-slate-400 text-[11px] space-y-0.5 pt-1 border-t border-slate-100 dark:border-slate-800/80">
-                        <p><i class="fa-regular fa-clock mr-1"></i> Data: <strong>${b.date}</strong> (${b.time})</p>
-                        ${b.desc ? `<p><i class="fa-solid fa-circle-info mr-1"></i> Detalhes: ${escapeHtml(b.desc)}</p>` : ''}
+                    <div class="mt-3 flex items-center justify-between text-xs text-zinc-400 pt-2 border-t border-zinc-800/60">
+                        <span class="flex items-center text-zinc-300">
+                            <i class="fa-solid fa-circle-check text-brand-500 mr-1"></i> Camila Rossi
+                        </span>
+                        <span>89.5k views</span>
                     </div>
                 </div>
-            `).join('');
-        }
+            </div>
 
-        function showToast(msg, type = 'info') {
-            const container = document.getElementById('toastContainer');
-            const toast = document.createElement('div');
-            let bgClass = 'bg-slate-800 text-white', icon = 'fa-circle-info';
-            if (type === 'success') { bgClass = 'bg-emerald-600 text-white'; icon = 'fa-circle-check'; }
-            else if (type === 'error') { bgClass = 'bg-rose-600 text-white'; icon = 'fa-triangle-exclamation'; }
+            <!-- Card 3 -->
+            <div class="group bg-zinc-900/60 rounded-xl overflow-hidden border border-zinc-800 hover:border-zinc-700 transition flex flex-col">
+                <div class="relative aspect-video overflow-hidden bg-zinc-950">
+                    <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=600&q=80" alt="Thumbnail" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+                    <span class="absolute bottom-2 right-2 bg-black/80 text-xs px-2 py-0.5 rounded font-semibold text-zinc-200">08:45</span>
+                    <span class="absolute top-2 left-2 bg-brand-600 text-white text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider">HD</span>
+                </div>
+                <div class="p-3 flex flex-col flex-1 justify-between">
+                    <div>
+                        <h3 class="font-semibold text-sm line-clamp-2 text-zinc-100 group-hover:text-brand-400 transition">Ensaio Fotográfico Sensual Externo (Golden Hour)</h3>
+                    </div>
+                    <div class="mt-3 flex items-center justify-between text-xs text-zinc-400 pt-2 border-t border-zinc-800/60">
+                        <span class="flex items-center text-zinc-300">
+                            <i class="fa-solid fa-circle-check text-brand-500 mr-1"></i> Natália Lima
+                        </span>
+                        <span>15.3k views</span>
+                    </div>
+                </div>
+            </div>
 
-            toast.className = `px-4.5 py-3 rounded-2xl text-xs font-semibold shadow-xl flex items-center gap-2.5 transform transition-all duration-300 translate-y-2 opacity-0 pointer-events-auto ${bgClass}`;
-            toast.innerHTML = `<i class="fa-solid ${icon} text-sm"></i> <span>${escapeHtml(msg)}</span>`;
-            container.appendChild(toast);
-            setTimeout(() => toast.classList.remove('translate-y-2', 'opacity-0'), 10);
-            setTimeout(() => {
-                toast.classList.add('opacity-0', 'translate-y-2');
-                setTimeout(() => toast.remove(), 300);
-            }, 3000);
-        }
+            <!-- Card 4 -->
+            <div class="group bg-zinc-900/60 rounded-xl overflow-hidden border border-zinc-800 hover:border-zinc-700 transition flex flex-col">
+                <div class="relative aspect-video overflow-hidden bg-zinc-950">
+                    <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=600&q=80" alt="Thumbnail" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+                    <span class="absolute bottom-2 right-2 bg-black/80 text-xs px-2 py-0.5 rounded font-semibold text-zinc-200">19:50</span>
+                    <span class="absolute top-2 left-2 bg-yellow-600 text-white text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider">VIP</span>
+                </div>
+                <div class="p-3 flex flex-col flex-1 justify-between">
+                    <div>
+                        <h3 class="font-semibold text-sm line-clamp-2 text-zinc-100 group-hover:text-brand-400 transition">Conteúdo Exclusivo para Assinantes - Uncut</h3>
+                    </div>
+                    <div class="mt-3 flex items-center justify-between text-xs text-zinc-400 pt-2 border-t border-zinc-800/60">
+                        <span class="flex items-center text-zinc-300">
+                            <i class="fa-solid fa-circle-check text-brand-500 mr-1"></i> Bruna Siqueira
+                        </span>
+                        <span>120.4k views</span>
+                    </div>
+                </div>
+            </div>
 
-        function escapeHtml(str) {
-            return String(str || '').replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
-        }
-    </script>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-zinc-900 border-t border-zinc-800 py-6 mt-12 text-center text-xs text-zinc-500">
+        <p>&copy; 2026 StreamVibe. Todos os direitos reservados. Plataforma restrita a maiores de 18 anos.</p>
+    </footer>
+
 </body>
 </html>
