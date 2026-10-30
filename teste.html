@@ -1300,17 +1300,22 @@
         async function desfazerMovimentacaoHistorico(historicoId) {
             const item = appState.history.find(h => h.id === historicoId);
             if (!item) return;
-            if (!confirm(`Deseja desfazer a transferência/movimentação de ${formatBRL(item.amount)} (${item.boxName})?`)) return;
+            if (!confirm(`Deseja desfazer a movimentação de ${formatBRL(item.amount)} (${item.boxName})?`)) return;
 
             try {
+                // Força o apagamento do registro no Supabase (se falhar por política RLS, o app continua atualizando a caixa)
+                if (supabaseClient) {
+                    await supabaseClient.from('historico_movimentacoes').delete().eq('id', item.id);
+                }
+
                 if (item.boxName === 'Aporte Global Inteligente') {
-                    showToast("Para aportes globais, utilize o botão principal ou refaça o ajuste necessário.", "info");
+                    showToast("Registro removido do histórico. Atualize os saldos das caixas manualmente se necessário.", "info");
+                    loadFromSupabase();
                     return;
                 }
 
                 const box = appState.boxes.find(b => b.name === item.boxName);
                 if (box) {
-                    // Se foi depósito, estorna tirando o valor. Se foi retirada, estorna recolocando.
                     if (item.type === 'deposit') {
                         box.balance = Math.max(0, box.balance - item.amount);
                     } else {
@@ -1319,7 +1324,6 @@
 
                     if (supabaseClient) {
                         await supabaseClient.from('caixas_financeiras').update({ balance: box.balance }).eq('id', box.id);
-                        await supabaseClient.from('historico_movimentacoes').delete().eq('id', item.id);
                     }
                 }
 
@@ -1329,7 +1333,7 @@
                 }
 
                 loadFromSupabase();
-                showToast("Movimentação estornada com sucesso!", "success");
+                showToast("Movimentação desfeita com sucesso!", "success");
             } catch (err) {
                 console.error(err);
                 showToast("Erro ao desfazer movimentação.", "error");
