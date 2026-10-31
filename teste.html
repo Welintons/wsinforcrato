@@ -1,499 +1,70 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#10131b">
-<title>WS HTML Studio</title>
-
-<script src="https://cdn.tailwindcss.com"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.52.2/min/vs/loader.min.js"></script>
-<script src="https://unpkg.com/lucide@latest"></script>
-
+<title>Testador de HTML</title>
 <style>
-*{box-sizing:border-box}
-body{margin:0;background:#10131b;color:#e5e7eb;font-family:Arial,sans-serif;overflow:hidden}
-button{cursor:pointer}
-.header{height:55px;background:#171b26;border-bottom:1px solid #292e3b;display:flex;align-items:center;justify-content:space-between;padding:0 12px}
-.brand{font-weight:800;color:#f97316;font-size:17px}
-.workspace{height:calc(100dvh - 55px);display:flex;flex-direction:column}
-.toolbar{height:43px;background:#171b26;border-bottom:1px solid #292e3b;display:flex;align-items:center;gap:7px;padding:0 10px;overflow-x:auto;flex-shrink:0}
-.btn{background:#252b39;color:#d1d5db;padding:8px 11px;border-radius:6px;font-size:12px;border:1px solid #353c4c;white-space:nowrap}
-.btn:hover{background:#353d50}
-.btn.orange{background:#ea580c;color:white;border-color:#ea580c}
-.btn.green{background:#166534;color:white}
-.main{display:flex;flex:1;min-height:0;overflow:hidden}
-.sidebar{width:205px;background:#171b26;border-right:1px solid #292e3b;display:flex;flex-direction:column;flex-shrink:0}
-.side-title{font-size:11px;color:#9ca3af;font-weight:bold;padding:15px 12px 9px;display:flex;justify-content:space-between}
-.file{padding:10px 12px;font-size:13px;display:flex;align-items:center;gap:9px;color:#cbd5e1;cursor:pointer;border-left:3px solid transparent}
-.file:hover{background:#252b39}
-.file.active{background:#292f3e;border-left-color:#f97316;color:white}
-.editor-area{flex:1;min-width:0;display:flex;flex-direction:column;background:#11151e}
-.tabs{height:39px;background:#171b26;display:flex;align-items:stretch;overflow-x:auto;border-bottom:1px solid #292e3b}
-.tab{padding:0 15px;display:flex;align-items:center;gap:7px;font-size:12px;color:#9ca3af;border-right:1px solid #292e3b;cursor:pointer;white-space:nowrap}
-.tab.active{background:#11151e;color:#fff;border-top:2px solid #f97316}
-#editor{flex:1;min-height:0;width:100%}
-#fallback{display:none;flex:1;width:100%;background:#11151e;color:#e5e7eb;border:0;outline:0;resize:none;padding:15px;font:14px/1.6 monospace;tab-size:2}
-.bottom{height:25px;background:#ea580c;display:flex;align-items:center;justify-content:space-between;padding:0 10px;font-size:10px;color:white}
-.preview{display:none;flex:1;min-width:0;background:white;flex-direction:column}
-.preview-head{height:39px;background:#171b26;display:flex;align-items:center;justify-content:space-between;padding:0 10px;font-size:12px}
-.preview iframe{flex:1;border:0;background:white;width:100%}
-.mobile-nav{display:none;background:#171b26;border-top:1px solid #292e3b;padding:7px;justify-content:space-around}
-.mobile-nav button{color:#9ca3af;font-size:11px;background:none;border:0;padding:5px}
-.mobile-nav button.active{color:#f97316}
-.empty{padding:15px;color:#6b7280;font-size:12px}
-.modal{position:fixed;inset:0;background:#000a;display:none;align-items:center;justify-content:center;z-index:50;padding:20px}
-.modal-box{background:#202635;border:1px solid #394154;border-radius:12px;padding:20px;width:100%;max-width:350px}
-.modal input{width:100%;background:#11151e;border:1px solid #41495b;border-radius:6px;padding:11px;color:white;margin:12px 0}
-@media(max-width:650px){
- .sidebar{display:none;width:100%}
- .sidebar.show{display:flex}
- .main{position:relative}
- .editor-area{width:100%}
- .mobile-nav{display:flex}
- .preview{width:100%}
- .workspace{height:calc(100dvh - 55px)}
-}
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: Arial, sans-serif; background: #0f172a; color: #f8fafc; height: 100vh; display: flex; flex-direction: column; }
+  header { background: #1e293b; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #334155; }
+  h1 { font-size: 16px; color: #38bdf8; }
+  .btn { background: #0284c7; color: white; border: none; padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 14px; }
+  .btn:hover { background: #0369a1; }
+  .container { display: flex; flex: 1; overflow: hidden; }
+  textarea { width: 50%; height: 100%; background: #090d16; color: #38bdf8; border: none; border-right: 1px solid #334155; padding: 15px; font-family: monospace; font-size: 14px; resize: none; outline: none; line-height: 1.5; }
+  iframe { width: 50%; height: 100%; background: white; border: none; }
+  @media (max-width: 768px) {
+    .container { flex-direction: column; }
+    textarea { width: 100%; height: 50%; border-right: none; border-bottom: 1px solid #334155; }
+    iframe { width: 100%; height: 50%; }
+  }
 </style>
 </head>
-
 <body>
 
-<header class="header">
- <div class="flex items-center gap-2">
-  <div class="bg-orange-600 rounded-lg p-2">
-   <i data-lucide="code-2" width="19"></i>
+  <header>
+    <h1>Testador de HTML Simples</h1>
+    <button class="btn" onclick="executarTelaCheia()">▶ Executar Tela Cheia</button>
+  </header>
+
+  <div class="container">
+    <textarea id="codigo" placeholder="Cole seu código HTML, CSS e JS aqui..."></textarea>
+    <iframe id="preview"></iframe>
   </div>
-  <div>
-   <div class="brand">WS HTML STUDIO</div>
-   <div class="text-gray-500 text-[9px]">WEB DEVELOPMENT ENVIRONMENT</div>
-  </div>
- </div>
- <button class="btn" onclick="openProjectModal()">
-  <i data-lucide="folder-plus" width="14" class="inline"></i> Projeto
- </button>
-</header>
-
-<div class="workspace">
-
- <div class="toolbar">
-  <button class="btn" onclick="saveProject()">
-   <i data-lucide="save" width="13" class="inline"></i> Salvar
-  </button>
-  <button class="btn green" onclick="runPreview()">
-   <i data-lucide="play" width="13" class="inline"></i> Executar
-  </button>
-  <button class="btn" onclick="showPreview()">
-   <i data-lucide="monitor" width="13" class="inline"></i> Preview
-  </button>
-  <button class="btn" onclick="downloadZIP()">
-   <i data-lucide="download" width="13" class="inline"></i> ZIP
-  </button>
-  <button class="btn" onclick="addFile()">
-   <i data-lucide="file-plus" width="13" class="inline"></i> Arquivo
-  </button>
- </div>
-
- <div class="main">
-
-  <aside class="sidebar" id="sidebar">
-   <div class="side-title">
-    EXPLORADOR
-    <button onclick="addFile()">＋</button>
-   </div>
-   <div class="px-3 py-2 text-xs text-orange-400" id="projectName">MEU PROJETO</div>
-   <div id="fileList"></div>
-   <div class="mt-auto p-3 text-[10px] text-gray-600 border-t border-gray-800">
-    WS HTML STUDIO v1.0
-   </div>
-  </aside>
-
-  <section class="editor-area" id="editorArea">
-   <div class="tabs" id="tabs"></div>
-   <div id="editor"></div>
-   <textarea id="fallback" spellcheck="false"></textarea>
-   <div class="bottom">
-    <span id="status">● Pronto</span>
-    <span id="language">HTML</span>
-   </div>
-  </section>
-
-  <section class="preview" id="preview">
-   <div class="preview-head">
-    <span><i data-lucide="monitor" width="14" class="inline"></i> Visualização</span>
-    <button onclick="backEditor()" class="btn">Voltar ao código</button>
-   </div>
-   <iframe id="frame" sandbox="allow-scripts allow-forms allow-modals allow-popups"></iframe>
-  </section>
-
- </div>
-
- <nav class="mobile-nav">
-  <button onclick="toggleSidebar()"><i data-lucide="folder" width="18"></i><br>Arquivos</button>
-  <button onclick="backEditor()"><i data-lucide="code" width="18"></i><br>Editor</button>
-  <button onclick="showPreview()"><i data-lucide="monitor" width="18"></i><br>Preview</button>
-  <button onclick="runPreview()"><i data-lucide="play" width="18"></i><br>Executar</button>
- </nav>
-
-</div>
-
-<div class="modal" id="modal">
- <div class="modal-box">
-  <h3 class="font-bold text-lg">Novo projeto</h3>
-  <p class="text-xs text-gray-400 mt-2">Dê um nome para seu projeto.</p>
-  <input id="projectInput" placeholder="Ex: Meu aplicativo">
-  <div class="flex gap-2">
-   <button class="btn flex-1" onclick="closeModal()">Cancelar</button>
-   <button class="btn orange flex-1" onclick="createProject()">Criar</button>
-  </div>
- </div>
-</div>
 
 <script>
-const STORAGE_KEY = "ws_studio_projects_v1";
+  const textarea = document.getElementById('codigo');
+  const preview = document.getElementById('preview');
 
-const templates = {
- "index.html": `<!DOCTYPE html>
-<html lang="pt-BR">
+  // Atualiza o preview automaticamente enquanto digita
+  textarea.addEventListener('input', () => {
+    preview.srcdoc = textarea.value;
+  });
+
+  function executarTelaCheia() {
+    const codigo = textarea.value;
+    const win = window.open('', '_blank');
+    win.document.write(codigo);
+    win.document.close();
+  }
+
+  // Código padrão de exemplo
+  textarea.value = `<!DOCTYPE html>
+<html>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Meu projeto</title>
-<link rel="stylesheet" href="style.css">
+<style>
+  body { text-align: center; font-family: sans-serif; margin-top: 50px; background: #f43f5e; color: white; }
+  button { padding: 10px 20px; font-size: 16px; cursor: pointer; border: none; border-radius: 5px; }
+</style>
 </head>
 <body>
-
-  <main class="container">
-    <h1>Meu primeiro projeto!</h1>
-    <p>Bem-vindo ao WS HTML Studio.</p>
-    <button onclick="mensagem()">Testar JavaScript</button>
-  </main>
-
-<script src="script.js"><\/script>
+  <h1>Olá, Mundo!</h1>
+  <button onclick="alert('Funcionando!')">Clique</button>
 </body>
-</html>`,
- "style.css": `body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: #f1f5f9;
-  color: #172033;
-}
-
-.container {
-  max-width: 700px;
-  margin: 60px auto;
-  padding: 25px;
-  text-align: center;
-}
-
-button {
-  background: #ea580c;
-  color: white;
-  border: 0;
-  padding: 12px 20px;
-  border-radius: 8px;
-  cursor: pointer;
-}`,
- "script.js": `function mensagem() {
-  alert("JavaScript funcionando!");
-}`
-};
-
-let projects = {};
-let currentProject = "Meu projeto";
-let currentFile = "index.html";
-let editor = null;
-let models = {};
-let activeView = "editor";
-let useMonaco = false;
-
-function defaultProject(){
- return {
-  files: {...templates},
-  updated: new Date().toISOString()
- };
-}
-
-function loadProjects(){
- try {
-  projects = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
- } catch(e) {
-  projects = {};
- }
- if(!Object.keys(projects).length){
-  projects["Meu projeto"] = defaultProject();
- }
- if(!projects[currentProject]){
-  currentProject = Object.keys(projects)[0];
- }
-}
-
-function saveProject(silent=false){
- if(useMonaco && editor){
-  Object.keys(models).forEach(name=>{
-   projects[currentProject].files[name] = models[name].getValue();
-  });
- } else if(!useMonaco){
-  const el=document.getElementById("fallback");
-  if(el && currentFile){
-   projects[currentProject].files[currentFile]=el.value;
-  }
- }
- projects[currentProject].updated = new Date().toISOString();
- try {
-  localStorage.setItem(STORAGE_KEY,JSON.stringify(projects));
-  setStatus("● Salvo localmente");
- } catch(e) {
-  setStatus("Erro ao salvar: armazenamento cheio");
-  return false;
- }
- if(!silent) setStatus("● Projeto salvo");
- return true;
-}
-
-function setStatus(text){
- document.getElementById("status").textContent=text;
-}
-
-function languageOf(file){
- const ext=file.split(".").pop().toLowerCase();
- return ext==="html"?"html":ext==="css"?"css":ext==="js"?"javascript":"plaintext";
-}
-
-function initMonaco(){
- if(typeof require==="undefined"){
-  fallbackMode();
-  return;
- }
- require.config({
-  paths:{vs:"https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.52.2/min/vs"}
- });
- require(["vs/editor/editor.main"],function(){
-  useMonaco=true;
-  editor=monaco.editor.create(document.getElementById("editor"),{
-   value:"",
-   language:"html",
-   theme:"vs-dark",
-   automaticLayout:true,
-   fontSize:13,
-   minimap:{enabled:false},
-   wordWrap:"on",
-   tabSize:2,
-   scrollBeyondLastLine:false,
-   padding:{top:15}
-  });
-
-  editor.onDidChangeModelContent(()=>{
-   if(currentFile && projects[currentProject]){
-    projects[currentProject].files[currentFile]=editor.getValue();
-    setStatus("● Alterações não salvas");
-   }
-  });
-
-  Object.keys(projects[currentProject].files).forEach(file=>{
-   createModel(file,projects[currentProject].files[file]);
-  });
-  openFile(currentFile);
- });
-}
-
-function fallbackMode(){
- useMonaco=false;
- document.getElementById("editor").style.display="none";
- document.getElementById("fallback").style.display="block";
- const el=document.getElementById("fallback");
- el.addEventListener("input",()=>{
-  projects[currentProject].files[currentFile]=el.value;
-  setStatus("● Alterações não salvas");
- });
- openFile(currentFile);
-}
-
-function createModel(name,content){
- if(!useMonaco)return;
- if(models[name])return;
- models[name]=monaco.editor.createModel(content,languageOf(name));
-}
-
-function openFile(name){
- if(!projects[currentProject].files[name])return;
- currentFile=name;
-
- if(useMonaco){
-  createModel(name,projects[currentProject].files[name]);
-  editor.setModel(models[name]);
- } else {
-  document.getElementById("fallback").value=projects[currentProject].files[name];
- }
-
- renderFiles();
- renderTabs();
- document.getElementById("language").textContent=languageOf(name).toUpperCase();
- if(window.innerWidth<=650){
-  document.getElementById("sidebar").classList.remove("show");
- }
-}
-
-function renderFiles(){
- const list=document.getElementById("fileList");
- list.innerHTML="";
- Object.keys(projects[currentProject].files).forEach(name=>{
-  const item=document.createElement("div");
-  item.className="file "+(name===currentFile?"active":"");
-  const icon=document.createElement("span");
-  icon.textContent=name.endsWith(".html")?"🌐":name.endsWith(".css")?"🎨":name.endsWith(".js")?"🟨":"📄";
-  const label=document.createElement("span");
-  label.textContent=name;
-  item.append(icon,label);
-  item.onclick=()=>openFile(name);
-  list.appendChild(item);
- });
- document.getElementById("projectName").textContent=currentProject.toUpperCase();
-}
-
-function renderTabs(){
- const tabs=document.getElementById("tabs");
- tabs.innerHTML="";
- Object.keys(projects[currentProject].files).forEach(name=>{
-  const tab=document.createElement("div");
-  tab.className="tab "+(name===currentFile?"active":"");
-  tab.textContent=(name===currentFile?"● ":"")+name;
-  tab.onclick=()=>openFile(name);
-  tabs.appendChild(tab);
- });
-}
-
-function addFile(){
- const name=prompt("Nome do arquivo (ex: contato.html):");
- if(!name)return;
- if(!/^[a-zA-Z0-9_-]+\.[a-zA-Z0-9]+$/.test(name)){
-  alert("Use um nome simples, como pagina.html ou style.css.");
-  return;
- }
- if(projects[currentProject].files[name]){
-  alert("Esse arquivo já existe.");
-  return;
- }
- projects[currentProject].files[name]="";
- if(useMonaco)createModel(name,"");
- openFile(name);
- saveProject(true);
-}
-
-function openProjectModal(){
- document.getElementById("modal").style.display="flex";
- document.getElementById("projectInput").value="";
- document.getElementById("projectInput").focus();
-}
-
-function closeModal(){
- document.getElementById("modal").style.display="none";
-}
-
-function createProject(){
- const name=document.getElementById("projectInput").value.trim();
- if(!name)return alert("Digite um nome.");
- if(projects[name])return alert("Já existe um projeto com esse nome.");
-
- saveProject(true);
- projects[name]=defaultProject();
- currentProject=name;
- currentFile="index.html";
- models={};
-
- if(useMonaco){
-  editor.setModel(null);
-  Object.values(models).forEach(m=>m.dispose());
-  Object.keys(projects[currentProject].files).forEach(file=>{
-   createModel(file,projects[currentProject].files[file]);
-  });
- }
- closeModal();
- openFile(currentFile);
- saveProject(true);
- setStatus("● Novo projeto criado");
-}
-
-function buildHTML(){
- const files=projects[currentProject].files;
- let html=files["index.html"]||"<!DOCTYPE html><html><body></body></html>";
- const css=files["style.css"]||"";
- const js=files["script.js"]||"";
-
- // Injeta os arquivos locais no HTML para o preview.
- html=html.replace(/<link[^>]+href=["']style\.css["'][^>]*>/gi,"");
- html=html.replace(/<script[^>]+src=["']script\.js["'][^>]*><\/script>/gi,"");
- html=html.replace("</head>",`<style>${css.replace(/<\/style/gi,"<\\/style")}</style></head>`);
- html=html.replace("</body>",`<script>${js.replace(/<\/script/gi,"<\\/script")}<\/script></body>`);
- return html;
-}
-
-function runPreview(){
- saveProject(true);
- const frame=document.getElementById("frame");
- frame.srcdoc=buildHTML();
- showPreview();
- setStatus("● Projeto executado");
-}
-
-function showPreview(){
- activeView="preview";
- document.getElementById("editorArea").style.display="none";
- document.getElementById("preview").style.display="flex";
-}
-
-function backEditor(){
- activeView="editor";
- document.getElementById("preview").style.display="none";
- document.getElementById("editorArea").style.display="flex";
-}
-
-function toggleSidebar(){
- document.getElementById("sidebar").classList.toggle("show");
-}
-
-async function downloadZIP(){
- saveProject(true);
- if(!window.JSZip)return alert("JSZip não carregou. Verifique sua conexão.");
- const zip=new JSZip();
- const files=projects[currentProject].files;
- Object.keys(files).forEach(name=>zip.file(name,files[name]));
- zip.file("README.txt","Projeto criado com WS HTML Studio.");
- try{
-  const blob=await zip.generateAsync({type:"blob"});
-  const url=URL.createObjectURL(blob);
-  const a=document.createElement("a");
-  a.href=url;
-  a.download=currentProject.replace(/[^a-z0-9_-]/gi,"_")+".zip";
-  a.click();
-  setTimeout(()=>URL.revokeObjectURL(url),1000);
-  setStatus("● ZIP exportado");
- }catch(e){
-  alert("Erro ao exportar ZIP.");
- }
-}
-
-function start(){
- loadProjects();
- renderFiles();
- renderTabs();
- initMonaco();
-
- // Salva periodicamente.
- setInterval(()=>{
-  saveProject(true);
- },15000);
-
- // Aviso antes de sair com alterações.
- window.addEventListener("beforeunload",()=>{
-  saveProject(true);
- });
- lucide.createIcons();
-}
-
-start();
+</html>`;
+  
+  preview.srcdoc = textarea.value;
 </script>
 
 </body>
