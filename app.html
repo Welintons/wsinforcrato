@@ -30,6 +30,8 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- Supabase JS Client -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- Html5-qrcode Scanner Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js"></script>
     <!-- Font Inter -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -112,14 +114,17 @@
         <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-5">
             <div class="finance-tab-panes space-y-5">
 
-                <!-- PANE 1: VISÃO GERAL -->
-                <section class="finance-pane active space-y-5" data-pane="visao" aria-label="Visão geral">
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div class="bg-gradient-to-br from-brand-600 to-emerald-800 text-white p-5 rounded-2xl shadow-lg relative overflow-hidden">
+                <!-- PANE 1: VISÃO GERAL (Dashboard Executivo Limpo) -->
+                <section class="finance-pane active space-y-4" data-pane="visao" aria-label="Visão geral">
+                    <!-- Topo Unificado -->
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                        <div class="bg-gradient-to-br from-brand-600 to-emerald-800 text-white p-5 rounded-2xl shadow-md relative overflow-hidden flex flex-col justify-between">
                             <div class="absolute -right-4 -bottom-4 text-white/10 text-8xl font-bold"><i class="fa-solid fa-piggy-bank"></i></div>
-                            <p class="text-emerald-100 text-xs font-semibold uppercase tracking-wider">Saldo Total Acumulado</p>
-                            <h2 id="totalBalance" class="text-3xl sm:text-4xl font-extrabold mt-1">R$ 0,00</h2>
-                            <div class="mt-4 flex items-center justify-between text-xs text-emerald-100 bg-white/10 px-3 py-1.5 rounded-lg backdrop-blur-sm">
+                            <div>
+                                <p class="text-emerald-100 text-[11px] font-semibold uppercase tracking-wider">Saldo Total Acumulado</p>
+                                <h2 id="totalBalance" class="text-3xl font-extrabold mt-1">R$ 0,00</h2>
+                            </div>
+                            <div class="mt-4 flex items-center justify-between text-xs text-emerald-100 bg-white/10 px-3 py-1.5 rounded-xl backdrop-blur-sm">
                                 <span id="boxCountText">0 Caixas ativas</span>
                                 <span id="completedBoxesCountText">0/0 Metas Atingidas</span>
                             </div>
@@ -128,161 +133,173 @@
                         <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 flex flex-col justify-between">
                             <div>
                                 <div class="flex justify-between items-center">
-                                    <span class="text-xs font-semibold uppercase text-slate-400 dark:text-slate-500">Alocação de Porcentagem</span>
+                                    <span class="text-xs font-semibold uppercase text-slate-400">Alocação de Porcentagem</span>
                                     <span id="pctStatusBadge" class="px-2 py-0.5 text-xs font-bold rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-900/50 dark:text-emerald-300">100%</span>
                                 </div>
                                 <div class="flex items-baseline gap-2 mt-2">
-                                    <h3 id="totalPercentageText" class="text-3xl font-extrabold text-slate-800 dark:text-white">100%</h3>
+                                    <h3 id="totalPercentageText" class="text-2xl font-extrabold text-slate-800 dark:text-white">100%</h3>
                                     <span class="text-xs text-slate-500">das porcentagens</span>
                                 </div>
                             </div>
-                            <div class="mt-4">
-                                <div class="w-full bg-slate-100 dark:bg-slate-700 h-2.5 rounded-full overflow-hidden">
+                            <div class="mt-3">
+                                <div class="w-full bg-slate-100 dark:bg-slate-700 h-2 rounded-full overflow-hidden">
                                     <div id="pctProgressBar" class="bg-brand-500 h-full rounded-full transition-all duration-300" style="width: 100%"></div>
                                 </div>
-                                <p id="pctWarningText" class="text-xs text-slate-500 dark:text-slate-400 mt-2 flex items-center gap-1">
+                                <p id="pctWarningText" class="text-[11px] text-slate-500 dark:text-slate-400 mt-2 flex items-center gap-1">
                                     <i class="fa-solid fa-circle-check text-emerald-500"></i> Distribuição perfeita (100%)
                                 </p>
                             </div>
                         </div>
 
+                        <!-- Status Despensa Compacto -->
                         <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 flex flex-col justify-between">
                             <div>
-                                <h3 class="text-sm font-semibold text-slate-700 dark:text-slate-200 flex items-center gap-2">
+                                <h3 class="text-xs font-semibold uppercase tracking-wide text-slate-400 flex items-center gap-2">
                                     <i class="fa-solid fa-basket-shopping text-amber-500"></i> Status da Despensa
                                 </h3>
-                                <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Itens em estoque crítico ou esgotados:</p>
                             </div>
-                            <div id="pantryAlertsSummary" class="my-2 space-y-1 max-h-24 overflow-y-auto">
-                                <p class="text-xs text-slate-400 italic">Nenhum item em falta no momento.</p>
+                            <div id="pantryAlertsSummary" class="my-2 space-y-1">
+                                <p class="text-xs text-slate-400 italic">Nenhum item em falta.</p>
                             </div>
-                            <button onclick="switchTab('despensa')" class="w-full py-2 px-4 bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 font-semibold text-xs rounded-xl transition-all">
+                            <button onclick="switchTab('despensa')" class="w-full py-2 px-3 bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 font-semibold text-xs rounded-xl transition-all">
                                 Gerenciar Despensa
                             </button>
                         </div>
                     </div>
 
-                    <section class="grid grid-cols-1 sm:grid-cols-3 gap-4" aria-label="Resumo financeiro do mês">
-                        <div class="bg-white dark:bg-slate-800 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm">
-                            <div class="flex items-center justify-between"><p class="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">Entradas deste mês</p><span class="w-9 h-9 rounded-xl bg-emerald-100 dark:bg-emerald-900/40 text-emerald-600 dark:text-emerald-300 flex items-center justify-center"><i class="fa-solid fa-arrow-down"></i></span></div>
-                            <p id="monthDeposits" class="text-2xl font-extrabold text-emerald-600 dark:text-emerald-400 mt-2">R$ 0,00</p>
-                            <p class="text-xs text-slate-400 mt-1">Soma dos aportes registrados</p>
-                        </div>
-                        <div class="bg-white dark:bg-slate-800 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm">
-                            <div class="flex items-center justify-between"><p class="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">Saídas deste mês</p><span class="w-9 h-9 rounded-xl bg-rose-100 dark:bg-rose-900/40 text-rose-600 dark:text-rose-300 flex items-center justify-center"><i class="fa-solid fa-arrow-up"></i></span></div>
-                            <p id="monthWithdrawals" class="text-2xl font-extrabold text-rose-600 dark:text-rose-400 mt-2">R$ 0,00</p>
-                            <p class="text-xs text-slate-400 mt-1">Soma dos gastos registrados</p>
-                        </div>
-                        <div class="bg-white dark:bg-slate-800 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm">
-                            <div class="flex items-center justify-between"><p class="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">Movimentação líquida</p><span class="w-9 h-9 rounded-xl bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-300 flex items-center justify-center"><i class="fa-solid fa-scale-balanced"></i></span></div>
-                            <p id="monthNet" class="text-2xl font-extrabold text-slate-800 dark:text-white mt-2">R$ 0,00</p>
-                            <p id="monthLabel" class="text-xs text-slate-400 mt-1">Mês atual</p>
-                        </div>
-                    </section>
-
-                    <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700">
-                        <h3 class="text-sm font-semibold text-slate-700 dark:text-slate-200 flex items-center gap-2">
-                            <i class="fa-solid fa-bolt text-amber-500"></i> Aporte Global Inteligente (Transbordamento Automático)
-                        </h3>
-                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 mb-3">Distribui o valor entre as caixas abertas proporcionalmente e joga o excedente para a Caixa Reserva.</p>
-                        <form onsubmit="handleGlobalDeposit(event)" class="grid grid-cols-1 sm:grid-cols-4 gap-3">
-                            <div class="sm:col-span-3 relative">
-                                <span class="absolute left-3 top-3 text-slate-400 text-sm font-bold">R$</span>
-                                <input type="number" step="0.01" min="0.01" id="globalDepositInput" placeholder="0,00" required
-                                    class="w-full pl-10 pr-3 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 focus:outline-none text-slate-800 dark:text-white text-sm font-semibold">
+                    <!-- Fluxo do Mês Enxuto & Aporte Global -->
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                        <div class="lg:col-span-2 bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm flex flex-col justify-between">
+                            <div>
+                                <h3 class="text-sm font-bold text-slate-800 dark:text-white flex items-center gap-2 mb-3">
+                                    <i class="fa-solid fa-bolt text-amber-500"></i> Aporte Global Inteligente
+                                </h3>
+                                <p class="text-xs text-slate-500 dark:text-slate-400 mb-3">Distribui o valor proporcionalmente entre as caixas e envia o excedente para a reserva.</p>
                             </div>
-                            <button type="submit" class="py-2.5 px-4 bg-brand-600 hover:bg-brand-700 text-white font-semibold text-sm rounded-xl shadow-md transition-all flex items-center justify-center gap-2">
-                                <i class="fa-solid fa-filter-circle-dollar"></i> Distribuir Aporte
-                            </button>
-                        </form>
+                            <form onsubmit="handleGlobalDeposit(event)" class="grid grid-cols-1 sm:grid-cols-4 gap-2">
+                                <div class="sm:col-span-3 relative">
+                                    <span class="absolute left-3 top-2.5 text-slate-400 text-sm font-bold">R$</span>
+                                    <input type="number" step="0.01" min="0.01" id="globalDepositInput" placeholder="0,00" required
+                                        class="w-full pl-10 pr-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 focus:outline-none text-slate-800 dark:text-white text-xs font-semibold">
+                                </div>
+                                <button type="submit" class="py-2 px-3 bg-brand-600 hover:bg-brand-700 text-white font-semibold text-xs rounded-xl shadow-md transition-all flex items-center justify-center gap-1.5">
+                                    <i class="fa-solid fa-filter-circle-dollar"></i> Distribuir
+                                </button>
+                            </form>
+                        </div>
+
+                        <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm flex flex-col justify-between">
+                            <h3 class="text-xs font-bold uppercase tracking-wide text-slate-400 mb-2">Fluxo do Mês</h3>
+                            <div class="space-y-1.5 text-xs">
+                                <div class="flex justify-between items-center"><span class="text-slate-500">Entradas:</span> <strong id="monthDeposits" class="text-emerald-600 dark:text-emerald-400">R$ 0,00</strong></div>
+                                <div class="flex justify-between items-center"><span class="text-slate-500">Saídas:</span> <strong id="monthWithdrawals" class="text-rose-600 dark:text-rose-400">R$ 0,00</strong></div>
+                                <div class="flex justify-between items-center pt-1.5 border-t border-slate-100 dark:border-slate-700"><span class="text-slate-500">Líquido:</span> <strong id="monthNet" class="text-slate-800 dark:text-white">R$ 0,00</strong></div>
+                            </div>
+                            <span id="monthLabel" class="text-[10px] text-slate-400 mt-2 block text-right">Mês atual</span>
+                        </div>
                     </div>
                 </section>
 
-                <!-- PANE 2: CAIXAS FINANCEIRAS -->
-                <section class="finance-pane space-y-5" data-pane="caixas" aria-label="Minhas caixas" hidden>
+                <!-- PANE 2: CAIXAS FINANCEIRAS (Layout Compacto em Lista/Cards Horizontais) -->
+                <section class="finance-pane space-y-4" data-pane="caixas" aria-label="Minhas caixas" hidden>
                     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white dark:bg-slate-800 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm">
                         <div>
-                            <h2 class="text-lg font-bold text-slate-800 dark:text-white flex items-center gap-2">
-                                <i class="fa-solid fa-boxes-stacked text-brand-500"></i> Minhas Caixas & Metas Financeiras
+                            <h2 class="text-base font-bold text-slate-800 dark:text-white flex items-center gap-2">
+                                <i class="fa-solid fa-boxes-stacked text-brand-500"></i> Minhas 7 Caixas & Metas Financeiras
                             </h2>
-                            <p class="text-xs text-slate-500 dark:text-slate-400">Gerencie limites, saldos e regras de porcentagem</p>
+                            <p class="text-xs text-slate-500 dark:text-slate-400">Visualização compacta e organizada em linha</p>
                         </div>
                         <div class="flex items-center gap-2">
                             <button onclick="openPresetModal()" class="text-xs px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 font-medium transition-all flex items-center gap-1.5">
-                                <i class="fa-solid fa-wand-magic-sparkles text-amber-500"></i> Modelos Prontos
+                                <i class="fa-solid fa-wand-magic-sparkles text-amber-500"></i> Modelos
                             </button>
-                            <button onclick="openBoxModal()" class="py-2 px-4 bg-slate-900 hover:bg-slate-800 dark:bg-slate-100 dark:hover:bg-white dark:text-slate-900 text-white text-sm font-semibold rounded-xl transition-all flex items-center justify-center gap-2">
+                            <button onclick="openBoxModal()" class="py-2 px-3 bg-slate-900 hover:bg-slate-800 dark:bg-slate-100 dark:hover:bg-white dark:text-slate-900 text-white text-xs font-semibold rounded-xl transition-all flex items-center justify-center gap-1.5">
                                 <i class="fa-solid fa-plus"></i> Nova Caixa
                             </button>
                         </div>
                     </div>
-                    <div id="boxesContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+                    <!-- Container Compacto em Coluna de Cards Horizontais -->
+                    <div id="boxesContainer" class="space-y-2.5"></div>
                 </section>
 
                 <!-- PANE 3: DESPENSA & MANTIMENTOS -->
-                <section class="finance-pane space-y-5" data-pane="despensa" aria-label="Despensa e Mantimentos" hidden>
+                <section class="finance-pane space-y-4" data-pane="despensa" aria-label="Despensa e Mantimentos" hidden>
                     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white dark:bg-slate-800 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm">
                         <div>
-                            <h2 class="text-lg font-bold text-slate-800 dark:text-white flex items-center gap-2">
-                                <i class="fa-solid fa-basket-shopping text-brand-500"></i> Controle de Despensa & Estoque Doméstico
+                            <h2 class="text-base font-bold text-slate-800 dark:text-white flex items-center gap-2">
+                                <i class="fa-solid fa-basket-shopping text-brand-500"></i> Controle de Despensa & Estoque
                             </h2>
-                            <p class="text-xs text-slate-500 dark:text-slate-400">Monitore quantidades, consumo diário e gere itens críticos</p>
+                            <p class="text-xs text-slate-500 dark:text-slate-400">Cards compactos com abas de status e leitor de código de barras</p>
                         </div>
-                        <button onclick="openPantryModal()" class="py-2 px-4 bg-brand-600 hover:bg-brand-700 text-white text-sm font-semibold rounded-xl transition-all flex items-center justify-center gap-2">
-                            <i class="fa-solid fa-plus"></i> Novo Item / Mantimento
+                        <div class="flex items-center gap-2 flex-wrap">
+                            <button onclick="copyShoppingList()" class="py-2 px-3 bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 text-xs font-bold rounded-xl transition-all flex items-center gap-1.5" title="Copiar itens em falta">
+                                <i class="fa-solid fa-copy text-brand-500"></i> Copiar Lista
+                            </button>
+                            <button onclick="openPantryModal()" class="py-2 px-3 bg-brand-600 hover:bg-brand-700 text-white text-xs font-semibold rounded-xl transition-all flex items-center justify-center gap-1.5">
+                                <i class="fa-solid fa-plus"></i> Novo Item
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- ABAS DE STATUS DOS MANTIMENTOS -->
+                    <div class="flex gap-1 overflow-x-auto pb-1 border-b border-slate-200 dark:border-slate-700">
+                        <button onclick="setPantryFilter('all')" id="pFilter_all" class="pantry-filter-btn px-3 py-1.5 rounded-xl text-xs font-bold transition-all bg-brand-600 text-white shadow-sm shrink-0">
+                            Todos (<span id="countAll">0</span>)
+                        </button>
+                        <button onclick="setPantryFilter('ok')" id="pFilter_ok" class="pantry-filter-btn px-3 py-1.5 rounded-xl text-xs font-bold transition-all text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 shrink-0">
+                            Estoque OK (<span id="countOk">0</span>)
+                        </button>
+                        <button onclick="setPantryFilter('low')" id="pFilter_low" class="pantry-filter-btn px-3 py-1.5 rounded-xl text-xs font-bold transition-all text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 shrink-0">
+                            Estoque Baixo (<span id="countLow">0</span>)
+                        </button>
+                        <button onclick="setPantryFilter('critical')" id="pFilter_critical" class="pantry-filter-btn px-3 py-1.5 rounded-xl text-xs font-bold transition-all text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 shrink-0">
+                            Esgotados (<span id="countCritical">0</span>)
                         </button>
                     </div>
-                    <div id="pantryContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
-                    <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm space-y-3">
-                        <div class="flex items-center justify-between">
-                            <h3 class="text-sm font-bold text-slate-800 dark:text-white flex items-center gap-2">
-                                <i class="fa-solid fa-cart-shopping text-emerald-500"></i> Lista de Compras Inteligente
-                            </h3>
-                            <span id="shoppingListCount" class="text-xs px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-700 font-bold text-slate-600 dark:text-slate-300">0 itens</span>
-                        </div>
-                        <div id="shoppingListContainer" class="space-y-2"></div>
-                    </div>
+
+                    <!-- GRID COMPACTO DE MANTIMENTOS -->
+                    <div id="pantryContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3"></div>
                 </section>
 
                 <!-- PANE 4: RELATÓRIOS & GRÁFICOS -->
-                <section class="finance-pane space-y-5" data-pane="relatorios" aria-label="Relatórios e Gráficos" hidden>
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <section class="finance-pane space-y-4" data-pane="relatorios" aria-label="Relatórios e Gráficos" hidden>
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
                         <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm">
-                            <h3 class="text-sm font-bold text-slate-800 dark:text-white mb-4 flex items-center gap-2">
-                                <i class="fa-solid fa-chart-pie text-brand-500"></i> Distribuição do Saldo Acumulado por Caixa
+                            <h3 class="text-xs font-bold uppercase tracking-wide text-slate-400 mb-4 flex items-center gap-2">
+                                <i class="fa-solid fa-chart-pie text-brand-500"></i> Distribuição por Caixa
                             </h3>
-                            <div class="relative flex items-center justify-center h-64">
+                            <div class="relative flex items-center justify-center h-56">
                                 <canvas id="boxesChart"></canvas>
                                 <div id="noChartData" class="hidden absolute text-center text-slate-400 text-xs">
-                                    <i class="fa-solid fa-chart-area text-3xl mb-1 block opacity-40"></i> Sem saldos para exibir no gráfico
+                                    <i class="fa-solid fa-chart-area text-3xl mb-1 block opacity-40"></i> Sem saldos para exibir
                                 </div>
                             </div>
                         </div>
                         <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm flex flex-col justify-between">
                             <div>
-                                <h3 class="text-sm font-bold text-slate-800 dark:text-white mb-3 flex items-center gap-2">
-                                    <i class="fa-solid fa-file-invoice-dollar text-brand-500"></i> Indicadores de Desempenho Financeiro
+                                <h3 class="text-xs font-bold uppercase tracking-wide text-slate-400 mb-3 flex items-center gap-2">
+                                    <i class="fa-solid fa-file-invoice-dollar text-brand-500"></i> Indicadores de Desempenho
                                 </h3>
-                                <div class="space-y-3 text-xs" id="financialMetricsList"></div>
+                                <div class="space-y-2.5 text-xs" id="financialMetricsList"></div>
                             </div>
                             <div class="mt-4 pt-3 border-t border-slate-100 dark:border-slate-700 flex justify-between items-center text-xs text-slate-400">
                                 <span>Atualizado em tempo real</span>
-                                <button onclick="loadFromSupabase()" class="text-brand-600 dark:text-brand-400 font-bold hover:underline">Atualizar dados</button>
+                                <button onclick="loadFromSupabase()" class="text-brand-600 dark:text-brand-400 font-bold hover:underline">Atualizar</button>
                             </div>
                         </div>
                     </div>
                 </section>
 
                 <!-- PANE 5: HISTÓRICO -->
-                <section class="finance-pane space-y-5" data-pane="historico" aria-label="Histórico" hidden>
+                <section class="finance-pane space-y-4" data-pane="historico" aria-label="Histórico" hidden>
                     <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm">
                         <div class="flex items-center justify-between mb-4">
-                            <h3 class="text-sm font-bold text-slate-800 dark:text-white flex items-center gap-2">
-                                <i class="fa-solid fa-clock-rotate-left text-brand-500"></i> Histórico Geral de Movimentações & Aportes
+                            <h3 class="text-xs font-bold uppercase tracking-wide text-slate-400 flex items-center gap-2">
+                                <i class="fa-solid fa-clock-rotate-left text-brand-500"></i> Histórico de Movimentações
                             </h3>
-                            <button onclick="clearHistory()" class="text-xs px-3 py-1.5 rounded-lg bg-rose-50 hover:bg-rose-100 dark:bg-rose-950/30 text-rose-600 dark:text-rose-400 font-medium transition-colors">Limpar Histórico</button>
+                            <button onclick="clearHistory()" class="text-xs px-3 py-1.5 rounded-lg bg-rose-50 hover:bg-rose-100 dark:bg-rose-950/30 text-rose-600 dark:text-rose-400 font-medium transition-colors">Limpar</button>
                         </div>
-                        <div id="historyList" class="space-y-3 max-h-[500px] overflow-y-auto pr-1"></div>
+                        <div id="historyList" class="space-y-2.5 max-h-[500px] overflow-y-auto pr-1"></div>
                     </div>
                 </section>
 
@@ -290,12 +307,12 @@
         </main>
     </div>
 
-    <!-- Modal: Configurações Supabase (AnyKey / URL) -->
+    <!-- Modal: Configurações Supabase -->
     <div id="configModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white dark:bg-slate-800 w-full max-w-md rounded-2xl shadow-xl overflow-hidden border border-slate-200 dark:border-slate-700">
             <div class="p-5 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center">
-                <h3 class="font-bold text-slate-800 dark:text-white text-lg flex items-center gap-2">
-                    <i class="fa-solid fa-database text-brand-500"></i> Configurar Conexão Supabase
+                <h3 class="font-bold text-slate-800 dark:text-white text-base flex items-center gap-2">
+                    <i class="fa-solid fa-database text-brand-500"></i> Configurar Supabase
                 </h3>
                 <button onclick="closeConfigModal()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
             </div>
@@ -303,58 +320,57 @@
                 <div>
                     <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Supabase URL</label>
                     <input type="text" id="supabaseUrlInput" required placeholder="https://seu-projeto.supabase.co"
-                        class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 focus:outline-none text-slate-800 dark:text-white text-xs">
+                        class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 text-slate-800 dark:text-white text-xs">
                 </div>
                 <div>
-                    <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Supabase Anon Key (API Key)</label>
+                    <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Supabase Anon Key</label>
                     <input type="password" id="supabaseKeyInput" required placeholder="eyJhbGciOiJIUzI1NiIsIn..."
-                        class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 focus:outline-none text-slate-800 dark:text-white text-xs">
+                        class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 text-slate-800 dark:text-white text-xs">
                 </div>
-                <p class="text-[11px] text-slate-400">Essas credenciais serão salvas apenas neste navegador para conectar com o seu banco de dados Supabase.</p>
-                <div class="pt-3 flex gap-2">
-                    <button type="button" onclick="closeConfigModal()" class="w-1/2 py-2 px-4 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 font-medium text-sm">Cancelar</button>
-                    <button type="submit" class="w-1/2 py-2 px-4 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-medium text-sm shadow-md">Salvar & Conectar</button>
+                <div class="pt-2 flex gap-2">
+                    <button type="button" onclick="closeConfigModal()" class="w-1/2 py-2 px-4 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 font-medium text-xs">Cancelar</button>
+                    <button type="submit" class="w-1/2 py-2 px-4 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-medium text-xs shadow-md">Salvar & Conectar</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- Demais Modais -->
+    <!-- Modal: Caixa Financeira -->
     <div id="boxModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white dark:bg-slate-800 w-full max-w-md rounded-2xl shadow-xl overflow-hidden border border-slate-200 dark:border-slate-700">
             <div class="p-5 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center">
-                <h3 id="boxModalTitle" class="font-bold text-slate-800 dark:text-white text-lg">Criar Nova Caixa</h3>
+                <h3 id="boxModalTitle" class="font-bold text-slate-800 dark:text-white text-base">Criar Nova Caixa</h3>
                 <button onclick="closeBoxModal()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
             </div>
             <form onsubmit="saveBox(event)" class="p-5 space-y-4">
                 <input type="hidden" id="boxIdInput">
                 <div>
                     <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Nome da Caixa</label>
-                    <input type="text" id="boxNameInput" required placeholder="Ex: Supermercado, Lazer, Reserva..."
-                        class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 focus:outline-none text-slate-800 dark:text-white text-sm">
+                    <input type="text" id="boxNameInput" required placeholder="Ex: Supermercado, Lazer..."
+                        class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 text-slate-800 dark:text-white text-xs">
                 </div>
                 <div class="grid grid-cols-2 gap-3">
                     <div>
                         <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Porcentagem (%)</label>
                         <div class="relative">
                             <input type="number" step="0.1" min="0" max="100" id="boxPctInput" required placeholder="0"
-                                class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 focus:outline-none text-slate-800 dark:text-white text-sm pr-8">
-                            <span class="absolute right-3 top-2 text-slate-400 font-bold text-sm">%</span>
+                                class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 text-slate-800 dark:text-white text-xs pr-8">
+                            <span class="absolute right-3 top-2 text-slate-400 font-bold text-xs">%</span>
                         </div>
                     </div>
                     <div>
-                        <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Valor Limite / Meta (R$)</label>
+                        <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Meta (R$)</label>
                         <div class="relative">
-                            <span class="absolute left-3 top-2.5 text-slate-400 text-xs font-bold">R$</span>
+                            <span class="absolute left-3 top-2.5 text-slate-400 text-[10px] font-bold">R$</span>
                             <input type="number" step="0.01" min="0" id="boxTargetInput" placeholder="Sem limite"
-                                class="w-full pl-8 pr-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 focus:outline-none text-slate-800 dark:text-white text-sm">
+                                class="w-full pl-7 pr-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 text-slate-800 dark:text-white text-xs">
                         </div>
                     </div>
                 </div>
                 <div class="p-3 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900/50 rounded-xl flex items-center gap-3">
                     <input type="checkbox" id="boxIsReserveInput" onchange="toggleReserveCheckboxUI()" class="w-4 h-4 text-amber-600 rounded focus:ring-amber-500 border-slate-300">
                     <label for="boxIsReserveInput" class="text-xs font-medium text-amber-900 dark:text-amber-200 cursor-pointer select-none">
-                        <strong class="block font-bold">Caixa Reserva Especial (Nunca fecha)</strong>
+                        <strong class="block font-bold">Caixa Reserva Especial</strong>
                         Recebe 100% dos excedentes quando as outras caixas estiverem cheias.
                     </label>
                 </div>
@@ -362,9 +378,9 @@
                     <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Ícone e Cor</label>
                     <div class="grid grid-cols-5 gap-2" id="iconPicker"></div>
                 </div>
-                <div class="pt-3 flex gap-2">
-                    <button type="button" onclick="closeBoxModal()" class="w-1/2 py-2 px-4 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 font-medium text-sm">Cancelar</button>
-                    <button type="submit" class="w-1/2 py-2 px-4 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-medium text-sm shadow-md">Salvar</button>
+                <div class="pt-2 flex gap-2">
+                    <button type="button" onclick="closeBoxModal()" class="w-1/2 py-2 px-4 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 font-medium text-xs">Cancelar</button>
+                    <button type="submit" class="w-1/2 py-2 px-4 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-medium text-xs shadow-md">Salvar</button>
                 </div>
             </form>
         </div>
@@ -375,7 +391,7 @@
         <div class="bg-white dark:bg-slate-800 w-full max-w-md rounded-2xl shadow-xl overflow-hidden border border-slate-200 dark:border-slate-700">
             <div class="p-5 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center">
                 <div>
-                    <h3 id="txModalTitle" class="font-bold text-slate-800 dark:text-white text-lg">Movimentar Caixa</h3>
+                    <h3 id="txModalTitle" class="font-bold text-slate-800 dark:text-white text-base">Movimentar Caixa</h3>
                     <p id="txModalSubtitle" class="text-xs text-slate-500">Nome da Caixa</p>
                 </div>
                 <button onclick="closeTxModal()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
@@ -388,25 +404,25 @@
                         <i class="fa-solid fa-plus-circle mr-1"></i> Entrada
                     </button>
                     <button type="button" id="btnTypeWithdraw" onclick="setTxType('withdraw')" class="py-2 text-xs font-bold rounded-lg transition-all text-slate-600 dark:text-slate-400">
-                        <i class="fa-solid fa-minus-circle mr-1"></i> Saída / Gasto
+                        <i class="fa-solid fa-minus-circle mr-1"></i> Saída
                     </button>
                 </div>
                 <div>
                     <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Valor (R$)</label>
                     <div class="relative">
-                        <span class="absolute left-3 top-2.5 text-slate-400 text-sm font-bold">R$</span>
+                        <span class="absolute left-3 top-2.5 text-slate-400 text-xs font-bold">R$</span>
                         <input type="number" step="0.01" min="0.01" id="txAmountInput" required placeholder="0,00"
-                            class="w-full pl-10 pr-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 focus:outline-none text-slate-800 dark:text-white font-semibold text-sm">
+                            class="w-full pl-8 pr-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 text-slate-800 dark:text-white font-semibold text-xs">
                     </div>
                 </div>
                 <div>
-                    <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Descrição / Observação</label>
-                    <input type="text" id="txDescInput" placeholder="Ex: Compra de mantimentos, Conta de luz..."
-                        class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 focus:outline-none text-slate-800 dark:text-white text-sm">
+                    <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Descrição</label>
+                    <input type="text" id="txDescInput" placeholder="Ex: Compra..."
+                        class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 text-slate-800 dark:text-white text-xs">
                 </div>
-                <div class="pt-3 flex gap-2">
-                    <button type="button" onclick="closeTxModal()" class="w-1/2 py-2 px-4 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 font-medium text-sm">Cancelar</button>
-                    <button type="submit" id="txSubmitBtn" class="w-1/2 py-2 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-medium text-sm shadow-md">Confirmar Entrada</button>
+                <div class="pt-2 flex gap-2">
+                    <button type="button" onclick="closeTxModal()" class="w-1/2 py-2 px-4 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 font-medium text-xs">Cancelar</button>
+                    <button type="submit" id="txSubmitBtn" class="w-1/2 py-2 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-medium text-xs shadow-md">Confirmar</button>
                 </div>
             </form>
         </div>
@@ -414,49 +430,74 @@
 
     <!-- Modal: Mantimento -->
     <div id="pantryModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white dark:bg-slate-800 w-full max-w-md rounded-2xl shadow-xl overflow-hidden border border-slate-200 dark:border-slate-700">
-            <div class="p-5 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center">
-                <h3 id="pantryModalTitle" class="font-bold text-slate-800 dark:text-white text-lg">Adicionar Mantimento</h3>
+        <div class="bg-white dark:bg-slate-800 w-full max-w-md rounded-2xl shadow-xl overflow-hidden border border-slate-200 dark:border-slate-700 max-h-[90vh] flex flex-col">
+            <div class="p-5 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center shrink-0">
+                <h3 id="pantryModalTitle" class="font-bold text-slate-800 dark:text-white text-base">Adicionar Mantimento</h3>
                 <button onclick="closePantryModal()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
             </div>
-            <form onsubmit="savePantryItem(event)" class="p-5 space-y-4">
-                <input type="hidden" id="pantryIdInput">
-                <div>
-                    <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Nome do Item</label>
-                    <input type="text" id="pantryNameInput" required placeholder="Ex: Arroz, Óleo de Soja..."
-                        class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 focus:outline-none text-slate-800 dark:text-white text-sm">
-                </div>
-                <div class="grid grid-cols-3 gap-2">
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Qtd Atual</label>
-                        <input type="number" step="1" min="0" id="pantryQtyInput" required placeholder="0"
-                            class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 text-slate-800 dark:text-white text-sm font-bold">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Estoque Ideal</label>
-                        <input type="number" step="1" min="1" id="pantryIdealInput" required placeholder="5"
-                            class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 text-slate-800 dark:text-white text-sm font-bold">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Unidade</label>
-                        <select id="pantryUnitInput" class="w-full px-2 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 text-slate-800 dark:text-white text-xs font-bold">
-                            <option value="un">unid.</option>
-                            <option value="kg">kg</option>
-                            <option value="L">litros</option>
-                            <option value="pct">pacotes</option>
-                            <option value="lata">latas</option>
-                        </select>
+            
+            <div class="p-5 space-y-4 overflow-y-auto flex-1">
+                <!-- Scanner de Câmera -->
+                <div class="bg-slate-50 dark:bg-slate-900 p-3 rounded-xl border border-slate-200 dark:border-slate-700 text-center">
+                    <button type="button" onclick="toggleBarcodeScanner()" class="w-full py-2 px-3 bg-slate-800 dark:bg-slate-700 hover:bg-slate-700 text-white font-bold text-xs rounded-lg transition-all flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-barcode text-brand-400 text-sm"></i> Ler Código de Barras com Câmera
+                    </button>
+                    <div id="scannerContainer" class="hidden mt-3 relative overflow-hidden rounded-lg border border-slate-300 dark:border-slate-600">
+                        <div id="reader" style="width: 100%;"></div>
+                        <button type="button" onclick="stopBarcodeScanner()" class="mt-2 text-[11px] text-rose-500 font-bold hover:underline">Fechar Câmera</button>
                     </div>
                 </div>
-                <div>
-                    <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Caixa Financeira Vinculada (Opcional)</label>
-                    <select id="pantryBoxLinkInput" class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 text-slate-800 dark:text-white text-sm"></select>
-                </div>
-                <div class="pt-3 flex gap-2">
-                    <button type="button" onclick="closePantryModal()" class="w-1/2 py-2 px-4 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 font-medium text-sm">Cancelar</button>
-                    <button type="submit" class="w-1/2 py-2 px-4 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-medium text-sm shadow-md">Salvar Mantimento</button>
-                </div>
-            </form>
+
+                <form id="pantryForm" onsubmit="savePantryItem(event)" class="space-y-4">
+                    <input type="hidden" id="pantryIdInput">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Código de Barras (Opcional)</label>
+                        <div class="flex gap-2">
+                            <input type="text" id="pantryBarcodeInput" placeholder="Ex: 7891000100103" onblur="lookupBarcodeAPI(this.value)"
+                                class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 text-slate-800 dark:text-white text-xs">
+                            <button type="button" onclick="lookupBarcodeAPI(document.getElementById('pantryBarcodeInput').value)" class="px-3 py-2 bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 rounded-xl text-xs font-bold transition-all" title="Buscar na API">
+                                <i class="fa-solid fa-magnifying-glass"></i>
+                            </button>
+                        </div>
+                        <span id="barcodeApiStatus" class="text-[10px] text-slate-400 mt-1 block">Digite ou escaneie o código para buscar online.</span>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Nome do Item</label>
+                        <input type="text" id="pantryNameInput" required placeholder="Ex: Arroz Tipo 1..."
+                            class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 text-slate-800 dark:text-white text-xs">
+                    </div>
+                    <div class="grid grid-cols-3 gap-2">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Qtd Atual</label>
+                            <input type="number" step="1" min="0" id="pantryQtyInput" required placeholder="0"
+                                class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 text-slate-800 dark:text-white text-xs font-bold">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Estoque Ideal</label>
+                            <input type="number" step="1" min="1" id="pantryIdealInput" required placeholder="5"
+                                class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 text-slate-800 dark:text-white text-xs font-bold">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Unidade</label>
+                            <select id="pantryUnitInput" class="w-full px-2 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 text-slate-800 dark:text-white text-xs font-bold">
+                                <option value="un">unid.</option>
+                                <option value="kg">kg</option>
+                                <option value="L">litros</option>
+                                <option value="pct">pacotes</option>
+                                <option value="lata">latas</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Caixa Vinculada (Opcional)</label>
+                        <select id="pantryBoxLinkInput" class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 text-slate-800 dark:text-white text-xs"></select>
+                    </div>
+                    <div class="pt-2 flex gap-2">
+                        <button type="button" onclick="closePantryModal()" class="w-1/2 py-2 px-4 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 font-medium text-xs">Cancelar</button>
+                        <button type="submit" class="w-1/2 py-2 px-4 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-medium text-xs shadow-md">Salvar</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 
@@ -467,7 +508,7 @@
                 <div class="flex items-center gap-2">
                     <i class="fa-solid fa-circle-check text-brand-600 dark:text-brand-400 text-xl"></i>
                     <div>
-                        <h3 class="font-bold text-slate-800 dark:text-white text-lg leading-tight">Resumo do Aporte Inteligente</h3>
+                        <h3 class="font-bold text-slate-800 dark:text-white text-base leading-tight">Resumo do Aporte Inteligente</h3>
                         <p id="spilloverTotalText" class="text-xs text-brand-700 dark:text-brand-300">Aporte total: R$ 0,00</p>
                     </div>
                 </div>
@@ -476,12 +517,12 @@
             <div class="p-5 space-y-4 max-h-[70vh] overflow-y-auto">
                 <div id="spilloverNoticeBox" class="p-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-600 dark:text-slate-300 space-y-1"></div>
                 <div>
-                    <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Detalhamento dos Valores Recebidos</h4>
+                    <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Detalhamento por Caixa</h4>
                     <div id="spilloverBreakdownList" class="space-y-2"></div>
                 </div>
             </div>
             <div class="p-4 bg-slate-50 dark:bg-slate-900/50 border-t border-slate-100 dark:border-slate-700 flex justify-end">
-                <button onclick="closeSpilloverReportModal()" class="py-2 px-5 bg-brand-600 hover:bg-brand-700 text-white font-semibold text-sm rounded-xl shadow-md">Entendido</button>
+                <button onclick="closeSpilloverReportModal()" class="py-2 px-5 bg-brand-600 hover:bg-brand-700 text-white font-semibold text-xs rounded-xl shadow-md">Entendido</button>
             </div>
         </div>
     </div>
@@ -490,18 +531,18 @@
     <div id="presetModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white dark:bg-slate-800 w-full max-w-lg rounded-2xl shadow-xl overflow-hidden border border-slate-200 dark:border-slate-700">
             <div class="p-5 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center">
-                <h3 class="font-bold text-slate-800 dark:text-white text-lg">Modelos de Regras Financeiras</h3>
+                <h3 class="font-bold text-slate-800 dark:text-white text-base">Modelos de Regras Financeiras</h3>
                 <button onclick="closePresetModal()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
             </div>
             <div class="p-5 space-y-4">
-                <p class="text-xs text-slate-500">Escolha uma regra pré-definida. <strong class="text-rose-500">Isto substituirá suas caixas e metas atuais!</strong></p>
+                <p class="text-xs text-slate-500">Escolha uma regra pré-definida. <strong class="text-rose-500">Isto substituirá suas caixas atuais!</strong></p>
                 <div class="space-y-3">
                     <button onclick="applyPreset('50-30-20')" class="w-full p-4 border border-slate-200 dark:border-slate-700 rounded-xl text-left hover:border-brand-500 hover:bg-brand-50/30 transition-all flex justify-between items-center group">
                         <div>
-                            <h4 class="font-bold text-slate-800 dark:text-white group-hover:text-brand-600">Regra 50 / 30 / 20 com Casa & Supermercado</h4>
-                            <p class="text-xs text-slate-500 mt-1">50% Essenciais/Supermercado • 30% Lazer & Desejos • 20% Reserva Infinita</p>
+                            <h4 class="font-bold text-xs text-slate-800 dark:text-white group-hover:text-brand-600">Regra 50 / 30 / 20 com Casa & Supermercado</h4>
+                            <p class="text-[11px] text-slate-500 mt-0.5">50% Essenciais • 30% Lazer • 20% Reserva Infinita</p>
                         </div>
-                        <i class="fa-solid fa-chevron-right text-slate-300 group-hover:text-brand-500"></i>
+                        <i class="fa-solid fa-chevron-right text-slate-300 group-hover:text-brand-500 text-xs"></i>
                     </button>
                 </div>
             </div>
@@ -528,6 +569,8 @@
         let chartInstance = null;
         let isSidebarCollapsed = false;
         let supabaseClient = null;
+        let currentPantryFilter = 'all';
+        let html5QrCodeScanner = null;
 
         let appState = {
             boxes: [],
@@ -576,12 +619,8 @@
             }
         }
 
-        function openConfigModal() {
-            document.getElementById('configModal').classList.remove('hidden');
-        }
-        function closeConfigModal() {
-            document.getElementById('configModal').classList.add('hidden');
-        }
+        function openConfigModal() { document.getElementById('configModal').classList.remove('hidden'); }
+        function closeConfigModal() { document.getElementById('configModal').classList.add('hidden'); }
 
         function saveConfig(e) {
             e.preventDefault();
@@ -596,7 +635,6 @@
             showToast('Conexão configurada com sucesso!', 'success');
         }
 
-        // CARREGAR DADOS DO SUPABASE
         async function loadFromSupabase() {
             if (!supabaseClient) return;
             try {
@@ -616,7 +654,7 @@
                 }));
 
                 appState.pantry = (pantryRes.data || []).map(p => ({
-                    id: p.id, name: p.name, qty: p.qty, ideal: p.ideal, unit: p.unit, boxId: p.box_id
+                    id: p.id, name: p.name, qty: p.qty, ideal: p.ideal, unit: p.unit, boxId: p.box_id, barcode: p.barcode || ''
                 }));
 
                 appState.history = (historyRes.data || []).map(h => ({
@@ -636,14 +674,12 @@
             const labels = document.querySelectorAll('.sidebar-label');
             const toggleIcon = document.getElementById('sidebarToggleIcon');
 
-            // No mobile, abre/fecha com deslizamento e fundo escuro
             if (window.innerWidth < 768) {
                 sidebar.classList.toggle('-translate-x-full');
                 overlay.classList.toggle('hidden');
                 return;
             }
 
-            // No desktop, alterna estado retrátil (mini sidebar com apenas ícones)
             isSidebarCollapsed = !isSidebarCollapsed;
             if (isSidebarCollapsed) {
                 sidebar.classList.remove('w-64');
@@ -681,7 +717,6 @@
                         p.classList.toggle('active', active);
                     });
 
-                    // Em telas menores, fecha o menu automaticamente ao selecionar uma aba
                     if (window.innerWidth < 768) {
                         document.getElementById('sidebar').classList.add('-translate-x-full');
                         document.getElementById('sidebarOverlay').classList.add('hidden');
@@ -717,7 +752,7 @@
             container.innerHTML = ICON_PALETTE.map((item, idx) => `
                 <button type="button" onclick="selectIcon(${idx})" id="iconOpt_${idx}"
                     class="h-10 rounded-xl flex items-center justify-center border-2 transition-all ${idx === 0 ? 'border-brand-500 scale-105 bg-slate-100 dark:bg-slate-700' : 'border-transparent hover:bg-slate-100 dark:hover:bg-slate-700'}">
-                    <i class="fa-solid ${item.icon} text-lg" style="color: ${item.color}"></i>
+                    <i class="fa-solid ${item.icon} text-base" style="color: ${item.color}"></i>
                 </button>
             `).join('');
         }
@@ -736,7 +771,6 @@
             renderSummary();
             renderBoxes();
             renderPantry();
-            renderShoppingList();
             renderHistory();
             renderMetrics();
             updateChart();
@@ -757,7 +791,7 @@
 
             document.getElementById('totalBalance').innerText = formatBRL(totalBalance);
             document.getElementById('boxCountText').innerText = `${appState.boxes.length} Caixa(s) ativa(s)`;
-            document.getElementById('completedBoxesCountText').innerText = targetableBoxesCount > 0 ? `${completedBoxes}/${targetableBoxesCount} Metas Atingidas` : 'Caixas Infinitas';
+            document.getElementById('completedBoxesCountText').innerText = targetableBoxesCount > 0 ? `${completedBoxes}/${targetableBoxesCount} Metas` : 'Caixas Infinitas';
 
             const now = new Date();
             let monthDeposits = 0;
@@ -774,7 +808,7 @@
             const monthNet = monthDeposits - monthWithdrawals;
             const netEl = document.getElementById('monthNet');
             netEl.innerText = `${monthNet < 0 ? '−' : ''}${formatBRL(Math.abs(monthNet))}`;
-            netEl.className = `text-2xl font-extrabold mt-2 ${monthNet < 0 ? 'text-rose-600 dark:text-rose-400' : 'text-slate-800 dark:text-white'}`;
+            netEl.className = `font-extrabold ${monthNet < 0 ? 'text-rose-600 dark:text-rose-400' : 'text-slate-800 dark:text-white'}`;
             document.getElementById('monthLabel').innerText = now.toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' });
 
             const pctText = document.getElementById('totalPercentageText');
@@ -787,22 +821,22 @@
             progressBar.style.width = `${Math.min(roundedPct, 100)}%`;
 
             if (Math.abs(roundedPct - 100) < 0.1) {
-                pctBadge.className = 'px-2 py-0.5 text-xs font-bold rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-900/50 dark:text-emerald-300';
+                pctBadge.className = 'px-2 py-0.5 text-[10px] font-bold rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-900/50 dark:text-emerald-300';
                 pctBadge.innerText = '100% OK';
                 progressBar.className = 'bg-brand-500 h-full rounded-full transition-all duration-300';
                 warningText.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-500"></i> Distribuição perfeita (100%)`;
             } else if (roundedPct < 100) {
                 const diff = (100 - roundedPct).toFixed(1);
-                pctBadge.className = 'px-2 py-0.5 text-xs font-bold rounded-full bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-300';
+                pctBadge.className = 'px-2 py-0.5 text-[10px] font-bold rounded-full bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-300';
                 pctBadge.innerText = `Falta ${diff}%`;
                 progressBar.className = 'bg-amber-500 h-full rounded-full transition-all duration-300';
-                warningText.innerHTML = `<i class="fa-solid fa-triangle-exclamation text-amber-500"></i> Faltam ${diff}% para fechar 100%`;
+                warningText.innerHTML = `<i class="fa-solid fa-triangle-exclamation text-amber-500"></i> Faltam ${diff}%`;
             } else {
                 const diff = (roundedPct - 100).toFixed(1);
-                pctBadge.className = 'px-2 py-0.5 text-xs font-bold rounded-full bg-rose-100 text-rose-800 dark:bg-rose-900/50 dark:text-rose-300';
+                pctBadge.className = 'px-2 py-0.5 text-[10px] font-bold rounded-full bg-rose-100 text-rose-800 dark:bg-rose-900/50 dark:text-rose-300';
                 pctBadge.innerText = `Excesso +${diff}%`;
                 progressBar.className = 'bg-rose-500 h-full rounded-full transition-all duration-300';
-                warningText.innerHTML = `<i class="fa-solid fa-circle-exclamation text-rose-500"></i> A soma excede 100%!`;
+                warningText.innerHTML = `<i class="fa-solid fa-circle-exclamation text-rose-500"></i> Excede 100%!`;
             }
 
             const criticalItems = appState.pantry.filter(p => p.qty <= 0);
@@ -810,20 +844,21 @@
             const summaryAlerts = document.getElementById('pantryAlertsSummary');
             
             let alertHtml = '';
-            if (criticalItems.length > 0) alertHtml += `<div class="text-xs font-bold text-rose-600 dark:text-rose-400 flex items-center gap-1"><i class="fa-solid fa-triangle-exclamation"></i> ${criticalItems.length} item(ns) esgotado(s)!</div>`;
-            if (lowItems.length > 0) alertHtml += `<div class="text-xs font-medium text-amber-600 dark:text-amber-400 flex items-center gap-1"><i class="fa-solid fa-clock"></i> ${lowItems.length} item(ns) abaixo do ideal.</div>`;
-            if (criticalItems.length === 0 && lowItems.length === 0) alertHtml = `<p class="text-xs text-emerald-600 dark:text-emerald-400 font-medium flex items-center gap-1"><i class="fa-solid fa-circle-check"></i> Estoque 100% abastecido.</p>`;
+            if (criticalItems.length > 0) alertHtml += `<div class="text-[11px] font-bold text-rose-600 dark:text-rose-400 flex items-center gap-1"><i class="fa-solid fa-triangle-exclamation"></i> ${criticalItems.length} item(ns) esgotado(s)</div>`;
+            if (lowItems.length > 0) alertHtml += `<div class="text-[11px] font-medium text-amber-600 dark:text-amber-400 flex items-center gap-1"><i class="fa-solid fa-clock"></i> ${lowItems.length} item(ns) abaixo do ideal</div>`;
+            if (criticalItems.length === 0 && lowItems.length === 0) alertHtml = `<p class="text-[11px] text-emerald-600 dark:text-emerald-400 font-medium flex items-center gap-1"><i class="fa-solid fa-circle-check"></i> Estoque 100% abastecido</p>`;
             summaryAlerts.innerHTML = alertHtml;
         }
 
+        // RENDERIZAÇÃO COMPACTA DAS 7 CAIXAS (FORMATO LINHA/CARD HORIZONTAL)
         function renderBoxes() {
             const container = document.getElementById('boxesContainer');
             if (appState.boxes.length === 0) {
                 container.innerHTML = `
-                    <div class="sm:col-span-3 text-center py-10 bg-white dark:bg-slate-800 rounded-2xl border border-dashed border-slate-300 dark:border-slate-700">
-                        <i class="fa-solid fa-box-open text-4xl text-slate-300 dark:text-slate-600 mb-2"></i>
-                        <p class="text-slate-500 text-sm font-medium">Nenhuma caixa cadastrada</p>
-                        <button onclick="openBoxModal()" class="mt-3 text-xs text-brand-600 font-bold hover:underline">+ Criar primeira caixa</button>
+                    <div class="text-center py-10 bg-white dark:bg-slate-800 rounded-2xl border border-dashed border-slate-300 dark:border-slate-700">
+                        <i class="fa-solid fa-box-open text-3xl text-slate-300 dark:text-slate-600 mb-2"></i>
+                        <p class="text-slate-500 text-xs font-medium">Nenhuma caixa cadastrada</p>
+                        <button onclick="openBoxModal()" class="mt-2 text-xs text-brand-600 font-bold hover:underline">+ Criar primeira caixa</button>
                     </div>
                 `;
                 return;
@@ -834,70 +869,94 @@
                 const progressPct = (!box.target || box.target <= 0) ? 100 : Math.min(100, (box.balance / box.target) * 100);
 
                 return `
-                <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl border ${isFull ? 'border-amber-400 dark:border-amber-500/50 ring-2 ring-amber-400/20' : 'border-slate-200 dark:border-slate-700'} shadow-sm flex flex-col justify-between transition-all relative overflow-hidden">
-                    ${isFull ? `<div class="absolute top-0 right-0 bg-amber-500 text-white font-bold text-[10px] uppercase px-3 py-0.5 rounded-bl-xl flex items-center gap-1"><i class="fa-solid fa-lock"></i> Meta Atingida</div>` : ''}
-                    ${box.isReserve ? `<div class="absolute top-0 right-0 bg-emerald-500 text-white font-bold text-[10px] uppercase px-3 py-0.5 rounded-bl-xl flex items-center gap-1"><i class="fa-solid fa-infinity"></i> Reserva</div>` : ''}
-                    <div>
-                        <div class="flex items-start justify-between mt-1">
-                            <div class="flex items-center gap-3">
-                                <div class="w-10 h-10 rounded-xl flex items-center justify-center text-white shadow-sm" style="background-color: ${box.color}">
-                                    <i class="fa-solid ${box.icon} text-lg"></i>
-                                </div>
-                                <div>
-                                    <h3 class="font-bold text-slate-800 dark:text-white text-base leading-snug">${escapeHtml(box.name)}</h3>
-                                    <span class="inline-block px-2 py-0.5 text-xs font-bold rounded-md bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 mt-0.5">Base: ${box.pct}%</span>
-                                </div>
-                            </div>
-                            <div class="flex items-center gap-1">
-                                <button onclick="editBox('${box.id}')" title="Editar" class="p-1.5 text-slate-400 hover:text-slate-600 text-xs rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700"><i class="fa-solid fa-pen"></i></button>
-                                <button onclick="deleteBox('${box.id}')" title="Excluir" class="p-1.5 text-slate-400 hover:text-rose-500 text-xs rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700"><i class="fa-solid fa-trash-can"></i></button>
-                            </div>
+                <div class="bg-white dark:bg-slate-800 p-3.5 rounded-xl border ${isFull ? 'border-amber-400 dark:border-amber-500/50' : 'border-slate-200 dark:border-slate-700'} shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-3 transition-all relative overflow-hidden">
+                    <!-- Informações Principais da Caixa -->
+                    <div class="flex items-center gap-3 min-w-0 flex-1">
+                        <div class="w-9 h-9 rounded-xl flex items-center justify-center text-white shadow-sm shrink-0" style="background-color: ${box.color}">
+                            <i class="fa-solid ${box.icon} text-sm"></i>
                         </div>
-                        <div class="mt-4">
-                            <div class="flex items-baseline justify-between">
-                                <span class="text-xs text-slate-400 font-medium">Saldo Atual</span>
-                                <span class="text-xs font-semibold text-slate-500">${box.target && box.target > 0 ? `Meta: ${formatBRL(box.target)}` : (box.isReserve ? 'Sem Meta (Reserva)' : 'Sem limite')}</span>
+                        <div class="min-w-0 flex-1">
+                            <div class="flex items-center gap-2">
+                                <h3 class="font-bold text-slate-800 dark:text-white text-xs truncate">${escapeHtml(box.name)}</h3>
+                                <span class="px-1.5 py-0.5 text-[9px] font-bold rounded bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 shrink-0">${box.pct}%</span>
+                                ${isFull ? `<span class="px-1.5 py-0.5 text-[9px] font-bold rounded bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-300 shrink-0">Meta Atingida</span>` : ''}
+                                ${box.isReserve ? `<span class="px-1.5 py-0.5 text-[9px] font-bold rounded bg-emerald-100 text-emerald-800 dark:bg-emerald-900/50 dark:text-emerald-300 shrink-0">Reserva</span>` : ''}
                             </div>
-                            <p class="text-2xl font-extrabold text-slate-900 dark:text-white mt-0.5">${formatBRL(box.balance)}</p>
-                        </div>
-                        ${box.target && box.target > 0 ? `
-                            <div class="mt-3">
-                                <div class="flex justify-between items-center text-[10px] font-semibold text-slate-400 mb-1">
-                                    <span>Progresso</span><span>${progressPct.toFixed(0)}%</span>
-                                </div>
-                                <div class="w-full bg-slate-100 dark:bg-slate-700 h-2 rounded-full overflow-hidden">
+                            <div class="flex items-center gap-3 mt-1">
+                                <div class="w-32 bg-slate-100 dark:bg-slate-700 h-1.5 rounded-full overflow-hidden hidden sm:block">
                                     <div class="h-full rounded-full transition-all duration-300 ${isFull ? 'bg-amber-500' : 'bg-brand-500'}" style="width: ${progressPct}%"></div>
                                 </div>
+                                <span class="text-[10px] text-slate-400">${box.target && box.target > 0 ? `Meta: ${formatBRL(box.target)}` : 'Sem limite'}</span>
                             </div>
-                        ` : ''}
+                        </div>
                     </div>
-                    <div class="mt-5 pt-3 border-t border-slate-100 dark:border-slate-700/60 flex gap-2">
-                        <button onclick="openTxModal('${box.id}', 'deposit')" class="flex-1 py-1.5 px-2 bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-300 text-xs font-bold rounded-lg transition-all flex items-center justify-center gap-1">
-                            <i class="fa-solid fa-plus text-[10px]"></i> Aporte
-                        </button>
-                        <button onclick="openTxModal('${box.id}', 'withdraw')" class="flex-1 py-1.5 px-2 bg-rose-50 hover:bg-rose-100 dark:bg-rose-950/30 text-rose-700 dark:text-rose-300 text-xs font-bold rounded-lg transition-all flex items-center justify-center gap-1">
-                            <i class="fa-solid fa-minus text-[10px]"></i> Gasto
-                        </button>
+
+                    <!-- Saldo & Botões de Ação Rápida -->
+                    <div class="flex items-center justify-between sm:justify-end gap-3 shrink-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-100 dark:border-slate-700">
+                        <div class="text-right">
+                            <span class="text-sm font-extrabold text-slate-900 dark:text-white">${formatBRL(box.balance)}</span>
+                        </div>
+                        <div class="flex items-center gap-1">
+                            <button onclick="openTxModal('${box.id}', 'deposit')" class="px-2.5 py-1 bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 text-[11px] font-bold rounded-lg transition-all flex items-center gap-1">
+                                <i class="fa-solid fa-plus text-[9px]"></i> Aporte
+                            </button>
+                            <button onclick="openTxModal('${box.id}', 'withdraw')" class="px-2.5 py-1 bg-rose-50 hover:bg-rose-100 dark:bg-rose-950/40 text-rose-700 dark:text-rose-300 text-[11px] font-bold rounded-lg transition-all flex items-center gap-1">
+                                <i class="fa-solid fa-minus text-[9px]"></i> Gasto
+                            </button>
+                            <div class="flex items-center border-l border-slate-200 dark:border-slate-700 pl-1.5 ml-1 gap-0.5">
+                                <button onclick="editBox('${box.id}')" title="Editar" class="p-1 text-slate-400 hover:text-slate-600 text-xs rounded"><i class="fa-solid fa-pen"></i></button>
+                                <button onclick="deleteBox('${box.id}')" title="Excluir" class="p-1 text-slate-400 hover:text-rose-500 text-xs rounded"><i class="fa-solid fa-trash-can"></i></button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             `;
             }).join('');
         }
 
+        function setPantryFilter(status) {
+            currentPantryFilter = status;
+            ['all', 'ok', 'low', 'critical'].forEach(s => {
+                const btn = document.getElementById(`pFilter_${s}`);
+                if (!btn) return;
+                if (s === status) {
+                    btn.className = 'pantry-filter-btn px-3 py-1.5 rounded-xl text-xs font-bold transition-all bg-brand-600 text-white shadow-sm shrink-0';
+                } else {
+                    btn.className = 'pantry-filter-btn px-3 py-1.5 rounded-xl text-xs font-bold transition-all text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 shrink-0';
+                }
+            });
+            renderPantry();
+        }
+
         function renderPantry() {
             const container = document.getElementById('pantryContainer');
-            if (appState.pantry.length === 0) {
+            
+            const totalCount = appState.pantry.length;
+            const okCount = appState.pantry.filter(p => p.qty >= p.ideal).length;
+            const lowCount = appState.pantry.filter(p => p.qty > 0 && p.qty < p.ideal).length;
+            const criticalCount = appState.pantry.filter(p => p.qty <= 0).length;
+
+            document.getElementById('countAll').innerText = totalCount;
+            document.getElementById('countOk').innerText = okCount;
+            document.getElementById('countLow').innerText = lowCount;
+            document.getElementById('countCritical').innerText = criticalCount;
+
+            let filteredItems = appState.pantry;
+            if (currentPantryFilter === 'ok') filteredItems = appState.pantry.filter(p => p.qty >= p.ideal);
+            else if (currentPantryFilter === 'low') filteredItems = appState.pantry.filter(p => p.qty > 0 && p.qty < p.ideal);
+            else if (currentPantryFilter === 'critical') filteredItems = appState.pantry.filter(p => p.qty <= 0);
+
+            if (filteredItems.length === 0) {
                 container.innerHTML = `
-                    <div class="sm:col-span-3 text-center py-10 bg-white dark:bg-slate-800 rounded-2xl border border-dashed border-slate-300 dark:border-slate-700">
-                        <i class="fa-solid fa-basket-shopping text-4xl text-slate-300 dark:text-slate-600 mb-2"></i>
-                        <p class="text-slate-500 text-sm font-medium">Nenhum mantimento cadastrado</p>
-                        <button onclick="openPantryModal()" class="mt-3 text-xs text-brand-600 font-bold hover:underline">+ Adicionar primeiro item</button>
+                    <div class="sm:col-span-3 text-center py-8 bg-white dark:bg-slate-800 rounded-2xl border border-dashed border-slate-300 dark:border-slate-700">
+                        <i class="fa-solid fa-box-open text-3xl text-slate-300 dark:text-slate-600 mb-1"></i>
+                        <p class="text-slate-500 text-xs font-medium">Nenhum mantimento nesta categoria</p>
                     </div>
                 `;
                 return;
             }
 
-            container.innerHTML = appState.pantry.map(item => {
+            container.innerHTML = filteredItems.map(item => {
                 const isCritical = item.qty <= 0;
                 const isLow = item.qty > 0 && item.qty < item.ideal;
                 const linkedBox = appState.boxes.find(b => b.id === item.boxId);
@@ -905,45 +964,39 @@
                 let badgeClass = 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/50 dark:text-emerald-300';
                 let badgeText = 'Estoque OK';
                 if (isCritical) {
-                    badgeClass = 'bg-rose-100 text-rose-800 dark:bg-rose-900/50 dark:text-rose-300 animate-pulse';
-                    badgeText = 'Esgotado!';
+                    badgeClass = 'bg-rose-100 text-rose-800 dark:bg-rose-900/50 dark:text-rose-300';
+                    badgeText = 'Esgotado';
                 } else if (isLow) {
                     badgeClass = 'bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-300';
                     badgeText = 'Baixo';
                 }
 
                 return `
-                <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl border ${isCritical ? 'border-rose-400 dark:border-rose-500/50' : (isLow ? 'border-amber-300' : 'border-slate-200 dark:border-slate-700')} shadow-sm flex flex-col justify-between transition-all relative">
-                    <div>
-                        <div class="flex items-start justify-between">
-                            <div>
-                                <span class="px-2 py-0.5 text-[10px] font-bold rounded-md ${badgeClass}">${badgeText}</span>
-                                <h3 class="font-bold text-slate-800 dark:text-white text-base mt-1">${escapeHtml(item.name)}</h3>
-                                ${linkedBox ? `<span class="text-[10px] text-slate-400 flex items-center gap-1 mt-0.5"><i class="fa-solid fa-box text-[9px]" style="color:${linkedBox.color}"></i> Caixa: ${escapeHtml(linkedBox.name)}</span>` : ''}
-                            </div>
-                            <div class="flex items-center gap-1">
-                                <button onclick="editPantryItem('${item.id}')" title="Editar" class="p-1.5 text-slate-400 hover:text-slate-600 text-xs rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700"><i class="fa-solid fa-pen"></i></button>
-                                <button onclick="deletePantryItem('${item.id}')" title="Excluir" class="p-1.5 text-slate-400 hover:text-rose-500 text-xs rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700"><i class="fa-solid fa-trash-can"></i></button>
-                            </div>
+                <div class="bg-white dark:bg-slate-800 p-3.5 rounded-xl border ${isCritical ? 'border-rose-400 dark:border-rose-500/50' : (isLow ? 'border-amber-300' : 'border-slate-200 dark:border-slate-700')} shadow-sm flex items-center justify-between gap-3 transition-all">
+                    <div class="min-w-0 flex-1">
+                        <div class="flex items-center gap-2">
+                            <span class="px-1.5 py-0.5 text-[9px] font-bold rounded ${badgeClass}">${badgeText}</span>
+                            ${item.barcode ? `<span class="text-[9px] text-slate-400 font-mono"><i class="fa-solid fa-barcode"></i> ${item.barcode}</span>` : ''}
                         </div>
-
-                        <div class="mt-4 flex items-baseline justify-between bg-slate-50 dark:bg-slate-900 p-3 rounded-xl border border-slate-100 dark:border-slate-700">
-                            <div>
-                                <span class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold block">Quantidade Atual</span>
-                                <span class="text-2xl font-extrabold text-slate-800 dark:text-white">${item.qty} <span class="text-xs font-normal text-slate-500">${item.unit}</span></span>
-                            </div>
-                            <div class="text-right">
-                                <span class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold block">Ideal p/ Casa</span>
-                                <span class="text-sm font-bold text-slate-600 dark:text-slate-300">${item.ideal} ${item.unit}</span>
-                            </div>
+                        <h4 class="font-bold text-slate-800 dark:text-white text-xs truncate mt-0.5">${escapeHtml(item.name)}</h4>
+                        <div class="flex items-center gap-2 text-[10px] text-slate-400 mt-0.5">
+                            <span>Ideal: <strong>${item.ideal} ${item.unit}</strong></span>
+                            ${linkedBox ? `<span>• Caixa: ${escapeHtml(linkedBox.name)}</span>` : ''}
                         </div>
                     </div>
 
-                    <div class="mt-4 pt-3 border-t border-slate-100 dark:border-slate-700/60 flex items-center justify-between gap-2">
-                        <span class="text-xs text-slate-400">Consumo Rápido:</span>
-                        <div class="flex gap-1.5">
-                            <button onclick="updatePantryQty('${item.id}', -1)" title="Consumir 1" class="w-8 h-8 rounded-lg bg-rose-50 hover:bg-rose-100 dark:bg-rose-950/40 text-rose-600 font-bold text-xs flex items-center justify-center transition-all"><i class="fa-solid fa-minus"></i></button>
-                            <button onclick="updatePantryQty('${item.id}', 1)" title="Repor 1" class="w-8 h-8 rounded-lg bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-950/40 text-emerald-600 font-bold text-xs flex items-center justify-center transition-all"><i class="fa-solid fa-plus"></i></button>
+                    <div class="flex items-center gap-3 shrink-0">
+                        <div class="text-right">
+                            <span class="text-sm font-extrabold text-slate-800 dark:text-white">${item.qty}</span>
+                            <span class="text-[10px] text-slate-500">${item.unit}</span>
+                        </div>
+                        <div class="flex items-center gap-1">
+                            <button onclick="updatePantryQty('${item.id}', -1)" title="Diminuir" class="w-6 h-6 rounded-lg bg-rose-50 hover:bg-rose-100 dark:bg-rose-950/40 text-rose-600 font-bold text-xs flex items-center justify-center transition-all"><i class="fa-solid fa-minus text-[9px]"></i></button>
+                            <button onclick="updatePantryQty('${item.id}', 1)" title="Aumentar" class="w-6 h-6 rounded-lg bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-950/40 text-emerald-600 font-bold text-xs flex items-center justify-center transition-all"><i class="fa-solid fa-plus text-[9px]"></i></button>
+                        </div>
+                        <div class="flex items-center border-l border-slate-200 dark:border-slate-700 pl-1.5 ml-0.5 gap-0.5">
+                            <button onclick="editPantryItem('${item.id}')" title="Editar" class="p-1 text-slate-400 hover:text-slate-600 text-xs rounded"><i class="fa-solid fa-pen"></i></button>
+                            <button onclick="deletePantryItem('${item.id}')" title="Excluir" class="p-1 text-slate-400 hover:text-rose-500 text-xs rounded"><i class="fa-solid fa-trash-can"></i></button>
                         </div>
                     </div>
                 </div>
@@ -951,55 +1004,24 @@
             }).join('');
         }
 
-        function renderShoppingList() {
-            const container = document.getElementById('shoppingListContainer');
-            const countBadge = document.getElementById('shoppingListCount');
+        function copyShoppingList() {
             const criticalItems = appState.pantry.filter(p => p.qty < p.ideal);
-
-            countBadge.innerText = `${criticalItems.length} item(ns)`;
-
             if (criticalItems.length === 0) {
-                container.innerHTML = `<div class="text-center py-6 text-slate-400 text-xs italic">Tudo abastecido! Nenhum item abaixo do estoque ideal.</div>`;
+                showToast('Nenhum item em falta para copiar!', 'info');
                 return;
             }
 
-            container.innerHTML = criticalItems.map(item => {
+            let text = "🛒 *Lista de Compras - Despensa*:\n\n";
+            criticalItems.forEach(item => {
                 const missing = item.ideal - item.qty;
-                const linkedBox = appState.boxes.find(b => b.id === item.boxId);
+                text += `[ ] ${missing}x ${item.name} (${item.unit})\n`;
+            });
 
-                return `
-                    <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 flex items-center justify-between text-xs">
-                        <div class="flex items-center gap-3">
-                            <div class="w-8 h-8 rounded-lg bg-amber-100 dark:bg-amber-900/40 text-amber-600 dark:text-amber-300 flex items-center justify-center font-bold">
-                                <i class="fa-solid fa-cart-shopping"></i>
-                            </div>
-                            <div>
-                                <h4 class="font-bold text-slate-800 dark:text-white">${escapeHtml(item.name)}</h4>
-                                <span class="text-[10px] text-slate-400">Faltam: <strong>${missing} ${item.unit}</strong> (Atual: ${item.qty} / Ideal: ${item.ideal}) ${linkedBox ? '• Caixa: ' + linkedBox.name : ''}</span>
-                            </div>
-                        </div>
-                        <button onclick="restockItem('${item.id}')" class="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-bold transition-all shadow-sm flex items-center gap-1.5">
-                            <i class="fa-solid fa-check"></i> Comprado (+${missing})
-                        </button>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        async function restockItem(id) {
-            const item = appState.pantry.find(p => p.id === id);
-            if (!item) return;
-            const diff = item.ideal - item.qty;
-            item.qty = item.ideal;
-
-            if (supabaseClient) {
-                await supabaseClient.from('despensa_mantimentos').update({ qty: item.qty }).eq('id', item.id);
-                await supabaseClient.from('historico_movimentacoes').insert([{
-                    id: 'h_' + Date.now(), box_name: 'Despensa Doméstica', type: 'deposit', amount: 0, description: `Reposição de item: ${item.name} (+${diff} ${item.unit})`, timestamp: new Date().toISOString()
-                }]);
-            }
-            loadFromSupabase();
-            showToast(`Item ${item.name} reposto!`, 'success');
+            navigator.clipboard.writeText(text).then(() => {
+                showToast('Lista de compras copiada para a área de transferência!', 'success');
+            }).catch(() => {
+                showToast('Erro ao copiar lista.', 'error');
+            });
         }
 
         async function updatePantryQty(id, delta) {
@@ -1052,19 +1074,19 @@
 
             container.innerHTML = `
                 <div class="flex justify-between p-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-700">
-                    <span class="text-slate-500">Total Acumulado em Caixas:</span>
+                    <span class="text-slate-500">Total Acumulado:</span>
                     <strong class="text-slate-800 dark:text-white">${formatBRL(totalBalance)}</strong>
                 </div>
                 <div class="flex justify-between p-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-700">
-                    <span class="text-slate-500">Soma das Metas Definidas:</span>
+                    <span class="text-slate-500">Soma das Metas:</span>
                     <strong class="text-slate-800 dark:text-white">${formatBRL(totalTarget)}</strong>
                 </div>
                 <div class="flex justify-between p-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-700">
-                    <span class="text-slate-500">Total de Mantimentos na Despensa:</span>
+                    <span class="text-slate-500">Total na Despensa:</span>
                     <strong class="text-slate-800 dark:text-white">${appState.pantry.reduce((a,b)=>a+b.qty,0)} unidades</strong>
                 </div>
                 <div class="flex justify-between p-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-700">
-                    <span class="text-slate-500">Itens Críticos para Reposição:</span>
+                    <span class="text-slate-500">Itens em Falta:</span>
                     <strong class="text-rose-600 dark:text-rose-400">${appState.pantry.filter(p=>p.qty < p.ideal).length} itens</strong>
                 </div>
             `;
@@ -1084,7 +1106,6 @@
             let remainingDeposit = totalDeposit;
             let allocations = {};
             appState.boxes.forEach(b => allocations[b.id] = 0);
-            let logs = [];
             let overflowOccurred = false;
 
             let maxIterations = 50; 
@@ -1147,27 +1168,27 @@
             if (supabaseClient) {
                 await supabaseClient.from('historico_movimentacoes').insert([{
                     id: 'h_' + Date.now(), box_name: 'Aporte Global Inteligente', type: 'deposit', amount: totalDeposit,
-                    description: overflowOccurred ? 'Com redistribuição por transbordamento' : 'Proporcional por porcentagem', timestamp: new Date().toISOString()
+                    description: overflowOccurred ? 'Com transbordamento automático' : 'Proporcional por porcentagem', timestamp: new Date().toISOString()
                 }]);
             }
 
             loadFromSupabase();
             input.value = '';
-            showSpilloverReport(totalDeposit, allocations, overflowOccurred, logs);
+            showSpilloverReport(totalDeposit, allocations, overflowOccurred);
         }
 
-        function showSpilloverReport(total, allocations, overflowOccurred, logs) {
-            document.getElementById('spilloverTotalText').innerText = `Valor Total Aportado: ${formatBRL(total)}`;
+        function showSpilloverReport(total, allocations, overflowOccurred) {
+            document.getElementById('spilloverTotalText').innerText = `Aporte Total: ${formatBRL(total)}`;
             document.getElementById('spilloverNoticeBox').innerHTML = overflowOccurred ? 
-                `<div class="font-bold text-amber-600 dark:text-amber-400"><i class="fa-solid fa-bolt"></i> Transbordamento Inteligente Ativado!</div><p>Excedente redistribuído para a Reserva.</p>` :
-                `<div class="font-bold text-emerald-600 dark:text-emerald-400"><i class="fa-solid fa-circle-check"></i> Distribuição Proporcional Completa</div><p>Valores alocados conforme porcentagens.</p>`;
+                `<div class="font-bold text-amber-600 dark:text-amber-400"><i class="fa-solid fa-bolt"></i> Transbordamento ativado!</div><p>Excedente enviado para a Reserva.</p>` :
+                `<div class="font-bold text-emerald-600 dark:text-emerald-400"><i class="fa-solid fa-circle-check"></i> Distribuição completa</div><p>Valores alocados proporcionalmente.</p>`;
 
             document.getElementById('spilloverBreakdownList').innerHTML = appState.boxes.map(box => {
                 const rec = allocations[box.id] || 0;
                 return `
                     <div class="flex items-center justify-between p-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700">
                         <div class="flex items-center gap-3">
-                            <div class="w-8 h-8 rounded-lg flex items-center justify-center text-white text-xs font-bold" style="background-color: ${box.color}"><i class="fa-solid ${box.icon}"></i></div>
+                            <div class="w-7 h-7 rounded-lg flex items-center justify-center text-white text-xs font-bold" style="background-color: ${box.color}"><i class="fa-solid ${box.icon}"></i></div>
                             <div>
                                 <h5 class="font-bold text-xs text-slate-800 dark:text-white">${escapeHtml(box.name)}</h5>
                                 <span class="text-[10px] text-slate-400">Novo saldo: ${formatBRL(box.balance)}</span>
@@ -1204,12 +1225,12 @@
             if (type === 'deposit') {
                 btnDep.className = 'py-2 text-xs font-bold rounded-lg transition-all bg-emerald-500 text-white shadow-sm';
                 btnWit.className = 'py-2 text-xs font-bold rounded-lg transition-all text-slate-600 dark:text-slate-400';
-                submitBtn.className = 'w-1/2 py-2 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-medium text-sm shadow-md';
+                submitBtn.className = 'w-1/2 py-2 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-medium text-xs shadow-md';
                 submitBtn.innerText = 'Confirmar Entrada';
             } else {
                 btnWit.className = 'py-2 text-xs font-bold rounded-lg transition-all bg-rose-500 text-white shadow-sm';
                 btnDep.className = 'py-2 text-xs font-bold rounded-lg transition-all text-slate-600 dark:text-slate-400';
-                submitBtn.className = 'w-1/2 py-2 px-4 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-medium text-sm shadow-md';
+                submitBtn.className = 'w-1/2 py-2 px-4 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-medium text-xs shadow-md';
                 submitBtn.innerText = 'Confirmar Saída';
             }
         }
@@ -1333,7 +1354,9 @@
 
         function openPantryModal(itemId = null) {
             updateBoxLinkDropdown();
+            stopBarcodeScanner();
             document.getElementById('pantryIdInput').value = itemId || '';
+            document.getElementById('barcodeApiStatus').innerText = 'Digite ou escaneie o código para buscar online.';
             const modalTitle = document.getElementById('pantryModalTitle');
 
             if (itemId) {
@@ -1341,6 +1364,7 @@
                 if (!item) return;
                 modalTitle.innerText = 'Editar Mantimento';
                 document.getElementById('pantryNameInput').value = item.name;
+                document.getElementById('pantryBarcodeInput').value = item.barcode || '';
                 document.getElementById('pantryQtyInput').value = item.qty;
                 document.getElementById('pantryIdealInput').value = item.ideal;
                 document.getElementById('pantryUnitInput').value = item.unit;
@@ -1348,6 +1372,7 @@
             } else {
                 modalTitle.innerText = 'Adicionar Mantimento';
                 document.getElementById('pantryNameInput').value = '';
+                document.getElementById('pantryBarcodeInput').value = '';
                 document.getElementById('pantryQtyInput').value = '1';
                 document.getElementById('pantryIdealInput').value = '3';
                 document.getElementById('pantryUnitInput').value = 'un';
@@ -1356,12 +1381,96 @@
             document.getElementById('pantryModal').classList.remove('hidden');
         }
 
-        function closePantryModal() { document.getElementById('pantryModal').classList.add('hidden'); }
+        function closePantryModal() {
+            stopBarcodeScanner();
+            document.getElementById('pantryModal').classList.add('hidden');
+        }
+
+        async function lookupBarcodeAPI(barcode) {
+            const cleanCode = (barcode || '').trim();
+            if (!cleanCode) return;
+
+            const statusEl = document.getElementById('barcodeApiStatus');
+            statusEl.innerHTML = `<i class="fa-solid fa-spinner fa-spin text-brand-500"></i> Consultando base global...`;
+
+            const localMatch = appState.pantry.find(p => p.barcode === cleanCode);
+            if (localMatch && !document.getElementById('pantryNameInput').value) {
+                document.getElementById('pantryNameInput').value = localMatch.name;
+                document.getElementById('pantryIdealInput').value = localMatch.ideal;
+                document.getElementById('pantryUnitInput').value = localMatch.unit;
+                statusEl.innerHTML = `<span class="text-emerald-600 font-bold"><i class="fa-solid fa-check"></i> Encontrado nos registros locais!</span>`;
+                showToast(`Item carregado: ${localMatch.name}`, 'success');
+                return;
+            }
+
+            try {
+                const response = await fetch(`https://world.openfoodfacts.org/api/v0/product/${cleanCode}.json`);
+                const data = await response.json();
+
+                if (data.status === 1 && data.product) {
+                    const productName = data.product.product_name || data.product.product_name_pt || data.product.brands || '';
+                    if (productName) {
+                        document.getElementById('pantryNameInput').value = productName;
+                        statusEl.innerHTML = `<span class="text-emerald-600 font-bold"><i class="fa-solid fa-check"></i> Produto encontrado online!</span>`;
+                        showToast(`Produto: ${productName}`, 'success');
+                    } else {
+                        statusEl.innerHTML = `<span class="text-amber-500">Produto sem nome cadastrado na base.</span>`;
+                    }
+                } else {
+                    statusEl.innerHTML = `<span class="text-slate-400">Código não encontrado. Preencha o nome manualmente.</span>`;
+                }
+            } catch (err) {
+                console.error(err);
+                statusEl.innerHTML = `<span class="text-rose-500">Erro ao consultar API.</span>`;
+            }
+        }
+
+        function toggleBarcodeScanner() {
+            const container = document.getElementById('scannerContainer');
+            if (!container.classList.contains('hidden')) {
+                stopBarcodeScanner();
+                return;
+            }
+            container.classList.remove('hidden');
+            
+            try {
+                html5QrCodeScanner = new Html5Qrcode("reader");
+                html5QrCodeScanner.start(
+                    { facingMode: "environment" },
+                    { fps: 10, qrbox: { width: 250, height: 100 } },
+                    (decodedText, decodedResult) => {
+                        document.getElementById('pantryBarcodeInput').value = decodedText;
+                        stopBarcodeScanner();
+                        lookupBarcodeAPI(decodedText);
+                    },
+                    (errorMessage) => {}
+                ).catch(err => {
+                    console.error(err);
+                    showToast('Não foi possível acessar a câmera.', 'error');
+                    container.classList.add('hidden');
+                });
+            } catch(e) {
+                console.error(e);
+                showToast('Erro ao iniciar leitor.', 'error');
+            }
+        }
+
+        function stopBarcodeScanner() {
+            const container = document.getElementById('scannerContainer');
+            if (html5QrCodeScanner) {
+                html5QrCodeScanner.stop().then(() => {
+                    html5QrCodeScanner.clear();
+                    html5QrCodeScanner = null;
+                }).catch(err => { console.error(err); });
+            }
+            if (container) container.classList.add('hidden');
+        }
 
         async function savePantryItem(e) {
             e.preventDefault();
             const id = document.getElementById('pantryIdInput').value;
             const name = document.getElementById('pantryNameInput').value.trim();
+            const barcode = document.getElementById('pantryBarcodeInput').value.trim();
             const qty = parseInt(document.getElementById('pantryQtyInput').value) || 0;
             const ideal = parseInt(document.getElementById('pantryIdealInput').value) || 1;
             const unit = document.getElementById('pantryUnitInput').value;
@@ -1369,7 +1478,7 @@
 
             if (!name) return;
 
-            const itemData = { name, qty, ideal, unit, box_id: boxId };
+            const itemData = { name, barcode, qty, ideal, unit, box_id: boxId };
 
             if (supabaseClient) {
                 if (id) {
@@ -1444,7 +1553,7 @@
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
-                        legend: { position: 'bottom', labels: { boxWidth: 12, padding: 12, font: { size: 11, family: 'Inter' }, color: isDark ? '#cbd5e1' : '#475569' } },
+                        legend: { position: 'bottom', labels: { boxWidth: 10, padding: 10, font: { size: 11, family: 'Inter' }, color: isDark ? '#cbd5e1' : '#475569' } },
                         tooltip: { callbacks: { label: function(context) { return ` ${context.label}: ${formatBRL(context.raw)}`; } } }
                     },
                     cutout: '70%'
