@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="h-full bg-slate-50">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestão Integrada: Finanças & Despensa da Casa</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Supabase JS Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- Font Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .finance-pane { min-width: 0; animation: financePaneIn .18s ease-out; }
+        .finance-pane[hidden] { display: none !important; }
+        @keyframes financePaneIn { from { opacity: .65; transform: translateY(3px); } to { opacity: 1; transform: translateY(0); } }
+        #sidebar { transition: width 0.25s ease, transform 0.25s ease; }
+    </style>
+</head>
+<body class="h-full flex flex-col md:flex-row text-slate-800 dark:text-slate-100 dark:bg-slate-900 transition-colors duration-200 overflow-x-hidden">
+
+    <!-- Overlay escura para mobile quando o menu estiver aberto -->
+    <div id="sidebarOverlay" onclick="toggleSidebar()" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-20 hidden md:hidden transition-opacity"></div>
+
+    <!-- Sidebar Retrátil / Lateral -->
+    <aside id="sidebar" class="fixed md:static inset-y-0 left-0 w-64 bg-white dark:bg-slate-800 border-r border-slate-200 dark:border-slate-700 flex flex-col z-30 shrink-0 shadow-sm -translate-x-full md:translate-x-0 transition-all duration-300">
+        <div class="h-16 px-4 border-b border-slate-200 dark:border-slate-700 flex items-center justify-between shrink-0">
+            <div class="flex items-center gap-3 overflow-hidden">
+                <div class="w-9 h-9 rounded-xl bg-brand-500 text-white flex items-center justify-center font-bold text-lg shadow-md shadow-brand-500/25 shrink-0">
+                    <i class="fa-solid fa-house-chimney-user"></i>
+                </div>
+                <div class="sidebar-label transition-opacity duration-200 truncate">
+                    <h1 class="font-bold text-sm leading-tight text-slate-900 dark:text-white truncate">Gestão Residencial</h1>
+                    <p class="text-[10px] text-slate-500 dark:text-slate-400">Supabase Conectado</p>
+                </div>
+            </div>
+            <button onclick="toggleSidebar()" class="hidden md:flex p-1.5 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors shrink-0" title="Recolher/Expandir menu">
+                <i id="sidebarToggleIcon" class="fa-solid fa-chevron-left text-xs"></i>
+            </button>
+        </div>
+
+        <nav class="flex-1 p-3 space-y-1.5 overflow-y-auto" aria-label="Seções do sistema">
+            <button type="button" class="finance-tab w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700/60 font-semibold text-xs transition-all is-active" data-tab="visao" aria-selected="true">
+                <i class="fa-solid fa-chart-line text-base w-5 text-center shrink-0"></i><span class="sidebar-label truncate">Visão Geral</span>
+            </button>
+            <button type="button" class="finance-tab w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700/60 font-semibold text-xs transition-all" data-tab="caixas" aria-selected="false">
+                <i class="fa-solid fa-boxes-stacked text-base w-5 text-center shrink-0"></i><span class="sidebar-label truncate">Caixas Financeiras</span>
+            </button>
+            <button type="button" class="finance-tab w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700/60 font-semibold text-xs transition-all" data-tab="despensa" aria-selected="false">
+                <i class="fa-solid fa-basket-shopping text-base w-5 text-center shrink-0"></i><span class="sidebar-label truncate">Despensa & Mantimentos</span>
+            </button>
+            <button type="button" class="finance-tab w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700/60 font-semibold text-xs transition-all" data-tab="relatorios" aria-selected="false">
+                <i class="fa-solid fa-chart-pie text-base w-5 text-center shrink-0"></i><span class="sidebar-label truncate">Relatórios & Gráficos</span>
+            </button>
+            <button type="button" class="finance-tab w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700/60 font-semibold text-xs transition-all" data-tab="historico" aria-selected="false">
+                <i class="fa-solid fa-clock-rotate-left text-base w-5 text-center shrink-0"></i><span class="sidebar-label truncate">Histórico & Compras</span>
+            </button>
+        </nav>
+
+        <div class="p-3 border-t border-slate-200 dark:border-slate-700 text-[10px] text-slate-400 text-center sidebar-label shrink-0">
+            <span id="dbStatusIndicator" class="text-amber-500 font-bold"><i class="fa-solid fa-circle text-[8px]"></i> Configurar Supabase</span>
+        </div>
+    </aside>
+
+    <!-- Conteúdo Principal -->
+    <div class="flex-1 flex flex-col min-w-0 h-full overflow-y-auto">
+        <header class="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 sticky top-0 z-20 shadow-sm">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <button onclick="toggleSidebar()" class="md:hidden p-2 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-600 dark:text-slate-300 transition-colors" title="Abrir menu">
+                        <i class="fa-solid fa-bars text-base"></i>
+                    </button>
+                    <span id="currentTitle" class="font-bold text-sm text-slate-800 dark:text-white uppercase tracking-wider">Visão Geral</span>
+                </div>
+
+                <!-- Ações Rápidas & Configurações -->
+                <div class="flex items-center gap-2">
+                    <button onclick="openConfigModal()" title="Configurar Supabase" class="p-2 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600 text-brand-600 dark:text-brand-400 transition-all font-bold flex items-center gap-1.5 text-xs">
+                        <i class="fa-solid fa-gear text-base"></i> <span class="hidden sm:inline">Supabase</span>
+                    </button>
+                    <button id="themeToggleBtn" onclick="toggleTheme()" class="p-2 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-600 dark:text-slate-300 transition-all">
+                        <i class="fa-solid fa-moon dark:hidden"></i>
+                        <i class="fa-solid fa-sun hidden dark:block text-amber-400"></i>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-5">
+            <div class="finance-tab-panes space-y-5">
+
+                <!-- PANE 1: VISÃO GERAL -->
+                <section class="finance-pane active space-y-4" data-pane="visao" aria-label="Visão geral">
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                        <div class="bg-gradient-to-br from-brand-600 to-emerald-800 text-white p-5 rounded-2xl shadow-md relative overflow-hidden flex flex-col justify-between">
+                            <div class="absolute -right-4 -bottom-4 text-white/10 text-8xl font-bold"><i class="fa-solid fa-piggy-bank"></i></div>
+                            <div>
+                                <p class="text-emerald-100 text-[11px] font-semibold uppercase tracking-wider">Saldo Total Acumulado</p>
+                                <h2 id="totalBalance" class="text-3xl font-extrabold mt-1">R$ 0,00</h2>
+                            </div>
+                            <div class="mt-4 flex items-center justify-between text-xs text-emerald-100 bg-white/10 px-3 py-1.5 rounded-xl backdrop-blur-sm">
+                                <span id="boxCountText">0 Caixas ativas</span>
+                                <span id="completedBoxesCountText">0/0 Metas Atingidas</span>
+                            </div>
+                        </div>
+
+                        <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 flex flex-col justify-between">
+                            <div>
+                                <div class="flex justify-between items-center">
+                                    <span class="text-xs font-semibold uppercase text-slate-400">Alocação de Porcentagem</span>
+                                    <span id="pctStatusBadge" class="px-2 py-0.5 text-xs font-bold rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-900/50 dark:text-emerald-300">100%</span>
+                                </div>
+                                <div class="flex items-baseline gap-2 mt-2">
+                                    <h3 id="totalPercentageText" class="text-2xl font-extrabold text-slate-800 dark:text-white">100%</h3>
+                                    <span class="text-xs text-slate-500">das porcentagens</span>
+                                </div>
+                            </div>
+                            <div class="mt-3">
+                                <div class="w-full bg-slate-100 dark:bg-slate-700 h-2 rounded-full overflow-hidden">
+                                    <div id="pctProgressBar" class="bg-brand-500 h-full rounded-full transition-all duration-300" style="width: 100%"></div>
+                                </div>
+                                <p id="pctWarningText" class="text-[11px] text-slate-500 dark:text-slate-400 mt-2 flex items-center gap-1">
+                                    <i class="fa-solid fa-circle-check text-emerald-500"></i> Distribuição perfeita (100%)
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Status Despensa Compacto -->
+                        <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 flex flex-col justify-between">
+                            <div>
+                                <h3 class="text-xs font-semibold uppercase tracking-wide text-slate-400 flex items-center gap-2">
+                                    <i class="fa-solid fa-basket-shopping text-amber-500"></i> Status da Despensa
+                                </h3>
+                            </div>
+                            <div id="pantryAlertsSummary" class="my-2 space-y-1">
+                                <p class="text-xs text-slate-400 italic">Nenhum item em falta.</p>
+                            </div>
+                            <button onclick="switchTab('despensa')" class="w-full py-2 px-3 bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 font-semibold text-xs rounded-xl transition-all">
+                                Gerenciar Despensa
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Fluxo do Mês & Aporte Global -->
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                        <div class="lg:col-span-2 bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm flex flex-col justify-between">
+                            <div>
+                                <h3 class="text-sm font-bold text-slate-800 dark:text-white flex items-center gap-2 mb-3">
+                                    <i class="fa-solid fa-bolt text-amber-500"></i> Aporte Global Inteligente
+                                </h3>
+                                <p class="text-xs text-slate-500 dark:text-slate-400 mb-3">Distribui o valor proporcionalmente entre as caixas e envia o excedente para a reserva.</p>
+                            </div>
+                            <form onsubmit="handleGlobalDeposit(event)" class="grid grid-cols-1 sm:grid-cols-4 gap-2">
+                                <div class="sm:col-span-3 relative">
+                                    <span class="absolute left-3 top-2.5 text-slate-400 text-sm font-bold">R$</span>
+                                    <input type="number" step="0.01" min="0.01" id="globalDepositInput" placeholder="0,00" required
+                                        class="w-full pl-10 pr-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 focus:outline-none text-slate-800 dark:text-white text-xs font-semibold">
+                                </div>
+                                <button type="submit" class="py-2 px-3 bg-brand-600 hover:bg-brand-700 text-white font-semibold text-xs rounded-xl shadow-md transition-all flex items-center justify-center gap-1.5">
+                                    <i class="fa-solid fa-filter-circle-dollar"></i> Distribuir
+                                </button>
+                            </form>
+                        </div>
+
+                        <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm flex flex-col justify-between">
+                            <h3 class="text-xs font-bold uppercase tracking-wide text-slate-400 mb-2">Fluxo do Mês</h3>
+                            <div class="space-y-1.5 text-xs">
+                                <div class="flex justify-between items-center"><span class="text-slate-500">Entradas:</span> <strong id="monthDeposits" class="text-emerald-600 dark:text-emerald-400">R$ 0,00</strong></div>
+                                <div class="flex justify-between items-center"><span class="text-slate-500">Saídas:</span> <strong id="monthWithdrawals" class="text-rose-600 dark:text-rose-400">R$ 0,00</strong></div>
+                                <div class="flex justify-between items-center pt-1.5 border-t border-slate-100 dark:border-slate-700"><span class="text-slate-500">Líquido:</span> <strong id="monthNet" class="text-slate-800 dark:text-white">R$ 0,00</strong></div>
+                            </div>
+                            <span id="monthLabel" class="text-[10px] text-slate-400 mt-2 block text-right">Mês atual</span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- PANE 2: CAIXAS FINANCEIRAS -->
+                <section class="finance-pane space-y-4" data-pane="caixas" aria-label="Minhas caixas" hidden>
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white dark:bg-slate-800 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm">
+                        <div>
+                            <h2 class="text-base font-bold text-slate-800 dark:text-white flex items-center gap-2">
+                                <i class="fa-solid fa-boxes-stacked text-brand-500"></i> Minhas Caixas & Metas Financeiras
+                            </h2>
+                            <p class="text-xs text-slate-500 dark:text-slate-400">Acompanhe a porcentagem de fechamento e o saldo de cada caixa</p>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <button onclick="openPresetModal()" class="text-xs px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 font-medium transition-all flex items-center gap-1.5">
+                                <i class="fa-solid fa-wand-magic-sparkles text-amber-500"></i> Modelos
+                            </button>
+                            <button onclick="openBoxModal()" class="py-2 px-3 bg-slate-900 hover:bg-slate-800 dark:bg-slate-100 dark:hover:bg-white dark:text-slate-900 text-white text-xs font-semibold rounded-xl transition-all flex items-center justify-center gap-1.5">
+                                <i class="fa-solid fa-plus"></i> Nova Caixa
+                            </button>
+                        </div>
+                    </div>
+                    <div id="boxesContainer" class="space-y-2.5"></div>
+                </section>
+
+                <!-- PANE 3: DESPENSA & MANTIMENTOS -->
+                <section class="finance-pane space-y-4" data-pane="despensa" aria-label="Despensa e Mantimentos" hidden>
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white dark:bg-slate-800 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm">
+                        <div>
+                            <h2 class="text-base font-bold text-slate-800 dark:text-white flex items-center gap-2">
+                                <i class="fa-solid fa-basket-shopping text-brand-500"></i> Controle de Despensa & Estoque
+                            </h2>
+                            <p class="text-xs text-slate-500 dark:text-slate-400">Cards compactos com abas de status</p>
+                        </div>
+                        <div class="flex items-center gap-2 flex-wrap">
+                            <button onclick="copyShoppingList()" class="py-2 px-3 bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 text-xs font-bold rounded-xl transition-all flex items-center gap-1.5" title="Copiar itens em falta">
+                                <i class="fa-solid fa-copy text-brand-500"></i> Copiar Lista
+                            </button>
+                            <button onclick="openPantryModal()" class="py-2 px-3 bg-brand-600 hover:bg-brand-700 text-white text-xs font-semibold rounded-xl transition-all flex items-center justify-center gap-1.5">
+                                <i class="fa-solid fa-plus"></i> Novo Item
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- ABAS DE STATUS -->
+                    <div class="flex gap-1 overflow-x-auto pb-1 border-b border-slate-200 dark:border-slate-700">
+                        <button onclick="setPantryFilter('all')" id="pFilter_all" class="pantry-filter-btn px-3 py-1.5 rounded-xl text-xs font-bold transition-all bg-brand-600 text-white shadow-sm shrink-0">
+                            Todos (<span id="countAll">0</span>)
+                        </button>
+                        <button onclick="setPantryFilter('ok')" id="pFilter_ok" class="pantry-filter-btn px-3 py-1.5 rounded-xl text-xs font-bold transition-all text-slate-600 dark:text-slate-300 hover:b
