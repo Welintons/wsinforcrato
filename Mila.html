@@ -1,0 +1,184 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MILA.exe 😂</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800;900&display=swap');
+
+*{box-sizing:border-box}
+body{
+ margin:0;
+ font-family:'Nunito',sans-serif;
+ background:#120d20;
+ color:white;
+ text-align:center;
+}
+header{
+ padding:35px 15px;
+ background:linear-gradient(135deg,#ff3d91,#873bff);
+ border-radius:0 0 30px 30px;
+}
+header h1{font-size:35px;margin:0;font-weight:900}
+header p{margin:8px 0 0}
+.container{padding:20px;max-width:550px;margin:auto}
+.card{
+ background:#211832;
+ padding:22px;
+ border-radius:20px;
+ margin:18px 0;
+ border:1px solid #49345e;
+ box-shadow:0 8px 25px #0004;
+}
+h2{color:#ff77bd;margin-top:0}
+button{
+ border:0;
+ padding:14px 20px;
+ border-radius:13px;
+ background:#ff3d91;
+ color:white;
+ font-weight:900;
+ font-size:15px;
+ width:100%;
+ margin-top:10px;
+ cursor:pointer;
+}
+button:active{transform:scale(.97)}
+.secondary{background:#873bff}
+.result{
+ margin-top:15px;
+ padding:15px;
+ background:#332447;
+ border-radius:12px;
+ display:none;
+ line-height:1.6;
+}
+input{
+ width:100%;
+ padding:13px;
+ border:0;
+ border-radius:10px;
+ margin-top:10px;
+ font-family:inherit;
+}
+footer{padding:25px;color:#a99ab8;font-size:12px}
+.emoji{font-size:48px}
+</style>
+</head>
+<body>
+
+<header>
+ <div class="emoji">😂💗</div>
+ <h1>MILA.exe</h1>
+ <p>Central oficial de ocorrências amorosas</p>
+ <small>Departamento de fiscalização do Wellington</small>
+</header>
+
+<div class="container">
+
+ <div class="card">
+  <h2>🚨 Comunicado importante</h2>
+  <p>Prezada Mila, detectamos uma situação preocupante no seu relacionamento.</p>
+  <p><b>Seu namorado apresenta níveis elevados de teimosia e brincadeiras sem sentido.</b></p>
+  <button onclick="comunicado()">Consultar diagnóstico</button>
+  <div class="result" id="r1"></div>
+ </div>
+
+ <div class="card">
+  <h2>🧠 Teste de paciência</h2>
+  <p>Quantos minutos você consegue ficar sem brigar com Wellington?</p>
+  <button onclick="teste()">Iniciar avaliação</button>
+  <div class="result" id="r2"></div>
+ </div>
+
+ <div class="card">
+  <h2>📋 Reclamações oficiais</h2>
+  <p>Selecione o principal defeito do indivíduo:</p>
+  <button class="secondary" onclick="reclamar('Ele mexe em tudo!')">🔧 Mexe em tudo</button>
+  <button class="secondary" onclick="reclamar('Ele passa mais tempo no celular do que deveria!')">📱 Vive no celular</button>
+  <button class="secondary" onclick="reclamar('Ele inventa projetos até de madrugada!')">💻 Inventor de projetos</button>
+  <button class="secondary" onclick="reclamar('Ele é muito engraçadinho!')">🤣 Engraçadinho demais</button>
+  <div class="result" id="r3"></div>
+ </div>
+
+ <div class="card">
+  <h2>❤️ Medidor de amor</h2>
+  <p>Quanto você ama esse cidadão?</p>
+  <button onclick="amor()">Calcular sentimento</button>
+  <div class="result" id="r4"></div>
+ </div>
+
+ <div class="card">
+  <h2>🆘 Botão de emergência</h2>
+  <p>Se Wellington estiver inventando mais um projeto...</p>
+  <button style="background:#e53935" onclick="emergencia()">ACIONAR SOCORRO</button>
+  <div class="result" id="r5"></div>
+ </div>
+
+ <div class="card">
+  <h2>💌 Deixe uma mensagem</h2>
+  <input id="mensagem" placeholder="Escreva sua reclamação...">
+  <button onclick="enviar()">Protocolar reclamação</button>
+  <div class="result" id="r6"></div>
+ </div>
+
+ <div class="card">
+  <div class="emoji">🏆</div>
+  <h2>Certificado oficial</h2>
+  <p>Você recebeu o título de:</p>
+  <h2 style="color:#ff77bd">SANTA MILA DO ANO</h2>
+  <p>Por suportar Wellington diariamente sem pedir indenização.</p>
+  <button onclick="alert('Certificado concedido! 😂❤️')">Receber certificado</button>
+ </div>
+
+</div>
+
+<footer>
+MILA.exe v1.0 — Desenvolvido pelo departamento de brincadeiras.<br>
+Nenhum Wellington foi prejudicado durante o desenvolvimento. 😂
+</footer>
+
+<script>
+function mostrar(id,texto){
+ const el=document.getElementById(id);
+ el.style.display='block';
+ el.innerHTML=texto;
+}
+
+function comunicado(){
+ mostrar('r1','🔬 DIAGNÓSTICO CONCLUÍDO:<br><br>Seu namorado apresenta 98% de teimosia, 150% de criatividade e uma necessidade inexplicável de criar sites às 00h.<br><br><b>Recomendação: continuar amando, mas com supervisão! 😂</b>');
+}
+
+function teste(){
+ let frases=[
+ 'Resultado: 3 minutos! Wellington conseguiu bater seu recorde de paciência. 😂',
+ 'Resultado: 15 minutos! Você está evoluindo, mas ele ainda não colaborou.',
+ 'Resultado: 0 segundos! Ele abriu a boca e o teste foi encerrado.',
+ 'Resultado: INDETERMINADO. O laboratório pediu demissão.'
+ ];
+ mostrar('r2','⏱️ '+frases[Math.floor(Math.random()*frases.length)]);
+}
+
+function reclamar(texto){
+ mostrar('r3','📂 Reclamação registrada:<br><b>'+texto+'</b><br><br>Protocolo: WS-'+Math.floor(Math.random()*90000+10000)+'<br>Status: Wellington não está nem aí. 😂');
+}
+
+function amor(){
+ mostrar('r4','❤️ Resultado: 1000% de amor!<br><br>Erro: o medidor não suporta tanto sentimento. Sistema sobrecarregado! 🥰');
+}
+
+function emergencia(){
+ mostrar('r5','🚨 SOCORRO ACIONADO!<br><br>A equipe de resgate foi notificada.<br><br>Resposta automática: Não podemos ajudar. Wellington já está planejando outro projeto. 🤣');
+}
+
+function enviar(){
+ let m=document.getElementById('mensagem').value.trim();
+ if(!m){alert('Escreva alguma coisa primeiro!');return;}
+ mostrar('r6','📨 Sua reclamação foi protocolada!<br><br>"'+m.replace(/</g,'&lt;').replace(/>/g,'&gt;')+'"<br><br>Previsão de resposta: nunca. 😂');
+}
+</script>
+
+</body>
+</html>
