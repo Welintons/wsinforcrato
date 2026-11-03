@@ -237,4 +237,1838 @@
                                 <i class="fa-solid fa-basket-shopping text-brand-500"></i> Controle de Despensa & Estoque
                             </h2>
                             <p class="text-xs text-slate-500 dark:text-slate-400">Cards compactos com abas de status</p>
-                        </d
+                        </div>
+                        <div class="flex items-center gap-2 flex-wrap">
+                            <button onclick="copyShoppingList()" class="py-2 px-3 bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 text-xs font-bold rounded-xl transition-all flex items-center gap-1.5" title="Copiar itens em falta">
+                                <i class="fa-solid fa-copy text-brand-500"></i> Copiar Lista
+                            </button>
+                            <button onclick="openPantryModal()" class="py-2 px-3 bg-brand-600 hover:bg-brand-700 text-white text-xs font-semibold rounded-xl transition-all flex items-center justify-center gap-1.5">
+                                <i class="fa-solid fa-plus"></i> Novo Item
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- ABAS DE STATUS -->
+                    <div class="flex gap-1 overflow-x-auto pb-1 border-b border-slate-200 dark:border-slate-700">
+                        <button onclick="setPantryFilter('all')" id="pFilter_all" class="pantry-filter-btn px-3 py-1.5 rounded-xl text-xs font-bold transition-all bg-brand-600 text-white shadow-sm shrink-0">
+                            Todos (<span id="countAll">0</span>)
+                        </button>
+                        <button onclick="setPantryFilter('ok')" id="pFilter_ok" class="pantry-filter-btn px-3 py-1.5 rounded-xl text-xs font-bold transition-all text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 shrink-0">
+                            Estoque OK (<span id="countOk">0</span>)
+                        </button>
+                        <button onclick="setPantryFilter('low')" id="pFilter_low" class="pantry-filter-btn px-3 py-1.5 rounded-xl text-xs font-bold transition-all text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 shrink-0">
+                            Estoque Baixo (<span id="countLow">0</span>)
+                        </button>
+                        <button onclick="setPantryFilter('critical')" id="pFilter_critical" class="pantry-filter-btn px-3 py-1.5 rounded-xl text-xs font-bold transition-all text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 shrink-0">
+                            Esgotados (<span id="countCritical">0</span>)
+                        </button>
+                    </div>
+
+                    <div id="pantryContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3"></div>
+                </section>
+
+                <!-- PANE 4: PEDIDOS & URGÊNCIAS (NOVO MÓDULO SUPER APP) -->
+                <section class="finance-pane space-y-4" data-pane="pedidos" aria-label="Pedidos e Urgências" hidden>
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white dark:bg-slate-800 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm">
+                        <div>
+                            <h2 class="text-base font-bold text-slate-800 dark:text-white flex items-center gap-2">
+                                <i class="fa-solid fa-bell text-amber-500"></i> Central de Pedidos & Urgências (Família)
+                            </h2>
+                            <p class="text-xs text-slate-500 dark:text-slate-400">Solicite itens em falta com prioridade e envie alertas diretos no Telegram</p>
+                        </div>
+                        <div class="flex items-center gap-2 flex-wrap">
+                            <button onclick="openOrderModalFromPantry()" class="py-2 px-3 bg-amber-500 hover:bg-amber-600 text-white text-xs font-bold rounded-xl transition-all flex items-center gap-1.5 shadow-sm">
+                                <i class="fa-solid fa-basket-shopping"></i> Puxar da Despensa
+                            </button>
+                            <button onclick="openOrderModal()" class="py-2 px-3 bg-brand-600 hover:bg-brand-700 text-white text-xs font-semibold rounded-xl transition-all flex items-center justify-center gap-1.5 shadow-md">
+                                <i class="fa-solid fa-plus"></i> Novo Pedido
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Filtros de Status dos Pedidos -->
+                    <div class="flex gap-1 overflow-x-auto pb-1 border-b border-slate-200 dark:border-slate-700">
+                        <button onclick="setOrderFilter('pending')" id="oFilter_pending" class="order-filter-btn px-3 py-1.5 rounded-xl text-xs font-bold transition-all bg-amber-500 text-white shadow-sm shrink-0">
+                            Pendentes (<span id="countPendingOrders">0</span>)
+                        </button>
+                        <button onclick="setOrderFilter('bought')" id="oFilter_bought" class="order-filter-btn px-3 py-1.5 rounded-xl text-xs font-bold transition-all text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 shrink-0">
+                            Comprados / Resolvidos (<span id="countBoughtOrders">0</span>)
+                        </button>
+                        <button onclick="setOrderFilter('all')" id="oFilter_all" class="order-filter-btn px-3 py-1.5 rounded-xl text-xs font-bold transition-all text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 shrink-0">
+                            Todos (<span id="countAllOrders">0</span>)
+                        </button>
+                    </div>
+
+                    <div id="ordersContainer" class="space-y-2.5">
+                        <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200 dark:border-slate-700 text-center text-slate-400 text-xs">
+                            Nenhum pedido cadastrado.
+                        </div>
+                    </div>
+                </section>
+
+                <!-- PANE 5: DÍVIDAS PENDENTES -->
+                <section class="finance-pane space-y-4" data-pane="dividas" aria-label="Dívidas Pendentes" hidden>
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white dark:bg-slate-800 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm">
+                        <div>
+                            <h2 class="text-base font-bold text-slate-800 dark:text-white flex items-center gap-2">
+                                <i class="fa-solid fa-file-invoice-dollar text-rose-500"></i> Controle de Dívidas & Contas a Pagar
+                            </h2>
+                            <p class="text-xs text-slate-500 dark:text-slate-400">Acompanhe vencimentos, valores e status de quitação</p>
+                        </div>
+                        <button onclick="openDebtModal()" class="py-2 px-3 bg-rose-600 hover:bg-rose-700 text-white text-xs font-semibold rounded-xl transition-all flex items-center justify-center gap-1.5 shadow-md">
+                            <i class="fa-solid fa-plus"></i> Nova Dívida
+                        </button>
+                    </div>
+
+                    <!-- Resumo Rápido de Dívidas -->
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <div class="bg-white dark:bg-slate-800 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm">
+                            <p class="text-[11px] font-semibold uppercase text-slate-400">Total Pendente</p>
+                            <h3 id="totalDebtPending" class="text-xl font-extrabold text-rose-600 dark:text-rose-400 mt-1">R$ 0,00</h3>
+                        </div>
+                        <div class="bg-white dark:bg-slate-800 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm">
+                            <p class="text-[11px] font-semibold uppercase text-slate-400">Vencendo este Mês</p>
+                            <h3 id="totalDebtMonth" class="text-xl font-extrabold text-amber-500 mt-1">R$ 0,00</h3>
+                        </div>
+                        <div class="bg-white dark:bg-slate-800 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm">
+                            <p class="text-[11px] font-semibold uppercase text-slate-400">Total Quitadas</p>
+                            <h3 id="totalDebtPaid" class="text-xl font-extrabold text-emerald-600 dark:text-emerald-400 mt-1">R$ 0,00</h3>
+                        </div>
+                    </div>
+
+                    <div id="debtsContainer" class="space-y-2.5">
+                        <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200 dark:border-slate-700 text-center text-slate-400 text-xs">
+                            Nenhuma dívida cadastrada. Clique em "Nova Dívida" para começar.
+                        </div>
+                    </div>
+                </section>
+
+                <!-- PANE 6: RELATÓRIOS & GRÁFICOS -->
+                <section class="finance-pane space-y-4" data-pane="relatorios" aria-label="Relatórios e Gráficos" hidden>
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                        <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm">
+                            <h3 class="text-xs font-bold uppercase tracking-wide text-slate-400 mb-4 flex items-center gap-2">
+                                <i class="fa-solid fa-chart-pie text-brand-500"></i> Distribuição por Caixa
+                            </h3>
+                            <div class="relative flex items-center justify-center h-56">
+                                <canvas id="boxesChart"></canvas>
+                                <div id="noChartData" class="hidden absolute text-center text-slate-400 text-xs">
+                                    <i class="fa-solid fa-chart-area text-3xl mb-1 block opacity-40"></i> Sem saldos para exibir
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm flex flex-col justify-between">
+                            <div>
+                                <h3 class="text-xs font-bold uppercase tracking-wide text-slate-400 mb-3 flex items-center gap-2">
+                                    <i class="fa-solid fa-file-invoice-dollar text-brand-500"></i> Indicadores de Desempenho
+                                </h3>
+                                <div class="space-y-2.5 text-xs" id="financialMetricsList"></div>
+                            </div>
+                            <div class="mt-4 pt-3 border-t border-slate-100 dark:border-slate-700 flex justify-between items-center text-xs text-slate-400">
+                                <span>Atualizado em tempo real</span>
+                                <button onclick="loadFromSupabase()" class="text-brand-600 dark:text-brand-400 font-bold hover:underline">Atualizar</button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- PANE 7: HISTÓRICO -->
+                <section class="finance-pane space-y-4" data-pane="historico" aria-label="Histórico" hidden>
+                    <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-xs font-bold uppercase tracking-wide text-slate-400 flex items-center gap-2">
+                                <i class="fa-solid fa-clock-rotate-left text-brand-500"></i> Histórico de Movimentações
+                            </h3>
+                            <button onclick="clearHistory()" class="text-xs px-3 py-1.5 rounded-lg bg-rose-50 hover:bg-rose-100 dark:bg-rose-950/30 text-rose-600 dark:text-rose-400 font-medium transition-colors">Limpar</button>
+                        </div>
+                        <div id="historyList" class="space-y-2.5 max-h-[500px] overflow-y-auto pr-1"></div>
+                    </div>
+                </section>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Modais -->
+    <!-- Modal: Configurações Supabase -->
+    <div id="configModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-800 w-full max-w-md rounded-2xl shadow-xl overflow-hidden border border-slate-200 dark:border-slate-700">
+            <div class="p-5 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center">
+                <h3 class="font-bold text-slate-800 dark:text-white text-base flex items-center gap-2">
+                    <i class="fa-solid fa-database text-brand-500"></i> Configurar Supabase
+                </h3>
+                <button onclick="closeConfigModal()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <form onsubmit="saveConfig(event)" class="p-5 space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Supabase URL</label>
+                    <input type="text" id="supabaseUrlInput" required placeholder="https://seu-projeto.supabase.co"
+                        class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 text-slate-800 dark:text-white text-xs">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Supabase Anon Key</label>
+                    <input type="password" id="supabaseKeyInput" required placeholder="eyJhbGciOiJIUzI1NiIsIn..."
+                        class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 text-slate-800 dark:text-white text-xs">
+                </div>
+                <div class="pt-2 flex gap-2">
+                    <button type="button" onclick="closeConfigModal()" class="w-1/2 py-2 px-4 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 font-medium text-xs">Cancelar</button>
+                    <button type="submit" class="w-1/2 py-2 px-4 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-medium text-xs shadow-md">Salvar & Conectar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal: Caixa Financeira -->
+    <div id="boxModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-800 w-full max-w-md rounded-2xl shadow-xl overflow-hidden border border-slate-200 dark:border-slate-700">
+            <div class="p-5 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center">
+                <h3 id="boxModalTitle" class="font-bold text-slate-800 dark:text-white text-base">Criar Nova Caixa</h3>
+                <button onclick="closeBoxModal()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <form onsubmit="saveBox(event)" class="p-5 space-y-4">
+                <input type="hidden" id="boxIdInput">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Nome da Caixa</label>
+                    <input type="text" id="boxNameInput" required placeholder="Ex: Supermercado, Lazer..."
+                        class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 text-slate-800 dark:text-white text-xs">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Porcentagem (%)</label>
+                        <div class="relative">
+                            <input type="number" step="0.1" min="0" max="100" id="boxPctInput" required placeholder="0"
+                                class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 text-slate-800 dark:text-white text-xs pr-8">
+                            <span class="absolute right-3 top-2 text-slate-400 font-bold text-xs">%</span>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Meta (R$)</label>
+                        <div class="relative">
+                            <span class="absolute left-3 top-2.5 text-slate-400 text-[10px] font-bold">R$</span>
+                            <input type="number" step="0.01" min="0" id="boxTargetInput" placeholder="Sem limite"
+                                class="w-full pl-7 pr-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 text-slate-800 dark:text-white text-xs">
+                        </div>
+                    </div>
+                </div>
+                <div class="p-3 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900/50 rounded-xl flex items-center gap-3">
+                    <input type="checkbox" id="boxIsReserveInput" onchange="toggleReserveCheckboxUI()" class="w-4 h-4 text-amber-600 rounded focus:ring-amber-500 border-slate-300">
+                    <label for="boxIsReserveInput" class="text-xs font-medium text-amber-900 dark:text-amber-200 cursor-pointer select-none">
+                        <strong class="block font-bold">Caixa Reserva Especial</strong>
+                        Recebe 100% dos excedentes quando as outras caixas estiverem cheias.
+                    </label>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Ícone e Cor</label>
+                    <div class="grid grid-cols-5 gap-2" id="iconPicker"></div>
+                </div>
+                <div class="pt-2 flex gap-2">
+                    <button type="button" onclick="closeBoxModal()" class="w-1/2 py-2 px-4 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 font-medium text-xs">Cancelar</button>
+                    <button type="submit" class="w-1/2 py-2 px-4 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-medium text-xs shadow-md">Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal: Transação -->
+    <div id="txModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-800 w-full max-w-md rounded-2xl shadow-xl overflow-hidden border border-slate-200 dark:border-slate-700">
+            <div class="p-5 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center">
+                <div>
+                    <h3 id="txModalTitle" class="font-bold text-slate-800 dark:text-white text-base">Movimentar Caixa</h3>
+                    <p id="txModalSubtitle" class="text-xs text-slate-500">Nome da Caixa</p>
+                </div>
+                <button onclick="closeTxModal()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <form onsubmit="handleTxSubmit(event)" class="p-5 space-y-4">
+                <input type="hidden" id="txBoxId">
+                <input type="hidden" id="txType" value="deposit">
+                <div class="grid grid-cols-2 gap-2 p-1 bg-slate-100 dark:bg-slate-900 rounded-xl">
+                    <button type="button" id="btnTypeDeposit" onclick="setTxType('deposit')" class="py-2 text-xs font-bold rounded-lg transition-all bg-emerald-500 text-white shadow-sm">
+                        <i class="fa-solid fa-plus-circle mr-1"></i> Entrada
+                    </button>
+                    <button type="button" id="btnTypeWithdraw" onclick="setTxType('withdraw')" class="py-2 text-xs font-bold rounded-lg transition-all text-slate-600 dark:text-slate-400">
+                        <i class="fa-solid fa-minus-circle mr-1"></i> Saída
+                    </button>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Valor (R$)</label>
+                    <div class="relative">
+                        <span class="absolute left-3 top-2.5 text-slate-400 text-xs font-bold">R$</span>
+                        <input type="number" step="0.01" min="0.01" id="txAmountInput" required placeholder="0,00"
+                            class="w-full pl-8 pr-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 text-slate-800 dark:text-white font-semibold text-xs">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Descrição</label>
+                    <input type="text" id="txDescInput" placeholder="Ex: Compra..."
+                        class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 text-slate-800 dark:text-white text-xs">
+                </div>
+                <div class="pt-2 flex gap-2">
+                    <button type="button" onclick="closeTxModal()" class="w-1/2 py-2 px-4 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 font-medium text-xs">Cancelar</button>
+                    <button type="submit" id="txSubmitBtn" class="w-1/2 py-2 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-medium text-xs shadow-md">Confirmar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal: Mantimento -->
+    <div id="pantryModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-800 w-full max-w-md rounded-2xl shadow-xl overflow-hidden border border-slate-200 dark:border-slate-700">
+            <div class="p-5 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center">
+                <h3 id="pantryModalTitle" class="font-bold text-slate-800 dark:text-white text-base">Adicionar Mantimento</h3>
+                <button onclick="closePantryModal()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <form onsubmit="savePantryItem(event)" class="p-5 space-y-4">
+                <input type="hidden" id="pantryIdInput">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Nome do Item</label>
+                    <input type="text" id="pantryNameInput" required placeholder="Ex: Arroz Tipo 1..."
+                        class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 text-slate-800 dark:text-white text-xs">
+                </div>
+                <div class="grid grid-cols-3 gap-2">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Qtd Atual</label>
+                        <input type="number" step="1" min="0" id="pantryQtyInput" required placeholder="0"
+                            class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 text-slate-800 dark:text-white text-xs font-bold">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Estoque Ideal</label>
+                        <input type="number" step="1" min="1" id="pantryIdealInput" required placeholder="5"
+                            class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 text-slate-800 dark:text-white text-xs font-bold">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Unidade</label>
+                        <select id="pantryUnitInput" class="w-full px-2 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 text-slate-800 dark:text-white text-xs font-bold">
+                            <option value="un">unid.</option>
+                            <option value="kg">kg</option>
+                            <option value="L">litros</option>
+                            <option value="pct">pacotes</option>
+                            <option value="lata">latas</option>
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Caixa Vinculada (Opcional)</label>
+                    <select id="pantryBoxLinkInput" class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-brand-500 text-slate-800 dark:text-white text-xs"></select>
+                </div>
+                <div class="pt-2 flex gap-2">
+                    <button type="button" onclick="closePantryModal()" class="w-1/2 py-2 px-4 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 font-medium text-xs">Cancelar</button>
+                    <button type="submit" class="w-1/2 py-2 px-4 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-medium text-xs shadow-md">Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal: Pedido / Urgência (NOVO) -->
+    <div id="orderModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-800 w-full max-w-md rounded-2xl shadow-xl overflow-hidden border border-slate-200 dark:border-slate-700">
+            <div class="p-5 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center bg-amber-50 dark:bg-amber-950/30">
+                <h3 id="orderModalTitle" class="font-bold text-slate-800 dark:text-white text-base flex items-center gap-2">
+                    <i class="fa-solid fa-bell text-amber-500"></i> Novo Pedido ou Urgência
+                </h3>
+                <button onclick="closeOrderModal()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <form onsubmit="saveOrderItem(event)" class="p-5 space-y-4">
+                <input type="hidden" id="orderIdInput">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Item ou Solicitação</label>
+                    <input type="text" id="orderItemNameInput" required placeholder="Ex: Café, Detergentes, Gás..."
+                        class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-amber-500 text-slate-800 dark:text-white text-xs">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Quantidade</label>
+                        <input type="text" id="orderQtyInput" placeholder="Ex: 2 unidades" value="1 un" required
+                            class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-amber-500 text-slate-800 dark:text-white text-xs font-bold">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Prioridade</label>
+                        <select id="orderPriorityInput" class="w-full px-2 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-amber-500 text-slate-800 dark:text-white text-xs font-bold">
+                            <option value="normal">Normal</option>
+                            <option value="urgente">🚨 URGENTE</option>
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Observações (Opcional)</label>
+                    <input type="text" id="orderObsInput" placeholder="Ex: Da marca X se tiver..."
+                        class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-amber-500 text-slate-800 dark:text-white text-xs">
+                </div>
+                <div class="pt-2 flex gap-2">
+                    <button type="button" onclick="closeOrderModal()" class="w-1/2 py-2 px-4 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 font-medium text-xs">Cancelar</button>
+                    <button type="submit" class="w-1/2 py-2 px-4 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-medium text-xs shadow-md">Enviar & Notificar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal: Selecionar Itens em Falta da Despensa para Pedido -->
+    <div id="orderFromPantryModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-800 w-full max-w-md rounded-2xl shadow-xl overflow-hidden border border-slate-200 dark:border-slate-700">
+            <div class="p-5 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center bg-amber-50 dark:bg-amber-950/30">
+                <h3 class="font-bold text-slate-800 dark:text-white text-base flex items-center gap-2">
+                    <i class="fa-solid fa-basket-shopping text-amber-500"></i> Puxar Itens em Falta da Despensa
+                </h3>
+                <button onclick="closeOrderFromPantryModal()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <div class="p-5 space-y-3 max-h-[60vh] overflow-y-auto" id="lowPantryCheckboxList">
+                <!-- Preenchido via JS -->
+            </div>
+            <div class="p-4 bg-slate-50 dark:bg-slate-900/50 border-t border-slate-100 dark:border-slate-700 flex justify-end gap-2">
+                <button type="button" onclick="closeOrderFromPantryModal()" class="py-2 px-4 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 font-medium text-xs">Cancelar</button>
+                <button type="button" onclick="submitLowPantryOrders()" class="py-2 px-5 bg-amber-500 hover:bg-amber-600 text-white font-semibold text-xs rounded-xl shadow-md">Adicionar aos Pedidos</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Dívida -->
+    <div id="debtModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-800 w-full max-w-md rounded-2xl shadow-xl overflow-hidden border border-slate-200 dark:border-slate-700">
+            <div class="p-5 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center">
+                <h3 id="debtModalTitle" class="font-bold text-slate-800 dark:text-white text-base">Adicionar Dívida / Conta</h3>
+                <button onclick="closeDebtModal()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <form onsubmit="saveDebtItem(event)" class="p-5 space-y-4">
+                <input type="hidden" id="debtIdInput">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Descrição / Credor</label>
+                    <input type="text" id="debtNameInput" required placeholder="Ex: Cartão de Crédito, Conta de Luz..."
+                        class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-rose-500 text-slate-800 dark:text-white text-xs">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Valor (R$)</label>
+                        <div class="relative">
+                            <span class="absolute left-3 top-2.5 text-slate-400 text-xs font-bold">R$</span>
+                            <input type="number" step="0.01" min="0.01" id="debtAmountInput" required placeholder="0,00"
+                                class="w-full pl-8 pr-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-rose-500 text-slate-800 dark:text-white text-xs font-bold">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Vencimento</label>
+                        <input type="date" id="debtDueDateInput" required
+                            class="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-rose-500 text-slate-800 dark:text-white text-xs">
+                    </div>
+                </div>
+                <div class="pt-2 flex gap-2">
+                    <button type="button" onclick="closeDebtModal()" class="w-1/2 py-2 px-4 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 font-medium text-xs">Cancelar</button>
+                    <button type="submit" class="w-1/2 py-2 px-4 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-medium text-xs shadow-md">Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal: Relatório Spillover -->
+    <div id="spilloverReportModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-800 w-full max-w-lg rounded-2xl shadow-xl overflow-hidden border border-slate-200 dark:border-slate-700">
+            <div class="p-5 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center bg-brand-50 dark:bg-brand-950/30">
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-circle-check text-brand-600 dark:text-brand-400 text-xl"></i>
+                    <div>
+                        <h3 class="font-bold text-slate-800 dark:text-white text-base leading-tight">Resumo do Aporte Inteligente</h3>
+                        <p id="spilloverTotalText" class="text-xs text-brand-700 dark:text-brand-300">Aporte total: R$ 0,00</p>
+                    </div>
+                </div>
+                <button onclick="closeSpilloverReportModal()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <div class="p-5 space-y-4 max-h-[70vh] overflow-y-auto">
+                <div id="spilloverNoticeBox" class="p-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-xs text-slate-600 dark:text-slate-300 space-y-1"></div>
+                <div>
+                    <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Detalhamento por Caixa</h4>
+                    <div id="spilloverBreakdownList" class="space-y-2"></div>
+                </div>
+            </div>
+            <div class="p-4 bg-slate-50 dark:bg-slate-900/50 border-t border-slate-100 dark:border-slate-700 flex justify-end">
+                <button onclick="closeSpilloverReportModal()" class="py-2 px-5 bg-brand-600 hover:bg-brand-700 text-white font-semibold text-xs rounded-xl shadow-md">Entendido</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Presets -->
+    <div id="presetModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-800 w-full max-w-lg rounded-2xl shadow-xl overflow-hidden border border-slate-200 dark:border-slate-700">
+            <div class="p-5 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center">
+                <h3 class="font-bold text-slate-800 dark:text-white text-base">Modelos de Regras Financeiras</h3>
+                <button onclick="closePresetModal()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <div class="p-5 space-y-4">
+                <p class="text-xs text-slate-500">Escolha uma regra pré-definida. <strong class="text-rose-500">Isto substituirá suas caixas atuais!</strong></p>
+                <div class="space-y-3">
+                    <button onclick="applyPreset('50-30-20')" class="w-full p-4 border border-slate-200 dark:border-slate-700 rounded-xl text-left hover:border-brand-500 hover:bg-brand-50/30 transition-all flex justify-between items-center group">
+                        <div>
+                            <h4 class="font-bold text-xs text-slate-800 dark:text-white group-hover:text-brand-600">Regra 50 / 30 / 20 com Casa & Supermercado</h4>
+                            <p class="text-[11px] text-slate-500 mt-0.5">50% Essenciais • 30% Lazer • 20% Reserva Infinita</p>
+                        </div>
+                        <i class="fa-solid fa-chevron-right text-slate-300 group-hover:text-brand-500 text-xs"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toastContainer" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+    <!-- JavaScript Supabase & App Application Logic -->
+    <script>
+        const ICON_PALETTE = [
+            { icon: 'fa-basket-shopping', color: '#16a34a' },
+            { icon: 'fa-shield-halved', color: '#eab308' },
+            { icon: 'fa-house', color: '#3b82f6' },
+            { icon: 'fa-gamepad', color: '#ec4899' },
+            { icon: 'fa-credit-card', color: '#ef4444' },
+            { icon: 'fa-lightbulb', color: '#f97316' },
+            { icon: 'fa-car', color: '#06b6d4' },
+            { icon: 'fa-graduation-cap', color: '#a855f7' }
+        ];
+
+        let selectedIconIndex = 0;
+        let chartInstance = null;
+        let isSidebarCollapsed = false;
+        let supabaseClient = null;
+        let currentPantryFilter = 'all';
+        let currentOrderFilter = 'pending';
+
+        let appState = {
+            boxes: [],
+            pantry: [],
+            orders: [],
+            debts: [],
+            history: [],
+            theme: 'light'
+        };
+
+        window.onload = function() {
+            loadConfigAndInit();
+            setupIconPicker();
+            setupTabs();
+            initChart();
+        };
+
+        function loadConfigAndInit() {
+            const savedUrl = localStorage.getItem('sb_url');
+            const savedKey = localStorage.getItem('sb_key');
+
+            if (savedUrl && savedKey) {
+                document.getElementById('supabaseUrlInput').value = savedUrl;
+                document.getElementById('supabaseKeyInput').value = savedKey;
+                initSupabase(savedUrl, savedKey);
+            } else {
+                openConfigModal();
+            }
+
+            const savedTheme = localStorage.getItem('app_theme');
+            if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.documentElement.classList.add('dark');
+                appState.theme = 'dark';
+            } else {
+                document.documentElement.classList.remove('dark');
+                appState.theme = 'light';
+            }
+        }
+
+        function initSupabase(url, key) {
+            try {
+                supabaseClient = supabase.createClient(url, key);
+                document.getElementById('dbStatusIndicator').innerHTML = `<span class="text-emerald-500 font-bold"><i class="fa-solid fa-circle text-[8px]"></i> Supabase Conectado</span>`;
+                loadFromSupabase();
+            } catch(e) {
+                console.error(e);
+                showToast('Erro ao conectar com Supabase.', 'error');
+            }
+        }
+
+        async function triggerTelegramReport() {
+            if (!supabaseClient) {
+                showToast('Configure o Supabase primeiro!', 'error');
+                openConfigModal();
+                return;
+            }
+
+            const btn = document.getElementById('btnTelegramReport');
+            const originalHtml = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin text-base"></i> <span class="hidden sm:inline">Enviando...</span>`;
+
+            try {
+                const { error } = await supabaseClient.rpc('send_daily_financial_pantry_digest');
+                if (error) throw error;
+                showToast('Relatório enviado para o seu Telegram!', 'success');
+            } catch (err) {
+                console.error(err);
+                showToast('Erro ao enviar relatório. Verifique a função no SQL.', 'error');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = originalHtml;
+            }
+        }
+
+        function openConfigModal() { document.getElementById('configModal').classList.remove('hidden'); }
+        function closeConfigModal() { document.getElementById('configModal').classList.add('hidden'); }
+
+        function saveConfig(e) {
+            e.preventDefault();
+            const url = document.getElementById('supabaseUrlInput').value.trim();
+            const key = document.getElementById('supabaseKeyInput').value.trim();
+
+            localStorage.setItem('sb_url', url);
+            localStorage.setItem('sb_key', key);
+
+            initSupabase(url, key);
+            closeConfigModal();
+            showToast('Conexão configurada com sucesso!', 'success');
+        }
+
+        async function loadFromSupabase() {
+            if (!supabaseClient) return;
+            try {
+                const [boxesRes, pantryRes, ordersRes, debtsRes, historyRes] = await Promise.all([
+                    supabaseClient.from('caixas_financeiras').select('*'),
+                    supabaseClient.from('despensa_mantimentos').select('*'),
+                    supabaseClient.from('pedidos_familia').select('*').order('timestamp', { ascending: false }),
+                    supabaseClient.from('dividas_pendentes').select('*'),
+                    supabaseClient.from('historico_movimentacoes').select('*').order('timestamp', { ascending: false })
+                ]);
+
+                if (boxesRes.error) throw boxesRes.error;
+                if (pantryRes.error && pantryRes.error.code !== 'PGRST116') console.warn(pantryRes.error);
+                if (ordersRes.error && ordersRes.error.code !== 'PGRST116') console.warn(ordersRes.error);
+                if (debtsRes.error && debtsRes.error.code !== 'PGRST116') console.warn(debtsRes.error);
+                if (historyRes.error && historyRes.error.code !== 'PGRST116') console.warn(historyRes.error);
+
+                appState.boxes = (boxesRes.data || []).map(b => ({
+                    id: b.id, name: b.name, pct: parseFloat(b.pct), balance: parseFloat(b.balance),
+                    target: b.target ? parseFloat(b.target) : null, isReserve: b.is_reserve, icon: b.icon, color: b.color
+                }));
+
+                appState.pantry = (pantryRes.data || []).map(p => ({
+                    id: p.id, name: p.name, qty: p.qty, ideal: p.ideal, unit: p.unit, boxId: p.box_id
+                }));
+
+                appState.orders = (ordersRes.data || []).map(o => ({
+                    id: o.id, name: o.name, qty: o.qty, priority: o.priority || 'normal',
+                    obs: o.obs, status: o.status || 'pending', timestamp: o.timestamp
+                }));
+
+                appState.debts = (debtsRes.data || []).map(d => ({
+                    id: d.id, name: d.name, amount: parseFloat(d.amount), dueDate: d.due_date, paid: !!d.paid
+                }));
+
+                appState.history = (historyRes.data || []).map(h => ({
+                    id: h.id, boxName: h.box_name, type: h.type, amount: parseFloat(h.amount), description: h.description, timestamp: h.timestamp
+                }));
+
+                renderApp();
+            } catch(err) {
+                console.error(err);
+                showToast('Erro ao carregar dados do Supabase.', 'error');
+            }
+        }
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            const labels = document.querySelectorAll('.sidebar-label');
+            const toggleIcon = document.getElementById('sidebarToggleIcon');
+
+            if (window.innerWidth < 768) {
+                sidebar.classList.toggle('-translate-x-full');
+                overlay.classList.toggle('hidden');
+                return;
+            }
+
+            isSidebarCollapsed = !isSidebarCollapsed;
+            if (isSidebarCollapsed) {
+                sidebar.classList.remove('w-64');
+                sidebar.classList.add('w-20');
+                labels.forEach(el => el.classList.add('hidden'));
+                if (toggleIcon) toggleIcon.className = 'fa-solid fa-chevron-right text-xs';
+            } else {
+                sidebar.classList.remove('w-20');
+                sidebar.classList.add('w-64');
+                labels.forEach(el => el.classList.remove('hidden'));
+                if (toggleIcon) toggleIcon.className = 'fa-solid fa-chevron-left text-xs';
+            }
+        }
+
+        function setupTabs() {
+            const tabs = document.querySelectorAll('.finance-tab');
+            const panes = document.querySelectorAll('.finance-pane');
+            const titleEl = document.getElementById('currentTitle');
+
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const target = tab.dataset.tab;
+                    tabs.forEach(t => {
+                        const active = t === tab;
+                        t.classList.toggle('is-active', active);
+                        t.setAttribute('aria-selected', String(active));
+                        if (active) {
+                            const spanText = t.querySelector('span:not(.sidebar-label)') || t.querySelector('span');
+                            if (titleEl && spanText) titleEl.innerText = spanText.innerText;
+                        }
+                    });
+                    panes.forEach(p => {
+                        const active = p.dataset.pane === target;
+                        p.hidden = !active;
+                        p.classList.toggle('active', active);
+                    });
+
+                    if (window.innerWidth < 768) {
+                        document.getElementById('sidebar').classList.add('-translate-x-full');
+                        document.getElementById('sidebarOverlay').classList.add('hidden');
+                    }
+                });
+            });
+        }
+
+        function switchTab(tabName) {
+            const btn = document.querySelector(`[data-tab="${tabName}"]`);
+            if (btn) btn.click();
+        }
+
+        function toggleTheme() {
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                appState.theme = 'light';
+            } else {
+                document.documentElement.classList.add('dark');
+                appState.theme = 'dark';
+            }
+            localStorage.setItem('app_theme', appState.theme);
+            if (chartInstance) chartInstance.destroy();
+            initChart();
+        }
+
+        function formatBRL(val) {
+            return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(val || 0);
+        }
+
+        function setupIconPicker() {
+            const container = document.getElementById('iconPicker');
+            container.innerHTML = ICON_PALETTE.map((item, idx) => `
+                <button type="button" onclick="selectIcon(${idx})" id="iconOpt_${idx}"
+                    class="h-10 rounded-xl flex items-center justify-center border-2 transition-all ${idx === 0 ? 'border-brand-500 scale-105 bg-slate-100 dark:bg-slate-700' : 'border-transparent hover:bg-slate-100 dark:hover:bg-slate-700'}">
+                    <i class="fa-solid ${item.icon} text-base" style="color: ${item.color}"></i>
+                </button>
+            `).join('');
+        }
+
+        function selectIcon(idx) {
+            selectedIconIndex = idx;
+            ICON_PALETTE.forEach((_, i) => {
+                const btn = document.getElementById(`iconOpt_${i}`);
+                if (btn) {
+                    btn.className = (i === idx) ? 'h-10 rounded-xl flex items-center justify-center border-2 border-brand-500 scale-105 bg-slate-100 dark:bg-slate-700 transition-all' : 'h-10 rounded-xl flex items-center justify-center border-2 border-transparent hover:bg-slate-100 dark:hover:bg-slate-700 transition-all';
+                }
+            });
+        }
+
+        function renderApp() {
+            renderSummary();
+            renderBoxes();
+            renderPantry();
+            renderOrders();
+            renderDebts();
+            renderHistory();
+            renderMetrics();
+            updateChart();
+        }
+
+        function renderSummary() {
+            const totalBalance = appState.boxes.reduce((acc, b) => acc + (b.balance || 0), 0);
+            const totalPct = appState.boxes.reduce((acc, b) => acc + (parseFloat(b.pct) || 0), 0);
+
+            let completedBoxes = 0;
+            let targetableBoxesCount = 0;
+            appState.boxes.forEach(b => {
+                if (!b.isReserve && b.target && b.target > 0) {
+                    targetableBoxesCount++;
+                    if (b.balance >= b.target) completedBoxes++;
+                }
+            });
+
+            document.getElementById('totalBalance').innerText = formatBRL(totalBalance);
+            document.getElementById('boxCountText').innerText = `${appState.boxes.length} Caixa(s) ativa(s)`;
+            document.getElementById('completedBoxesCountText').innerText = targetableBoxesCount > 0 ? `${completedBoxes}/${targetableBoxesCount} Metas` : 'Caixas Infinitas';
+
+            const now = new Date();
+            let monthDeposits = 0;
+            let monthWithdrawals = 0;
+            (appState.history || []).forEach(item => {
+                const date = new Date(item.timestamp);
+                if (Number.isNaN(date.getTime()) || date.getFullYear() !== now.getFullYear() || date.getMonth() !== now.getMonth()) return;
+                const amount = Number(item.amount) || 0;
+                if (item.type === 'deposit') monthDeposits += amount;
+                else if (item.type === 'withdraw') monthWithdrawals += amount;
+            });
+            document.getElementById('monthDeposits').innerText = formatBRL(monthDeposits);
+            document.getElementById('monthWithdrawals').innerText = formatBRL(monthWithdrawals);
+            const monthNet = monthDeposits - monthWithdrawals;
+            const netEl = document.getElementById('monthNet');
+            netEl.innerText = `${monthNet < 0 ? '−' : ''}${formatBRL(Math.abs(monthNet))}`;
+            netEl.className = `font-extrabold ${monthNet < 0 ? 'text-rose-600 dark:text-rose-400' : 'text-slate-800 dark:text-white'}`;
+            document.getElementById('monthLabel').innerText = now.toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' });
+
+            const pctText = document.getElementById('totalPercentageText');
+            const pctBadge = document.getElementById('pctStatusBadge');
+            const progressBar = document.getElementById('pctProgressBar');
+            const warningText = document.getElementById('pctWarningText');
+
+            const roundedPct = Math.round(totalPct * 10) / 10;
+            pctText.innerText = `${roundedPct}%`;
+            progressBar.style.width = `${Math.min(roundedPct, 100)}%`;
+
+            if (Math.abs(roundedPct - 100) < 0.1) {
+                pctBadge.className = 'px-2 py-0.5 text-[10px] font-bold rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-900/50 dark:text-emerald-300';
+                pctBadge.innerText = '100% OK';
+                progressBar.className = 'bg-brand-500 h-full rounded-full transition-all duration-300';
+                warningText.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-500"></i> Distribuição perfeita (100%)`;
+            } else if (roundedPct < 100) {
+                const diff = (100 - roundedPct).toFixed(1);
+                pctBadge.className = 'px-2 py-0.5 text-[10px] font-bold rounded-full bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-300';
+                pctBadge.innerText = `Falta ${diff}%`;
+                progressBar.className = 'bg-amber-500 h-full rounded-full transition-all duration-300';
+                warningText.innerHTML = `<i class="fa-solid fa-triangle-exclamation text-amber-500"></i> Faltam ${diff}%`;
+            } else {
+                const diff = (roundedPct - 100).toFixed(1);
+                pctBadge.className = 'px-2 py-0.5 text-[10px] font-bold rounded-full bg-rose-100 text-rose-800 dark:bg-rose-900/50 dark:text-rose-300';
+                pctBadge.innerText = `Excesso +${diff}%`;
+                progressBar.className = 'bg-rose-500 h-full rounded-full transition-all duration-300';
+                warningText.innerHTML = `<i class="fa-solid fa-circle-exclamation text-rose-500"></i> Excede 100%!`;
+            }
+
+            const criticalItems = appState.pantry.filter(p => p.qty <= 0);
+            const lowItems = appState.pantry.filter(p => p.qty > 0 && p.qty < p.ideal);
+            const summaryAlerts = document.getElementById('pantryAlertsSummary');
+            
+            let alertHtml = '';
+            if (criticalItems.length > 0) alertHtml += `<div class="text-[11px] font-bold text-rose-600 dark:text-rose-400 flex items-center gap-1"><i class="fa-solid fa-triangle-exclamation"></i> ${criticalItems.length} item(ns) esgotado(s)</div>`;
+            if (lowItems.length > 0) alertHtml += `<div class="text-[11px] font-medium text-amber-600 dark:text-amber-400 flex items-center gap-1"><i class="fa-solid fa-clock"></i> ${lowItems.length} item(ns) abaixo do ideal</div>`;
+            if (criticalItems.length === 0 && lowItems.length === 0) alertHtml = `<p class="text-[11px] text-emerald-600 dark:text-emerald-400 font-medium flex items-center gap-1"><i class="fa-solid fa-circle-check"></i> Estoque 100% abastecido</p>`;
+            summaryAlerts.innerHTML = alertHtml;
+        }
+
+        function renderBoxes() {
+            const container = document.getElementById('boxesContainer');
+            if (appState.boxes.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-10 bg-white dark:bg-slate-800 rounded-2xl border border-dashed border-slate-300 dark:border-slate-700">
+                        <i class="fa-solid fa-box-open text-3xl text-slate-300 dark:text-slate-600 mb-2"></i>
+                        <p class="text-slate-500 text-xs font-medium">Nenhuma caixa cadastrada</p>
+                        <button onclick="openBoxModal()" class="mt-2 text-xs text-brand-600 font-bold hover:underline">+ Criar primeira caixa</button>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = appState.boxes.map(box => {
+                const isFull = !box.isReserve && box.target && box.balance >= box.target;
+                const progressPct = (!box.target || box.target <= 0) ? 100 : Math.min(100, (box.balance / box.target) * 100);
+                const formattedProgressPct = Math.round(progressPct * 10) / 10;
+                const boxIdStr = typeof box.id === 'string' ? `'${box.id}'` : box.id;
+
+                return `
+                <div class="bg-white dark:bg-slate-800 p-3.5 rounded-xl border ${isFull ? 'border-amber-400 dark:border-amber-500/50' : 'border-slate-200 dark:border-slate-700'} shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-3 transition-all relative overflow-hidden">
+                    <div class="flex items-center gap-3 min-w-0 flex-1">
+                        <div class="w-9 h-9 rounded-xl flex items-center justify-center text-white shadow-sm shrink-0" style="background-color: ${box.color}">
+                            <i class="fa-solid ${box.icon} text-sm"></i>
+                        </div>
+                        <div class="min-w-0 flex-1">
+                            <div class="flex items-center gap-2">
+                                <h3 class="font-bold text-slate-800 dark:text-white text-xs truncate">${escapeHtml(box.name)}</h3>
+                                <span class="px-1.5 py-0.5 text-[9px] font-bold rounded bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 shrink-0">Alocação: ${box.pct}%</span>
+                                ${isFull ? `<span class="px-1.5 py-0.5 text-[9px] font-bold rounded bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-300 shrink-0">Meta Atingida</span>` : ''}
+                                ${box.isReserve ? `<span class="px-1.5 py-0.5 text-[9px] font-bold rounded bg-emerald-100 text-emerald-800 dark:bg-emerald-900/50 dark:text-emerald-300 shrink-0">Reserva</span>` : ''}
+                            </div>
+                            <div class="flex items-center gap-3 mt-1.5">
+                                <div class="w-32 bg-slate-100 dark:bg-slate-700 h-1.5 rounded-full overflow-hidden hidden sm:block">
+                                    <div class="h-full rounded-full transition-all duration-300 ${isFull ? 'bg-amber-500' : 'bg-brand-500'}" style="width: ${progressPct}%"></div>
+                                </div>
+                                <span class="text-[10px] font-bold text-slate-600 dark:text-slate-300">${box.target && box.target > 0 ? `${formattedProgressPct}% da meta (${formatBRL(box.target)})` : 'Sem limite'}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-between sm:justify-end gap-3 shrink-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-100 dark:border-slate-700">
+                        <div class="text-right">
+                            <span class="text-sm font-extrabold text-slate-900 dark:text-white">${formatBRL(box.balance)}</span>
+                        </div>
+                        <div class="flex items-center gap-1">
+                            <button onclick="openTxModal(${boxIdStr}, 'deposit')" class="px-2.5 py-1 bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 text-[11px] font-bold rounded-lg transition-all flex items-center gap-1">
+                                <i class="fa-solid fa-plus text-[9px]"></i> Aporte
+                            </button>
+                            <button onclick="openTxModal(${boxIdStr}, 'withdraw')" class="px-2.5 py-1 bg-rose-50 hover:bg-rose-100 dark:bg-rose-950/40 text-rose-700 dark:text-rose-300 text-[11px] font-bold rounded-lg transition-all flex items-center gap-1">
+                                <i class="fa-solid fa-minus text-[9px]"></i> Gasto
+                            </button>
+                            <div class="flex items-center border-l border-slate-200 dark:border-slate-700 pl-1.5 ml-1 gap-0.5">
+                                <button onclick="editBox(${boxIdStr})" title="Editar" class="p-1 text-slate-400 hover:text-slate-600 text-xs rounded"><i class="fa-solid fa-pen"></i></button>
+                                <button onclick="deleteBox(${boxIdStr})" title="Excluir" class="p-1 text-slate-400 hover:text-rose-500 text-xs rounded"><i class="fa-solid fa-trash-can"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            }).join('');
+        }
+
+        // RENDER DE PEDIDOS & URGÊNCIAS (NOVO MÓDULO)
+        function setOrderFilter(status) {
+            currentOrderFilter = status;
+            ['pending', 'bought', 'all'].forEach(s => {
+                const btn = document.getElementById(`oFilter_${s}`);
+                if (!btn) return;
+                if (s === status) {
+                    btn.className = 'order-filter-btn px-3 py-1.5 rounded-xl text-xs font-bold transition-all bg-amber-500 text-white shadow-sm shrink-0';
+                } else {
+                    btn.className = 'order-filter-btn px-3 py-1.5 rounded-xl text-xs font-bold transition-all text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 shrink-0';
+                }
+            });
+            renderOrders();
+        }
+
+        function renderOrders() {
+            const container = document.getElementById('ordersContainer');
+            const pendingCount = appState.orders.filter(o => o.status === 'pending').length;
+            const boughtCount = appState.orders.filter(o => o.status === 'bought').length;
+            const totalCount = appState.orders.length;
+
+            document.getElementById('countPendingOrders').innerText = pendingCount;
+            document.getElementById('countBoughtOrders').innerText = boughtCount;
+            document.getElementById('countAllOrders').innerText = totalCount;
+
+            const badge = document.getElementById('sidebarBadgePedidos');
+            if (pendingCount > 0) {
+                badge.innerText = pendingCount;
+                badge.classList.remove('hidden');
+            } else {
+                badge.classList.add('hidden');
+            }
+
+            let filteredOrders = appState.orders;
+            if (currentOrderFilter === 'pending') filteredOrders = appState.orders.filter(o => o.status === 'pending');
+            else if (currentOrderFilter === 'bought') filteredOrders = appState.orders.filter(o => o.status === 'bought');
+
+            if (filteredOrders.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-10 bg-white dark:bg-slate-800 rounded-2xl border border-dashed border-slate-300 dark:border-slate-700">
+                        <i class="fa-solid fa-bell-slash text-3xl text-slate-300 dark:text-slate-600 mb-2"></i>
+                        <p class="text-slate-500 text-xs font-medium">Nenhum pedido encontrado nesta categoria</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = filteredOrders.map(order => {
+                const isUrgente = order.priority === 'urgente';
+                const isBought = order.status === 'bought';
+                const orderIdStr = typeof order.id === 'string' ? `'${order.id}'` : order.id;
+                const timeStr = new Date(order.timestamp).toLocaleDateString('pt-BR', { hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit' });
+
+                return `
+                <div class="bg-white dark:bg-slate-800 p-3.5 rounded-xl border ${isBought ? 'border-slate-200 dark:border-slate-700 opacity-60' : (isUrgente ? 'border-rose-400 dark:border-rose-500' : 'border-amber-300 dark:border-amber-600/50')} shadow-sm flex items-center justify-between gap-3 transition-all">
+                    <div class="flex items-center gap-3 min-w-0 flex-1">
+                        <button onclick="toggleOrderStatus(${orderIdStr})" class="w-7 h-7 rounded-lg flex items-center justify-center border transition-all ${isBought ? 'bg-emerald-500 border-emerald-500 text-white' : 'border-slate-300 dark:border-slate-600 hover:border-amber-500'}" title="Marcar como Comprado/Pendente">
+                            ${isBought ? '<i class="fa-solid fa-check text-xs"></i>' : ''}
+                        </button>
+                        <div class="min-w-0 flex-1">
+                            <div class="flex items-center gap-2">
+                                ${isUrgente ? '<span class="px-1.5 py-0.5 text-[9px] font-bold rounded bg-rose-100 text-rose-800 dark:bg-rose-900/50 dark:text-rose-300 shrink-0">🚨 URGENTE</span>' : ''}
+                                <span class="px-1.5 py-0.5 text-[9px] font-bold rounded bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 shrink-0">${order.qty}</span>
+                            </div>
+                            <h4 class="font-bold text-slate-800 dark:text-white text-xs truncate mt-0.5 ${isBought ? 'line-through text-slate-400' : ''}">${escapeHtml(order.name)}</h4>
+                            ${order.obs ? `<p class="text-[10px] text-slate-400 italic truncate mt-0.5">Obs: ${escapeHtml(order.obs)}</p>` : ''}
+                            <span class="text-[9px] text-slate-400 mt-1 block">Solicitado em: ${timeStr}</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2 shrink-0">
+                        <button onclick="deleteOrderItem(${orderIdStr})" title="Excluir" class="p-1.5 text-slate-400 hover:text-rose-500 text-xs rounded transition-all"><i class="fa-solid fa-trash-can"></i></button>
+                    </div>
+                </div>
+                `;
+            }).join('');
+        }
+
+        function openOrderModal() {
+            document.getElementById('orderIdInput').value = '';
+            document.getElementById('orderItemNameInput').value = '';
+            document.getElementById('orderQtyInput').value = '1 un';
+            document.getElementById('orderPriorityInput').value = 'normal';
+            document.getElementById('orderObsInput').value = '';
+            document.getElementById('orderModal').classList.remove('hidden');
+        }
+
+        function closeOrderModal() { document.getElementById('orderModal').classList.add('hidden'); }
+
+        async function saveOrderItem(e) {
+            e.preventDefault();
+            const name = document.getElementById('orderItemNameInput').value.trim();
+            const qty = document.getElementById('orderQtyInput').value.trim();
+            const priority = document.getElementById('orderPriorityInput').value;
+            const obs = document.getElementById('orderObsInput').value.trim();
+
+            if (!name) return;
+
+            const orderData = {
+                id: 'o_' + Date.now(),
+                name: name,
+                qty: qty,
+                priority: priority,
+                obs: obs,
+                status: 'pending',
+                timestamp: new Date().toISOString()
+            };
+
+            if (supabaseClient) {
+                await supabaseClient.from('pedidos_familia').insert([orderData]);
+                // Tenta disparar notificação imediata via Telegram se a função existir
+                try {
+                    await supabaseClient.rpc('send_telegram_notification', { 
+                        message: `🔔 *NOVO PEDIDO ${priority === 'urgente' ? '🚨 URGENTE' : ''}*\n\n*Item:* ${name}\n*Qtd:* ${qty}\n${obs ? `*Obs:* ${obs}` : ''}` 
+                    });
+                } catch(err) {
+                    console.warn('Notificação Telegram via RPC opcional não configurada ou falhou.', err);
+                }
+            }
+
+            loadFromSupabase();
+            closeOrderModal();
+            showToast('Pedido enviado e notificação disparada!', 'success');
+        }
+
+        async function toggleOrderStatus(id) {
+            const order = appState.orders.find(o => o.id == id);
+            if (!order) return;
+            order.status = order.status === 'pending' ? 'bought' : 'pending';
+            if (supabaseClient) {
+                const queryId = isNaN(id) ? id : Number(id);
+                await supabaseClient.from('pedidos_familia').update({ status: order.status }).eq('id', queryId);
+            }
+            renderApp();
+        }
+
+        async function deleteOrderItem(id) {
+            const order = appState.orders.find(o => o.id == id);
+            if (!order) return;
+            if (confirm(`Remover "${order.name}" dos pedidos?`)) {
+                if (supabaseClient) {
+                    const queryId = isNaN(id) ? id : Number(id);
+                    await supabaseClient.from('pedidos_familia').delete().eq('id', queryId);
+                }
+                loadFromSupabase();
+                showToast('Pedido removido.', 'info');
+            }
+        }
+
+        function openOrderModalFromPantry() {
+            const lowItems = appState.pantry.filter(p => p.qty < p.ideal);
+            const container = document.getElementById('lowPantryCheckboxList');
+
+            if (lowItems.length === 0) {
+                container.innerHTML = `<p class="text-xs text-slate-400 text-center py-4">Nenhum item com estoque abaixo do ideal na despensa no momento.</p>`;
+            } else {
+                container.innerHTML = lowItems.map(item => {
+                    const missing = item.ideal - item.qty;
+                    return `
+                        <label class="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 cursor-pointer hover:border-amber-500 transition-all">
+                            <div class="flex items-center gap-2.5">
+                                <input type="checkbox" value="${item.id}" class="low-pantry-cb w-4 h-4 text-amber-500 rounded focus:ring-amber-500 border-slate-300">
+                                <div>
+                                    <h5 class="font-bold text-xs text-slate-800 dark:text-white">${escapeHtml(item.name)}</h5>
+                                    <span class="text-[10px] text-slate-400">Atual: ${item.qty} | Ideal: ${item.ideal} ${item.unit}</span>
+                                </div>
+                            </div>
+                            <span class="text-xs font-extrabold text-amber-600 dark:text-amber-400">Faltam ${missing} ${item.unit}</span>
+                        </label>
+                    `;
+                }).join('');
+            }
+            document.getElementById('orderFromPantryModal').classList.remove('hidden');
+        }
+
+        function closeOrderFromPantryModal() { document.getElementById('orderFromPantryModal').classList.add('hidden'); }
+
+        async function submitLowPantryOrders() {
+            const checkboxes = document.querySelectorAll('.low-pantry-cb:checked');
+            if (checkboxes.length === 0) {
+                showToast('Selecione ao menos um item!', 'error');
+                return;
+            }
+
+            for (let cb of checkboxes) {
+                const item = appState.pantry.find(p => p.id == cb.value);
+                if (!item) continue;
+                const missing = item.ideal - item.qty;
+
+                const orderData = {
+                    id: 'o_' + Date.now() + Math.floor(Math.random()*100),
+                    name: item.name,
+                    qty: `${missing} ${item.unit}`,
+                    priority: item.qty <= 0 ? 'urgente' : 'normal',
+                    obs: 'Reposição automática da despensa',
+                    status: 'pending',
+                    timestamp: new Date().toISOString()
+                };
+
+                if (supabaseClient) {
+                    await supabaseClient.from('pedidos_familia').insert([orderData]);
+                }
+            }
+
+            loadFromSupabase();
+            closeOrderFromPantryModal();
+            showToast('Itens da despensa adicionados aos pedidos!', 'success');
+        }
+
+        // RENDER DE DÍVIDAS PENDENTES
+        function renderDebts() {
+            const container = document.getElementById('debtsContainer');
+            const pendingDebts = appState.debts.filter(d => !d.paid);
+            const paidDebts = appState.debts.filter(d => d.paid);
+
+            const totalPending = pendingDebts.reduce((acc, d) => acc + (d.amount || 0), 0);
+            const totalPaid = paidDebts.reduce((acc, d) => acc + (d.amount || 0), 0);
+
+            const now = new Date();
+            const currentMonth = now.getMonth();
+            const currentYear = now.getFullYear();
+            const totalMonth = pendingDebts.filter(d => {
+                const due = new Date(d.dueDate + 'T00:00:00');
+                return due.getMonth() === currentMonth && due.getFullYear() === currentYear;
+            }).reduce((acc, d) => acc + (d.amount || 0), 0);
+
+            document.getElementById('totalDebtPending').innerText = formatBRL(totalPending);
+            document.getElementById('totalDebtMonth').innerText = formatBRL(totalMonth);
+            document.getElementById('totalDebtPaid').innerText = formatBRL(totalPaid);
+
+            if (appState.debts.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-10 bg-white dark:bg-slate-800 rounded-2xl border border-dashed border-slate-300 dark:border-slate-700">
+                        <i class="fa-solid fa-file-invoice-dollar text-3xl text-slate-300 dark:text-slate-600 mb-2"></i>
+                        <p class="text-slate-500 text-xs font-medium">Nenhuma dívida cadastrada</p>
+                        <button onclick="openDebtModal()" class="mt-2 text-xs text-rose-600 font-bold hover:underline">+ Adicionar primeira dívida</button>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = appState.debts.map(debt => {
+                const due = new Date(debt.dueDate + 'T00:00:00');
+                const isOverdue = !debt.paid && due < new Date();
+                const debtIdStr = typeof debt.id === 'string' ? `'${debt.id}'` : debt.id;
+
+                return `
+                <div class="bg-white dark:bg-slate-800 p-3.5 rounded-xl border ${debt.paid ? 'border-slate-200 dark:border-slate-700 opacity-60' : (isOverdue ? 'border-rose-400 dark:border-rose-500' : 'border-slate-200 dark:border-slate-700')} shadow-sm flex items-center justify-between gap-3 transition-all">
+                    <div class="flex items-center gap-3 min-w-0 flex-1">
+                        <button onclick="toggleDebtPaid(${debtIdStr})" class="w-7 h-7 rounded-lg flex items-center justify-center border transition-all ${debt.paid ? 'bg-emerald-500 border-emerald-500 text-white' : 'border-slate-300 dark:border-slate-600 hover:border-brand-500'}" title="Marcar como paga/pendente">
+                            ${debt.paid ? '<i class="fa-solid fa-check text-xs"></i>' : ''}
+                        </button>
+                        <div class="min-w-0 flex-1">
+                            <h4 class="font-bold text-slate-800 dark:text-white text-xs truncate ${debt.paid ? 'line-through text-slate-400' : ''}">${escapeHtml(debt.name)}</h4>
+                            <p class="text-[10px] text-slate-400 mt-0.5">Vencimento: ${due.toLocaleDateString('pt-BR')}</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3 shrink-0">
+                        <div class="text-right">
+                            <span class="text-sm font-extrabold ${debt.paid ? 'text-slate-400' : 'text-rose-600 dark:text-rose-400'}">${formatBRL(debt.amount)}</span>
+                        </div>
+                        <div class="flex items-center border-l border-slate-200 dark:border-slate-700 pl-1.5 ml-0.5 gap-0.5">
+                            <button onclick="editDebtItem(${debtIdStr})" title="Editar" class="p-1 text-slate-400 hover:text-slate-600 text-xs rounded"><i class="fa-solid fa-pen"></i></button>
+                            <button onclick="deleteDebtItem(${debtIdStr})" title="Excluir" class="p-1 text-slate-400 hover:text-rose-500 text-xs rounded"><i class="fa-solid fa-trash-can"></i></button>
+                        </div>
+                    </div>
+                </div>
+                `;
+            }).join('');
+        }
+
+        function openDebtModal(id = null) {
+            document.getElementById('debtIdInput').value = id || '';
+            const modalTitle = document.getElementById('debtModalTitle');
+            if (id) {
+                const debt = appState.debts.find(d => d.id == id);
+                if (!debt) return;
+                modalTitle.innerText = 'Editar Dívida';
+                document.getElementById('debtNameInput').value = debt.name;
+                document.getElementById('debtAmountInput').value = debt.amount;
+                document.getElementById('debtDueDateInput').value = debt.dueDate;
+            } else {
+                modalTitle.innerText = 'Adicionar Dívida / Conta';
+                document.getElementById('debtNameInput').value = '';
+                document.getElementById('debtAmountInput').value = '';
+                document.getElementById('debtDueDateInput').value = new Date().toISOString().split('T')[0];
+            }
+            document.getElementById('debtModal').classList.remove('hidden');
+        }
+
+        function closeDebtModal() { document.getElementById('debtModal').classList.add('hidden'); }
+
+        async function saveDebtItem(e) {
+            e.preventDefault();
+            const id = document.getElementById('debtIdInput').value;
+            const name = document.getElementById('debtNameInput').value.trim();
+            const amount = parseFloat(document.getElementById('debtAmountInput').value) || 0;
+            const dueDate = document.getElementById('debtDueDateInput').value;
+
+            if (!name || !amount) return;
+
+            const debtData = { name, amount, due_date: dueDate };
+
+            if (supabaseClient) {
+                if (id) {
+                    const queryId = isNaN(id) ? id : Number(id);
+                    await supabaseClient.from('dividas_pendentes').update(debtData).eq('id', queryId);
+                } else {
+                    debtData.id = 'd_' + Date.now();
+                    debtData.paid = false;
+                    await supabaseClient.from('dividas_pendentes').insert([debtData]);
+                }
+            }
+
+            loadFromSupabase();
+            closeDebtModal();
+            showToast('Dívida salva com sucesso!', 'success');
+        }
+
+        async function toggleDebtPaid(id) {
+            const debt = appState.debts.find(d => d.id == id);
+            if (!debt) return;
+            debt.paid = !debt.paid;
+            if (supabaseClient) {
+                const queryId = isNaN(id) ? id : Number(id);
+                await supabaseClient.from('dividas_pendentes').update({ paid: debt.paid }).eq('id', queryId);
+            }
+            renderApp();
+        }
+
+        function editDebtItem(id) { openDebtModal(id); }
+
+        async function deleteDebtItem(id) {
+            const debt = appState.debts.find(d => d.id == id);
+            if (!debt) return;
+            if (confirm(`Excluir a dívida "${debt.name}"?`)) {
+                if (supabaseClient) {
+                    const queryId = isNaN(id) ? id : Number(id);
+                    await supabaseClient.from('dividas_pendentes').delete().eq('id', queryId);
+                }
+                loadFromSupabase();
+                showToast('Dívida removida.', 'info');
+            }
+        }
+
+        function setPantryFilter(status) {
+            currentPantryFilter = status;
+            ['all', 'ok', 'low', 'critical'].forEach(s => {
+                const btn = document.getElementById(`pFilter_${s}`);
+                if (!btn) return;
+                if (s === status) {
+                    btn.className = 'pantry-filter-btn px-3 py-1.5 rounded-xl text-xs font-bold transition-all bg-brand-600 text-white shadow-sm shrink-0';
+                } else {
+                    btn.className = 'pantry-filter-btn px-3 py-1.5 rounded-xl text-xs font-bold transition-all text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 shrink-0';
+                }
+            });
+            renderPantry();
+        }
+
+        function renderPantry() {
+            const container = document.getElementById('pantryContainer');
+            
+            const totalCount = appState.pantry.length;
+            const okCount = appState.pantry.filter(p => p.qty >= p.ideal).length;
+            const lowCount = appState.pantry.filter(p => p.qty > 0 && p.qty < p.ideal).length;
+            const criticalCount = appState.pantry.filter(p => p.qty <= 0).length;
+
+            document.getElementById('countAll').innerText = totalCount;
+            document.getElementById('countOk').innerText = okCount;
+            document.getElementById('countLow').innerText = lowCount;
+            document.getElementById('countCritical').innerText = criticalCount;
+
+            let filteredItems = appState.pantry;
+            if (currentPantryFilter === 'ok') filteredItems = appState.pantry.filter(p => p.qty >= p.ideal);
+            else if (currentPantryFilter === 'low') filteredItems = appState.pantry.filter(p => p.qty > 0 && p.qty < p.ideal);
+            else if (currentPantryFilter === 'critical') filteredItems = appState.pantry.filter(p => p.qty <= 0);
+
+            if (filteredItems.length === 0) {
+                container.innerHTML = `
+                    <div class="sm:col-span-3 text-center py-8 bg-white dark:bg-slate-800 rounded-2xl border border-dashed border-slate-300 dark:border-slate-700">
+                        <i class="fa-solid fa-box-open text-3xl text-slate-300 dark:text-slate-600 mb-1"></i>
+                        <p class="text-slate-500 text-xs font-medium">Nenhum mantimento nesta categoria</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = filteredItems.map(item => {
+                const isCritical = item.qty <= 0;
+                const isLow = item.qty > 0 && item.qty < item.ideal;
+                const linkedBox = appState.boxes.find(b => b.id == item.boxId);
+
+                let badgeClass = 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/50 dark:text-emerald-300';
+                let badgeText = 'Estoque OK';
+                if (isCritical) {
+                    badgeClass = 'bg-rose-100 text-rose-800 dark:bg-rose-900/50 dark:text-rose-300';
+                    badgeText = 'Esgotado';
+                } else if (isLow) {
+                    badgeClass = 'bg-amber-100 text-amber-800 dark:bg-amber-900/50 dark:text-amber-300';
+                    badgeText = 'Baixo';
+                }
+
+                const itemIdStr = typeof item.id === 'string' ? `'${item.id}'` : item.id;
+
+                return `
+                <div class="bg-white dark:bg-slate-800 p-3.5 rounded-xl border ${isCritical ? 'border-rose-400 dark:border-rose-500/50' : (isLow ? 'border-amber-300' : 'border-slate-200 dark:border-slate-700')} shadow-sm flex items-center justify-between gap-3 transition-all">
+                    <div class="min-w-0 flex-1">
+                        <div class="flex items-center gap-2">
+                            <span class="px-1.5 py-0.5 text-[9px] font-bold rounded ${badgeClass}">${badgeText}</span>
+                        </div>
+                        <h4 class="font-bold text-slate-800 dark:text-white text-xs truncate mt-0.5">${escapeHtml(item.name)}</h4>
+                        <div class="flex items-center gap-2 text-[10px] text-slate-400 mt-0.5">
+                            <span>Ideal: <strong>${item.ideal} ${item.unit}</strong></span>
+                            ${linkedBox ? `<span>• Caixa: ${escapeHtml(linkedBox.name)}</span>` : ''}
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-3 shrink-0">
+                        <div class="text-right">
+                            <span class="text-sm font-extrabold text-slate-800 dark:text-white">${item.qty}</span>
+                            <span class="text-[10px] text-slate-500">${item.unit}</span>
+                        </div>
+                        <div class="flex items-center gap-1">
+                            <button onclick="updatePantryQty(${itemIdStr}, -1)" title="Diminuir" class="w-6 h-6 rounded-lg bg-rose-50 hover:bg-rose-100 dark:bg-rose-950/40 text-rose-600 font-bold text-xs flex items-center justify-center transition-all"><i class="fa-solid fa-minus text-[9px]"></i></button>
+                            <button onclick="updatePantryQty(${itemIdStr}, 1)" title="Aumentar" class="w-6 h-6 rounded-lg bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-950/40 text-emerald-600 font-bold text-xs flex items-center justify-center transition-all"><i class="fa-solid fa-plus text-[9px]"></i></button>
+                        </div>
+                        <div class="flex items-center border-l border-slate-200 dark:border-slate-700 pl-1.5 ml-0.5 gap-0.5">
+                            <button onclick="editPantryItem(${itemIdStr})" title="Editar" class="p-1 text-slate-400 hover:text-slate-600 text-xs rounded"><i class="fa-solid fa-pen"></i></button>
+                            <button onclick="deletePantryItem(${itemIdStr})" title="Excluir" class="p-1 text-slate-400 hover:text-rose-500 text-xs rounded"><i class="fa-solid fa-trash-can"></i></button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            }).join('');
+        }
+
+        function copyShoppingList() {
+            const criticalItems = appState.pantry.filter(p => p.qty < p.ideal);
+            if (criticalItems.length === 0) {
+                showToast('Nenhum item em falta para copiar!', 'info');
+                return;
+            }
+
+            let text = "🛒 *Lista de Compras - Despensa*:\n\n";
+            criticalItems.forEach(item => {
+                const missing = item.ideal - item.qty;
+                text += `[ ] ${missing}x ${item.name} (${item.unit})\n`;
+            });
+
+            navigator.clipboard.writeText(text).then(() => {
+                showToast('Lista de compras copiada!', 'success');
+            }).catch(() => {
+                showToast('Erro ao copiar lista.', 'error');
+            });
+        }
+
+        async function updatePantryQty(id, delta) {
+            const item = appState.pantry.find(p => p.id == id);
+            if (!item) return;
+            item.qty = Math.max(0, item.qty + delta);
+            if (supabaseClient) {
+                const queryId = isNaN(id) ? id : Number(id);
+                await supabaseClient.from('despensa_mantimentos').update({ qty: item.qty }).eq('id', queryId);
+            }
+            renderApp();
+        }
+
+        function renderHistory() {
+            const list = document.getElementById('historyList');
+            if (!appState.history || appState.history.length === 0) {
+                list.innerHTML = `<div class="text-center py-6 text-slate-400 text-xs">Nenhuma movimentação registrada.</div>`;
+                return;
+            }
+
+            list.innerHTML = appState.history.map(item => {
+                const isDeposit = item.type === 'deposit';
+                const dateStr = new Date(item.timestamp).toLocaleDateString('pt-BR', { hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit' });
+                
+                return `
+                    <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 text-xs space-y-1">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-2">
+                                <div class="w-6 h-6 rounded-lg flex items-center justify-center text-[10px] ${isDeposit ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300' : 'bg-rose-100 text-rose-700 dark:bg-rose-900/40 dark:text-rose-300'}">
+                                    <i class="fa-solid ${isDeposit ? 'fa-arrow-down' : 'fa-arrow-up'}"></i>
+                                </div>
+                                <p class="font-bold text-slate-800 dark:text-slate-200">${escapeHtml(item.boxName)}</p>
+                            </div>
+                            <span class="font-extrabold ${isDeposit ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}">
+                                ${item.amount > 0 ? (isDeposit ? '+' : '-') + formatBRL(item.amount) : 'Registro'}
+                            </span>
+                        </div>
+                        <div class="flex justify-between items-center text-[10px] text-slate-400">
+                            <span>${escapeHtml(item.description || (isDeposit ? 'Aporte' : 'Gasto'))}</span>
+                            <span>${dateStr}</span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderMetrics() {
+            const container = document.getElementById('financialMetricsList');
+            const totalBalance = appState.boxes.reduce((acc, b) => acc + (b.balance || 0), 0);
+            const totalTarget = appState.boxes.reduce((acc, b) => acc + (b.target || 0), 0);
+
+            container.innerHTML = `
+                <div class="flex justify-between p-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-700">
+                    <span class="text-slate-500">Total Acumulado:</span>
+                    <strong class="text-slate-800 dark:text-white">${formatBRL(totalBalance)}</strong>
+                </div>
+                <div class="flex justify-between p-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-700">
+                    <span class="text-slate-500">Soma das Metas:</span>
+                    <strong class="text-slate-800 dark:text-white">${formatBRL(totalTarget)}</strong>
+                </div>
+                <div class="flex justify-between p-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-700">
+                    <span class="text-slate-500">Total na Despensa:</span>
+                    <strong class="text-slate-800 dark:text-white">${appState.pantry.reduce((a,b)=>a+b.qty,0)} unidades</strong>
+                </div>
+                <div class="flex justify-between p-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-700">
+                    <span class="text-slate-500">Pedidos Pendentes:</span>
+                    <strong class="text-amber-500">${appState.orders.filter(o=>o.status==='pending').length} solicitações</strong>
+                </div>
+                <div class="flex justify-between p-2.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-700">
+                    <span class="text-slate-500">Dívidas Pendentes:</span>
+                    <strong class="text-rose-600 dark:text-rose-400">${appState.debts.filter(d=>!d.paid).length} contas</strong>
+                </div>
+            `;
+        }
+
+        async function handleGlobalDeposit(e) {
+            e.preventDefault();
+            const input = document.getElementById('globalDepositInput');
+            const totalDeposit = parseFloat(input.value);
+
+            if (!totalDeposit || totalDeposit <= 0) return;
+            if (appState.boxes.length === 0) {
+                showToast('Crie ao menos uma caixa primeiro!', 'error');
+                return;
+            }
+
+            let remainingDeposit = totalDeposit;
+            let allocations = {};
+            appState.boxes.forEach(b => allocations[b.id] = 0);
+            let overflowOccurred = false;
+
+            let maxIterations = 50; 
+            while (remainingDeposit > 0.001 && maxIterations > 0) {
+                maxIterations--;
+                let eligibleBoxes = appState.boxes.filter(b => {
+                    if (b.isReserve) return true;
+                    if (!b.target || b.target <= 0) return true;
+                    return (b.balance + allocations[b.id]) < b.target - 0.0001;
+                });
+
+                if (eligibleBoxes.length === 0) {
+                    let reserveBox = appState.boxes.find(b => b.isReserve) || appState.boxes[appState.boxes.length - 1];
+                    allocations[reserveBox.id] += remainingDeposit;
+                    remainingDeposit = 0;
+                    break;
+                }
+
+                const sumEligiblePct = eligibleBoxes.reduce((acc, b) => acc + (parseFloat(b.pct) || 0), 0);
+                const effectiveSumPct = sumEligiblePct > 0 ? sumEligiblePct : eligibleBoxes.length;
+
+                let roundAllocated = 0;
+                let newlyFilledInThisRound = false;
+
+                for (let box of eligibleBoxes) {
+                    const boxPct = parseFloat(box.pct) || (100 / eligibleBoxes.length);
+                    let share = remainingDeposit * (boxPct / effectiveSumPct);
+
+                    if (!box.isReserve && box.target && box.target > 0) {
+                        const currentVal = box.balance + allocations[box.id];
+                        const spaceLeft = Math.max(0, box.target - currentVal);
+                        if (share >= spaceLeft) {
+                            allocations[box.id] += spaceLeft;
+                            roundAllocated += spaceLeft;
+                            newlyFilledInThisRound = true;
+                            overflowOccurred = true;
+                        } else {
+                            allocations[box.id] += share;
+                            roundAllocated += share;
+                        }
+                    } else {
+                        allocations[box.id] += share;
+                        roundAllocated += share;
+                    }
+                }
+                remainingDeposit -= roundAllocated;
+                if (!newlyFilledInThisRound) { remainingDeposit = 0; break; }
+            }
+
+            for (let box of appState.boxes) {
+                const addedAmount = allocations[box.id] || 0;
+                if (addedAmount > 0) {
+                    box.balance = (box.balance || 0) + addedAmount;
+                    if (supabaseClient) {
+                        const boxQueryId = isNaN(box.id) ? box.id : Number(box.id);
+                        await supabaseClient.from('caixas_financeiras').update({ balance: box.balance }).eq('id', boxQueryId);
+                    }
+                }
+            }
+
+            if (supabaseClient) {
+                await supabaseClient.from('historico_movimentacoes').insert([{
+                    id: 'h_' + Date.now(), box_name: 'Aporte Global Inteligente', type: 'deposit', amount: totalDeposit,
+                    description: overflowOccurred ? 'Com transbordamento automático' : 'Proporcional por porcentagem', timestamp: new Date().toISOString()
+                }]);
+            }
+
+            loadFromSupabase();
+            input.value = '';
+            showSpilloverReport(totalDeposit, allocations, overflowOccurred);
+        }
+
+        function showSpilloverReport(total, allocations, overflowOccurred) {
+            document.getElementById('spilloverTotalText').innerText = `Aporte Total: ${formatBRL(total)}`;
+            document.getElementById('spilloverNoticeBox').innerHTML = overflowOccurred ? 
+                `<div class="font-bold text-amber-600 dark:text-amber-400"><i class="fa-solid fa-bolt"></i> Transbordamento ativado!</div><p>Excedente enviado para a Reserva.</p>` :
+                `<div class="font-bold text-emerald-600 dark:text-emerald-400"><i class="fa-solid fa-circle-check"></i> Distribuição completa</div><p>Valores alocados proporcionalmente.</p>`;
+
+            document.getElementById('spilloverBreakdownList').innerHTML = appState.boxes.map(box => {
+                const rec = allocations[box.id] || 0;
+                return `
+                    <div class="flex items-center justify-between p-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700">
+                        <div class="flex items-center gap-3">
+                            <div class="w-7 h-7 rounded-lg flex items-center justify-center text-white text-xs font-bold" style="background-color: ${box.color}"><i class="fa-solid ${box.icon}"></i></div>
+                            <div>
+                                <h5 class="font-bold text-xs text-slate-800 dark:text-white">${escapeHtml(box.name)}</h5>
+                                <span class="text-[10px] text-slate-400">Novo saldo: ${formatBRL(box.balance)}</span>
+                            </div>
+                        </div>
+                        <span class="font-extrabold text-xs text-emerald-600 dark:text-emerald-400">+ ${formatBRL(rec)}</span>
+                    </div>
+                `;
+            }).join('');
+            document.getElementById('spilloverReportModal').classList.remove('hidden');
+        }
+
+        function closeSpilloverReportModal() { document.getElementById('spilloverReportModal').classList.add('hidden'); }
+
+        function openTxModal(boxId, type) {
+            const box = appState.boxes.find(b => b.id == boxId);
+            if (!box) return;
+            document.getElementById('txBoxId').value = box.id;
+            document.getElementById('txModalSubtitle').innerText = box.name;
+            document.getElementById('txAmountInput').value = '';
+            document.getElementById('txDescInput').value = '';
+            setTxType(type);
+            document.getElementById('txModal').classList.remove('hidden');
+        }
+
+        function closeTxModal() { document.getElementById('txModal').classList.add('hidden'); }
+
+        function setTxType(type) {
+            document.getElementById('txType').value = type;
+            const btnDep = document.getElementById('btnTypeDeposit');
+            const btnWit = document.getElementById('btnTypeWithdraw');
+            const submitBtn = document.getElementById('txSubmitBtn');
+
+            if (type === 'deposit') {
+                btnDep.className = 'py-2 text-xs font-bold rounded-lg transition-all bg-emerald-500 text-white shadow-sm';
+                btnWit.className = 'py-2 text-xs font-bold rounded-lg transition-all text-slate-600 dark:text-slate-400';
+                submitBtn.className = 'w-1/2 py-2 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-medium text-xs shadow-md';
+                submitBtn.innerText = 'Confirmar Entrada';
+            } else {
+                btnWit.className = 'py-2 text-xs font-bold rounded-lg transition-all bg-rose-500 text-white shadow-sm';
+                btnDep.className = 'py-2 text-xs font-bold rounded-lg transition-all text-slate-600 dark:text-slate-400';
+                submitBtn.className = 'w-1/2 py-2 px-4 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-medium text-xs shadow-md';
+                submitBtn.innerText = 'Confirmar Saída';
+            }
+        }
+
+        async function handleTxSubmit(e) {
+            e.preventDefault();
+            const boxId = document.getElementById('txBoxId').value;
+            const type = document.getElementById('txType').value;
+            const amount = parseFloat(document.getElementById('txAmountInput').value);
+            const desc = document.getElementById('txDescInput').value.trim();
+
+            const box = appState.boxes.find(b => b.id == boxId);
+            if (!box || !amount || amount <= 0) return;
+
+            if (type === 'withdraw' && amount > box.balance) {
+                showToast(`Saldo insuficiente. Disponível: ${formatBRL(box.balance)}.`, 'error');
+                return;
+            }
+
+            box.balance = type === 'deposit' ? box.balance + amount : box.balance - amount;
+
+            if (supabaseClient) {
+                const boxQueryId = isNaN(box.id) ? box.id : Number(box.id);
+                await supabaseClient.from('caixas_financeiras').update({ balance: box.balance }).eq('id', boxQueryId);
+                await supabaseClient.from('historico_movimentacoes').insert([{
+                    id: 'h_' + Date.now(), box_name: box.name, type: type, amount: amount, description: desc, timestamp: new Date().toISOString()
+                }]);
+            }
+
+            loadFromSupabase();
+            closeTxModal();
+            showToast(`${type === 'deposit' ? 'Aporte' : 'Gasto'} registrado!`, 'success');
+        }
+
+        function openBoxModal(boxId = null) {
+            document.getElementById('boxIdInput').value = boxId || '';
+            const modalTitle = document.getElementById('boxModalTitle');
+            if (boxId) {
+                const box = appState.boxes.find(b => b.id == boxId);
+                if (!box) return;
+                modalTitle.innerText = 'Editar Caixa';
+                document.getElementById('boxNameInput').value = box.name;
+                document.getElementById('boxPctInput').value = box.pct;
+                document.getElementById('boxTargetInput').value = box.target || '';
+                document.getElementById('boxIsReserveInput').checked = !!box.isReserve;
+                const iconIdx = ICON_PALETTE.findIndex(p => p.icon === box.icon);
+                selectIcon(iconIdx >= 0 ? iconIdx : 0);
+            } else {
+                modalTitle.innerText = 'Criar Nova Caixa';
+                document.getElementById('boxNameInput').value = '';
+                document.getElementById('boxPctInput').value = '';
+                document.getElementById('boxTargetInput').value = '';
+                document.getElementById('boxIsReserveInput').checked = false;
+                selectIcon(0);
+            }
+            toggleReserveCheckboxUI();
+            document.getElementById('boxModal').classList.remove('hidden');
+        }
+
+        function toggleReserveCheckboxUI() {
+            const isReserve = document.getElementById('boxIsReserveInput').checked;
+            const targetInput = document.getElementById('boxTargetInput');
+            if (isReserve) { targetInput.value = ''; targetInput.disabled = true; targetInput.placeholder = 'Sem limite (Reserva)'; }
+            else { targetInput.disabled = false; targetInput.placeholder = 'Sem limite'; }
+        }
+
+        function closeBoxModal() { document.getElementById('boxModal').classList.add('hidden'); }
+
+        async function saveBox(e) {
+            e.preventDefault();
+            const id = document.getElementById('boxIdInput').value;
+            const name = document.getElementById('boxNameInput').value.trim();
+            const pct = parseFloat(document.getElementById('boxPctInput').value) || 0;
+            const targetVal = parseFloat(document.getElementById('boxTargetInput').value);
+            const isReserve = document.getElementById('boxIsReserveInput').checked;
+            const iconObj = ICON_PALETTE[selectedIconIndex];
+
+            if (!name) return;
+
+            const boxData = {
+                name: name,
+                pct: pct,
+                target: isReserve ? null : (targetVal > 0 ? targetVal : null),
+                is_reserve: isReserve,
+                icon: iconObj.icon,
+                color: iconObj.color
+            };
+
+            if (supabaseClient) {
+                if (id) {
+                    const boxQueryId = isNaN(id) ? id : Number(id);
+                    await supabaseClient.from('caixas_financeiras').update(boxData).eq('id', boxQueryId);
+                } else {
+                    boxData.id = 'b_' + Date.now();
+                    boxData.balance = 0;
+                    await supabaseClient.from('caixas_financeiras').insert([boxData]);
+                }
+            }
+
+            loadFromSupabase();
+            closeBoxModal();
+            showToast('Caixa salva com sucesso!', 'success');
+        }
+
+        function editBox(id) { openBoxModal(id); }
+
+        async function deleteBox(id) {
+            const box = appState.boxes.find(b => b.id == id);
+            if (!box) return;
+            if (confirm(`Excluir a caixa "${box.name}"?`)) {
+                if (supabaseClient) {
+                    const boxQueryId = isNaN(id) ? id : Number(id);
+                    await supabaseClient.from('caixas_financeiras').delete().eq('id', boxQueryId);
+                }
+                loadFromSupabase();
+                showToast('Caixa removida.', 'info');
+            }
+        }
+
+        function updateBoxLinkDropdown() {
+            const select = document.getElementById('pantryBoxLinkInput');
+            select.innerHTML = `<option value="">Nenhuma (Independente)</option>` + appState.boxes.map(b => `<option value="${b.id}">${escapeHtml(b.name)}</option>`).join('');
+        }
+
+        function openPantryModal(itemId = null) {
+            updateBoxLinkDropdown();
+            document.getElementById('pantryIdInput').value = itemId || '';
+            const modalTitle = document.getElementById('pantryModalTitle');
+
+            if (itemId !== null && itemId !== undefined && itemId !== '') {
+                const item = appState.pantry.find(p => p.id == itemId);
+                if (!item) return;
+                modalTitle.innerText = 'Editar Mantimento';
+                document.getElementById('pantryNameInput').value = item.name;
+                document.getElementById('pantryQtyInput').value = item.qty;
+                document.getElementById('pantryIdealInput').value = item.ideal;
+                document.getElementById('pantryUnitInput').value = item.unit;
+                document.getElementById('pantryBoxLinkInput').value = item.boxId || '';
+            } else {
+                modalTitle.innerText = 'Adicionar Mantimento';
+                document.getElementById('pantryNameInput').value = '';
+                document.getElementById('pantryQtyInput').value = '1';
+                document.getElementById('pantryIdealInput').value = '3';
+                document.getElementById('pantryUnitInput').value = 'un';
+                document.getElementById('pantryBoxLinkInput').value = '';
+            }
+            document.getElementById('pantryModal').classList.remove('hidden');
+        }
+
+        function closePantryModal() { document.getElementById('pantryModal').classList.add('hidden'); }
+
+        async function savePantryItem(e) {
+            e.preventDefault();
+            const id = document.getElementById('pantryIdInput').value;
+            const name = document.getElementById('pantryNameInput').value.trim();
+            const qty = parseInt(document.getElementById('pantryQtyInput').value) || 0;
+            const ideal = parseInt(document.getElementById('pantryIdealInput').value) || 1;
+            const unit = document.getElementById('pantryUnitInput').value;
+            const boxId = document.getElementById('pantryBoxLinkInput').value || null;
+
+            if (!name) return;
+
+            const itemData = { name, qty, ideal, unit, box_id: boxId };
+
+            if (supabaseClient) {
+                if (id) {
+                    const queryId = isNaN(id) ? id : Number(id);
+                    await supabaseClient.from('despensa_mantimentos').update(itemData).eq('id', queryId);
+                } else {
+                    itemData.id = 'p_' + Date.now();
+                    await supabaseClient.from('despensa_mantimentos').insert([itemData]);
+                }
+            }
+
+            loadFromSupabase();
+            closePantryModal();
+            showToast('Mantimento salvo com sucesso!', 'success');
+        }
+
+        function editPantryItem(id) { openPantryModal(id); }
+
+        async function deletePantryItem(id) {
+            const item = appState.pantry.find(p => p.id == id);
+            if (!item) return;
+            if (confirm(`Remover "${item.name}" da despensa?`)) {
+                if (supabaseClient) {
+                    const queryId = isNaN(id) ? id : Number(id);
+                    await supabaseClient.from('despensa_mantimentos').delete().eq('id', queryId);
+                }
+                loadFromSupabase();
+                showToast('Mantimento removido.', 'info');
+            }
+        }
+
+        function openPresetModal() { document.getElementById('presetModal').classList.remove('hidden'); }
+        function closePresetModal() { document.getElementById('presetModal').classList.add('hidden'); }
+
+        async function applyPreset(key) {
+            if (!confirm('Deseja aplicar este modelo? Suas caixas atuais serão substituídas.')) return;
+            if (key === '50-30-20') {
+                if (supabaseClient) {
+                    await supabaseClient.from('caixas_financeiras').delete().neq('id', 'abc');
+                    const presets = [
+                        { id: 'p1', name: 'Supermercado & Despensa', pct: 50, balance: 0, target: 1500, is_reserve: false, icon: 'fa-basket-shopping', color: '#16a34a' },
+                        { id: 'p2', name: 'Lazer e Estilo de Vida', pct: 30, balance: 0, target: 1000, is_reserve: false, icon: 'fa-gamepad', color: '#ec4899' },
+                        { id: 'p3', name: 'Caixa Reserva Infinita', pct: 20, balance: 0, target: null, is_reserve: true, icon: 'fa-shield-halved', color: '#eab308' }
+                    ];
+                    await supabaseClient.from('caixas_financeiras').insert(presets);
+                }
+            }
+            loadFromSupabase();
+            closePresetModal();
+            showToast('Modelo aplicado com sucesso!', 'success');
+        }
+
+        async function clearHistory() {
+            if (confirm('Deseja limpar todo o histórico?')) {
+                if (supabaseClient) {
+                    await supabaseClient.from('historico_movimentacoes').delete().neq('id', 'abc');
+                }
+                loadFromSupabase();
+                showToast('Histórico limpo.', 'info');
+            }
+        }
+
+        function initChart() {
+            const ctx = document.getElementById('boxesChart').getContext('2d');
+            const isDark = document.documentElement.classList.contains('dark');
+
+            chartInstance = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: [],
+                    datasets: [{ data: [], backgroundColor: [], borderWidth: 2, borderColor: isDark ? '#1e293b' : '#ffffff' }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom', labels: { boxWidth: 10, padding: 10, font: { size: 11, family: 'Inter' }, color: isDark ? '#cbd5e1' : '#475569' } },
+                        tooltip: { callbacks: { label: function(context) { return ` ${context.label}: ${formatBRL(context.raw)}`; } } }
+                    },
+                    cutout: '70%'
+                }
+            });
+            updateChart();
+        }
+
+        function updateChart() {
+            if (!chartInstance) return;
+            const boxesWithBalance = appState.boxes.filter(b => (b.balance || 0) > 0);
+            const noDataEl = document.getElementById('noChartData');
+
+            if (boxesWithBalance.length === 0) {
+                chartInstance.data.labels = [];
+                chartInstance.data.datasets[0].data = [];
+                chartInstance.update();
+                noDataEl.classList.remove('hidden');
+                return;
+            }
+
+            noDataEl.classList.add('hidden');
+            chartInstance.data.labels = boxesWithBalance.map(b => b.name);
+            chartInstance.data.datasets[0].data = boxesWithBalance.map(b => b.balance);
+            chartInstance.data.datasets[0].backgroundColor = boxesWithBalance.map(b => b.color);
+            chartInstance.data.datasets[0].borderColor = document.documentElement.classList.contains('dark') ? '#1e293b' : '#ffffff';
+            chartInstance.update();
+        }
+
+        function showToast(msg, type = 'info') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            let bgClass = 'bg-slate-800 text-white', icon = 'fa-circle-info';
+            if (type === 'success') { bgClass = 'bg-emerald-600 text-white'; icon = 'fa-circle-check'; }
+            else if (type === 'error') { bgClass = 'bg-rose-600 text-white'; icon = 'fa-triangle-exclamation'; }
+
+            toast.className = `px-4 py-2.5 rounded-xl text-xs font-semibold shadow-lg flex items-center gap-2 transform transition-all duration-300 translate-y-2 opacity-0 pointer-events-auto ${bgClass}`;
+            toast.innerHTML = `<i class="fa-solid ${icon}"></i> <span>${escapeHtml(msg)}</span>`;
+            container.appendChild(toast);
+            setTimeout(() => toast.classList.remove('translate-y-2', 'opacity-0'), 10);
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-2');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        function escapeHtml(str) {
+            return String(str || '').replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&quot;");
+        }
+    </script>
+</body>
+</html>
