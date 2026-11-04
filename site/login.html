@@ -1,419 +1,283 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Login | WS SOLUÇÕES</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - WS Soluções</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
 
-<!-- Tailwind CSS -->
-<script src="https://cdn.tailwindcss.com"></script>
+        body {
+            height: 100vh;
+            background: #080a0f;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
 
-<!-- Lucide Icons -->
-<script src="https://unpkg.com/lucide@latest"></script>
+        /* Fundo Animado com Gradientes Fluídos */
+        .background-blobs {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 1;
+        }
 
-<!-- Supabase -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+        .blob {
+            position: absolute;
+            filter: blur(80px);
+            opacity: 0.5;
+            animation: floatBlob 10s infinite alternate ease-in-out;
+        }
 
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+        .blob-1 {
+            width: 350px;
+            height: 350px;
+            background: #00f2fe;
+            top: -10%;
+            left: -10%;
+            border-radius: 50%;
+        }
 
-<script>
-tailwind.config = {
-  theme: {
-    extend: {
-      fontFamily: {
-        sans: ['Plus Jakarta Sans', 'sans-serif']
-      },
-      colors: {
-        brand: '#f97316',
-        dark: '#080d18',
-        panel: '#111827'
-      }
-    }
-  }
-}
-</script>
+        .blob-2 {
+            width: 400px;
+            height: 400px;
+            background: #4facfe;
+            bottom: -15%;
+            right: -10%;
+            border-radius: 50%;
+            animation-delay: -5s;
+        }
 
-<style>
-* {
-  box-sizing: border-box;
-}
+        @keyframes floatBlob {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(50px, 30px) scale(1.1); }
+        }
 
-body {
-  background: #080d18;
-  color: #fff;
-  font-family: 'Plus Jakarta Sans', sans-serif;
-}
+        /* Container do Login (Glassmorphism) */
+        .login-container {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            max-width: 400px;
+            padding: 40px;
+            background: rgba(16, 22, 34, 0.7);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(0, 242, 254, 0.2);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5),
+                        0 0 20px rgba(0, 242, 254, 0.1);
+            animation: fadeIn 1s ease-out forwards;
+        }
 
-.login-card {
-  background: rgba(17, 24, 39, .92);
-  border: 1px solid #263244;
-  box-shadow: 0 25px 80px rgba(0,0,0,.35);
-}
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
 
-.field {
-  background: #0b1220;
-  border: 1px solid #293548;
-  transition: .2s;
-}
+        .login-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
 
-.field:focus-within {
-  border-color: #f97316;
-  box-shadow: 0 0 0 3px rgba(249,115,22,.12);
-}
+        .login-header h2 {
+            color: #ffffff;
+            font-size: 28px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
 
-.field input {
-  background: transparent;
-  outline: none;
-  color: white;
-  width: 100%;
-}
+        .login-header h2 span {
+            color: #00f2fe;
+        }
 
-.btn-login {
-  background: #f97316;
-  transition: .2s;
-}
+        .login-header p {
+            color: #8a99ad;
+            font-size: 14px;
+        }
 
-.btn-login:hover {
-  background: #ea580c;
-  transform: translateY(-1px);
-}
+        /* Campos de Entrada */
+        .input-group {
+            position: relative;
+            margin-bottom: 25px;
+        }
 
-button:disabled {
-  opacity: .6;
-  cursor: not-allowed;
-}
+        .input-group input {
+            width: 100%;
+            padding: 15px 15px 15px 45px;
+            background: rgba(8, 10, 15, 0.6);
+            border: 1px solid rgba(138, 153, 173, 0.3);
+            border-radius: 10px;
+            color: #fff;
+            font-size: 15px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
 
-.bg-effect {
-  background:
-    radial-gradient(circle at 20% 20%, rgba(249,115,22,.12), transparent 35%),
-    radial-gradient(circle at 85% 80%, rgba(37,99,235,.10), transparent 35%);
-}
+        .input-group input:focus {
+            border-color: #00f2fe;
+            box-shadow: 0 0 10px rgba(0, 242, 254, 0.3);
+        }
 
-</style>
+        .input-group svg {
+            position: absolute;
+            top: 50%;
+            left: 15px;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            fill: #8a99ad;
+            transition: fill 0.3s ease;
+        }
+
+        .input-group input:focus ~ svg {
+            fill: #00f2fe;
+        }
+
+        /* Botão de Ação */
+        .btn-login {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            border: none;
+            border-radius: 10px;
+            color: #080a0f;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 242, 254, 0.4);
+        }
+
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 242, 254, 0.6);
+        }
+
+        .btn-login:active {
+            transform: translateY(0);
+        }
+
+        /* Links de Rodapé */
+        .login-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+            font-size: 13px;
+        }
+
+        .login-footer a {
+            color: #8a99ad;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .login-footer a:hover {
+            color: #00f2fe;
+        }
+
+        /* Animação de Erro (Shake) disparada via JS */
+        .shake {
+            animation: shake 0.4s ease-in-out;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-8px); }
+            40%, 80% { transform: translateX(8px); }
+        }
+    </style>
 </head>
+<body>
 
-<body class="min-h-screen bg-effect flex flex-col">
-
-<!-- CABEÇALHO -->
-<header class="px-6 py-5 flex justify-between items-center max-w-7xl mx-auto w-full">
-
-  <div class="flex items-center gap-3">
-    <div class="w-11 h-11 rounded-xl bg-brand flex items-center justify-center">
-      <i data-lucide="zap" class="w-6 h-6 text-white"></i>
+    <!-- Fundo Fluído -->
+    <div class="background-blobs">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
     </div>
 
-    <div>
-      <h1 class="font-extrabold text-lg tracking-tight">
-        WS <span class="text-brand">SOLUÇÕES</span>
-      </h1>
-      <p class="text-[10px] text-gray-500 tracking-widest">
-        TECNOLOGIA E SERVIÇOS
-      </p>
-    </div>
-  </div>
-
-  <span class="text-xs text-gray-500 flex items-center gap-2">
-    <i data-lucide="shield-check" class="w-4 h-4 text-green-500"></i>
-    Ambiente seguro
-  </span>
-
-</header>
-
-<!-- CONTEÚDO -->
-<main class="flex-1 flex items-center justify-center px-5 py-8">
-
-  <div class="w-full max-w-md">
-
-    <div class="login-card rounded-3xl p-7 sm:p-9">
-
-      <!-- ÍCONE -->
-      <div class="w-14 h-14 rounded-2xl bg-orange-500/10 border border-orange-500/20 flex items-center justify-center mb-7">
-        <i data-lucide="user-round" class="w-7 h-7 text-brand"></i>
-      </div>
-
-      <div class="mb-8">
-        <h2 class="text-2xl font-extrabold mb-2">
-          Bem-vindo!
-        </h2>
-
-        <p class="text-sm text-gray-400">
-          Acesse sua conta para acompanhar seus serviços.
-        </p>
-      </div>
-
-      <!-- FORMULÁRIO -->
-      <form id="loginForm" class="space-y-5">
-
-        <div>
-          <label class="text-xs font-semibold text-gray-300 block mb-2">
-            E-mail
-          </label>
-
-          <div class="field flex items-center gap-3 px-4 py-3.5 rounded-xl">
-            <i data-lucide="mail" class="w-5 h-5 text-gray-500"></i>
-
-            <input
-              id="email"
-              type="email"
-              placeholder="seu@email.com"
-              autocomplete="email"
-              required
-            >
-          </div>
+    <!-- Caixa de Login -->
+    <div class="login-container" id="loginCard">
+        <div class="login-header">
+            <h2>Área <span>Restrita</span></h2>
+            <p>Entre com suas credenciais para continuar</p>
         </div>
 
-        <div>
-          <div class="flex justify-between mb-2">
-            <label class="text-xs font-semibold text-gray-300">
-              Senha
-            </label>
+        <form id="loginForm">
+            <div class="input-group">
+                <input type="email" id="email" placeholder="E-mail ou Usuário" required autocomplete="off">
+                <!-- Ícone de Usuário (SVG) -->
+                <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+            </div>
 
-            <button
-              type="button"
-              onclick="recuperarSenha()"
-              class="text-xs text-brand hover:text-orange-300"
-            >
-              Esqueceu a senha?
-            </button>
-          </div>
+            <div class="input-group">
+                <input type="password" id="password" placeholder="Senha" required>
+                <!-- Ícone de Cadeado (SVG) -->
+                <svg viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+            </div>
 
-          <div class="field flex items-center gap-3 px-4 py-3.5 rounded-xl">
+            <button type="submit" class="btn-login" id="submitBtn">ACESSAR SISTEMA</button>
 
-            <i data-lucide="lock" class="w-5 h-5 text-gray-500"></i>
-
-            <input
-              id="senha"
-              type="password"
-              placeholder="Digite sua senha"
-              autocomplete="current-password"
-              required
-            >
-
-            <button type="button" onclick="alternarSenha()">
-              <i id="eyeIcon" data-lucide="eye" class="w-5 h-5 text-gray-500"></i>
-            </button>
-
-          </div>
-        </div>
-
-        <!-- MENSAGEM -->
-        <div id="mensagem" class="hidden text-sm p-3 rounded-xl"></div>
-
-        <!-- BOTÃO -->
-        <button
-          id="btnLogin"
-          type="submit"
-          class="btn-login w-full rounded-xl py-4 font-bold text-sm flex items-center justify-center gap-2"
-        >
-          <span id="btnTexto">Entrar na minha conta</span>
-          <i data-lucide="arrow-right" class="w-4 h-4"></i>
-        </button>
-
-      </form>
-
-      <div class="flex items-center gap-3 my-7">
-        <div class="h-px bg-gray-700 flex-1"></div>
-        <span class="text-xs text-gray-500">WS SOLUÇÕES</span>
-        <div class="h-px bg-gray-700 flex-1"></div>
-      </div>
-
-      <p class="text-center text-xs text-gray-500">
-        Precisa de atendimento?
-        <a href="https://wa.me/" target="_blank"
-           class="text-brand hover:underline">
-          Fale conosco
-        </a>
-      </p>
-
+            <div class="login-footer">
+                <a href="#">Esqueceu a senha?</a>
+                <a href="#">Criar conta</a>
+            </div>
+        </form>
     </div>
 
-    <p class="text-center text-xs text-gray-600 mt-7">
-      © 2026 WS SOLUÇÕES · Todos os direitos reservados.
-    </p>
+    <!-- JavaScript de Efeitos e Validação -->
+    <script>
+        const form = document.getElementById('loginForm');
+        const loginCard = document.getElementById('loginCard');
+        const submitBtn = document.getElementById('submitBtn');
 
-  </div>
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
 
-</main>
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
 
-<script>
+            // Simulação de verificação (exemplo simples)
+            submitBtn.innerText = "Autenticando...";
+            submitBtn.style.opacity = "0.7";
 
-// ===================================
-// CONFIGURAÇÃO SUPABASE
-// ===================================
+            setTimeout(() => {
+                if (email === "admin@sistema.com" && password === "123456") {
+                    submitBtn.innerText = "Sucesso! Entrando...";
+                    submitBtn.style.background = "linear-gradient(135deg, #00b09b, #96c93d)";
+                    submitBtn.style.boxShadow = "0 5px 15px rgba(0, 176, 155, 0.5)";
+                    
+                    setTimeout(() => {
+                        alert("Login realizado com sucesso! (Redirecionando...)");
+                        // window.location.href = "dashboard.html";
+                    }, 800);
+                } else {
+                    // Dispara animação de erro (Shake)
+                    loginCard.classList.add('shake');
+                    
+                    submitBtn.innerText = "ACESSAR SISTEMA";
+                    submitBtn.style.opacity = "1";
+                    
+                    alert("Credenciais inválidas! (Dica: admin@sistema.com / 123456)");
 
-const SUPABASE_URL = "SUA_SUPABASE_URL";
-const SUPABASE_KEY = "SUA_CHAVE_ANON_PUBLIC";
-
-const db = window.supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_KEY
-);
-
-// ===================================
-// ELEMENTOS
-// ===================================
-
-const form = document.getElementById("loginForm");
-const email = document.getElementById("email");
-const senha = document.getElementById("senha");
-const mensagem = document.getElementById("mensagem");
-const btnLogin = document.getElementById("btnLogin");
-const btnTexto = document.getElementById("btnTexto");
-
-// ===================================
-// MENSAGENS
-// ===================================
-
-function mostrarMensagem(texto, tipo = "erro") {
-
-  mensagem.classList.remove("hidden");
-
-  mensagem.className =
-    "text-sm p-3 rounded-xl " +
-    (tipo === "sucesso"
-      ? "bg-green-500/10 text-green-400 border border-green-500/20"
-      : "bg-red-500/10 text-red-400 border border-red-500/20");
-
-  mensagem.textContent = texto;
-}
-
-// ===================================
-// MOSTRAR SENHA
-// ===================================
-
-function alternarSenha() {
-
-  const visivel = senha.type === "password";
-
-  senha.type = visivel ? "text" : "password";
-
-  document.getElementById("eyeIcon")
-    .setAttribute("data-lucide", visivel ? "eye-off" : "eye");
-
-  lucide.createIcons();
-}
-
-// ===================================
-// LOGIN
-// ===================================
-
-form.addEventListener("submit", async (e) => {
-
-  e.preventDefault();
-
-  mensagem.classList.add("hidden");
-
-  btnLogin.disabled = true;
-  btnTexto.textContent = "Autenticando...";
-
-  try {
-
-    const { data, error } = await db.auth.signInWithPassword({
-      email: email.value.trim(),
-      password: senha.value
-    });
-
-    if (error) throw error;
-
-    // Buscar perfil do usuário
-    const { data: perfil, error: perfilErro } = await db
-      .from("profiles")
-      .select("nome, role")
-      .eq("id", data.user.id)
-      .single();
-
-    if (perfilErro || !perfil) {
-
-      await db.auth.signOut();
-
-      throw new Error("Perfil não encontrado. Procure o administrador.");
-
-    }
-
-    mostrarMensagem("Login realizado com sucesso!", "sucesso");
-
-    // Redirecionamento conforme permissão
-    if (perfil.role === "admin") {
-      window.location.replace("admin.html");
-    } else {
-      window.location.replace("portal.html");
-    }
-
-  } catch (error) {
-
-    mostrarMensagem(
-      error.message === "Invalid login credentials"
-        ? "E-mail ou senha incorretos."
-        : error.message
-    );
-
-    btnLogin.disabled = false;
-    btnTexto.textContent = "Entrar na minha conta";
-
-  }
-
-});
-
-// ===================================
-// RECUPERAR SENHA
-// ===================================
-
-async function recuperarSenha() {
-
-  const endereco = email.value.trim();
-
-  if (!endereco) {
-    mostrarMensagem("Digite seu e-mail primeiro.");
-    email.focus();
-    return;
-  }
-
-  const { error } = await db.auth.resetPasswordForEmail(
-    endereco,
-    {
-      redirectTo: window.location.origin + "/redefinir-senha.html"
-    }
-  );
-
-  if (error) {
-    mostrarMensagem(error.message);
-  } else {
-    mostrarMensagem(
-      "Se o e-mail estiver cadastrado, você receberá as instruções de recuperação.",
-      "sucesso"
-    );
-  }
-
-}
-
-// ===================================
-// INICIALIZAÇÃO
-// ===================================
-
-lucide.createIcons();
-
-// Se já estiver autenticado, verificar o perfil
-(async () => {
-
-  const { data: { user } } = await db.auth.getUser();
-
-  if (!user) return;
-
-  const { data: perfil } = await db
-    .from("profiles")
-    .select("role")
-    .eq("id", user.id)
-    .single();
-
-  if (perfil) {
-    window.location.replace(
-      perfil.role === "admin" ? "admin.html" : "portal.html"
-    );
-  }
-
-})();
-
-</script>
-
+                    // Remove a classe para permitir novo shake caso erre de novo
+                    setTimeout(() => {
+                        loginCard.classList.remove('shake');
+                    }, 400);
+                }
+            }, 1000);
+        });
+    </script>
 </body>
 </html>
