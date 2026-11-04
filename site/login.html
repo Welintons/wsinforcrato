@@ -1,15 +1,17 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#080d18">
+<title>Login | WS SOLUÇÕES</title>
 
-<title>WS SOLUÇÕES | Acesso</title>
-
+<!-- Tailwind CSS -->
 <script src="https://cdn.tailwindcss.com"></script>
+
+<!-- Lucide Icons -->
 <script src="https://unpkg.com/lucide@latest"></script>
+
+<!-- Supabase -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -32,16 +34,18 @@ tailwind.config = {
 </script>
 
 <style>
-* { box-sizing: border-box; }
+* {
+  box-sizing: border-box;
+}
 
 body {
   background: #080d18;
-  color: white;
+  color: #fff;
   font-family: 'Plus Jakarta Sans', sans-serif;
 }
 
 .login-card {
-  background: rgba(17,24,39,.96);
+  background: rgba(17, 24, 39, .92);
   border: 1px solid #263244;
   box-shadow: 0 25px 80px rgba(0,0,0,.35);
 }
@@ -62,24 +66,19 @@ body {
   outline: none;
   color: white;
   width: 100%;
-  min-width: 0;
 }
 
-.field input::placeholder {
-  color: #64748b;
-}
-
-.btn-primary {
+.btn-login {
   background: #f97316;
   transition: .2s;
 }
 
-.btn-primary:hover {
+.btn-login:hover {
   background: #ea580c;
   transform: translateY(-1px);
 }
 
-.btn-primary:disabled {
+button:disabled {
   opacity: .6;
   cursor: not-allowed;
 }
@@ -90,45 +89,21 @@ body {
     radial-gradient(circle at 85% 80%, rgba(37,99,235,.10), transparent 35%);
 }
 
-.tab {
-  color: #94a3b8;
-  border-bottom: 2px solid transparent;
-}
-
-.tab.active {
-  color: #f97316;
-  border-color: #f97316;
-}
-
-.view {
-  display: none;
-}
-
-.view.active {
-  display: block;
-}
-
-.message {
-  display: none;
-}
-
-.message.show {
-  display: block;
-}
 </style>
 </head>
 
 <body class="min-h-screen bg-effect flex flex-col">
 
+<!-- CABEÇALHO -->
 <header class="px-6 py-5 flex justify-between items-center max-w-7xl mx-auto w-full">
 
   <div class="flex items-center gap-3">
     <div class="w-11 h-11 rounded-xl bg-brand flex items-center justify-center">
-      <i data-lucide="zap" class="w-6 h-6"></i>
+      <i data-lucide="zap" class="w-6 h-6 text-white"></i>
     </div>
 
     <div>
-      <h1 class="font-extrabold text-lg">
+      <h1 class="font-extrabold text-lg tracking-tight">
         WS <span class="text-brand">SOLUÇÕES</span>
       </h1>
       <p class="text-[10px] text-gray-500 tracking-widest">
@@ -144,199 +119,97 @@ body {
 
 </header>
 
-<main class="flex-1 flex items-center justify-center px-4 py-8">
+<!-- CONTEÚDO -->
+<main class="flex-1 flex items-center justify-center px-5 py-8">
 
   <div class="w-full max-w-md">
 
-    <div class="login-card rounded-3xl p-6 sm:p-9">
+    <div class="login-card rounded-3xl p-7 sm:p-9">
 
-      <div class="flex justify-center mb-6">
-        <div class="w-14 h-14 rounded-2xl bg-orange-500/10 border border-orange-500/20 flex items-center justify-center">
-          <i data-lucide="user-round" class="w-7 h-7 text-brand"></i>
-        </div>
+      <!-- ÍCONE -->
+      <div class="w-14 h-14 rounded-2xl bg-orange-500/10 border border-orange-500/20 flex items-center justify-center mb-7">
+        <i data-lucide="user-round" class="w-7 h-7 text-brand"></i>
       </div>
 
-      <div class="text-center mb-7">
-        <h2 class="text-2xl font-extrabold mb-2" id="titulo">
+      <div class="mb-8">
+        <h2 class="text-2xl font-extrabold mb-2">
           Bem-vindo!
         </h2>
-        <p class="text-sm text-gray-400" id="subtitulo">
+
+        <p class="text-sm text-gray-400">
           Acesse sua conta para acompanhar seus serviços.
         </p>
       </div>
 
-      <!-- ABAS -->
-      <div class="grid grid-cols-2 border-b border-gray-700 mb-7">
+      <!-- FORMULÁRIO -->
+      <form id="loginForm" class="space-y-5">
 
-        <button id="tabLogin" class="tab active py-3 text-sm font-bold">
-          Entrar
+        <div>
+          <label class="text-xs font-semibold text-gray-300 block mb-2">
+            E-mail
+          </label>
+
+          <div class="field flex items-center gap-3 px-4 py-3.5 rounded-xl">
+            <i data-lucide="mail" class="w-5 h-5 text-gray-500"></i>
+
+            <input
+              id="email"
+              type="email"
+              placeholder="seu@email.com"
+              autocomplete="email"
+              required
+            >
+          </div>
+        </div>
+
+        <div>
+          <div class="flex justify-between mb-2">
+            <label class="text-xs font-semibold text-gray-300">
+              Senha
+            </label>
+
+            <button
+              type="button"
+              onclick="recuperarSenha()"
+              class="text-xs text-brand hover:text-orange-300"
+            >
+              Esqueceu a senha?
+            </button>
+          </div>
+
+          <div class="field flex items-center gap-3 px-4 py-3.5 rounded-xl">
+
+            <i data-lucide="lock" class="w-5 h-5 text-gray-500"></i>
+
+            <input
+              id="senha"
+              type="password"
+              placeholder="Digite sua senha"
+              autocomplete="current-password"
+              required
+            >
+
+            <button type="button" onclick="alternarSenha()">
+              <i id="eyeIcon" data-lucide="eye" class="w-5 h-5 text-gray-500"></i>
+            </button>
+
+          </div>
+        </div>
+
+        <!-- MENSAGEM -->
+        <div id="mensagem" class="hidden text-sm p-3 rounded-xl"></div>
+
+        <!-- BOTÃO -->
+        <button
+          id="btnLogin"
+          type="submit"
+          class="btn-login w-full rounded-xl py-4 font-bold text-sm flex items-center justify-center gap-2"
+        >
+          <span id="btnTexto">Entrar na minha conta</span>
+          <i data-lucide="arrow-right" class="w-4 h-4"></i>
         </button>
 
-        <button id="tabCadastro" class="tab py-3 text-sm font-bold">
-          Primeiro cadastro
-        </button>
-
-      </div>
-
-      <!-- MENSAGEM -->
-      <div id="mensagem" class="message text-sm p-3 rounded-xl mb-5" role="alert" aria-live="polite"></div>
-
-      <!-- LOGIN -->
-      <section id="viewLogin" class="view active">
-
-        <form id="loginForm" class="space-y-5">
-
-          <div>
-            <label class="text-xs font-semibold text-gray-300 block mb-2">
-              E-mail
-            </label>
-
-            <div class="field flex items-center gap-3 px-4 py-3.5 rounded-xl">
-              <i data-lucide="mail" class="w-5 h-5 text-gray-500"></i>
-              <input id="loginEmail" type="email" placeholder="seu@email.com" autocomplete="email" required>
-            </div>
-          </div>
-
-          <div>
-            <div class="flex justify-between mb-2">
-              <label class="text-xs font-semibold text-gray-300">
-                Senha
-              </label>
-
-              <button type="button" id="recuperar" class="text-xs text-brand">
-                Esqueceu a senha?
-              </button>
-            </div>
-
-            <div class="field flex items-center gap-3 px-4 py-3.5 rounded-xl">
-              <i data-lucide="lock" class="w-5 h-5 text-gray-500"></i>
-
-              <input id="loginSenha" type="password" placeholder="Digite sua senha" autocomplete="current-password" required>
-
-              <button type="button" data-toggle="loginSenha" aria-label="Mostrar senha">
-                <i data-lucide="eye" class="w-5 h-5 text-gray-500"></i>
-              </button>
-            </div>
-          </div>
-
-          <button id="btnLogin" type="submit" class="btn-primary w-full rounded-xl py-4 font-bold text-sm flex items-center justify-center gap-2">
-            Entrar na minha conta
-            <i data-lucide="arrow-right" class="w-4 h-4"></i>
-          </button>
-
-        </form>
-
-      </section>
-
-      <!-- CADASTRO -->
-      <section id="viewCadastro" class="view">
-
-        <form id="cadastroForm" class="space-y-4">
-
-          <div>
-            <label class="text-xs font-semibold text-gray-300 block mb-2">
-              Nome completo
-            </label>
-            <div class="field flex items-center gap-3 px-4 py-3 rounded-xl">
-              <i data-lucide="user" class="w-5 h-5 text-gray-500"></i>
-              <input id="nome" type="text" placeholder="Seu nome completo" autocomplete="name" required>
-            </div>
-          </div>
-
-          <div>
-            <label class="text-xs font-semibold text-gray-300 block mb-2">
-              E-mail
-            </label>
-            <div class="field flex items-center gap-3 px-4 py-3 rounded-xl">
-              <i data-lucide="mail" class="w-5 h-5 text-gray-500"></i>
-              <input id="cadEmail" type="email" placeholder="seu@email.com" autocomplete="email" required>
-            </div>
-          </div>
-
-          <div>
-            <label class="text-xs font-semibold text-gray-300 block mb-2">
-              WhatsApp
-            </label>
-            <div class="field flex items-center gap-3 px-4 py-3 rounded-xl">
-              <i data-lucide="phone" class="w-5 h-5 text-gray-500"></i>
-              <input id="telefone" type="tel" placeholder="(88) 99999-9999" autocomplete="tel" required>
-            </div>
-          </div>
-
-          <div class="pt-2">
-            <p class="text-xs font-bold text-gray-300 mb-3 flex items-center gap-2">
-              <i data-lucide="map-pin" class="w-4 h-4 text-brand"></i>
-              Endereço para visitas
-            </p>
-
-            <div class="space-y-3">
-
-              <div>
-                <label class="text-xs text-gray-400 block mb-2">Rua / Avenida</label>
-                <div class="field flex items-center gap-3 px-4 py-3 rounded-xl">
-                  <i data-lucide="map" class="w-5 h-5 text-gray-500"></i>
-                  <input id="endereco" type="text" placeholder="Nome da rua" autocomplete="street-address" required>
-                </div>
-              </div>
-
-              <div class="grid grid-cols-2 gap-3">
-
-                <div>
-                  <label class="text-xs text-gray-400 block mb-2">Número</label>
-                  <div class="field px-4 py-3 rounded-xl">
-                    <input id="numero" type="text" placeholder="Nº" required>
-                  </div>
-                </div>
-
-                <div>
-                  <label class="text-xs text-gray-400 block mb-2">Bairro</label>
-                  <div class="field px-4 py-3 rounded-xl">
-                    <input id="bairro" type="text" placeholder="Bairro" required>
-                  </div>
-                </div>
-
-              </div>
-
-              <div>
-                <label class="text-xs text-gray-400 block mb-2">Complemento (opcional)</label>
-                <div class="field px-4 py-3 rounded-xl">
-                  <input id="complemento" type="text" placeholder="Casa, apartamento, referência...">
-                </div>
-              </div>
-
-            </div>
-          </div>
-
-          <div class="bg-orange-500/10 border border-orange-500/20 rounded-xl p-3 flex gap-3">
-            <i data-lucide="info" class="w-5 h-5 text-brand shrink-0"></i>
-            <p class="text-xs text-gray-300 leading-relaxed">
-              Solicitamos seu endereço para manter seus dados atualizados, facilitar o agendamento de visitas técnicas e ajudar nossa equipe a localizar você durante a prestação dos serviços.
-            </p>
-          </div>
-
-          <div>
-            <label class="text-xs font-semibold text-gray-300 block mb-2">
-              Crie uma senha
-            </label>
-
-            <div class="field flex items-center gap-3 px-4 py-3 rounded-xl">
-              <i data-lucide="lock" class="w-5 h-5 text-gray-500"></i>
-              <input id="cadSenha" type="password" placeholder="Mínimo de 8 caracteres" minlength="8" autocomplete="new-password" required>
-
-              <button type="button" data-toggle="cadSenha" aria-label="Mostrar senha">
-                <i data-lucide="eye" class="w-5 h-5 text-gray-500"></i>
-              </button>
-            </div>
-          </div>
-
-          <button id="btnCadastro" type="submit" class="btn-primary w-full rounded-xl py-4 font-bold text-sm flex items-center justify-center gap-2">
-            Criar minha conta
-            <i data-lucide="user-plus" class="w-4 h-4"></i>
-          </button>
-
-        </form>
-
-      </section>
+      </form>
 
       <div class="flex items-center gap-3 my-7">
         <div class="h-px bg-gray-700 flex-1"></div>
@@ -346,7 +219,8 @@ body {
 
       <p class="text-center text-xs text-gray-500">
         Precisa de atendimento?
-        <a href="https://wa.me/" target="_blank" rel="noopener noreferrer" class="text-brand hover:underline">
+        <a href="https://wa.me/" target="_blank"
+           class="text-brand hover:underline">
           Fale conosco
         </a>
       </p>
@@ -363,133 +237,107 @@ body {
 
 <script>
 
-// ========================================
-// SUPABASE JS V2
-// ========================================
+// ===================================
+// CONFIGURAÇÃO SUPABASE
+// ===================================
 
 const SUPABASE_URL = "SUA_SUPABASE_URL";
-const SUPABASE_ANON_KEY = "SUA_CHAVE_PUBLICA";
+const SUPABASE_KEY = "SUA_CHAVE_ANON_PUBLIC";
 
-const { createClient } = supabase;
-
-const db = createClient(
+const db = window.supabase.createClient(
   SUPABASE_URL,
-  SUPABASE_ANON_KEY
+  SUPABASE_KEY
 );
 
+// ===================================
+// ELEMENTOS
+// ===================================
 
-// ========================================
-// ALTERNAR ENTRE LOGIN E CADASTRO
-// ========================================
-
-const tabLogin = document.getElementById("tabLogin");
-const tabCadastro = document.getElementById("tabCadastro");
-
-const viewLogin = document.getElementById("viewLogin");
-const viewCadastro = document.getElementById("viewCadastro");
-
-function alternarTela(tela) {
-
-  limparMensagem();
-
-  const cadastro = tela === "cadastro";
-
-  viewLogin.classList.toggle("active", !cadastro);
-  viewCadastro.classList.toggle("active", cadastro);
-
-  tabLogin.classList.toggle("active", !cadastro);
-  tabCadastro.classList.toggle("active", cadastro);
-
-  document.getElementById("titulo").textContent =
-    cadastro ? "Primeiro acesso" : "Bem-vindo!";
-
-  document.getElementById("subtitulo").textContent =
-    cadastro
-      ? "Preencha seus dados para criar sua conta."
-      : "Acesse sua conta para acompanhar seus serviços.";
-
-  lucide.createIcons();
-
-}
-
-tabLogin.addEventListener("click", () => alternarTela("login"));
-tabCadastro.addEventListener("click", () => alternarTela("cadastro"));
-
-
-// ========================================
-// MENSAGENS
-// ========================================
-
+const form = document.getElementById("loginForm");
+const email = document.getElementById("email");
+const senha = document.getElementById("senha");
 const mensagem = document.getElementById("mensagem");
+const btnLogin = document.getElementById("btnLogin");
+const btnTexto = document.getElementById("btnTexto");
+
+// ===================================
+// MENSAGENS
+// ===================================
 
 function mostrarMensagem(texto, tipo = "erro") {
 
+  mensagem.classList.remove("hidden");
+
   mensagem.className =
-    "message text-sm p-3 rounded-xl mb-5 show " +
+    "text-sm p-3 rounded-xl " +
     (tipo === "sucesso"
       ? "bg-green-500/10 text-green-400 border border-green-500/20"
       : "bg-red-500/10 text-red-400 border border-red-500/20");
 
   mensagem.textContent = texto;
-
 }
 
-function limparMensagem() {
-  mensagem.className = "message";
-  mensagem.textContent = "";
-}
-
-
-// ========================================
+// ===================================
 // MOSTRAR SENHA
-// ========================================
+// ===================================
 
-document.querySelectorAll("[data-toggle]").forEach(botao => {
+function alternarSenha() {
 
-  botao.addEventListener("click", () => {
+  const visivel = senha.type === "password";
 
-    const campo = document.getElementById(botao.dataset.toggle);
+  senha.type = visivel ? "text" : "password";
 
-    const visivel = campo.type === "password";
+  document.getElementById("eyeIcon")
+    .setAttribute("data-lucide", visivel ? "eye-off" : "eye");
 
-    campo.type = visivel ? "text" : "password";
+  lucide.createIcons();
+}
 
-    botao.innerHTML = `
-      <i data-lucide="${visivel ? "eye-off" : "eye"}"
-         class="w-5 h-5 text-gray-500"></i>
-    `;
-
-    lucide.createIcons();
-
-  });
-
-});
-
-
-// ========================================
+// ===================================
 // LOGIN
-// ========================================
+// ===================================
 
-document.getElementById("loginForm").addEventListener("submit", async e => {
+form.addEventListener("submit", async (e) => {
 
   e.preventDefault();
-  limparMensagem();
 
-  const botao = document.getElementById("btnLogin");
+  mensagem.classList.add("hidden");
 
-  botao.disabled = true;
-  botao.textContent = "Autenticando...";
+  btnLogin.disabled = true;
+  btnTexto.textContent = "Autenticando...";
 
   try {
 
     const { data, error } = await db.auth.signInWithPassword({
-      email: document.getElementById("loginEmail").value.trim(),
-      password: document.getElementById("loginSenha").value
+      email: email.value.trim(),
+      password: senha.value
     });
 
     if (error) throw error;
 
-    await verificarPerfil(data.user);
+    // Buscar perfil do usuário
+    const { data: perfil, error: perfilErro } = await db
+      .from("profiles")
+      .select("nome, role")
+      .eq("id", data.user.id)
+      .single();
+
+    if (perfilErro || !perfil) {
+
+      await db.auth.signOut();
+
+      throw new Error("Perfil não encontrado. Procure o administrador.");
+
+    }
+
+    mostrarMensagem("Login realizado com sucesso!", "sucesso");
+
+    // Redirecionamento conforme permissão
+    if (perfil.role === "admin") {
+      window.location.replace("admin.html");
+    } else {
+      window.location.replace("portal.html");
+    }
 
   } catch (error) {
 
@@ -499,188 +347,71 @@ document.getElementById("loginForm").addEventListener("submit", async e => {
         : error.message
     );
 
-    botao.disabled = false;
-    botao.textContent = "Entrar na minha conta";
+    btnLogin.disabled = false;
+    btnTexto.textContent = "Entrar na minha conta";
 
   }
 
 });
 
-
-// ========================================
-// CADASTRO
-// ========================================
-
-document.getElementById("cadastroForm").addEventListener("submit", async e => {
-
-  e.preventDefault();
-  limparMensagem();
-
-  const botao = document.getElementById("btnCadastro");
-
-  botao.disabled = true;
-  botao.textContent = "Criando sua conta...";
-
-  const dados = {
-    nome: document.getElementById("nome").value.trim(),
-    telefone: document.getElementById("telefone").value.trim(),
-    endereco: document.getElementById("endereco").value.trim(),
-    numero: document.getElementById("numero").value.trim(),
-    bairro: document.getElementById("bairro").value.trim(),
-    complemento: document.getElementById("complemento").value.trim()
-  };
-
-  try {
-
-    const { data, error } = await db.auth.signUp({
-
-      email: document.getElementById("cadEmail").value.trim(),
-
-      password: document.getElementById("cadSenha").value,
-
-      options: {
-        data: dados,
-        emailRedirectTo: window.location.origin + "/login.html"
-      }
-
-    });
-
-    if (error) throw error;
-
-    if (data.session && data.user) {
-
-      mostrarMensagem("Conta criada! Preparando seu acesso...", "sucesso");
-
-      await verificarPerfil(data.user);
-
-    } else {
-
-      mostrarMensagem(
-        "Cadastro recebido! Verifique seu e-mail para confirmar a conta. Depois, faça seu login.",
-        "sucesso"
-      );
-
-      document.getElementById("cadastroForm").reset();
-
-      botao.disabled = false;
-      botao.innerHTML = 'Criar minha conta <i data-lucide="user-plus" class="w-4 h-4"></i>';
-
-      lucide.createIcons();
-
-    }
-
-  } catch (error) {
-
-    mostrarMensagem(error.message);
-
-    botao.disabled = false;
-    botao.innerHTML = 'Criar minha conta <i data-lucide="user-plus" class="w-4 h-4"></i>';
-
-    lucide.createIcons();
-
-  }
-
-});
-
-
-// ========================================
-// PERFIL E REDIRECIONAMENTO
-// ========================================
-
-async function verificarPerfil(user) {
-
-  const { data: perfil, error } = await db
-    .from("profiles")
-    .select("id, nome, role")
-    .eq("id", user.id)
-    .single();
-
-  if (error || !perfil) {
-
-    await db.auth.signOut();
-
-    throw new Error(
-      "Perfil não encontrado. Procure o administrador."
-    );
-
-  }
-
-  if (perfil.role === "admin") {
-    window.location.replace("admin.html");
-  } else if (perfil.role === "cliente") {
-    window.location.replace("portal.html");
-  } else {
-    await db.auth.signOut();
-    throw new Error("Tipo de acesso não autorizado.");
-  }
-
-}
-
-
-// ========================================
+// ===================================
 // RECUPERAR SENHA
-// ========================================
+// ===================================
 
-document.getElementById("recuperar").addEventListener("click", async () => {
+async function recuperarSenha() {
 
-  limparMensagem();
-
-  const endereco = document.getElementById("loginEmail").value.trim();
+  const endereco = email.value.trim();
 
   if (!endereco) {
     mostrarMensagem("Digite seu e-mail primeiro.");
+    email.focus();
     return;
   }
 
-  try {
-
-    const { error } = await db.auth.resetPasswordForEmail(endereco, {
+  const { error } = await db.auth.resetPasswordForEmail(
+    endereco,
+    {
       redirectTo: window.location.origin + "/redefinir-senha.html"
-    });
+    }
+  );
 
-    if (error) throw error;
-
+  if (error) {
+    mostrarMensagem(error.message);
+  } else {
     mostrarMensagem(
       "Se o e-mail estiver cadastrado, você receberá as instruções de recuperação.",
       "sucesso"
     );
-
-  } catch (error) {
-
-    mostrarMensagem(error.message);
-
-  }
-
-});
-
-
-// ========================================
-// SESSÃO EXISTENTE
-// ========================================
-
-async function iniciar() {
-
-  lucide.createIcons();
-
-  try {
-
-    const { data, error } = await db.auth.getUser();
-
-    if (error) throw error;
-
-    if (data.user) {
-      await verificarPerfil(data.user);
-    }
-
-  } catch (error) {
-
-    mostrarMensagem(error.message);
-
   }
 
 }
 
-iniciar();
+// ===================================
+// INICIALIZAÇÃO
+// ===================================
+
+lucide.createIcons();
+
+// Se já estiver autenticado, verificar o perfil
+(async () => {
+
+  const { data: { user } } = await db.auth.getUser();
+
+  if (!user) return;
+
+  const { data: perfil } = await db
+    .from("profiles")
+    .select("role")
+    .eq("id", user.id)
+    .single();
+
+  if (perfil) {
+    window.location.replace(
+      perfil.role === "admin" ? "admin.html" : "portal.html"
+    );
+  }
+
+})();
 
 </script>
 
