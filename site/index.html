@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WS Soluções — Portal do Cliente</title>
+    <title>WS Soluções — Portal do Cliente & Bancada</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -22,12 +22,29 @@
             }
         }
     </script>
-    <!-- CSS Personalizado -->
-    <link rel="stylesheet" href="./css/style.css">
+    
+    <!-- CSS Customizado -->
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            background-color: #0a0a0c;
+            color: #f3f4f6;
+            font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+        .neon-glow {
+            box-shadow: 0 0 20px rgba(0, 242, 254, 0.15);
+        }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #0a0a0c; }
+        ::-webkit-scrollbar-thumb { background: #121216; border-radius: 3px; border: 1px solid #1f2937; }
+        ::-webkit-scrollbar-thumb:hover { background: #00f2fe; }
+    </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between bg-darkbg text-gray-100">
 
-    <!-- CABEÇALHO (Oculto na tela de login, aparece após entrar) -->
+    <!-- CABEÇALHO (Visível apenas após login) -->
     <header id="app-header" class="hidden bg-cardbg border-b border-gray-800 p-4 sticky top-0 z-50 flex justify-between items-center">
         <div class="flex items-center space-x-2">
             <span class="text-neoncyan font-bold text-xl tracking-wider">⚡ WS SOLUÇÕES</span>
@@ -37,31 +54,276 @@
         </button>
     </header>
 
-    <!-- CONTEÚDO DINÂMICO (Inicia com a Tela de Login) -->
+    <!-- CONTEÚDO DINÂMICO PRINCIPAL -->
     <main id="app-content" class="flex-1 p-4 max-w-md mx-auto w-full flex flex-col justify-center">
-        <!-- Injetado via JS -->
+        <!-- Renderizado dinamicamente via JS -->
     </main>
 
-    <!-- NAVEGAÇÃO INFERIOR (Oculta na tela de login, aparece após entrar) -->
-    <nav id="app-nav" class="hidden fixed bottom-0 left-0 right-0 bg-cardbg border-t border-gray-800 flex justify-around items-center p-3 z-40">
-        <button onclick="switchTab('inicio')" class="flex flex-col items-center text-gray-400 hover:text-neoncyan transition">
-            <span class="text-xs mt-1">Início</span>
+    <!-- NAVEGAÇÃO INFERIOR (Visível apenas após login) -->
+    <nav id="app-nav" class="hidden fixed bottom-0 left-0 right-0 bg-cardbg border-t border-gray-800 flex justify-around items-center p-3 z-40 max-w-md mx-auto left-0 right-0">
+        <button onclick="switchTab('inicio')" class="flex flex-col items-center text-gray-400 hover:text-neoncyan transition text-xs">
+            <span>🏠</span> Início
         </button>
-        <button onclick="switchTab('aparelhos')" class="flex flex-col items-center text-gray-400 hover:text-neoncyan transition">
-            <span class="text-xs mt-1">Aparelhos</span>
+        <button onclick="switchTab('aparelhos')" class="flex flex-col items-center text-gray-400 hover:text-neoncyan transition text-xs">
+            <span>📱</span> Aparelhos
         </button>
-        <button onclick="switchTab('orcamento')" class="flex flex-col items-center text-gray-400 hover:text-neoncyan transition">
-            <span class="text-xs mt-1">Pedir</span>
+        <button onclick="switchTab('orcamento')" class="flex flex-col items-center text-gray-400 hover:text-neoncyan transition text-xs">
+            <span>📝</span> Pedir
         </button>
-        <button onclick="switchTab('agendamentos')" class="flex flex-col items-center text-gray-400 hover:text-neoncyan transition">
-            <span class="text-xs mt-1">Agenda</span>
+        <button onclick="switchTab('agendamentos')" class="flex flex-col items-center text-gray-400 hover:text-neoncyan transition text-xs">
+            <span>📅</span> Agenda
         </button>
-        <button onclick="switchTab('perfil')" class="flex flex-col items-center text-gray-400 hover:text-neoncyan transition">
-            <span class="text-xs mt-1">Perfil</span>
+        <button onclick="switchTab('perfil')" class="flex flex-col items-center text-gray-400 hover:text-neoncyan transition text-xs">
+            <span>⚙️</span> Perfil
         </button>
     </nav>
 
-    <!-- SCRIPT PRINCIPAL -->
-    <script type="module" src="./js/app.js"></script>
+    <!-- LÓGICA E CONEXÃO SUPABASE -->
+    <script type="module">
+        import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
+
+        // Credenciais do Supabase
+        const SUPABASE_URL = 'https://vnzdrnygnknpqmryptwq.supabase.co'
+        const SUPABASE_ANON_KEY = 'sb_publishable_SAGvo6mmBGV5gpuTSE86Xw_4OnqYfxw'
+        const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+
+        let currentUser = null;
+
+        // Controle de Sessão e Layout
+        function checkAuthAndInit() {
+            const header = document.getElementById('app-header');
+            const nav = document.getElementById('app-nav');
+
+            if (!currentUser) {
+                header.classList.add('hidden');
+                nav.classList.add('hidden');
+                renderLoginScreen();
+            } else {
+                header.classList.remove('hidden');
+                nav.classList.remove('hidden');
+                switchTab('inicio');
+            }
+        }
+
+        // Tela de Login/Cadastro por WhatsApp
+        function renderLoginScreen() {
+            const content = document.getElementById('app-content');
+            content.innerHTML = `
+                <div class="bg-cardbg border border-gray-800 p-6 rounded-2xl shadow-xl text-center space-y-5 neon-glow w-full">
+                    <div class="space-y-2">
+                        <h1 class="text-2xl font-bold text-neoncyan">⚡ WS SOLUÇÕES</h1>
+                        <p class="text-gray-400 text-xs">Insira o seu número de WhatsApp para aceder ao portal de serviços.</p>
+                    </div>
+                    
+                    <div class="space-y-3 text-left">
+                        <div>
+                            <label class="text-xs text-gray-400 block mb-1">WhatsApp</label>
+                            <input type="text" id="auth-whatsapp" placeholder="Ex: 5588999999999" class="w-full bg-darkbg border border-gray-800 rounded-xl p-3 text-sm focus:border-neoncyan outline-none text-white text-center tracking-wider">
+                        </div>
+                        <button onclick="window.handleLogin()" class="w-full bg-neoncyan text-darkbg font-bold py-3 rounded-xl hover:opacity-95 transition shadow-lg">
+                            Entrar / Cadastrar
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        window.handleLogin = async function() {
+            const whatsappInput = document.getElementById('auth-whatsapp').value.trim();
+            if (!whatsappInput) {
+                alert("Insira o número de WhatsApp.");
+                return;
+            }
+
+            try {
+                let { data, error } = await supabase
+                    .from('profiles')
+                    .select('*')
+                    .eq('whatsapp', whatsappInput)
+                    .single();
+
+                if (error || !data) {
+                    const newName = prompt("Número não registado. Digite seu nome completo:") || "Cliente WS";
+                    const { data: createdData, error: createError } = await supabase
+                        .from('profiles')
+                        .insert([{ whatsapp: whatsappInput, nome: newName, role: 'client' }])
+                        .select()
+                        .single();
+                        
+                    if (createError) {
+                        alert("Erro ao criar perfil. Tente novamente.");
+                        return;
+                    }
+                    currentUser = createdData;
+                } else {
+                    currentUser = data;
+                }
+
+                checkAuthAndInit();
+            } catch (err) {
+                console.error("Erro no login:", err);
+                alert("Erro ao conectar com o banco de dados.");
+            }
+        }
+
+        window.handleLogout = function() {
+            currentUser = null;
+            checkAuthAndInit();
+        }
+
+        // Sistema de Abas
+        window.switchTab = async function(tabName) {
+            if (!currentUser) return;
+            const content = document.getElementById('app-content');
+            
+            switch(tabName) {
+                case 'inicio':
+                    content.innerHTML = `
+                        <div class="space-y-4 pb-20">
+                            <div class="bg-cardbg border border-gray-800 p-5 rounded-xl shadow-lg neon-glow">
+                                <h2 class="text-xl font-bold text-neoncyan mb-1">Olá, ${currentUser.nome}!</h2>
+                                <p class="text-gray-400 text-sm">Painel oficial de atendimento e bancada técnica.</p>
+                            </div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <button onclick="switchTab('orcamento')" class="bg-cardbg border border-gray-800 hover:border-neoncyan p-4 rounded-xl text-left transition">
+                                    <span class="text-2xl">📝</span>
+                                    <h3 class="font-bold mt-2 text-sm">Pedir Orçamento</h3>
+                                    <p class="text-xs text-gray-400 mt-1">Registar novo aparelho</p>
+                                </button>
+                                <button onclick="switchTab('aparelhos')" class="bg-cardbg border border-gray-800 hover:border-neoncyan p-4 rounded-xl text-left transition">
+                                    <span class="text-2xl">📱</span>
+                                    <h3 class="font-bold mt-2 text-sm">Meus Aparelhos</h3>
+                                    <p class="text-xs text-gray-400 mt-1">Ver ordens e status</p>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                    break;
+                    
+                case 'aparelhos':
+                    content.innerHTML = `<div class="text-center py-12"><h2 class="text-xl font-bold text-neoncyan">A carregar aparelhos...</h2></div>`;
+                    await loadServiceOrders(currentUser.whatsapp);
+                    break;
+                    
+                case 'orcamento':
+                    content.innerHTML = `
+                        <div class="bg-cardbg border border-gray-800 p-5 rounded-xl shadow-lg space-y-4 pb-20 w-full">
+                            <h2 class="text-xl font-bold text-neoncyan">Registar Orçamento</h2>
+                            <form onsubmit="window.handleBudgetSubmit(event)" class="space-y-3">
+                                <div>
+                                    <label class="text-xs text-gray-400 block mb-1">Nome do Equipamento</label>
+                                    <input type="text" id="eq-nome" required class="w-full bg-darkbg border border-gray-800 rounded-lg p-3 text-sm focus:border-neoncyan outline-none text-white" placeholder="Ex: TV LG 32 polegadas">
+                                </div>
+                                <div>
+                                    <label class="text-xs text-gray-400 block mb-1">Descrição do Problema</label>
+                                    <textarea id="eq-desc" required rows="3" class="w-full bg-darkbg border border-gray-800 rounded-lg p-3 text-sm focus:border-neoncyan outline-none text-white" placeholder="Ex: Não liga, LED standby piscando..."></textarea>
+                                </div>
+                                <button type="submit" class="w-full bg-neoncyan text-darkbg font-bold py-3 rounded-lg hover:opacity-95 transition">Enviar Solicitação</button>
+                            </form>
+                        </div>
+                    `;
+                    break;
+                    
+                case 'agendamentos':
+                    content.innerHTML = `
+                        <div class="space-y-4 pb-20 w-full">
+                            <h2 class="text-xl font-bold text-neoncyan">Agendamentos</h2>
+                            <p class="text-gray-400 text-sm">Controle de visitas técnicas e prazos.</p>
+                            <div class="p-4 bg-cardbg border border-gray-800 rounded-xl text-center text-gray-400 text-xs">
+                                Nenhum agendamento ativo.
+                            </div>
+                        </div>
+                    `;
+                    break;
+                    
+                case 'perfil':
+                    content.innerHTML = `
+                        <div class="bg-cardbg border border-gray-800 p-5 rounded-xl shadow-lg space-y-4 pb-20 w-full">
+                            <h2 class="text-xl font-bold text-neoncyan">Meu Perfil</h2>
+                            <div class="text-sm space-y-2 bg-darkbg p-4 rounded-xl border border-gray-800">
+                                <p><span class="text-gray-400">Nome:</span> <b class="text-white">${currentUser.nome}</b></p>
+                                <p><span class="text-gray-400">WhatsApp:</span> <b class="text-white">${currentUser.whatsapp}</b></p>
+                                <p><span class="text-gray-400">Tipo:</span> <b class="text-white uppercase">${currentUser.role}</b></p>
+                            </div>
+                        </div>
+                    `;
+                    break;
+            }
+        }
+
+        async function loadServiceOrders(whatsapp) {
+            const content = document.getElementById('app-content');
+            try {
+                const { data, error } = await supabase
+                    .from('service_orders')
+                    .select('*')
+                    .eq('client_whatsapp', whatsapp)
+                    .order('created_at', { ascending: false });
+
+                if (error) throw error;
+
+                if (!data || data.length === 0) {
+                    content.innerHTML = `
+                        <div class="space-y-4 text-center py-8 pb-20 w-full">
+                            <h2 class="text-xl font-bold text-neoncyan">Meus Aparelhos</h2>
+                            <p class="text-gray-400 text-sm">Ainda não tem ordens de serviço registadas.</p>
+                            <button onclick="switchTab('orcamento')" class="bg-neoncyan text-darkbg px-4 py-2 rounded-lg font-bold text-sm">Pedir Orçamento</button>
+                        </div>
+                    `;
+                    return;
+                }
+
+                let html = `<div class="space-y-4 pb-20 w-full"><div class="flex justify-between items-center"><h2 class="text-xl font-bold text-neoncyan">Aparelhos (${data.length})</h2><button onclick="switchTab('orcamento')" class="text-xs bg-neoncyan text-darkbg px-3 py-1.5 rounded-lg font-bold">+ Novo</button></div><div class="space-y-3">`;
+                
+                data.forEach(order => {
+                    html += `
+                        <div class="bg-cardbg border border-gray-800 p-4 rounded-xl space-y-2 shadow">
+                            <div class="flex justify-between items-center">
+                                <span class="font-bold text-sm text-white">${order.equipamento || 'Equipamento'}</span>
+                                <span class="text-xs px-2 py-1 rounded bg-darkbg text-neoncyan border border-gray-800">${order.status || 'Analise'}</span>
+                            </div>
+                            <p class="text-xs text-gray-400">${order.descricao_problema || ''}</p>
+                            <p class="text-xs text-gray-500">Registo: ${new Date(order.created_at).toLocaleDateString('pt-BR')}</p>
+                        </div>
+                    `;
+                });
+                html += `</div></div>`;
+                content.innerHTML = html;
+            } catch (err) {
+                console.error("Erro ao carregar ordens:", err);
+                content.innerHTML = `<p class="text-center text-red-400 py-8">Erro ao carregar dados do Supabase.</p>`;
+            }
+        }
+
+        window.handleBudgetSubmit = async function(e) {
+            e.preventDefault();
+            const equipamento = document.getElementById('eq-nome').value;
+            const descricao = document.getElementById('eq-desc').value;
+            const codigoOS = 'OS-' + Math.floor(100000 + Math.random() * 900000);
+
+            try {
+                const { error } = await supabase
+                    .from('service_orders')
+                    .insert([{ 
+                        codigo: codigoOS,
+                        client_whatsapp: currentUser.whatsapp, 
+                        equipamento: equipamento, 
+                        descricao_problema: descricao, 
+                        status: 'analise' 
+                    }]);
+
+                if (error) throw error;
+
+                alert("Orçamento enviado com sucesso!");
+                switchTab('aparelhos');
+            } catch (err) {
+                console.error("Erro ao enviar:", err);
+                alert("Erro ao gravar no banco de dados.");
+            }
+        }
+
+        // Inicialização automática
+        checkAuthAndInit();
+    </script>
 </body>
 </html>
