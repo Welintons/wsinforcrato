@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WS Soluções — Portal do Cliente & Admin</title>
+    <title>WS Soluções — Portal do Cliente</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -25,28 +25,25 @@
     <!-- CSS Personalizado -->
     <link rel="stylesheet" href="./css/style.css">
 </head>
-<body class="min-h-screen flex flex-col justify-between pb-20 md:pb-0">
+<body class="min-h-screen flex flex-col justify-between bg-darkbg text-gray-100">
 
-    <!-- CABEÇALHO -->
-    <header class="bg-cardbg border-b border-gray-800 p-4 sticky top-0 z-50 flex justify-between items-center">
+    <!-- CABEÇALHO (Oculto na tela de login, aparece após entrar) -->
+    <header id="app-header" class="hidden bg-cardbg border-b border-gray-800 p-4 sticky top-0 z-50 flex justify-between items-center">
         <div class="flex items-center space-x-2">
             <span class="text-neoncyan font-bold text-xl tracking-wider">⚡ WS SOLUÇÕES</span>
         </div>
-        <button id="menu-btn" class="text-gray-300 hover:text-neoncyan focus:outline-none p-2">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-            </svg>
+        <button onclick="handleLogout()" class="text-xs text-red-400 border border-red-500/30 px-3 py-1.5 rounded-lg hover:bg-red-500/10 transition">
+            Sair
         </button>
     </header>
 
-      <!-- CONTEÚDO DINÂMICO -->
-    <main id="app-content" class="flex-1 p-4 max-w-4xl mx-auto w-full">
-        <!-- O conteúdo será injetado dinamicamente pelo app.js -->
+    <!-- CONTEÚDO DINÂMICO (Inicia com a Tela de Login) -->
+    <main id="app-content" class="flex-1 p-4 max-w-md mx-auto w-full flex flex-col justify-center">
+        <!-- Injetado via JS -->
     </main>
 
-
-    <!-- NAVEGAÇÃO INFERIOR -->
-    <nav class="fixed bottom-0 left-0 right-0 bg-cardbg border-t border-gray-800 flex justify-around items-center p-3 z-40 md:hidden">
+    <!-- NAVEGAÇÃO INFERIOR (Oculta na tela de login, aparece após entrar) -->
+    <nav id="app-nav" class="hidden fixed bottom-0 left-0 right-0 bg-cardbg border-t border-gray-800 flex justify-around items-center p-3 z-40">
         <button onclick="switchTab('inicio')" class="flex flex-col items-center text-gray-400 hover:text-neoncyan transition">
             <span class="text-xs mt-1">Início</span>
         </button>
