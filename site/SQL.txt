@@ -1,0 +1,136 @@
+-- 0. Limpeza prévia para evitar conflitos
+drop table if exists public.wallet_transactions cascade;
+drop table if exists public.wallets cascade;
+drop table if exists public.service_orders cascade;
+drop table if exists public.appointments cascade;
+drop table if exists public.express_quotes cascade;
+drop table if exists public.portfolio cascade;
+drop table if exists public.profiles cascade;
+
+-- 1. TABELA DE PERFIS (Clientes e Admin via WhatsApp)
+create table public.profiles (
+  id uuid default gen_random_uuid() primary key,
+  whatsapp text unique not null,
+  nome text not null,
+  enderecos jsonb default '[]'::jsonb,
+  role text default 'client', -- 'client' ou 'admin'
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null
+);
+
+-- 2. TABELA DE ORDENS DE SERVIÇO (Com controle de tempo e abatimento de crédito)
+create table public.service_orders (
+  id uuid default gen_random_uuid() primary key,
+  codigo text unique not null,
+  client_whatsapp text references public.profiles(whatsapp) on delete cascade,
+  equipamento text not null,
+  descricao_problema text,
+  laudo_tecnico text,
+  status text default 'analise', -- analise, aprovado, reparo, pronto, entregue
+  valor_total numeric(10,2) default 0.00 not null,
+  credito_usado numeric(10,2) default 0.00 not null, -- Quanto abateu da carteira
+  valor_restante numeric(10,2) default 0.00 not null, -- Quanto falta pagar (dinheiro/PIX)
+  garantia_ate timestamp with time zone,
+  fotos_antes jsonb default '[]'::jsonb,
+  fotos_depois jsonb default '[]'::jsonb,
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null,
+  updated_at timestamp with time zone default timezone('utc'::text, now()) not null
+);
+
+-- 3. TABELA DE CARTEIRA (Com trava de segurança para não ficar negativa)
+create table public.wallets (
+  id uuid default gen_random_uuid() primary key,
+  client_whatsapp text references public.profiles(whatsapp) on delete cascade unique,
+  saldo numeric(10,2) default 0.00 not null check (saldo >= 0), -- BLINDAGEM: Saldo nunca fica negativo
+  updated_at timestamp with time zone default timezone('utc'::text, now()) not null
+);
+
+-- 4. TABELA DE EXTRATO DE CRÉDITOS
+create table public.wallet_transactions (
+  id uuid default gen_random_uuid() primary key,
+  client_whatsapp text references public.profiles(whatsapp) on delete cascade,
+  tipo text not null, -- 'credito' ou 'debito'
+  valor numeric(10,2) not null,
+  descricao text not null,
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null
+);
+
+-- 5. TABELA DE AGENDAMENTOS
+create table public.appointments (
+  id uuid default gen_random_uuid() primary key,
+  client_whatsapp text references public.profiles(whatsapp) on delete cascade,
+  data_hora timestamp with time zone not null,
+  tipo_servico text not null, -- 'visita_tecnica' ou 'retirada_aparelho'
+  status text default 'agendado', -- agendado, concluido, cancelado
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null
+);
+
+-- 6. TABELA DE ORÇAMENTOS EXPRESSOS
+create table public.express_quotes (
+  id uuid default gen_random_uuid() primary key,
+  client_whatsapp text references public.profiles(whatsapp) on delete cascade,
+  mensagem text not null,
+  foto_url text,
+  status text default 'pendente', -- pendente, respondido
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null
+);
+
+-- 7. TABELA DE PORTFÓLIO
+create table public.portfolio (
+  id uuid default gen_random_uuid() primary key,
+  titulo text not null,
+  categoria text not null, -- 'eletrica', 'pvc', 'eletronicos'
+  descricao text,
+  foto_url text,
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null
+);
+
+-- ==========================================
+-- 8. TRIGGER PARA ATUALIZAR O "updated_at" AUTOMATICAMENTE
+-- ==========================================
+create or replace function update_modified_column()
+returns trigger as $$
+begin
+    NEW.updated_at = now();
+    return NEW;
+end;
+$$ language plpgsql;
+
+create trigger update_service_orders_modtime
+    before update on public.service_orders
+    for each row
+    execute function update_modified_column();
+
+-- ==========================================
+-- 9. INSERIR SEU USUÁRIO ADMIN DE FÁBRICA
+-- ==========================================
+-- Lembre de colocar o seu número real de WhatsApp abaixo com DDI e DDD!
+insert into public.profiles (whatsapp, nome, role, enderecos)
+values (
+  '5588999999999', 
+  'Wellington (Admin)', 
+  'admin',
+  '[{"cep": "63180000", "rua": "Barro Branco", "numero": "Conjunto 2", "bairro": "Barro Branco"}]'::jsonb
+);
+
+-- ==========================================
+-- 10. SEGURANÇA (RLS) E POLÍTICAS DE ACESSO
+-- ==========================================
+alter table public.profiles enable row level security;
+alter table public.service_orders enable row level security;
+alter table public.wallets enable row level security;
+alter table public.wallet_transactions enable row level security;
+alter table public.appointments enable row level security;
+alter table public.express_quotes enable row level security;
+alter table public.portfolio enable row level security;
+
+create policy "Permitir leitura publica de perfis" on public.profiles for select using (true);
+create policy "Permitir insercao de novos perfis" on public.profiles for insert with check (true);
+create policy "Permitir atualizacao do proprio perfil" on public.profiles for update using (true);
+
+create policy "Portfólio público" on public.portfolio for select using (true);
+
+create policy "Acesso livre autenticado via app" on public.service_orders for all using (true) with check (true);
+create policy "Acesso livre carteiras" on public.wallets for all using (true) with check (true);
+create policy "Acesso livre transacoes" on public.wallet_transactions for all using (true) with check (true);
+create policy "Acesso livre agendamentos" on public.appointments for all using (true) with check (true);
+create policy "Acesso livre orcamentos" on public.express_quotes for all using (true) with check (true);
