@@ -95,19 +95,16 @@
             <p class="text-center text-gray-400 text-xs mb-8">Qualidade técnica e garantia em cada projeto.</p>
             
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
-                <!-- Card 1 -->
                 <div class="bg-cardbg border border-gray-800 p-5 rounded-2xl space-y-3 hover:border-neoncyan transition">
                     <span class="text-3xl">📺</span>
                     <h3 class="font-bold text-white text-base">Bancada de Eletrónicos</h3>
                     <p class="text-xs text-gray-400 leading-relaxed">Reparo avançado em TVs, placas-mãe, amplificadores, fontes de bancada e smartphones com diagnóstico preciso.</p>
                 </div>
-                <!-- Card 2 -->
                 <div class="bg-cardbg border border-gray-800 p-5 rounded-2xl space-y-3 hover:border-neoncyan transition">
                     <span class="text-3xl">⚡</span>
                     <h3 class="font-bold text-white text-base">Instalações Elétricas</h3>
                     <p class="text-xs text-gray-400 leading-relaxed">Montagem de quadros de energia, redes elétricas residenciais seguras e layouts dimensionados sob rigor técnico.</p>
                 </div>
-                <!-- Card 3 -->
                 <div class="bg-cardbg border border-gray-800 p-5 rounded-2xl space-y-3 hover:border-neoncyan transition">
                     <span class="text-3xl">🏠</span>
                     <h3 class="font-bold text-white text-base">Estruturas & Tetos PVC</h3>
@@ -134,8 +131,8 @@
                 </div>
                 <div class="p-4 bg-cardbg/50 border border-gray-800 rounded-xl space-y-2">
                     <div class="text-neoncyan font-bold text-lg">03</div>
-                    <h3 class="font-bold text-sm text-white">Créditos & Agenda</h3>
-                    <p class="text-xs text-gray-400">Gerencie sua carteira digital, créditos e agende serviços técnicos com facilidade.</p>
+                    <h3 class="font-bold text-sm text-white">Créditos & Descontos</h3>
+                    <p class="text-xs text-gray-400">Acumule saldo indicando amigos para usar como desconto em novos serviços.</p>
                 </div>
             </div>
         </section>
@@ -148,10 +145,10 @@
 
 
     <!-- ==========================================
-       MODAL DE LOGIN / AUTENTICAÇÃO (TOP & NEON)
+       MODAL DE LOGIN / AUTENTICAÇÃO COM EXPLICAÇÃO
        ========================================== -->
     <div id="login-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm hidden p-4">
-        <div class="bg-cardbg border border-gray-800 p-6 sm:p-8 rounded-2xl shadow-2xl w-full max-w-sm space-y-5 relative neon-glow">
+        <div class="bg-cardbg border border-gray-800 p-6 sm:p-8 rounded-2xl shadow-2xl w-full max-w-md space-y-5 relative neon-glow">
             
             <!-- Botão Fechar Modal -->
             <button onclick="closeLoginModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white text-sm">
@@ -176,8 +173,20 @@
                     Entrar na Conta
                 </button>
             </form>
-            <div class="text-center">
-                <p class="text-[11px] text-gray-500">Primeiro acesso ou sem senha? O sistema cadastra automaticamente ao validar o número.</p>
+
+            <!-- EXPLICAÇÃO DA INDICAÇÃO NA TELA DE LOGIN -->
+            <div class="border-t border-gray-800 pt-4 space-y-2 text-left">
+                <div class="flex items-center space-x-2">
+                    <span class="text-neoncyan text-sm">🎁</span>
+                    <h3 class="text-xs font-bold text-white uppercase tracking-wider">Programa Indique e Ganhe</h3>
+                </div>
+                <p class="text-[11px] text-gray-400 leading-relaxed">
+                    Cada cliente indicado que realizar um serviço conosco gera um <strong class="text-neoncyan">saldo de bônus</strong> na sua conta. Você pode usar esse saldo acumulado como desconto em suas próximas manutenções ou instalações!
+                </p>
+            </div>
+
+            <div class="text-center border-t border-gray-800/60 pt-3">
+                <p class="text-[11px] text-gray-500">Primeiro acesso? O sistema cadastra automaticamente ao validar o número.</p>
             </div>
         </div>
     </div>
@@ -193,7 +202,6 @@
         const SUPABASE_ANON_KEY = 'sb_publishable_SAGvo6mmBGV5gpuTSE86Xw_4OnqYfxw'
         const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
 
-        // Funções de Abertura/Fechamento do Modal expostas globalmente
         window.openLoginModal = function() {
             document.getElementById('login-modal').classList.remove('hidden');
         }
@@ -202,31 +210,25 @@
             document.getElementById('login-modal').classList.add('hidden');
         }
 
-        // Fechar modal clicando fora
         document.getElementById('login-modal').addEventListener('click', (e) => {
             if (e.target.id === 'login-modal') {
                 closeLoginModal();
             }
         });
 
-        // Autenticação Real integrada
         window.handleAuthSubmit = async function(e) {
             e.preventDefault();
             const whatsapp = document.getElementById('modal-whatsapp').value.trim();
             const password = document.getElementById('modal-password').value.trim();
-            
-            // Para mantermos o Supabase Auth 100% compativel com telefone, usamos um e-mail interno mapeado
             const fakeEmail = `zap_${whatsapp}@wssolucoes.com`;
 
             try {
-                // Tenta o login direto
                 let { data, error } = await supabase.auth.signInWithPassword({
                     email: fakeEmail,
                     password: password
                 });
 
                 if (error) {
-                    // Se o usuário não existir, cadastra automaticamente (Sign Up)
                     const nomeInput = prompt("Primeiro acesso detetado. Digite o seu Nome Completo:") || "Cliente WS";
                     const roleInput = (whatsapp === '88994377744') ? 'admin' : 'client';
 
@@ -246,11 +248,9 @@
                     alert("Cadastro efetuado com sucesso! Bem-vindo à WS Soluções.");
                 }
 
-                // Salva na sessão local e recarrega para entrar no painel do cliente
                 localStorage.setItem('ws_client_whatsapp', whatsapp);
                 alert("Login efetuado com sucesso!");
                 closeLoginModal();
-                // Aqui você pode redirecionar para o painel logado ou carregar as abas da Home
                 location.reload();
 
             } catch (err) {
