@@ -2,21 +2,16 @@ import { supabase } from './supabase.js';
 
 console.log("WS Soluções App Inicializado com Sucesso");
 
-// Estado global do usuário logado
 let currentUser = null;
 
-// Função global para alternar entre as abas do aplicativo
 window.switchTab = async function(tabName) {
     const content = document.getElementById('app-content');
-    
-    // Destaca visualmente o botão ativo da navegação (se houver)
-    document.querySelectorAll('nav button').forEach(btn => btn.classList.remove('text-neoncyan', 'font-bold'));
     
     switch(tabName) {
         case 'inicio':
             content.innerHTML = `
                 <div class="space-y-4">
-                    <div class="bg-cardbg border border-gray-800 p-5 rounded-xl shadow-lg">
+                    <div class="bg-cardbg border border-gray-800 p-5 rounded-xl shadow-lg neon-glow">
                         <h2 class="text-xl font-bold text-neoncyan mb-1">Bem-vindo ao Portal WS</h2>
                         <p class="text-gray-400 text-sm">Gerencie suas ordens de serviço, créditos e agendamentos com rapidez e eficiência.</p>
                     </div>
@@ -96,7 +91,6 @@ window.switchTab = async function(tabName) {
     }
 };
 
-// Tela padrão de autenticação por WhatsApp
 function renderAuthScreen(message) {
     return `
         <div class="bg-cardbg border border-gray-800 p-6 rounded-xl shadow-lg text-center space-y-4 max-w-md mx-auto mt-6">
@@ -108,7 +102,6 @@ function renderAuthScreen(message) {
     `;
 }
 
-// Função de Login/Identificação simulada via tabela profiles
 window.handleLogin = async function() {
     const whatsappInput = document.getElementById('auth-whatsapp').value.trim();
     if (!whatsappInput) {
@@ -117,7 +110,6 @@ window.handleLogin = async function() {
     }
 
     try {
-        // Tenta buscar o perfil na tabela profiles do Supabase
         let { data, error } = await supabase
             .from('profiles')
             .select('*')
@@ -125,7 +117,6 @@ window.handleLogin = async function() {
             .single();
 
         if (error || !data) {
-            // Se não existir, cria um cadastro rápido básico
             const newName = prompt("Número não cadastrado. Digite seu nome completo:") || "Cliente WS";
             const { data: createdData, error: createError } = await supabase
                 .from('profiles')
@@ -156,7 +147,6 @@ window.handleLogout = function() {
     window.switchTab('inicio');
 };
 
-// Função para buscar as ordens de serviço do cliente logado
 async function loadServiceOrders(whatsapp) {
     const content = document.getElementById('app-content');
     try {
@@ -173,7 +163,7 @@ async function loadServiceOrders(whatsapp) {
                 <div class="space-y-4 text-center py-8">
                     <h2 class="text-xl font-bold text-neoncyan">Meus Aparelhos</h2>
                     <p class="text-gray-400 text-sm">Você ainda não possui ordens de serviço cadastradas.</p>
-                    <button onclick="switchTab('orcamento')" class="bg-neoncyan text-darkbg px-4 py-2 rounded-lg font-bold text-sm">Pedir Orçamento</button>
+                    <button onclick="switchTab('orcamento')" class="bg-neoncyan text-darkbg px-4 py-2 rounded-lg font-bold text-sm mt-2">Pedir Orçamento</button>
                 </div>
             `;
             return;
@@ -199,7 +189,6 @@ async function loadServiceOrders(whatsapp) {
     }
 }
 
-// Envio de orçamento expresso
 window.handleBudgetSubmit = async function(e) {
     e.preventDefault();
     const name = document.getElementById('client-name').value;
@@ -221,5 +210,4 @@ window.handleBudgetSubmit = async function(e) {
     }
 };
 
-// Carga inicial padrão ao abrir o site
 window.switchTab('inicio');
