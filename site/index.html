@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WS Soluções — Portal do Cliente & Admin</title>
     
-    <!-- Tailwind CSS (CDN para alta performance sem compilação pesada) -->
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -22,20 +22,18 @@
             }
         }
     </script>
-    
-    <!-- Ícones (Lucide / FontAwesome ou similar se precisar, por ora usando SVG puro) -->
     <style>
         body { background-color: #0a0a0c; color: #f3f4f6; }
     </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between pb-20 md:pb-0">
 
-    <!-- CABEÇALHO / HEADER -->
+    <!-- CABEÇALHO COM A SUA LOGO OFICIAL -->
     <header class="bg-cardbg border-b border-gray-800 p-4 sticky top-0 z-50 flex justify-between items-center">
-        <div class="flex items-center space-x-2">
-            <span class="text-neoncyan font-bold text-xl tracking-wider">⚡ WS SOLUÇÕES</span>
+        <div class="flex items-center space-x-3">
+            <!-- Insira o link direto ou caminho local da sua logo hospedada -->
+            <img src="https://raw.githubusercontent.com/Welintons/wsinforcrato/main/site/1793756039407.jpg" alt="WS Soluções Logo" class="h-10 w-auto rounded-md object-contain">
         </div>
-        <!-- Botão do Menu Lateral (Hamburguer) -->
         <button id="menu-btn" class="text-gray-300 hover:text-neoncyan focus:outline-none p-2">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
@@ -43,16 +41,15 @@
         </button>
     </header>
 
-    <!-- CONTEÚDO PRINCIPAL (Muda dinamicamente via JS) -->
+    <!-- CONTEÚDO DINÂMICO (Controlado pelo app.js) -->
     <main id="app-content" class="flex-1 p-4 max-w-4xl mx-auto w-full">
-        <!-- O conteúdo da aba ativa entra aqui -->
         <div class="text-center py-12">
             <h2 class="text-2xl font-bold mb-2">Carregando o sistema...</h2>
             <p class="text-gray-400">Identificando sessão e preparando sua bancada.</p>
         </div>
     </main>
 
-    <!-- BARRA DE NAVEGAÇÃO INFERIOR (Bottom Bar - Foco no Cliente) -->
+    <!-- NAVEGAÇÃO INFERIOR -->
     <nav class="fixed bottom-0 left-0 right-0 bg-cardbg border-t border-gray-800 flex justify-around items-center p-3 z-40 md:hidden">
         <button onclick="switchTab('inicio')" class="flex flex-col items-center text-gray-400 hover:text-neoncyan">
             <span class="text-xs mt-1">Início</span>
@@ -71,7 +68,7 @@
         </button>
     </nav>
 
-    <!-- SCRIPT PRINCIPAL DO APP -->
+    <!-- SCRIPT PRINCIPAL -->
     <script type="module" src="./js/app.js"></script>
 </body>
 </html>
