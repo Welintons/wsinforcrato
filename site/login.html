@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -7,703 +6,933 @@
 <title>WS SOLUÇÕES | Acesso</title>
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif}
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
-body{
- min-height:100vh;
- background:#080a0f;
- color:white;
- display:flex;
- align-items:center;
- justify-content:center;
- padding:20px;
- overflow-x:hidden
+:root {
+    --bg: #080d18;
+    --panel: #101a2b;
+    --input: #0b1423;
+    --blue: #168cff;
+    --cyan: #20d9e8;
+    --text: #f3f7ff;
+    --muted: #91a0b8;
+    --border: #26364e;
+    --danger: #ff6262;
+    --success: #37d99a;
 }
 
-.background-blobs{position:fixed;inset:0;overflow:hidden;z-index:0}
-
-.blob{
- position:absolute;
- filter:blur(80px);
- opacity:.5;
- border-radius:50%;
- animation:float 10s infinite alternate
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
-.blob-1{
- width:350px;height:350px;
- background:#00f2fe;
- top:-10%;left:-10%
+body {
+    min-height: 100vh;
+    background:
+        radial-gradient(circle at 50% 0%, #102c50 0%, transparent 45%),
+        var(--bg);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
 }
 
-.blob-2{
- width:400px;height:400px;
- background:#4facfe;
- bottom:-15%;right:-10%;
- animation-delay:-5s
+.container {
+    width: 100%;
+    max-width: 410px;
 }
 
-@keyframes float{
- to{transform:translate(50px,30px) scale(1.1)}
+.logo {
+    text-align: center;
+    margin-bottom: 28px;
 }
 
-.login-container{
- position:relative;
- z-index:2;
- width:100%;
- max-width:400px;
- padding:35px;
- background:rgba(16,22,34,.8);
- backdrop-filter:blur(16px);
- border:1px solid #00f2fe33;
- border-radius:20px;
- box-shadow:0 15px 35px #0008,0 0 20px #00f2fe18;
- animation:fade .7s ease
+.logo-icon {
+    width: 65px;
+    height: 65px;
+    margin: auto auto 13px;
+    border-radius: 20px;
+    display: grid;
+    place-items: center;
+    background: linear-gradient(135deg, var(--blue), var(--cyan));
+    font-size: 25px;
+    font-weight: 800;
+    color: white;
+    box-shadow: 0 8px 35px #168cff40;
 }
 
-@keyframes fade{
- from{opacity:0;transform:translateY(20px)}
- to{opacity:1;transform:translateY(0)}
+.logo h1 {
+    font-size: 25px;
+    font-weight: 800;
+    letter-spacing: 1px;
 }
 
-.header{text-align:center;margin-bottom:28px}
-.header h2{font-size:27px;letter-spacing:1px}
-.header h2 span{color:#00f2fe}
-.header p{color:#8a99ad;font-size:13px;margin-top:8px}
-
-.input-group{margin-bottom:17px}
-
-.input-group label{
- display:block;
- font-size:12px;
- color:#aab7c9;
- margin-bottom:7px
+.logo h1 span {
+    color: var(--cyan);
 }
 
-.input-group input{
- width:100%;
- padding:14px;
- background:#080a0fcc;
- border:1px solid #8a99ad55;
- border-radius:9px;
- color:white;
- font-size:14px;
- outline:none;
- transition:.3s
+.logo p {
+    color: var(--muted);
+    font-size: 12px;
+    margin-top: 7px;
 }
 
-.input-group input:focus{
- border-color:#00f2fe;
- box-shadow:0 0 10px #00f2fe30
+.card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 27px;
+    box-shadow: 0 20px 70px #0007;
 }
 
-.input-group input::placeholder{color:#66758a}
-
-.btn{
- width:100%;
- padding:15px;
- border:0;
- border-radius:10px;
- background:linear-gradient(135deg,#4facfe,#00f2fe);
- color:#080a0f;
- font-size:15px;
- font-weight:800;
- cursor:pointer;
- transition:.3s
+.card h2 {
+    font-size: 21px;
+    margin-bottom: 7px;
 }
 
-.btn:hover{
- transform:translateY(-2px);
- box-shadow:0 8px 20px #00f2fe55
+.subtitle {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 25px;
 }
 
-.btn:disabled{
- opacity:.5;
- cursor:not-allowed;
- transform:none
+.field {
+    margin-bottom: 16px;
 }
 
-.links{
- display:flex;
- justify-content:space-between;
- gap:10px;
- margin-top:20px
+.field label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    color: #bdc9dc;
+    margin-bottom: 8px;
 }
 
-.links button{
- background:none;
- border:0;
- color:#8a99ad;
- cursor:pointer;
- font-size:12px
+.field input {
+    width: 100%;
+    height: 47px;
+    background: var(--input);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 0 13px;
+    color: white;
+    font-size: 14px;
+    outline: none;
+    transition: .2s;
 }
 
-.links button:hover{color:#00f2fe}
-
-.hidden{display:none!important}
-
-.step{
- font-size:12px;
- color:#8a99ad;
- margin-bottom:18px
+.field input:focus {
+    border-color: var(--blue);
+    box-shadow: 0 0 0 3px #168cff20;
 }
 
-.message{
- font-size:13px;
- padding:12px;
- border-radius:8px;
- margin-bottom:15px;
- display:none;
- line-height:1.5
+.field input::placeholder {
+    color: #65758d;
 }
 
-.error{
- background:#ff444422;
- color:#ff8585;
- border:1px solid #ff444455
+.btn {
+    width: 100%;
+    height: 48px;
+    border: none;
+    border-radius: 10px;
+    background: linear-gradient(100deg, var(--blue), #0874db);
+    color: white;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: .2s;
 }
 
-.success{
- background:#00c78b22;
- color:#70eac0;
- border:1px solid #00c78b55
+.btn:hover {
+    filter: brightness(1.12);
+    transform: translateY(-1px);
 }
 
-.footer{
- text-align:center;
- color:#66758a;
- font-size:11px;
- margin-top:22px
+.btn:disabled {
+    opacity: .6;
+    cursor: wait;
+    transform: none;
 }
 
-@media(max-width:420px){
- .login-container{padding:27px 20px}
+.btn-secondary {
+    background: #1c2a40;
+    border: 1px solid var(--border);
+}
+
+.links {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 20px;
+    font-size: 12px;
+}
+
+.links a {
+    color: var(--cyan);
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.links a:hover {
+    text-decoration: underline;
+}
+
+.message {
+    display: none;
+    padding: 12px;
+    margin-bottom: 17px;
+    border-radius: 9px;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.message.error {
+    display: block;
+    background: #ff62621a;
+    border: 1px solid #ff626255;
+    color: #ff9999;
+}
+
+.message.success {
+    display: block;
+    background: #37d99a18;
+    border: 1px solid #37d99a55;
+    color: #65e9b3;
+}
+
+/* MODAL */
+
+.modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    background: #000b;
+    padding: 15px;
+    align-items: center;
+    justify-content: center;
+    overflow-y: auto;
+}
+
+.modal.active {
+    display: flex;
+}
+
+.modal-content {
+    width: 100%;
+    max-width: 440px;
+    max-height: 94vh;
+    overflow-y: auto;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 25px;
+    position: relative;
+    animation: aparecer .2s ease;
+}
+
+@keyframes aparecer {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.modal-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 22px;
+}
+
+.modal-header h2 {
+    font-size: 20px;
+}
+
+.modal-header p {
+    color: var(--muted);
+    font-size: 12px;
+    margin-top: 6px;
+}
+
+.close {
+    border: none;
+    background: transparent;
+    color: white;
+    font-size: 27px;
+    cursor: pointer;
+    line-height: 1;
+}
+
+.progress {
+    display: flex;
+    gap: 7px;
+    margin-bottom: 22px;
+}
+
+.progress span {
+    height: 4px;
+    flex: 1;
+    border-radius: 10px;
+    background: #26364e;
+}
+
+.progress span.active {
+    background: var(--cyan);
+}
+
+.step {
+    display: none;
+}
+
+.step.active {
+    display: block;
+}
+
+.step-title {
+    color: var(--cyan);
+    font-size: 12px;
+    font-weight: 700;
+    margin-bottom: 17px;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 12px;
+}
+
+.grid .full {
+    grid-column: 1 / -1;
+}
+
+.step-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.step-buttons button {
+    flex: 1;
+}
+
+.footer {
+    text-align: center;
+    color: #64748b;
+    font-size: 11px;
+    margin-top: 23px;
+}
+
+@media(max-width: 380px) {
+    .card {
+        padding: 21px;
+    }
+
+    .modal-content {
+        padding: 19px;
+    }
 }
 </style>
 </head>
 
 <body>
 
-<div class="background-blobs">
- <div class="blob blob-1"></div>
- <div class="blob blob-2"></div>
-</div>
+<div class="container">
 
-<div class="login-container">
+    <div class="logo">
+        <div class="logo-icon">WS</div>
+        <h1>WS <span>SOLUÇÕES</span></h1>
+        <p>Seu atendimento começa aqui.</p>
+    </div>
 
- <div class="header">
-  <h2>WS <span>SOLUÇÕES</span></h2>
-  <p id="subtitle">Entre com suas credenciais para continuar</p>
- </div>
+    <div class="card">
 
- <div id="message" class="message" role="status" aria-live="polite"></div>
+        <h2>Bem-vindo!</h2>
+        <p class="subtitle">Entre na sua conta para continuar.</p>
 
-<!-- LOGIN -->
-<form id="loginForm">
+        <div id="loginMessage" class="message"></div>
 
- <div class="input-group">
-  <label for="loginEmail">E-mail</label>
-  <input type="email" id="loginEmail" placeholder="Seu e-mail" required autocomplete="email">
- </div>
+        <form id="loginForm">
 
- <div class="input-group">
-  <label for="loginPassword">Senha</label>
-  <input type="password" id="loginPassword" placeholder="Sua senha" required autocomplete="current-password">
- </div>
+            <div class="field">
+                <label>E-mail</label>
+                <input
+                    type="email"
+                    id="loginEmail"
+                    placeholder="seuemail@email.com"
+                    autocomplete="email"
+                    required
+                >
+            </div>
 
- <button class="btn" id="loginBtn" type="submit">
-  ACESSAR SISTEMA
- </button>
+            <div class="field">
+                <label>Senha</label>
+                <input
+                    type="password"
+                    id="loginSenha"
+                    placeholder="Sua senha"
+                    autocomplete="current-password"
+                    required
+                >
+            </div>
 
- <div class="links">
-  <button type="button" data-screen="recovery">Esqueceu a senha?</button>
-  <button type="button" data-screen="register1">Criar conta</button>
- </div>
+            <button class="btn" id="btnLogin" type="submit">
+                Entrar na minha conta
+            </button>
 
-</form>
+        </form>
 
-<!-- CADASTRO ETAPA 1 -->
-<form id="register1" class="hidden">
+        <div class="links">
+            <a id="btnEsqueci">Esqueci minha senha</a>
+            <a id="btnAbrirCadastro">Criar conta</a>
+        </div>
 
- <div class="step">ETAPA 1 DE 2 — Dados pessoais</div>
+    </div>
 
- <div class="input-group">
-  <label for="name">Nome completo *</label>
-  <input id="name" type="text" placeholder="Seu nome completo" minlength="3" required autocomplete="name">
- </div>
-
- <div class="input-group">
-  <label for="email">E-mail *</label>
-  <input id="email" type="email" placeholder="seu@email.com" required autocomplete="email">
- </div>
-
- <div class="input-group">
-  <label for="phone">WhatsApp *</label>
-  <input id="phone" type="tel" placeholder="(88) 99999-9999" maxlength="15" required autocomplete="tel">
- </div>
-
- <div class="input-group">
-  <label for="password">Senha *</label>
-  <input id="password" type="password" placeholder="Mínimo 8 caracteres" minlength="8" required autocomplete="new-password">
- </div>
-
- <div class="input-group">
-  <label for="confirmPassword">Confirmar senha *</label>
-  <input id="confirmPassword" type="password" placeholder="Repita sua senha" required autocomplete="new-password">
- </div>
-
- <button class="btn" type="submit">CONTINUAR</button>
-
- <div class="links">
-  <button type="button" data-screen="loginForm">Voltar ao login</button>
- </div>
-
-</form>
-
-<!-- CADASTRO ETAPA 2 -->
-<form id="register2" class="hidden">
-
- <div class="step">ETAPA 2 DE 2 — Seu endereço</div>
-
- <div class="input-group">
-  <label for="city">Cidade *</label>
-  <input id="city" type="text" placeholder="Sua cidade" required>
- </div>
-
- <div class="input-group">
-  <label for="neighborhood">Bairro *</label>
-  <input id="neighborhood" type="text" placeholder="Seu bairro" required>
- </div>
-
- <div class="input-group">
-  <label for="street">Rua / Endereço *</label>
-  <input id="street" type="text" placeholder="Nome da rua ou endereço" required>
- </div>
-
- <div class="input-group">
-  <label for="number">Número *</label>
-  <input id="number" type="text" placeholder="Número da residência" required>
- </div>
-
- <button class="btn" id="registerBtn" type="submit">
-  FINALIZAR CADASTRO
- </button>
-
- <div class="links">
-  <button type="button" data-screen="register1">Voltar</button>
-  <button type="button" data-screen="loginForm">Cancelar</button>
- </div>
-
-</form>
-
-<!-- RECUPERAÇÃO -->
-<form id="recovery" class="hidden">
-
- <div class="input-group">
-  <label for="recoveryEmail">E-mail cadastrado</label>
-  <input type="email" id="recoveryEmail" placeholder="seu@email.com" required>
- </div>
-
- <button class="btn" id="recoveryBtn" type="submit">
-  RECUPERAR SENHA
- </button>
-
- <div class="links">
-  <button type="button" data-screen="loginForm">Voltar</button>
- </div>
-
-</form>
-
-<div class="footer">
- WS SOLUÇÕES · Atendimento e serviços
-</div>
+    <div class="footer">
+        WS SOLUÇÕES © 2026
+    </div>
 
 </div>
+
+
+<!-- MODAL CADASTRO -->
+
+<div class="modal" id="modalCadastro">
+
+    <div class="modal-content">
+
+        <div class="modal-header">
+            <div>
+                <h2>Criar minha conta</h2>
+                <p>Preencha seus dados para começar.</p>
+            </div>
+
+            <button class="close" id="btnFecharCadastro" type="button">
+                &times;
+            </button>
+        </div>
+
+        <div class="progress">
+            <span id="progress1" class="active"></span>
+            <span id="progress2"></span>
+        </div>
+
+        <div id="cadastroMessage" class="message"></div>
+
+        <form id="cadastroForm">
+
+            <!-- ETAPA 1 -->
+
+            <div class="step active" id="register1">
+
+                <div class="step-title">01 — Dados pessoais</div>
+
+                <div class="field">
+                    <label>Nome completo</label>
+                    <input
+                        type="text"
+                        id="cadNome"
+                        placeholder="Seu nome"
+                        autocomplete="name"
+                        required
+                    >
+                </div>
+
+                <div class="field">
+                    <label>E-mail</label>
+                    <input
+                        type="email"
+                        id="cadEmail"
+                        placeholder="seuemail@email.com"
+                        autocomplete="email"
+                        required
+                    >
+                </div>
+
+                <div class="field">
+                    <label>WhatsApp</label>
+                    <input
+                        type="tel"
+                        id="cadTelefone"
+                        placeholder="(88) 99999-9999"
+                        autocomplete="tel"
+                        required
+                    >
+                </div>
+
+                <div class="field">
+                    <label>Senha</label>
+                    <input
+                        type="password"
+                        id="cadSenha"
+                        placeholder="Mínimo de 6 caracteres"
+                        minlength="6"
+                        autocomplete="new-password"
+                        required
+                    >
+                </div>
+
+                <div class="field">
+                    <label>Confirmar senha</label>
+                    <input
+                        type="password"
+                        id="cadConfirmarSenha"
+                        placeholder="Digite novamente"
+                        required
+                    >
+                </div>
+
+                <button class="btn" id="btnProximaEtapa" type="button">
+                    Continuar
+                </button>
+
+            </div>
+
+
+            <!-- ETAPA 2 -->
+
+            <div class="step" id="register2">
+
+                <div class="step-title">02 — Endereço</div>
+
+                <div class="grid">
+
+                    <div class="field full">
+                        <label>Cidade</label>
+                        <input
+                            type="text"
+                            id="cadCidade"
+                            placeholder="Sua cidade"
+                            required
+                        >
+                    </div>
+
+                    <div class="field full">
+                        <label>Bairro</label>
+                        <input
+                            type="text"
+                            id="cadBairro"
+                            placeholder="Seu bairro"
+                            required
+                        >
+                    </div>
+
+                    <div class="field">
+                        <label>Rua</label>
+                        <input
+                            type="text"
+                            id="cadRua"
+                            placeholder="Nome da rua"
+                            required
+                        >
+                    </div>
+
+                    <div class="field">
+                        <label>Número</label>
+                        <input
+                            type="text"
+                            id="cadNumero"
+                            placeholder="Nº"
+                            required
+                        >
+                    </div>
+
+                </div>
+
+                <div class="step-buttons">
+
+                    <button
+                        class="btn btn-secondary"
+                        id="btnVoltarEtapa"
+                        type="button"
+                    >
+                        Voltar
+                    </button>
+
+                    <button
+                        class="btn"
+                        id="btnCriarConta"
+                        type="submit"
+                    >
+                        Criar minha conta
+                    </button>
+
+                </div>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<!-- MODAL RECUPERAÇÃO -->
+
+<div class="modal" id="modalRecuperacao">
+
+    <div class="modal-content">
+
+        <div class="modal-header">
+            <div>
+                <h2>Recuperar senha</h2>
+                <p>Enviaremos um link para seu e-mail.</p>
+            </div>
+
+            <button class="close" id="btnFecharRecuperacao" type="button">
+                &times;
+            </button>
+        </div>
+
+        <div id="recoveryMessage" class="message"></div>
+
+        <form id="recoveryForm">
+
+            <div class="field">
+                <label>Seu e-mail</label>
+                <input
+                    type="email"
+                    id="recoveryEmail"
+                    placeholder="seuemail@email.com"
+                    required
+                >
+            </div>
+
+            <button class="btn" id="btnRecuperar" type="submit">
+                Enviar link de recuperação
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
 
 <script type="module">
 
 import { supabase } from './supabase.js';
 
-// INSTÂNCIA DO SUPABASE
-const db = supabase;
-
-let registration = {};
-
-const screens = [
- "loginForm",
- "register1",
- "register2",
- "recovery"
-];
-
-// ELEMENTOS
 const $ = id => document.getElementById(id);
 
+const modalCadastro = $('modalCadastro');
+const modalRecuperacao = $('modalRecuperacao');
+
+
 // MENSAGENS
-function message(text,type="error"){
 
- const el = $("message");
+function mensagem(id, texto, tipo = 'error') {
+    const elemento = $(id);
 
- el.textContent = text;
- el.className = "message " + type;
- el.style.display = "block";
+    elemento.textContent = texto;
+    elemento.className = 'message ' + tipo;
 }
 
-function clearMessage(){
- $("message").style.display = "none";
+function limparMensagem(id) {
+    const elemento = $(id);
+
+    elemento.textContent = '';
+    elemento.className = 'message';
 }
 
-// TROCA DE TELAS
-function showScreen(id){
 
- screens.forEach(screen=>{
-  $(screen).classList.add("hidden");
- });
+// MODAL CADASTRO
 
- $(id).classList.remove("hidden");
-
- const titles = {
-  loginForm:"Entre com suas credenciais para continuar",
-  register1:"Crie sua conta na WS SOLUÇÕES",
-  register2:"Informe seu endereço",
-  recovery:"Recupere seu acesso"
- };
-
- $("subtitle").textContent = titles[id];
-
- clearMessage();
+function abrirCadastro() {
+    limparMensagem('cadastroMessage');
+    modalCadastro.classList.add('active');
 }
 
-// DISPONIBILIZA PARA OS BOTÕES
-window.showScreen = showScreen;
+function fecharCadastro() {
+    modalCadastro.classList.remove('active');
+}
 
-// NAVEGAÇÃO
-document.querySelectorAll("[data-screen]").forEach(button=>{
+$('btnAbrirCadastro').addEventListener('click', abrirCadastro);
 
- button.addEventListener("click",()=>{
-  showScreen(button.dataset.screen);
- });
+$('btnFecharCadastro').addEventListener('click', fecharCadastro);
 
+
+// MODAL RECUPERAÇÃO
+
+$('btnEsqueci').addEventListener('click', () => {
+    limparMensagem('recoveryMessage');
+    modalRecuperacao.classList.add('active');
 });
 
-// UTILITÁRIOS
-function digits(value){
- return value.replace(/\D/g,"");
-}
-
-// MÁSCARA WHATSAPP
-$("phone").addEventListener("input",e=>{
-
- let v = digits(e.target.value).slice(0,11);
-
- if(v.length>2){
-  v = "("+v.slice(0,2)+") "+v.slice(2);
- }
-
- if(digits(v).length===11){
-  v = v.replace(/(\d{5})(\d{4})$/,"$1-$2");
- }else if(digits(v).length===10){
-  v = v.replace(/(\d{4})(\d{4})$/,"$1-$2");
- }
-
- e.target.value = v;
+$('btnFecharRecuperacao').addEventListener('click', () => {
+    modalRecuperacao.classList.remove('active');
 });
 
-// CADASTRO ETAPA 1
-$("register1").addEventListener("submit",e=>{
 
- e.preventDefault();
- clearMessage();
+// FECHAR CLICANDO FORA
 
- const name = $("name").value.trim();
- const email = $("email").value.trim();
- const phone = digits($("phone").value);
- const password = $("password").value;
- const confirm = $("confirmPassword").value;
-
- if(name.length<3){
-  return message("Informe seu nome completo.");
- }
-
- if(phone.length!==10 && phone.length!==11){
-  return message("WhatsApp inválido.");
- }
-
- if(password.length<8){
-  return message("A senha precisa ter pelo menos 8 caracteres.");
- }
-
- if(password!==confirm){
-  return message("As senhas não conferem.");
- }
-
- registration = {
-  name,
-  email,
-  phone,
-  password
- };
-
- showScreen("register2");
-
+modalCadastro.addEventListener('click', event => {
+    if (event.target === modalCadastro) fecharCadastro();
 });
 
-// CADASTRO ETAPA 2
-$("register2").addEventListener("submit",async e=>{
-
- e.preventDefault();
- clearMessage();
-
- if(!registration.email){
-  showScreen("register1");
-  return message("Informe seus dados pessoais novamente.");
- }
-
- const city = $("city").value.trim();
- const neighborhood = $("neighborhood").value.trim();
- const street = $("street").value.trim();
- const number = $("number").value.trim();
-
- if(!city || !neighborhood || !street || !number){
-  return message("Preencha todos os campos do endereço.");
- }
-
- const btn = $("registerBtn");
-
- btn.disabled = true;
- btn.textContent = "CRIANDO CONTA...";
-
- try{
-
-  // CRIA USUÁRIO
-  const {data,error} = await db.auth.signUp({
-
-   email:registration.email,
-   password:registration.password,
-
-   options:{
-    data:{
-     full_name:registration.name
+modalRecuperacao.addEventListener('click', event => {
+    if (event.target === modalRecuperacao) {
+        modalRecuperacao.classList.remove('active');
     }
-   }
+});
 
-  });
 
-  if(error) throw error;
+// ETAPAS DO CADASTRO
 
-  if(!data.user){
-   throw new Error("Não foi possível criar a conta.");
-  }
+function mostrarEtapa(numero) {
 
-  // SALVA PERFIL
-  // A tabela profiles deve ter RLS permitindo
-  // INSERT quando id = auth.uid().
+    $('register1').classList.toggle('active', numero === 1);
+    $('register2').classList.toggle('active', numero === 2);
 
-  const profile = {
+    $('progress1').classList.toggle('active', numero === 1 || numero === 2);
+    $('progress2').classList.toggle('active', numero === 2);
 
-   id:data.user.id,
-   full_name:registration.name,
-   email:registration.email,
-   phone:registration.phone,
-   city,
-   neighborhood,
-   street,
-   number
+    limparMensagem('cadastroMessage');
+}
 
-  };
+$('btnProximaEtapa').addEventListener('click', () => {
 
-  // Se a confirmação de e-mail estiver ativada,
-  // não existe sessão para inserir diretamente.
-  // Nesse caso, o perfil deve ser criado por um
-  // trigger seguro no banco de dados.
+    const nome = $('cadNome').value.trim();
+    const email = $('cadEmail').value.trim();
+    const telefone = $('cadTelefone').value.trim();
+    const senha = $('cadSenha').value;
+    const confirmar = $('cadConfirmarSenha').value;
 
-  if(data.session){
+    if (!nome || !email || !telefone || !senha || !confirmar) {
+        mensagem('cadastroMessage', 'Preencha todos os campos.');
+        return;
+    }
 
-   const {error:profileError} = await db
-    .from("profiles")
-    .upsert(profile,{onConflict:"id"});
+    if (senha.length < 6) {
+        mensagem('cadastroMessage', 'A senha precisa ter pelo menos 6 caracteres.');
+        return;
+    }
 
-   if(profileError){
+    if (senha !== confirmar) {
+        mensagem('cadastroMessage', 'As senhas não são iguais.');
+        return;
+    }
 
-    console.error(profileError);
+    mostrarEtapa(2);
+});
 
-    throw new Error(
-     "Conta criada, mas houve um erro ao salvar o perfil: "+profileError.message
-    );
+$('btnVoltarEtapa').addEventListener('click', () => {
+    mostrarEtapa(1);
+});
 
-   }
 
-  }
+// CADASTRO SUPABASE
 
-  const emailCadastrado = registration.email;
+$('cadastroForm').addEventListener('submit', async event => {
 
-  registration = {};
+    event.preventDefault();
 
-  $("register1").reset();
-  $("register2").reset();
+    const botao = $('btnCriarConta');
 
-  if(data.session){
+    const nome = $('cadNome').value.trim();
+    const email = $('cadEmail').value.trim();
+    const telefone = $('cadTelefone').value.trim();
+    const senha = $('cadSenha').value;
 
-   message(
-    "Cadastro concluído! Bem-vindo à WS SOLUÇÕES.",
-    "success"
-   );
+    const cidade = $('cadCidade').value.trim();
+    const bairro = $('cadBairro').value.trim();
+    const rua = $('cadRua').value.trim();
+    const numero = $('cadNumero').value.trim();
 
-   setTimeout(()=>{
-    location.href = "dashboard.html";
-   },1500);
+    if (!cidade || !bairro || !rua || !numero) {
+        mensagem('cadastroMessage', 'Preencha todos os dados do endereço.');
+        return;
+    }
 
-  }else{
+    botao.disabled = true;
+    botao.textContent = 'Criando conta...';
 
-   showScreen("loginForm");
+    limparMensagem('cadastroMessage');
 
-   $("loginEmail").value = emailCadastrado;
+    try {
 
-   message(
-    "Cadastro realizado! Confirme seu e-mail para acessar.",
-    "success"
-   );
+        const { data, error } = await supabase.auth.signUp({
 
-  }
+            email: email,
+            password: senha,
 
- }catch(error){
+            options: {
+                data: {
+                    full_name: nome,
+                    phone: telefone,
+                    city: cidade,
+                    neighborhood: bairro,
+                    street: rua,
+                    number: numero
+                }
+            }
 
-  console.error("Erro no cadastro:",error);
+        });
 
-  message(error.message || "Erro ao realizar cadastro.");
+        if (error) throw error;
 
- }finally{
+        if (!data.user) {
+            throw new Error('O Supabase não retornou os dados do usuário.');
+        }
 
-  btn.disabled = false;
-  btn.textContent = "FINALIZAR CADASTRO";
+        if (data.session) {
 
- }
+            mensagem(
+                'cadastroMessage',
+                'Conta criada com sucesso! Redirecionando...',
+                'success'
+            );
+
+            setTimeout(() => {
+                window.location.href = 'dashboard.html';
+            }, 1200);
+
+        } else {
+
+            mensagem(
+                'cadastroMessage',
+                'Cadastro realizado! Verifique seu e-mail para confirmar a conta antes de entrar.',
+                'success'
+            );
+
+            botao.textContent = 'Cadastro realizado';
+
+        }
+
+    } catch (error) {
+
+        console.error('Erro no cadastro:', error);
+
+        mensagem(
+            'cadastroMessage',
+            error.message || 'Não foi possível criar sua conta.'
+        );
+
+        botao.disabled = false;
+        botao.textContent = 'Criar minha conta';
+
+    }
 
 });
+
 
 // LOGIN
-$("loginForm").addEventListener("submit",async e=>{
 
- e.preventDefault();
- clearMessage();
+$('loginForm').addEventListener('submit', async event => {
 
- const btn = $("loginBtn");
+    event.preventDefault();
 
- btn.disabled = true;
- btn.textContent = "AUTENTICANDO...";
+    const botao = $('btnLogin');
 
- try{
+    const email = $('loginEmail').value.trim();
+    const senha = $('loginSenha').value;
 
-  const {data,error} = await db.auth.signInWithPassword({
+    botao.disabled = true;
+    botao.textContent = 'Entrando...';
 
-   email:$("loginEmail").value.trim(),
-   password:$("loginPassword").value
+    limparMensagem('loginMessage');
 
-  });
+    try {
 
-  if(error) throw error;
+        const { data, error } = await supabase.auth.signInWithPassword({
+            email,
+            password: senha
+        });
 
-  // VERIFICA PERFIL
-  const {data:profile,error:profileError} = await db
-   .from("profiles")
-   .select("id")
-   .eq("id",data.user.id)
-   .maybeSingle();
+        if (error) throw error;
 
-  if(profileError) throw profileError;
+        if (!data.session) {
+            throw new Error('Não foi possível iniciar sua sessão.');
+        }
 
-  if(!profile){
+        window.location.href = 'dashboard.html';
 
-   await db.auth.signOut();
+    } catch (error) {
 
-   throw new Error(
-    "Cadastro incompleto. Entre em contato com o suporte."
-   );
+        console.error('Erro no login:', error);
 
-  }
+        mensagem(
+            'loginMessage',
+            error.message || 'Não foi possível entrar.'
+        );
 
-  location.href = "dashboard.html";
+        botao.disabled = false;
+        botao.textContent = 'Entrar na minha conta';
 
- }catch(error){
-
-  console.error("Erro no login:",error);
-
-  message(error.message || "Não foi possível entrar.");
-
- }finally{
-
-  btn.disabled = false;
-  btn.textContent = "ACESSAR SISTEMA";
-
- }
+    }
 
 });
+
 
 // RECUPERAÇÃO DE SENHA
-$("recovery").addEventListener("submit",async e=>{
 
- e.preventDefault();
- clearMessage();
+$('recoveryForm').addEventListener('submit', async event => {
 
- const btn = $("recoveryBtn");
+    event.preventDefault();
 
- btn.disabled = true;
- btn.textContent = "ENVIANDO...";
+    const botao = $('btnRecuperar');
+    const email = $('recoveryEmail').value.trim();
 
- try{
+    botao.disabled = true;
+    botao.textContent = 'Enviando...';
 
-  const email = $("recoveryEmail").value.trim();
+    limparMensagem('recoveryMessage');
 
-  const {error} = await db.auth.resetPasswordForEmail(email,{
+    try {
 
-   redirectTo:location.origin + "/redefinir-senha.html"
+        const { error } = await supabase.auth.resetPasswordForEmail(email, {
+            redirectTo: window.location.origin + '/redefinir-senha.html'
+        });
 
-  });
+        if (error) throw error;
 
-  if(error) throw error;
+        mensagem(
+            'recoveryMessage',
+            'Se o endereço estiver cadastrado, você receberá um e-mail com as instruções.',
+            'success'
+        );
 
-  message(
-   "Se o e-mail estiver cadastrado, você receberá as instruções.",
-   "success"
-  );
+    } catch (error) {
 
- }catch(error){
+        mensagem(
+            'recoveryMessage',
+            error.message || 'Não foi possível enviar o e-mail.'
+        );
 
-  console.error("Erro na recuperação:",error);
+    } finally {
 
-  message(error.message || "Falha na recuperação.");
+        botao.disabled = false;
+        botao.textContent = 'Enviar link de recuperação';
 
- }finally{
-
-  btn.disabled = false;
-  btn.textContent = "RECUPERAR SENHA";
-
- }
+    }
 
 });
 
-// VERIFICA SESSÃO
-(async()=>{
 
- try{
+// VERIFICAR SESSÃO EXISTENTE
 
-  const {data,error} = await db.auth.getSession();
+try {
 
-  if(error) throw error;
+    const { data } = await supabase.auth.getSession();
 
-  if(data.session){
-   location.href = "dashboard.html";
-  }
+    if (data.session) {
+        window.location.href = 'dashboard.html';
+    }
 
- }catch(error){
-
-  console.error("Erro ao verificar sessão:",error);
-
-  message("Não foi possível verificar sua sessão.");
-
- }
-
-})();
+} catch (error) {
+    console.error('Erro ao verificar sessão:', error);
+}
 
 </script>
 
