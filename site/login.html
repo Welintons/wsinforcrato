@@ -1,940 +1,283 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>WS SOLUÇÕES | Acesso</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - WS Soluções</title>
+    <!-- SDK do Supabase via CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
 
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+        body {
+            height: 100vh;
+            background: #080a0f;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
 
-:root {
-    --bg: #080d18;
-    --panel: #101a2b;
-    --input: #0b1423;
-    --blue: #168cff;
-    --cyan: #20d9e8;
-    --text: #f3f7ff;
-    --muted: #91a0b8;
-    --border: #26364e;
-    --danger: #ff6262;
-    --success: #37d99a;
-}
+        .background-blobs {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 1;
+        }
 
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
+        .blob {
+            position: absolute;
+            filter: blur(80px);
+            opacity: 0.5;
+            animation: floatBlob 10s infinite alternate ease-in-out;
+        }
 
-body {
-    min-height: 100vh;
-    background:
-        radial-gradient(circle at 50% 0%, #102c50 0%, transparent 45%),
-        var(--bg);
-    color: var(--text);
-    font-family: 'Inter', sans-serif;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-}
+        .blob-1 {
+            width: 350px;
+            height: 350px;
+            background: #00f2fe;
+            top: -10%;
+            left: -10%;
+            border-radius: 50%;
+        }
 
-.container {
-    width: 100%;
-    max-width: 410px;
-}
+        .blob-2 {
+            width: 400px;
+            height: 400px;
+            background: #4facfe;
+            bottom: -15%;
+            right: -10%;
+            border-radius: 50%;
+            animation-delay: -5s;
+        }
 
-.logo {
-    text-align: center;
-    margin-bottom: 28px;
-}
+        @keyframes floatBlob {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(50px, 30px) scale(1.1); }
+        }
 
-.logo-icon {
-    width: 65px;
-    height: 65px;
-    margin: auto auto 13px;
-    border-radius: 20px;
-    display: grid;
-    place-items: center;
-    background: linear-gradient(135deg, var(--blue), var(--cyan));
-    font-size: 25px;
-    font-weight: 800;
-    color: white;
-    box-shadow: 0 8px 35px #168cff40;
-}
+        .login-container {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            max-width: 400px;
+            padding: 40px;
+            background: rgba(16, 22, 34, 0.7);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(0, 242, 254, 0.2);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5),
+                        0 0 20px rgba(0, 242, 254, 0.1);
+            animation: fadeIn 1s ease-out forwards;
+        }
 
-.logo h1 {
-    font-size: 25px;
-    font-weight: 800;
-    letter-spacing: 1px;
-}
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
 
-.logo h1 span {
-    color: var(--cyan);
-}
+        .login-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
 
-.logo p {
-    color: var(--muted);
-    font-size: 12px;
-    margin-top: 7px;
-}
+        .login-header h2 {
+            color: #ffffff;
+            font-size: 28px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
 
-.card {
-    background: var(--panel);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    padding: 27px;
-    box-shadow: 0 20px 70px #0007;
-}
+        .login-header h2 span {
+            color: #00f2fe;
+        }
 
-.card h2 {
-    font-size: 21px;
-    margin-bottom: 7px;
-}
+        .login-header p {
+            color: #8a99ad;
+            font-size: 14px;
+        }
 
-.subtitle {
-    font-size: 13px;
-    color: var(--muted);
-    margin-bottom: 25px;
-}
+        .input-group {
+            position: relative;
+            margin-bottom: 25px;
+        }
 
-.field {
-    margin-bottom: 16px;
-}
+        .input-group input {
+            width: 100%;
+            padding: 15px 15px 15px 45px;
+            background: rgba(8, 10, 15, 0.6);
+            border: 1px solid rgba(138, 153, 173, 0.3);
+            border-radius: 10px;
+            color: #fff;
+            font-size: 15px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
 
-.field label {
-    display: block;
-    font-size: 12px;
-    font-weight: 600;
-    color: #bdc9dc;
-    margin-bottom: 8px;
-}
+        .input-group input:focus {
+            border-color: #00f2fe;
+            box-shadow: 0 0 10px rgba(0, 242, 254, 0.3);
+        }
 
-.field input {
-    width: 100%;
-    height: 47px;
-    background: var(--input);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 0 13px;
-    color: white;
-    font-size: 14px;
-    outline: none;
-    transition: .2s;
-}
+        .input-group svg {
+            position: absolute;
+            top: 50%;
+            left: 15px;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            fill: #8a99ad;
+            transition: fill 0.3s ease;
+        }
 
-.field input:focus {
-    border-color: var(--blue);
-    box-shadow: 0 0 0 3px #168cff20;
-}
+        .input-group input:focus ~ svg {
+            fill: #00f2fe;
+        }
 
-.field input::placeholder {
-    color: #65758d;
-}
+        .btn-login {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            border: none;
+            border-radius: 10px;
+            color: #080a0f;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 242, 254, 0.4);
+        }
 
-.btn {
-    width: 100%;
-    height: 48px;
-    border: none;
-    border-radius: 10px;
-    background: linear-gradient(100deg, var(--blue), #0874db);
-    color: white;
-    font-size: 14px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: .2s;
-}
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 242, 254, 0.6);
+        }
 
-.btn:hover {
-    filter: brightness(1.12);
-    transform: translateY(-1px);
-}
+        .btn-login:active {
+            transform: translateY(0);
+        }
 
-.btn:disabled {
-    opacity: .6;
-    cursor: wait;
-    transform: none;
-}
+        .login-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+            font-size: 13px;
+        }
 
-.btn-secondary {
-    background: #1c2a40;
-    border: 1px solid var(--border);
-}
+        .login-footer a {
+            color: #8a99ad;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
 
-.links {
-    display: flex;
-    justify-content: space-between;
-    gap: 10px;
-    margin-top: 20px;
-    font-size: 12px;
-}
+        .login-footer a:hover {
+            color: #00f2fe;
+        }
 
-.links a {
-    color: var(--cyan);
-    text-decoration: none;
-    cursor: pointer;
-}
+        .shake {
+            animation: shake 0.4s ease-in-out;
+        }
 
-.links a:hover {
-    text-decoration: underline;
-}
-
-.message {
-    display: none;
-    padding: 12px;
-    margin-bottom: 17px;
-    border-radius: 9px;
-    font-size: 12px;
-    line-height: 1.5;
-}
-
-.message.error {
-    display: block;
-    background: #ff62621a;
-    border: 1px solid #ff626255;
-    color: #ff9999;
-}
-
-.message.success {
-    display: block;
-    background: #37d99a18;
-    border: 1px solid #37d99a55;
-    color: #65e9b3;
-}
-
-/* MODAL */
-
-.modal {
-    display: none;
-    position: fixed;
-    inset: 0;
-    z-index: 1000;
-    background: #000b;
-    padding: 15px;
-    align-items: center;
-    justify-content: center;
-    overflow-y: auto;
-}
-
-.modal.active {
-    display: flex;
-}
-
-.modal-content {
-    width: 100%;
-    max-width: 440px;
-    max-height: 94vh;
-    overflow-y: auto;
-    background: var(--panel);
-    border: 1px solid var(--border);
-    border-radius: 18px;
-    padding: 25px;
-    position: relative;
-    animation: aparecer .2s ease;
-}
-
-@keyframes aparecer {
-    from {
-        opacity: 0;
-        transform: translateY(15px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.modal-header {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    margin-bottom: 22px;
-}
-
-.modal-header h2 {
-    font-size: 20px;
-}
-
-.modal-header p {
-    color: var(--muted);
-    font-size: 12px;
-    margin-top: 6px;
-}
-
-.close {
-    border: none;
-    background: transparent;
-    color: white;
-    font-size: 27px;
-    cursor: pointer;
-    line-height: 1;
-}
-
-.progress {
-    display: flex;
-    gap: 7px;
-    margin-bottom: 22px;
-}
-
-.progress span {
-    height: 4px;
-    flex: 1;
-    border-radius: 10px;
-    background: #26364e;
-}
-
-.progress span.active {
-    background: var(--cyan);
-}
-
-.step {
-    display: none;
-}
-
-.step.active {
-    display: block;
-}
-
-.step-title {
-    color: var(--cyan);
-    font-size: 12px;
-    font-weight: 700;
-    margin-bottom: 17px;
-    text-transform: uppercase;
-    letter-spacing: .5px;
-}
-
-.grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0 12px;
-}
-
-.grid .full {
-    grid-column: 1 / -1;
-}
-
-.step-buttons {
-    display: flex;
-    gap: 10px;
-    margin-top: 10px;
-}
-
-.step-buttons button {
-    flex: 1;
-}
-
-.footer {
-    text-align: center;
-    color: #64748b;
-    font-size: 11px;
-    margin-top: 23px;
-}
-
-@media(max-width: 380px) {
-    .card {
-        padding: 21px;
-    }
-
-    .modal-content {
-        padding: 19px;
-    }
-}
-</style>
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-8px); }
+            40%, 80% { transform: translateX(8px); }
+        }
+    </style>
 </head>
-
 <body>
 
-<div class="container">
-
-    <div class="logo">
-        <div class="logo-icon">WS</div>
-        <h1>WS <span>SOLUÇÕES</span></h1>
-        <p>Seu atendimento começa aqui.</p>
+    <div class="background-blobs">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
     </div>
 
-    <div class="card">
-
-        <h2>Bem-vindo!</h2>
-        <p class="subtitle">Entre na sua conta para continuar.</p>
-
-        <div id="loginMessage" class="message"></div>
+    <div class="login-container" id="loginCard">
+        <div class="login-header">
+            <h2>WS <span>Soluções</span></h2>
+            <p>Entre com suas credenciais</p>
+        </div>
 
         <form id="loginForm">
-
-            <div class="field">
-                <label>E-mail</label>
-                <input
-                    type="email"
-                    id="loginEmail"
-                    placeholder="seuemail@email.com"
-                    autocomplete="email"
-                    required
-                >
+            <div class="input-group">
+                <input type="email" id="email" placeholder="E-mail" required autocomplete="off">
+                <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
             </div>
 
-            <div class="field">
-                <label>Senha</label>
-                <input
-                    type="password"
-                    id="loginSenha"
-                    placeholder="Sua senha"
-                    autocomplete="current-password"
-                    required
-                >
+            <div class="input-group">
+                <input type="password" id="password" placeholder="Senha" required>
+                <svg viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
             </div>
 
-            <button class="btn" id="btnLogin" type="submit">
-                Entrar na minha conta
-            </button>
+            <button type="submit" class="btn-login" id="submitBtn">ACESSAR SISTEMA</button>
 
+            <div class="login-footer">
+                <a href="#">Esqueceu a senha?</a>
+                <a href="register.html">Criar conta</a>
+            </div>
         </form>
-
-        <div class="links">
-            <a id="btnEsqueci">Esqueci minha senha</a>
-            <a id="btnAbrirCadastro">Criar conta</a>
-        </div>
-
     </div>
 
-    <div class="footer">
-        WS SOLUÇÕES © 2026
-    </div>
-
-</div>
-
-
-<!-- MODAL CADASTRO -->
-
-<div class="modal" id="modalCadastro">
-
-    <div class="modal-content">
-
-        <div class="modal-header">
-            <div>
-                <h2>Criar minha conta</h2>
-                <p>Preencha seus dados para começar.</p>
-            </div>
-
-            <button class="close" id="btnFecharCadastro" type="button">
-                &times;
-            </button>
-        </div>
-
-        <div class="progress">
-            <span id="progress1" class="active"></span>
-            <span id="progress2"></span>
-        </div>
-
-        <div id="cadastroMessage" class="message"></div>
-
-        <form id="cadastroForm">
-
-            <!-- ETAPA 1 -->
-
-            <div class="step active" id="register1">
-
-                <div class="step-title">01 — Dados pessoais</div>
-
-                <div class="field">
-                    <label>Nome completo</label>
-                    <input
-                        type="text"
-                        id="cadNome"
-                        placeholder="Seu nome"
-                        autocomplete="name"
-                        required
-                    >
-                </div>
-
-                <div class="field">
-                    <label>E-mail</label>
-                    <input
-                        type="email"
-                        id="cadEmail"
-                        placeholder="seuemail@email.com"
-                        autocomplete="email"
-                        required
-                    >
-                </div>
-
-                <div class="field">
-                    <label>WhatsApp</label>
-                    <input
-                        type="tel"
-                        id="cadTelefone"
-                        placeholder="(88) 99999-9999"
-                        autocomplete="tel"
-                        required
-                    >
-                </div>
-
-                <div class="field">
-                    <label>Senha</label>
-                    <input
-                        type="password"
-                        id="cadSenha"
-                        placeholder="Mínimo de 6 caracteres"
-                        minlength="6"
-                        autocomplete="new-password"
-                        required
-                    >
-                </div>
-
-                <div class="field">
-                    <label>Confirmar senha</label>
-                    <input
-                        type="password"
-                        id="cadConfirmarSenha"
-                        placeholder="Digite novamente"
-                        required
-                    >
-                </div>
-
-                <button class="btn" id="btnProximaEtapa" type="button">
-                    Continuar
-                </button>
-
-            </div>
-
-
-            <!-- ETAPA 2 -->
-
-            <div class="step" id="register2">
-
-                <div class="step-title">02 — Endereço</div>
-
-                <div class="grid">
-
-                    <div class="field full">
-                        <label>Cidade</label>
-                        <input
-                            type="text"
-                            id="cadCidade"
-                            placeholder="Sua cidade"
-                            required
-                        >
-                    </div>
-
-                    <div class="field full">
-                        <label>Bairro</label>
-                        <input
-                            type="text"
-                            id="cadBairro"
-                            placeholder="Seu bairro"
-                            required
-                        >
-                    </div>
-
-                    <div class="field">
-                        <label>Rua</label>
-                        <input
-                            type="text"
-                            id="cadRua"
-                            placeholder="Nome da rua"
-                            required
-                        >
-                    </div>
-
-                    <div class="field">
-                        <label>Número</label>
-                        <input
-                            type="text"
-                            id="cadNumero"
-                            placeholder="Nº"
-                            required
-                        >
-                    </div>
-
-                </div>
-
-                <div class="step-buttons">
-
-                    <button
-                        class="btn btn-secondary"
-                        id="btnVoltarEtapa"
-                        type="button"
-                    >
-                        Voltar
-                    </button>
-
-                    <button
-                        class="btn"
-                        id="btnCriarConta"
-                        type="submit"
-                    >
-                        Criar minha conta
-                    </button>
-
-                </div>
-
-            </div>
-
-        </form>
-
-    </div>
-
-</div>
-
-
-<!-- MODAL RECUPERAÇÃO -->
-
-<div class="modal" id="modalRecuperacao">
-
-    <div class="modal-content">
-
-        <div class="modal-header">
-            <div>
-                <h2>Recuperar senha</h2>
-                <p>Enviaremos um link para seu e-mail.</p>
-            </div>
-
-            <button class="close" id="btnFecharRecuperacao" type="button">
-                &times;
-            </button>
-        </div>
-
-        <div id="recoveryMessage" class="message"></div>
-
-        <form id="recoveryForm">
-
-            <div class="field">
-                <label>Seu e-mail</label>
-                <input
-                    type="email"
-                    id="recoveryEmail"
-                    placeholder="seuemail@email.com"
-                    required
-                >
-            </div>
-
-            <button class="btn" id="btnRecuperar" type="submit">
-                Enviar link de recuperação
-            </button>
-
-        </form>
-
-    </div>
-
-</div>
-
-
-<script type="module">
-
-import { supabase } from './supabase.js';
-
-const $ = id => document.getElementById(id);
-
-const modalCadastro = $('modalCadastro');
-const modalRecuperacao = $('modalRecuperacao');
-
-
-// MENSAGENS
-
-function mensagem(id, texto, tipo = 'error') {
-    const elemento = $(id);
-
-    elemento.textContent = texto;
-    elemento.className = 'message ' + tipo;
-}
-
-function limparMensagem(id) {
-    const elemento = $(id);
-
-    elemento.textContent = '';
-    elemento.className = 'message';
-}
-
-
-// MODAL CADASTRO
-
-function abrirCadastro() {
-    limparMensagem('cadastroMessage');
-    modalCadastro.classList.add('active');
-}
-
-function fecharCadastro() {
-    modalCadastro.classList.remove('active');
-}
-
-$('btnAbrirCadastro').addEventListener('click', abrirCadastro);
-
-$('btnFecharCadastro').addEventListener('click', fecharCadastro);
-
-
-// MODAL RECUPERAÇÃO
-
-$('btnEsqueci').addEventListener('click', () => {
-    limparMensagem('recoveryMessage');
-    modalRecuperacao.classList.add('active');
-});
-
-$('btnFecharRecuperacao').addEventListener('click', () => {
-    modalRecuperacao.classList.remove('active');
-});
-
-
-// FECHAR CLICANDO FORA
-
-modalCadastro.addEventListener('click', event => {
-    if (event.target === modalCadastro) fecharCadastro();
-});
-
-modalRecuperacao.addEventListener('click', event => {
-    if (event.target === modalRecuperacao) {
-        modalRecuperacao.classList.remove('active');
-    }
-});
-
-
-// ETAPAS DO CADASTRO
-
-function mostrarEtapa(numero) {
-
-    $('register1').classList.toggle('active', numero === 1);
-    $('register2').classList.toggle('active', numero === 2);
-
-    $('progress1').classList.toggle('active', numero === 1 || numero === 2);
-    $('progress2').classList.toggle('active', numero === 2);
-
-    limparMensagem('cadastroMessage');
-}
-
-$('btnProximaEtapa').addEventListener('click', () => {
-
-    const nome = $('cadNome').value.trim();
-    const email = $('cadEmail').value.trim();
-    const telefone = $('cadTelefone').value.trim();
-    const senha = $('cadSenha').value;
-    const confirmar = $('cadConfirmarSenha').value;
-
-    if (!nome || !email || !telefone || !senha || !confirmar) {
-        mensagem('cadastroMessage', 'Preencha todos os campos.');
-        return;
-    }
-
-    if (senha.length < 6) {
-        mensagem('cadastroMessage', 'A senha precisa ter pelo menos 6 caracteres.');
-        return;
-    }
-
-    if (senha !== confirmar) {
-        mensagem('cadastroMessage', 'As senhas não são iguais.');
-        return;
-    }
-
-    mostrarEtapa(2);
-});
-
-$('btnVoltarEtapa').addEventListener('click', () => {
-    mostrarEtapa(1);
-});
-
-
-// CADASTRO SUPABASE
-
-$('cadastroForm').addEventListener('submit', async event => {
-
-    event.preventDefault();
-
-    const botao = $('btnCriarConta');
-
-    const nome = $('cadNome').value.trim();
-    const email = $('cadEmail').value.trim();
-    const telefone = $('cadTelefone').value.trim();
-    const senha = $('cadSenha').value;
-
-    const cidade = $('cadCidade').value.trim();
-    const bairro = $('cadBairro').value.trim();
-    const rua = $('cadRua').value.trim();
-    const numero = $('cadNumero').value.trim();
-
-    if (!cidade || !bairro || !rua || !numero) {
-        mensagem('cadastroMessage', 'Preencha todos os dados do endereço.');
-        return;
-    }
-
-    botao.disabled = true;
-    botao.textContent = 'Criando conta...';
-
-    limparMensagem('cadastroMessage');
-
-    try {
-
-        const { data, error } = await supabase.auth.signUp({
-
-            email: email,
-            password: senha,
-
-            options: {
-                data: {
-                    full_name: nome,
-                    phone: telefone,
-                    city: cidade,
-                    neighborhood: bairro,
-                    street: rua,
-                    number: numero
-                }
+    <script>
+        // Credenciais do Supabase configuradas
+        const SUPABASE_URL = 'https://vnzdrnygnknpqmryptwq.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_SAGvo6mmBGV5gpuTSE86Xw_4OnqYfxw';
+
+        const { createClient } = supabase;
+        const _supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        const form = document.getElementById('loginForm');
+        const loginCard = document.getElementById('loginCard');
+        const submitBtn = document.getElementById('submitBtn');
+
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            submitBtn.innerText = "Autenticando...";
+            submitBtn.style.opacity = "0.7";
+
+            try {
+                const { data, error } = await _supabase.auth.signInWithPassword({
+                    email: email,
+                    password: password,
+                });
+
+                if (error) throw error;
+
+                submitBtn.innerText = "Sucesso! Entrando...";
+                submitBtn.style.background = "linear-gradient(135deg, #00b09b, #96c93d)";
+                submitBtn.style.boxShadow = "0 5px 15px rgba(0, 176, 155, 0.5)";
+                
+                setTimeout(() => {
+                    alert("Login realizado com sucesso! ID do usuário: " + data.user.id);
+                    // window.location.href = "dashboard.html";
+                }, 800);
+
+            } catch (error) {
+                loginCard.classList.add('shake');
+                submitBtn.innerText = "ACESSAR SISTEMA";
+                submitBtn.style.opacity = "1";
+                
+                alert("Erro ao entrar: " + (error.message === "Invalid login credentials" ? "E-mail ou senha incorretos." : error.message));
+
+                setTimeout(() => {
+                    loginCard.classList.remove('shake');
+                }, 400);
             }
-
         });
-
-        if (error) throw error;
-
-        if (!data.user) {
-            throw new Error('O Supabase não retornou os dados do usuário.');
-        }
-
-        if (data.session) {
-
-            mensagem(
-                'cadastroMessage',
-                'Conta criada com sucesso! Redirecionando...',
-                'success'
-            );
-
-            setTimeout(() => {
-                window.location.href = 'dashboard.html';
-            }, 1200);
-
-        } else {
-
-            mensagem(
-                'cadastroMessage',
-                'Cadastro realizado! Verifique seu e-mail para confirmar a conta antes de entrar.',
-                'success'
-            );
-
-            botao.textContent = 'Cadastro realizado';
-
-        }
-
-    } catch (error) {
-
-        console.error('Erro no cadastro:', error);
-
-        mensagem(
-            'cadastroMessage',
-            error.message || 'Não foi possível criar sua conta.'
-        );
-
-        botao.disabled = false;
-        botao.textContent = 'Criar minha conta';
-
-    }
-
-});
-
-
-// LOGIN
-
-$('loginForm').addEventListener('submit', async event => {
-
-    event.preventDefault();
-
-    const botao = $('btnLogin');
-
-    const email = $('loginEmail').value.trim();
-    const senha = $('loginSenha').value;
-
-    botao.disabled = true;
-    botao.textContent = 'Entrando...';
-
-    limparMensagem('loginMessage');
-
-    try {
-
-        const { data, error } = await supabase.auth.signInWithPassword({
-            email,
-            password: senha
-        });
-
-        if (error) throw error;
-
-        if (!data.session) {
-            throw new Error('Não foi possível iniciar sua sessão.');
-        }
-
-        window.location.href = 'dashboard.html';
-
-    } catch (error) {
-
-        console.error('Erro no login:', error);
-
-        mensagem(
-            'loginMessage',
-            error.message || 'Não foi possível entrar.'
-        );
-
-        botao.disabled = false;
-        botao.textContent = 'Entrar na minha conta';
-
-    }
-
-});
-
-
-// RECUPERAÇÃO DE SENHA
-
-$('recoveryForm').addEventListener('submit', async event => {
-
-    event.preventDefault();
-
-    const botao = $('btnRecuperar');
-    const email = $('recoveryEmail').value.trim();
-
-    botao.disabled = true;
-    botao.textContent = 'Enviando...';
-
-    limparMensagem('recoveryMessage');
-
-    try {
-
-        const { error } = await supabase.auth.resetPasswordForEmail(email, {
-            redirectTo: window.location.origin + '/redefinir-senha.html'
-        });
-
-        if (error) throw error;
-
-        mensagem(
-            'recoveryMessage',
-            'Se o endereço estiver cadastrado, você receberá um e-mail com as instruções.',
-            'success'
-        );
-
-    } catch (error) {
-
-        mensagem(
-            'recoveryMessage',
-            error.message || 'Não foi possível enviar o e-mail.'
-        );
-
-    } finally {
-
-        botao.disabled = false;
-        botao.textContent = 'Enviar link de recuperação';
-
-    }
-
-});
-
-
-// VERIFICAR SESSÃO EXISTENTE
-
-try {
-
-    const { data } = await supabase.auth.getSession();
-
-    if (data.session) {
-        window.location.href = 'dashboard.html';
-    }
-
-} catch (error) {
-    console.error('Erro ao verificar sessão:', error);
-}
-
-</script>
-
+    </script>
 </body>
 </html>
