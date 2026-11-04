@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro - WS Soluções</title>
+    <!-- SDK do Supabase via CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: #080a0f;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .background-blobs {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            overflow: hidden;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .blob {
+            position: absolute;
+            filter: blur(80px);
+            opacity: 0.4;
+            animation: floatBlob 10s infinite alternate ease-in-out;
+        }
+
+        .blob-1 {
+            width: 400px;
+            height: 400px;
+            background: #00f2fe;
+            top: -10%;
+            left: -10%;
+            border-radius: 50%;
+        }
+
+        .blob-2 {
+            width: 450px;
+            height: 450px;
+            background: #4facfe;
+            bottom: -15%;
+            right: -10%;
+            border-radius: 50%;
+            animation-delay: -5s;
+        }
+
+        @keyframes floatBlob {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(50px, 30px) scale(1.1); }
+        }
+
+        .register-container {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            max-width: 550px;
+            padding: 40px;
+            background: rgba(16, 22, 34, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(0, 242, 254, 0.2);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5),
+                        0 0 20px rgba(0, 242, 254, 0.1);
+            animation: fadeIn 1s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .register-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .register-header h2 {
+            color: #ffffff;
+            font-size: 26px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+
+        .register-header h2 span {
+            color: #00f2fe;
+        }
+
+        .register-header p {
+            color: #8a99ad;
+            font-size: 13px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .full-width {
+            grid-column: span 2;
+        }
+
+        .input-group {
+            position: relative;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px 15px 12px 15px;
+            background: rgba(8, 10, 15, 0.6);
+            border: 1px solid rgba(138, 153, 173, 0.3);
+            border-radius: 10px;
+            color: #fff;
+            font-size: 14px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .input-group input:focus {
+            border-color: #00f2fe;
+            box-shadow: 0 0 10px rgba(0, 242, 254, 0.3);
+        }
+
+        .input-group input::placeholder {
+            color: #6c7d93;
+        }
+
+        .btn-register {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            border: none;
+            border-radius: 10px;
+            color: #080a0f;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 242, 254, 0.4);
+            margin-top: 10px;
+        }
+
+        .btn-register:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 242, 254, 0.6);
+        }
+
+        .register-footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 13px;
+        }
+
+        .register-footer a {
+            color: #00f2fe;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .register-footer a:hover {
+            text-decoration: underline;
+        }
+
+        .shake {
+            animation: shake 0.4s ease-in-out;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-8px); }
+            40%, 80% { transform: translateX(8px); }
+        }
+
+        @media (max-width: 600px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            .full-width {
+                grid-column: span 1;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="background-blobs">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+    </div>
+
+    <div class="register-container" id="registerCard">
+        <div class="register-header">
+            <h2>Criar <span>Conta</span></h2>
+            <p>Preencha os dados abaixo para se cadastrar</p>
+        </div>
+
+        <form id="registerForm">
+            <div class="form-grid">
+                <div class="input-group full-width">
+                    <input type="text" id="full_name" placeholder="Nome Completo (Mínimo 3 letras)" required>
+                </div>
+
+                <div class="input-group">
+                    <input type="email" id="email" placeholder="E-mail" required autocomplete="off">
+                </div>
+
+                <div class="input-group">
+                    <input type="password" id="password" placeholder="Senha (Mínimo 6 dígitos)" required minlength="6">
+                </div>
+
+                <div class="input-group full-width">
+                    <input type="text" id="phone" placeholder="Telefone / WhatsApp (Apenas números, ex: 88999998888)" required maxlength="11">
+                </div>
+
+                <div class="input-group">
+                    <input type="text" id="city" placeholder="Cidade" required>
+                </div>
+
+                <div class="input-group">
+                    <input type="text" id="neighborhood" placeholder="Bairro" required>
+                </div>
+
+                <div class="input-group">
+                    <input type="text" id="street" placeholder="Rua / Logradouro" required>
+                </div>
+
+                <div class="input-group">
+                    <input type="text" id="number" placeholder="Número" required>
+                </div>
+
+                <div class="full-width">
+                    <button type="submit" class="btn-register" id="submitBtn">CADASTRAR CONTA</button>
+                </div>
+            </div>
+
+            <div class="register-footer">
+                <span style="color: #8a99ad;">Já tem uma conta? </span>
+                <a href="login.html">Fazer Login</a>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // Credenciais do Supabase configuradas
+        const SUPABASE_URL = 'https://vnzdrnygnknpqmryptwq.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_SAGvo6mmBGV5gpuTSE86Xw_4OnqYfxw';
+
+        const { createClient } = supabase;
+        const _supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        const form = document.getElementById('registerForm');
+        const registerCard = document.getElementById('registerCard');
+        const submitBtn = document.getElementById('submitBtn');
+
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const full_name = document.getElementById('full_name').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            const phone = document.getElementById('phone').value.trim();
+            const city = document.getElementById('city').value.trim();
+            const neighborhood = document.getElementById('neighborhood').value.trim();
+            const street = document.getElementById('street').value.trim();
+            const number = document.getElementById('number').value.trim();
+
+            // Validação simples do telefone pelas regras da tabela (10 a 11 dígitos numéricos)
+            const phoneRegex = /^[0-9]{10,11}$/;
+            if (!phoneRegex.test(phone)) {
+                alert("O telefone deve conter apenas números (10 ou 11 dígitos com DDD).");
+                return;
+            }
+
+            submitBtn.innerText = "Cadastrando...";
+            submitBtn.style.opacity = "0.7";
+
+            try {
+                // Cadastra o usuário no Supabase Auth e passa os dados nos metadados (options.data)
+                // A nossa trigger SQL (criada na Etapa 1) vai ler esses metadados e popular a tabela public.profiles automaticamente!
+                const { data, error } = await _supabase.auth.signUp({
+                    email: email,
+                    password: password,
+                    options: {
+                        data: {
+                            full_name: full_name,
+                            phone: phone,
+                            city: city,
+                            neighborhood: neighborhood,
+                            street: street,
+                            number: number
+                        }
+                    }
+                });
+
+                if (error) throw error;
+
+                submitBtn.innerText = "Sucesso! Conta criada.";
+                submitBtn.style.background = "linear-gradient(135deg, #00b09b, #96c93d)";
+                submitBtn.style.boxShadow = "0 5px 15px rgba(0, 176, 155, 0.5)";
+                
+                setTimeout(() => {
+                    alert("Cadastro realizado com sucesso! Verifique seu e-mail (se necessário) ou faça o login.");
+                    window.location.href = "login.html";
+                }, 1200);
+
+            } catch (error) {
+                registerCard.classList.add('shake');
+                submitBtn.innerText = "CADASTRAR CONTA";
+                submitBtn.style.opacity = "1";
+                
+                alert("Erro ao cadastrar: " + error.message);
+
+                setTimeout(() => {
+                    registerCard.classList.remove('shake');
+                }, 400);
+            }
+        });
+    </script>
+</body>
+</html>
