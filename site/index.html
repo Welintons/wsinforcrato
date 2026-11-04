@@ -22,17 +22,15 @@
             }
         }
     </script>
-    <style>
-        body { background-color: #0a0a0c; color: #f3f4f6; }
-    </style>
+    <!-- CSS Personalizado -->
+    <link rel="stylesheet" href="./css/style.css">
 </head>
 <body class="min-h-screen flex flex-col justify-between pb-20 md:pb-0">
 
-    <!-- CABEÇALHO COM A SUA LOGO OFICIAL -->
+    <!-- CABEÇALHO -->
     <header class="bg-cardbg border-b border-gray-800 p-4 sticky top-0 z-50 flex justify-between items-center">
-        <div class="flex items-center space-x-3">
-            <!-- Insira o link direto ou caminho local da sua logo hospedada -->
-            <img src="https://raw.githubusercontent.com/Welintons/wsinforcrato/main/site/1793756039407.jpg" alt="WS Soluções Logo" class="h-10 w-auto rounded-md object-contain">
+        <div class="flex items-center space-x-2">
+            <span class="text-neoncyan font-bold text-xl tracking-wider">⚡ WS SOLUÇÕES</span>
         </div>
         <button id="menu-btn" class="text-gray-300 hover:text-neoncyan focus:outline-none p-2">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -41,7 +39,7 @@
         </button>
     </header>
 
-    <!-- CONTEÚDO DINÂMICO (Controlado pelo app.js) -->
+    <!-- CONTEÚDO DINÂMICO -->
     <main id="app-content" class="flex-1 p-4 max-w-4xl mx-auto w-full">
         <div class="text-center py-12">
             <h2 class="text-2xl font-bold mb-2">Carregando o sistema...</h2>
@@ -51,19 +49,19 @@
 
     <!-- NAVEGAÇÃO INFERIOR -->
     <nav class="fixed bottom-0 left-0 right-0 bg-cardbg border-t border-gray-800 flex justify-around items-center p-3 z-40 md:hidden">
-        <button onclick="switchTab('inicio')" class="flex flex-col items-center text-gray-400 hover:text-neoncyan">
+        <button onclick="switchTab('inicio')" class="flex flex-col items-center text-gray-400 hover:text-neoncyan transition">
             <span class="text-xs mt-1">Início</span>
         </button>
-        <button onclick="switchTab('aparelhos')" class="flex flex-col items-center text-gray-400 hover:text-neoncyan">
+        <button onclick="switchTab('aparelhos')" class="flex flex-col items-center text-gray-400 hover:text-neoncyan transition">
             <span class="text-xs mt-1">Aparelhos</span>
         </button>
-        <button onclick="switchTab('orcamento')" class="flex flex-col items-center text-gray-400 hover:text-neoncyan">
+        <button onclick="switchTab('orcamento')" class="flex flex-col items-center text-gray-400 hover:text-neoncyan transition">
             <span class="text-xs mt-1">Pedir</span>
         </button>
-        <button onclick="switchTab('agendamentos')" class="flex flex-col items-center text-gray-400 hover:text-neoncyan">
+        <button onclick="switchTab('agendamentos')" class="flex flex-col items-center text-gray-400 hover:text-neoncyan transition">
             <span class="text-xs mt-1">Agenda</span>
         </button>
-        <button onclick="switchTab('perfil')" class="flex flex-col items-center text-gray-400 hover:text-neoncyan">
+        <button onclick="switchTab('perfil')" class="flex flex-col items-center text-gray-400 hover:text-neoncyan transition">
             <span class="text-xs mt-1">Perfil</span>
         </button>
     </nav>
