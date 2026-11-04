@@ -1,419 +1,263 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" class="dark">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Login | WS SOLUÇÕES</title>
-
-<!-- Tailwind CSS -->
-<script src="https://cdn.tailwindcss.com"></script>
-
-<!-- Lucide Icons -->
-<script src="https://unpkg.com/lucide@latest"></script>
-
-<!-- Supabase -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
-<script>
-tailwind.config = {
-  theme: {
-    extend: {
-      fontFamily: {
-        sans: ['Plus Jakarta Sans', 'sans-serif']
-      },
-      colors: {
-        brand: '#f97316',
-        dark: '#080d18',
-        panel: '#111827'
-      }
-    }
-  }
-}
-</script>
-
-<style>
-* {
-  box-sizing: border-box;
-}
-
-body {
-  background: #080d18;
-  color: #fff;
-  font-family: 'Plus Jakarta Sans', sans-serif;
-}
-
-.login-card {
-  background: rgba(17, 24, 39, .92);
-  border: 1px solid #263244;
-  box-shadow: 0 25px 80px rgba(0,0,0,.35);
-}
-
-.field {
-  background: #0b1220;
-  border: 1px solid #293548;
-  transition: .2s;
-}
-
-.field:focus-within {
-  border-color: #f97316;
-  box-shadow: 0 0 0 3px rgba(249,115,22,.12);
-}
-
-.field input {
-  background: transparent;
-  outline: none;
-  color: white;
-  width: 100%;
-}
-
-.btn-login {
-  background: #f97316;
-  transition: .2s;
-}
-
-.btn-login:hover {
-  background: #ea580c;
-  transform: translateY(-1px);
-}
-
-button:disabled {
-  opacity: .6;
-  cursor: not-allowed;
-}
-
-.bg-effect {
-  background:
-    radial-gradient(circle at 20% 20%, rgba(249,115,22,.12), transparent 35%),
-    radial-gradient(circle at 85% 80%, rgba(37,99,235,.10), transparent 35%);
-}
-
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WS Soluções — Assistência Técnica & Instalações</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        darkbg: '#0a0a0c',
+                        cardbg: '#121216',
+                        neoncyan: '#00f2fe',
+                        neonblue: '#4facfe',
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- CSS Customizado & Neon -->
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            background-color: #0a0a0c;
+            color: #f3f4f6;
+            font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            scroll-behavior: smooth;
+        }
+        .neon-glow {
+            box-shadow: 0 0 25px rgba(0, 242, 254, 0.2);
+        }
+        .neon-border {
+            border-color: #00f2fe;
+        }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #0a0a0c; }
+        ::-webkit-scrollbar-thumb { background: #121216; border-radius: 3px; border: 1px solid #1f2937; }
+        ::-webkit-scrollbar-thumb:hover { background: #00f2fe; }
+    </style>
 </head>
+<body class="bg-darkbg text-gray-100 flex flex-col min-h-screen">
 
-<body class="min-h-screen bg-effect flex flex-col">
-
-<!-- CABEÇALHO -->
-<header class="px-6 py-5 flex justify-between items-center max-w-7xl mx-auto w-full">
-
-  <div class="flex items-center gap-3">
-    <div class="w-11 h-11 rounded-xl bg-brand flex items-center justify-center">
-      <i data-lucide="zap" class="w-6 h-6 text-white"></i>
-    </div>
-
-    <div>
-      <h1 class="font-extrabold text-lg tracking-tight">
-        WS <span class="text-brand">SOLUÇÕES</span>
-      </h1>
-      <p class="text-[10px] text-gray-500 tracking-widest">
-        TECNOLOGIA E SERVIÇOS
-      </p>
-    </div>
-  </div>
-
-  <span class="text-xs text-gray-500 flex items-center gap-2">
-    <i data-lucide="shield-check" class="w-4 h-4 text-green-500"></i>
-    Ambiente seguro
-  </span>
-
-</header>
-
-<!-- CONTEÚDO -->
-<main class="flex-1 flex items-center justify-center px-5 py-8">
-
-  <div class="w-full max-w-md">
-
-    <div class="login-card rounded-3xl p-7 sm:p-9">
-
-      <!-- ÍCONE -->
-      <div class="w-14 h-14 rounded-2xl bg-orange-500/10 border border-orange-500/20 flex items-center justify-center mb-7">
-        <i data-lucide="user-round" class="w-7 h-7 text-brand"></i>
-      </div>
-
-      <div class="mb-8">
-        <h2 class="text-2xl font-extrabold mb-2">
-          Bem-vindo!
-        </h2>
-
-        <p class="text-sm text-gray-400">
-          Acesse sua conta para acompanhar seus serviços.
-        </p>
-      </div>
-
-      <!-- FORMULÁRIO -->
-      <form id="loginForm" class="space-y-5">
-
-        <div>
-          <label class="text-xs font-semibold text-gray-300 block mb-2">
-            E-mail
-          </label>
-
-          <div class="field flex items-center gap-3 px-4 py-3.5 rounded-xl">
-            <i data-lucide="mail" class="w-5 h-5 text-gray-500"></i>
-
-            <input
-              id="email"
-              type="email"
-              placeholder="seu@email.com"
-              autocomplete="email"
-              required
-            >
-          </div>
+    <!-- ==========================================
+       CABEÇALHO DA LANDING PAGE
+       ========================================== -->
+    <header class="bg-cardbg/80 backdrop-blur-md border-b border-gray-800 p-4 sticky top-0 z-40 flex justify-between items-center px-6">
+        <div class="flex items-center space-x-2">
+            <span class="text-neoncyan font-bold text-lg tracking-wider">⚡ WS SOLUÇÕES</span>
         </div>
-
-        <div>
-          <div class="flex justify-between mb-2">
-            <label class="text-xs font-semibold text-gray-300">
-              Senha
-            </label>
-
-            <button
-              type="button"
-              onclick="recuperarSenha()"
-              class="text-xs text-brand hover:text-orange-300"
-            >
-              Esqueceu a senha?
+        <div class="flex items-center space-x-3">
+            <a href="#servicos" class="hidden sm:inline text-xs text-gray-400 hover:text-neoncyan transition">Serviços</a>
+            <a href="#como-funciona" class="hidden sm:inline text-xs text-gray-400 hover:text-neoncyan transition">Como Funciona</a>
+            <button onclick="openLoginModal()" class="bg-neoncyan text-darkbg font-bold px-4 py-2 rounded-xl text-xs hover:opacity-90 transition shadow-lg">
+                Área do Cliente / Login
             </button>
-          </div>
-
-          <div class="field flex items-center gap-3 px-4 py-3.5 rounded-xl">
-
-            <i data-lucide="lock" class="w-5 h-5 text-gray-500"></i>
-
-            <input
-              id="senha"
-              type="password"
-              placeholder="Digite sua senha"
-              autocomplete="current-password"
-              required
-            >
-
-            <button type="button" onclick="alternarSenha()">
-              <i id="eyeIcon" data-lucide="eye" class="w-5 h-5 text-gray-500"></i>
-            </button>
-
-          </div>
         </div>
+    </header>
 
-        <!-- MENSAGEM -->
-        <div id="mensagem" class="hidden text-sm p-3 rounded-xl"></div>
+    <!-- ==========================================
+       CONTEÚDO DA LANDING PAGE (PORTFÓLIO & INFO)
+       ========================================== -->
+    <main class="flex-1">
+        <!-- Hero Section -->
+        <section class="py-16 px-6 text-center max-w-3xl mx-auto space-y-6">
+            <div class="inline-block bg-cardbg border border-gray-800 text-neoncyan text-xs px-3 py-1 rounded-full neon-glow">
+                Bancada Profissional & Serviços Residenciais
+            </div>
+            <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-white">
+                Tecnologia, Reparos & <span class="text-neoncyan">Soluções Precisas</span>
+            </h1>
+            <p class="text-gray-400 text-sm sm:text-base leading-relaxed">
+                Especialista em manutenção de eletrónicos, eletrodomésticos, instalações elétricas estruturadas e acabamentos em PVC. Acompanhe os seus aparelhos em tempo real pelo nosso portal exclusivo.
+            </p>
+            <div class="flex justify-center space-x-4 pt-2">
+                <button onclick="openLoginModal()" class="bg-neoncyan text-darkbg font-bold px-6 py-3 rounded-xl text-sm hover:opacity-95 transition shadow-lg neon-glow">
+                    Aceder ao Meu Portal ⚡
+                </button>
+                <a href="#como-funciona" class="border border-gray-800 bg-cardbg hover:border-neoncyan text-gray-300 font-semibold px-6 py-3 rounded-xl text-sm transition">
+                    Ver Como Funciona
+                </a>
+            </div>
+        </section>
 
-        <!-- BOTÃO -->
-        <button
-          id="btnLogin"
-          type="submit"
-          class="btn-login w-full rounded-xl py-4 font-bold text-sm flex items-center justify-center gap-2"
-        >
-          <span id="btnTexto">Entrar na minha conta</span>
-          <i data-lucide="arrow-right" class="w-4 h-4"></i>
-        </button>
+        <!-- Seção: Nossos Serviços (Portfólio) -->
+        <section id="servicos" class="py-12 px-6 max-w-5xl mx-auto">
+            <h2 class="text-2xl font-bold text-center text-white mb-2">Nossas Especialidades</h2>
+            <p class="text-center text-gray-400 text-xs mb-8">Qualidade técnica e garantia em cada projeto.</p>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                <!-- Card 1 -->
+                <div class="bg-cardbg border border-gray-800 p-5 rounded-2xl space-y-3 hover:border-neoncyan transition">
+                    <span class="text-3xl">📺</span>
+                    <h3 class="font-bold text-white text-base">Bancada de Eletrónicos</h3>
+                    <p class="text-xs text-gray-400 leading-relaxed">Reparo avançado em TVs, placas-mãe, amplificadores, fontes de bancada e smartphones com diagnóstico preciso.</p>
+                </div>
+                <!-- Card 2 -->
+                <div class="bg-cardbg border border-gray-800 p-5 rounded-2xl space-y-3 hover:border-neoncyan transition">
+                    <span class="text-3xl">⚡</span>
+                    <h3 class="font-bold text-white text-base">Instalações Elétricas</h3>
+                    <p class="text-xs text-gray-400 leading-relaxed">Montagem de quadros de energia, redes elétricas residenciais seguras e layouts dimensionados sob rigor técnico.</p>
+                </div>
+                <!-- Card 3 -->
+                <div class="bg-cardbg border border-gray-800 p-5 rounded-2xl space-y-3 hover:border-neoncyan transition">
+                    <span class="text-3xl">🏠</span>
+                    <h3 class="font-bold text-white text-base">Estruturas & Tetos PVC</h3>
+                    <p class="text-xs text-gray-400 leading-relaxed">Estruturação e montagem de tetos suspensos em PVC, acabamentos e soluções personalizadas de acabamento.</p>
+                </div>
+            </div>
+        </section>
 
-      </form>
+        <!-- Seção: Como o Portal Funciona -->
+        <section id="como-funciona" class="py-12 px-6 max-w-4xl mx-auto border-t border-gray-800/80 my-8">
+            <h2 class="text-2xl font-bold text-center text-white mb-2">Como Funciona o Portal do Cliente</h2>
+            <p class="text-center text-gray-400 text-xs mb-8">Toda a transparência que você merece na palma da mão.</p>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 text-center">
+                <div class="p-4 bg-cardbg/50 border border-gray-800 rounded-xl space-y-2">
+                    <div class="text-neoncyan font-bold text-lg">01</div>
+                    <h3 class="font-bold text-sm text-white">Login Rápido</h3>
+                    <p class="text-xs text-gray-400">Entre com seu número de WhatsApp cadastrado e senha de forma segura.</p>
+                </div>
+                <div class="p-4 bg-cardbg/50 border border-gray-800 rounded-xl space-y-2">
+                    <div class="text-neoncyan font-bold text-lg">02</div>
+                    <h3 class="font-bold text-sm text-white">Acompanhe Ordens</h3>
+                    <p class="text-xs text-gray-400">Veja o status em tempo real (Análise, Reparo, Pronto) e valores detalhados.</p>
+                </div>
+                <div class="p-4 bg-cardbg/50 border border-gray-800 rounded-xl space-y-2">
+                    <div class="text-neoncyan font-bold text-lg">03</div>
+                    <h3 class="font-bold text-sm text-white">Créditos & Agenda</h3>
+                    <p class="text-xs text-gray-400">Gerencie sua carteira digital, créditos e agende serviços técnicos com facilidade.</p>
+                </div>
+            </div>
+        </section>
+    </main>
 
-      <div class="flex items-center gap-3 my-7">
-        <div class="h-px bg-gray-700 flex-1"></div>
-        <span class="text-xs text-gray-500">WS SOLUÇÕES</span>
-        <div class="h-px bg-gray-700 flex-1"></div>
-      </div>
+    <!-- Rodapé -->
+    <footer class="bg-cardbg border-t border-gray-800 p-6 text-center text-xs text-gray-500">
+        &copy; 2026 WS Soluções. Todos os direitos reservados.
+    </footer>
 
-      <p class="text-center text-xs text-gray-500">
-        Precisa de atendimento?
-        <a href="https://wa.me/" target="_blank"
-           class="text-brand hover:underline">
-          Fale conosco
-        </a>
-      </p>
 
+    <!-- ==========================================
+       MODAL DE LOGIN / AUTENTICAÇÃO (TOP & NEON)
+       ========================================== -->
+    <div id="login-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm hidden p-4">
+        <div class="bg-cardbg border border-gray-800 p-6 sm:p-8 rounded-2xl shadow-2xl w-full max-w-sm space-y-5 relative neon-glow">
+            
+            <!-- Botão Fechar Modal -->
+            <button onclick="closeLoginModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white text-sm">
+                ✕
+            </button>
+
+            <div class="space-y-1 text-center">
+                <h2 class="text-2xl font-bold text-neoncyan">⚡ Aceder ao Portal</h2>
+                <p class="text-gray-400 text-xs">Insira suas credenciais para entrar na sua conta.</p>
+            </div>
+
+            <form onsubmit="handleAuthSubmit(event)" class="space-y-4 text-left">
+                <div>
+                    <label class="text-xs text-gray-400 block mb-1">WhatsApp (Número de Acesso)</label>
+                    <input type="text" id="modal-whatsapp" required placeholder="Ex: 88994377744" class="w-full bg-darkbg border border-gray-800 rounded-xl p-3 text-sm focus:border-neoncyan outline-none text-white tracking-wider text-center">
+                </div>
+                <div>
+                    <label class="text-xs text-gray-400 block mb-1">Senha</label>
+                    <input type="password" id="modal-password" required placeholder="Sua senha de acesso" class="w-full bg-darkbg border border-gray-800 rounded-xl p-3 text-sm focus:border-neoncyan outline-none text-white text-center">
+                </div>
+                <button type="submit" class="w-full bg-neoncyan text-darkbg font-bold py-3 rounded-xl hover:opacity-95 transition shadow-lg text-sm">
+                    Entrar na Conta
+                </button>
+            </form>
+            <div class="text-center">
+                <p class="text-[11px] text-gray-500">Primeiro acesso ou sem senha? O sistema cadastra automaticamente ao validar o número.</p>
+            </div>
+        </div>
     </div>
 
-    <p class="text-center text-xs text-gray-600 mt-7">
-      © 2026 WS SOLUÇÕES · Todos os direitos reservados.
-    </p>
 
-  </div>
+    <!-- ==========================================
+       LÓGICA SUPABASE & CONTROLE DE MODAL
+       ========================================== -->
+    <script type="module">
+        import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
 
-</main>
+        const SUPABASE_URL = 'https://vnzdrnygnknpqmryptwq.supabase.co'
+        const SUPABASE_ANON_KEY = 'sb_publishable_SAGvo6mmBGV5gpuTSE86Xw_4OnqYfxw'
+        const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
 
-<script>
+        // Funções de Abertura/Fechamento do Modal expostas globalmente
+        window.openLoginModal = function() {
+            document.getElementById('login-modal').classList.remove('hidden');
+        }
 
-// ===================================
-// CONFIGURAÇÃO SUPABASE
-// ===================================
+        window.closeLoginModal = function() {
+            document.getElementById('login-modal').classList.add('hidden');
+        }
 
-const SUPABASE_URL = "SUA_SUPABASE_URL";
-const SUPABASE_KEY = "SUA_CHAVE_ANON_PUBLIC";
+        // Fechar modal clicando fora
+        document.getElementById('login-modal').addEventListener('click', (e) => {
+            if (e.target.id === 'login-modal') {
+                closeLoginModal();
+            }
+        });
 
-const db = window.supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_KEY
-);
+        // Autenticação Real integrada
+        window.handleAuthSubmit = async function(e) {
+            e.preventDefault();
+            const whatsapp = document.getElementById('modal-whatsapp').value.trim();
+            const password = document.getElementById('modal-password').value.trim();
+            
+            // Para mantermos o Supabase Auth 100% compativel com telefone, usamos um e-mail interno mapeado
+            const fakeEmail = `zap_${whatsapp}@wssolucoes.com`;
 
-// ===================================
-// ELEMENTOS
-// ===================================
+            try {
+                // Tenta o login direto
+                let { data, error } = await supabase.auth.signInWithPassword({
+                    email: fakeEmail,
+                    password: password
+                });
 
-const form = document.getElementById("loginForm");
-const email = document.getElementById("email");
-const senha = document.getElementById("senha");
-const mensagem = document.getElementById("mensagem");
-const btnLogin = document.getElementById("btnLogin");
-const btnTexto = document.getElementById("btnTexto");
+                if (error) {
+                    // Se o usuário não existir, cadastra automaticamente (Sign Up)
+                    const nomeInput = prompt("Primeiro acesso detetado. Digite o seu Nome Completo:") || "Cliente WS";
+                    const roleInput = (whatsapp === '88994377744') ? 'admin' : 'client';
 
-// ===================================
-// MENSAGENS
-// ===================================
+                    const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
+                        email: fakeEmail,
+                        password: password,
+                        options: {
+                            data: {
+                                whatsapp: whatsapp,
+                                nome: nomeInput,
+                                role: roleInput
+                            }
+                        }
+                    });
 
-function mostrarMensagem(texto, tipo = "erro") {
+                    if (signUpError) throw signUpError;
+                    alert("Cadastro efetuado com sucesso! Bem-vindo à WS Soluções.");
+                }
 
-  mensagem.classList.remove("hidden");
+                // Salva na sessão local e recarrega para entrar no painel do cliente
+                localStorage.setItem('ws_client_whatsapp', whatsapp);
+                alert("Login efetuado com sucesso!");
+                closeLoginModal();
+                // Aqui você pode redirecionar para o painel logado ou carregar as abas da Home
+                location.reload();
 
-  mensagem.className =
-    "text-sm p-3 rounded-xl " +
-    (tipo === "sucesso"
-      ? "bg-green-500/10 text-green-400 border border-green-500/20"
-      : "bg-red-500/10 text-red-400 border border-red-500/20");
-
-  mensagem.textContent = texto;
-}
-
-// ===================================
-// MOSTRAR SENHA
-// ===================================
-
-function alternarSenha() {
-
-  const visivel = senha.type === "password";
-
-  senha.type = visivel ? "text" : "password";
-
-  document.getElementById("eyeIcon")
-    .setAttribute("data-lucide", visivel ? "eye-off" : "eye");
-
-  lucide.createIcons();
-}
-
-// ===================================
-// LOGIN
-// ===================================
-
-form.addEventListener("submit", async (e) => {
-
-  e.preventDefault();
-
-  mensagem.classList.add("hidden");
-
-  btnLogin.disabled = true;
-  btnTexto.textContent = "Autenticando...";
-
-  try {
-
-    const { data, error } = await db.auth.signInWithPassword({
-      email: email.value.trim(),
-      password: senha.value
-    });
-
-    if (error) throw error;
-
-    // Buscar perfil do usuário
-    const { data: perfil, error: perfilErro } = await db
-      .from("profiles")
-      .select("nome, role")
-      .eq("id", data.user.id)
-      .single();
-
-    if (perfilErro || !perfil) {
-
-      await db.auth.signOut();
-
-      throw new Error("Perfil não encontrado. Procure o administrador.");
-
-    }
-
-    mostrarMensagem("Login realizado com sucesso!", "sucesso");
-
-    // Redirecionamento conforme permissão
-    if (perfil.role === "admin") {
-      window.location.replace("admin.html");
-    } else {
-      window.location.replace("portal.html");
-    }
-
-  } catch (error) {
-
-    mostrarMensagem(
-      error.message === "Invalid login credentials"
-        ? "E-mail ou senha incorretos."
-        : error.message
-    );
-
-    btnLogin.disabled = false;
-    btnTexto.textContent = "Entrar na minha conta";
-
-  }
-
-});
-
-// ===================================
-// RECUPERAR SENHA
-// ===================================
-
-async function recuperarSenha() {
-
-  const endereco = email.value.trim();
-
-  if (!endereco) {
-    mostrarMensagem("Digite seu e-mail primeiro.");
-    email.focus();
-    return;
-  }
-
-  const { error } = await db.auth.resetPasswordForEmail(
-    endereco,
-    {
-      redirectTo: window.location.origin + "/redefinir-senha.html"
-    }
-  );
-
-  if (error) {
-    mostrarMensagem(error.message);
-  } else {
-    mostrarMensagem(
-      "Se o e-mail estiver cadastrado, você receberá as instruções de recuperação.",
-      "sucesso"
-    );
-  }
-
-}
-
-// ===================================
-// INICIALIZAÇÃO
-// ===================================
-
-lucide.createIcons();
-
-// Se já estiver autenticado, verificar o perfil
-(async () => {
-
-  const { data: { user } } = await db.auth.getUser();
-
-  if (!user) return;
-
-  const { data: perfil } = await db
-    .from("profiles")
-    .select("role")
-    .eq("id", user.id)
-    .single();
-
-  if (perfil) {
-    window.location.replace(
-      perfil.role === "admin" ? "admin.html" : "portal.html"
-    );
-  }
-
-})();
-
-</script>
-
+            } catch (err) {
+                console.error("Erro na autenticação:", err);
+                alert("Erro ao autenticar. Verifique sua senha ou dados informados.");
+            }
+        }
+    </script>
 </body>
 </html>
