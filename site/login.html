@@ -6,35 +6,65 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>WS SOLUÇÕES | Acesso</title>
 
-<script type="module">
-import { supabase } from './supabase.js';
-
-window.db = supabase;
-
-// Aqui entra o restante do JavaScript do login
-</script>
-
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif}
+
 body{
- min-height:100vh;background:#080a0f;color:white;
- display:flex;align-items:center;justify-content:center;
- padding:20px;overflow-x:hidden
+ min-height:100vh;
+ background:#080a0f;
+ color:white;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ padding:20px;
+ overflow-x:hidden
 }
+
 .background-blobs{position:fixed;inset:0;overflow:hidden;z-index:0}
-.blob{position:absolute;filter:blur(80px);opacity:.5;border-radius:50%;animation:float 10s infinite alternate}
-.blob-1{width:350px;height:350px;background:#00f2fe;top:-10%;left:-10%}
-.blob-2{width:400px;height:400px;background:#4facfe;bottom:-15%;right:-10%;animation-delay:-5s}
-@keyframes float{to{transform:translate(50px,30px) scale(1.1)}}
+
+.blob{
+ position:absolute;
+ filter:blur(80px);
+ opacity:.5;
+ border-radius:50%;
+ animation:float 10s infinite alternate
+}
+
+.blob-1{
+ width:350px;height:350px;
+ background:#00f2fe;
+ top:-10%;left:-10%
+}
+
+.blob-2{
+ width:400px;height:400px;
+ background:#4facfe;
+ bottom:-15%;right:-10%;
+ animation-delay:-5s
+}
+
+@keyframes float{
+ to{transform:translate(50px,30px) scale(1.1)}
+}
 
 .login-container{
- position:relative;z-index:2;width:100%;max-width:400px;
- padding:35px;background:rgba(16,22,34,.8);
- backdrop-filter:blur(16px);border:1px solid #00f2fe33;
- border-radius:20px;box-shadow:0 15px 35px #0008,0 0 20px #00f2fe18;
+ position:relative;
+ z-index:2;
+ width:100%;
+ max-width:400px;
+ padding:35px;
+ background:rgba(16,22,34,.8);
+ backdrop-filter:blur(16px);
+ border:1px solid #00f2fe33;
+ border-radius:20px;
+ box-shadow:0 15px 35px #0008,0 0 20px #00f2fe18;
  animation:fade .7s ease
 }
-@keyframes fade{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+@keyframes fade{
+ from{opacity:0;transform:translateY(20px)}
+ to{opacity:1;transform:translateY(0)}
+}
 
 .header{text-align:center;margin-bottom:28px}
 .header h2{font-size:27px;letter-spacing:1px}
@@ -42,34 +72,109 @@ body{
 .header p{color:#8a99ad;font-size:13px;margin-top:8px}
 
 .input-group{margin-bottom:17px}
-.input-group label{display:block;font-size:12px;color:#aab7c9;margin-bottom:7px}
-.input-group input{
- width:100%;padding:14px;background:#080a0fcc;
- border:1px solid #8a99ad55;border-radius:9px;
- color:white;font-size:14px;outline:none;transition:.3s
+
+.input-group label{
+ display:block;
+ font-size:12px;
+ color:#aab7c9;
+ margin-bottom:7px
 }
-.input-group input:focus{border-color:#00f2fe;box-shadow:0 0 10px #00f2fe30}
+
+.input-group input{
+ width:100%;
+ padding:14px;
+ background:#080a0fcc;
+ border:1px solid #8a99ad55;
+ border-radius:9px;
+ color:white;
+ font-size:14px;
+ outline:none;
+ transition:.3s
+}
+
+.input-group input:focus{
+ border-color:#00f2fe;
+ box-shadow:0 0 10px #00f2fe30
+}
+
 .input-group input::placeholder{color:#66758a}
 
 .btn{
- width:100%;padding:15px;border:0;border-radius:10px;
+ width:100%;
+ padding:15px;
+ border:0;
+ border-radius:10px;
  background:linear-gradient(135deg,#4facfe,#00f2fe);
- color:#080a0f;font-size:15px;font-weight:800;cursor:pointer;
+ color:#080a0f;
+ font-size:15px;
+ font-weight:800;
+ cursor:pointer;
  transition:.3s
 }
-.btn:hover{transform:translateY(-2px);box-shadow:0 8px 20px #00f2fe55}
-.btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
 
-.links{display:flex;justify-content:space-between;gap:10px;margin-top:20px}
-.links button{background:none;border:0;color:#8a99ad;cursor:pointer;font-size:12px}
+.btn:hover{
+ transform:translateY(-2px);
+ box-shadow:0 8px 20px #00f2fe55
+}
+
+.btn:disabled{
+ opacity:.5;
+ cursor:not-allowed;
+ transform:none
+}
+
+.links{
+ display:flex;
+ justify-content:space-between;
+ gap:10px;
+ margin-top:20px
+}
+
+.links button{
+ background:none;
+ border:0;
+ color:#8a99ad;
+ cursor:pointer;
+ font-size:12px
+}
+
 .links button:hover{color:#00f2fe}
 
 .hidden{display:none!important}
-.step{font-size:12px;color:#8a99ad;margin-bottom:18px}
-.message{font-size:13px;padding:12px;border-radius:8px;margin-bottom:15px;display:none;line-height:1.5}
-.error{background:#ff444422;color:#ff8585;border:1px solid #ff444455}
-.success{background:#00c78b22;color:#70eac0;border:1px solid #00c78b55}
-.footer{text-align:center;color:#66758a;font-size:11px;margin-top:22px}
+
+.step{
+ font-size:12px;
+ color:#8a99ad;
+ margin-bottom:18px
+}
+
+.message{
+ font-size:13px;
+ padding:12px;
+ border-radius:8px;
+ margin-bottom:15px;
+ display:none;
+ line-height:1.5
+}
+
+.error{
+ background:#ff444422;
+ color:#ff8585;
+ border:1px solid #ff444455
+}
+
+.success{
+ background:#00c78b22;
+ color:#70eac0;
+ border:1px solid #00c78b55
+}
+
+.footer{
+ text-align:center;
+ color:#66758a;
+ font-size:11px;
+ margin-top:22px
+}
 
 @media(max-width:420px){
  .login-container{padding:27px 20px}
@@ -91,26 +196,28 @@ body{
   <p id="subtitle">Entre com suas credenciais para continuar</p>
  </div>
 
- <div id="message" class="message"></div>
+ <div id="message" class="message" role="status" aria-live="polite"></div>
 
 <!-- LOGIN -->
 <form id="loginForm">
 
  <div class="input-group">
-  <label>E-mail</label>
+  <label for="loginEmail">E-mail</label>
   <input type="email" id="loginEmail" placeholder="Seu e-mail" required autocomplete="email">
  </div>
 
  <div class="input-group">
-  <label>Senha</label>
+  <label for="loginPassword">Senha</label>
   <input type="password" id="loginPassword" placeholder="Sua senha" required autocomplete="current-password">
  </div>
 
- <button class="btn" id="loginBtn" type="submit">ACESSAR SISTEMA</button>
+ <button class="btn" id="loginBtn" type="submit">
+  ACESSAR SISTEMA
+ </button>
 
  <div class="links">
-  <button type="button" onclick="showScreen('recovery')">Esqueceu a senha?</button>
-  <button type="button" onclick="showScreen('register1')">Criar conta</button>
+  <button type="button" data-screen="recovery">Esqueceu a senha?</button>
+  <button type="button" data-screen="register1">Criar conta</button>
  </div>
 
 </form>
@@ -121,34 +228,34 @@ body{
  <div class="step">ETAPA 1 DE 2 — Dados pessoais</div>
 
  <div class="input-group">
-  <label>Nome completo *</label>
+  <label for="name">Nome completo *</label>
   <input id="name" type="text" placeholder="Seu nome completo" minlength="3" required autocomplete="name">
  </div>
 
  <div class="input-group">
-  <label>E-mail *</label>
+  <label for="email">E-mail *</label>
   <input id="email" type="email" placeholder="seu@email.com" required autocomplete="email">
  </div>
 
  <div class="input-group">
-  <label>WhatsApp *</label>
+  <label for="phone">WhatsApp *</label>
   <input id="phone" type="tel" placeholder="(88) 99999-9999" maxlength="15" required autocomplete="tel">
  </div>
 
  <div class="input-group">
-  <label>Senha *</label>
+  <label for="password">Senha *</label>
   <input id="password" type="password" placeholder="Mínimo 8 caracteres" minlength="8" required autocomplete="new-password">
  </div>
 
  <div class="input-group">
-  <label>Confirmar senha *</label>
+  <label for="confirmPassword">Confirmar senha *</label>
   <input id="confirmPassword" type="password" placeholder="Repita sua senha" required autocomplete="new-password">
  </div>
 
  <button class="btn" type="submit">CONTINUAR</button>
 
  <div class="links">
-  <button type="button" onclick="showScreen('loginForm')">Voltar ao login</button>
+  <button type="button" data-screen="loginForm">Voltar ao login</button>
  </div>
 
 </form>
@@ -159,30 +266,32 @@ body{
  <div class="step">ETAPA 2 DE 2 — Seu endereço</div>
 
  <div class="input-group">
-  <label>Cidade *</label>
+  <label for="city">Cidade *</label>
   <input id="city" type="text" placeholder="Sua cidade" required>
  </div>
 
  <div class="input-group">
-  <label>Bairro *</label>
+  <label for="neighborhood">Bairro *</label>
   <input id="neighborhood" type="text" placeholder="Seu bairro" required>
  </div>
 
  <div class="input-group">
-  <label>Rua / Endereço *</label>
+  <label for="street">Rua / Endereço *</label>
   <input id="street" type="text" placeholder="Nome da rua ou endereço" required>
  </div>
 
  <div class="input-group">
-  <label>Número *</label>
+  <label for="number">Número *</label>
   <input id="number" type="text" placeholder="Número da residência" required>
  </div>
 
- <button class="btn" id="registerBtn" type="submit">FINALIZAR CADASTRO</button>
+ <button class="btn" id="registerBtn" type="submit">
+  FINALIZAR CADASTRO
+ </button>
 
  <div class="links">
-  <button type="button" onclick="showScreen('register1')">Voltar</button>
-  <button type="button" onclick="showScreen('loginForm')">Cancelar</button>
+  <button type="button" data-screen="register1">Voltar</button>
+  <button type="button" data-screen="loginForm">Cancelar</button>
  </div>
 
 </form>
@@ -191,38 +300,67 @@ body{
 <form id="recovery" class="hidden">
 
  <div class="input-group">
-  <label>E-mail cadastrado</label>
+  <label for="recoveryEmail">E-mail cadastrado</label>
   <input type="email" id="recoveryEmail" placeholder="seu@email.com" required>
  </div>
 
- <button class="btn" type="submit">RECUPERAR SENHA</button>
+ <button class="btn" id="recoveryBtn" type="submit">
+  RECUPERAR SENHA
+ </button>
 
  <div class="links">
-  <button type="button" onclick="showScreen('loginForm')">Voltar</button>
+  <button type="button" data-screen="loginForm">Voltar</button>
  </div>
 
 </form>
 
-<div class="footer">WS SOLUÇÕES · Atendimento e serviços</div>
+<div class="footer">
+ WS SOLUÇÕES · Atendimento e serviços
+</div>
 
 </div>
 
-<script>
+<script type="module">
 
-// CONEXÃO COM SUPABASE.JS
-const db = window.db;
+import { supabase } from './supabase.js';
+
+// INSTÂNCIA DO SUPABASE
+const db = supabase;
 
 let registration = {};
 
-const screens = ["loginForm","register1","register2","recovery"];
+const screens = [
+ "loginForm",
+ "register1",
+ "register2",
+ "recovery"
+];
 
+// ELEMENTOS
+const $ = id => document.getElementById(id);
+
+// MENSAGENS
+function message(text,type="error"){
+
+ const el = $("message");
+
+ el.textContent = text;
+ el.className = "message " + type;
+ el.style.display = "block";
+}
+
+function clearMessage(){
+ $("message").style.display = "none";
+}
+
+// TROCA DE TELAS
 function showScreen(id){
 
- screens.forEach(s=>{
-  document.getElementById(s).classList.add("hidden");
+ screens.forEach(screen=>{
+  $(screen).classList.add("hidden");
  });
 
- document.getElementById(id).classList.remove("hidden");
+ $(id).classList.remove("hidden");
 
  const titles = {
   loginForm:"Entre com suas credenciais para continuar",
@@ -231,106 +369,113 @@ function showScreen(id){
   recovery:"Recupere seu acesso"
  };
 
- document.getElementById("subtitle").textContent = titles[id];
+ $("subtitle").textContent = titles[id];
 
  clearMessage();
 }
 
-function message(text,type="error"){
+// DISPONIBILIZA PARA OS BOTÕES
+window.showScreen = showScreen;
 
- const el = document.getElementById("message");
+// NAVEGAÇÃO
+document.querySelectorAll("[data-screen]").forEach(button=>{
 
- el.textContent = text;
- el.className = "message " + type;
- el.style.display = "block";
-}
+ button.addEventListener("click",()=>{
+  showScreen(button.dataset.screen);
+ });
 
-function clearMessage(){
- document.getElementById("message").style.display = "none";
-}
+});
 
-function requireDB(){
-
- if(!db){
-  message("Conexão não encontrada. Verifique o arquivo supabase.js.");
-  return false;
- }
-
- return true;
-}
-
+// UTILITÁRIOS
 function digits(value){
  return value.replace(/\D/g,"");
 }
 
 // MÁSCARA WHATSAPP
-document.getElementById("phone").addEventListener("input",e=>{
+$("phone").addEventListener("input",e=>{
 
  let v = digits(e.target.value).slice(0,11);
 
- if(v.length>2)
+ if(v.length>2){
   v = "("+v.slice(0,2)+") "+v.slice(2);
+ }
 
- if(digits(v).length>10)
+ if(digits(v).length===11){
   v = v.replace(/(\d{5})(\d{4})$/,"$1-$2");
- else if(digits(v).length>9)
+ }else if(digits(v).length===10){
   v = v.replace(/(\d{4})(\d{4})$/,"$1-$2");
+ }
 
  e.target.value = v;
 });
 
-// ETAPA 1
-document.getElementById("register1").addEventListener("submit",e=>{
+// CADASTRO ETAPA 1
+$("register1").addEventListener("submit",e=>{
 
  e.preventDefault();
  clearMessage();
 
- const name = document.getElementById("name").value.trim();
- const email = document.getElementById("email").value.trim();
- const phone = digits(document.getElementById("phone").value);
- const password = document.getElementById("password").value;
- const confirm = document.getElementById("confirmPassword").value;
+ const name = $("name").value.trim();
+ const email = $("email").value.trim();
+ const phone = digits($("phone").value);
+ const password = $("password").value;
+ const confirm = $("confirmPassword").value;
 
- if(name.length<3)
+ if(name.length<3){
   return message("Informe seu nome completo.");
+ }
 
- if(phone.length!==10 && phone.length!==11)
+ if(phone.length!==10 && phone.length!==11){
   return message("WhatsApp inválido.");
+ }
 
- if(password.length<8)
+ if(password.length<8){
   return message("A senha precisa ter pelo menos 8 caracteres.");
+ }
 
- if(password!==confirm)
+ if(password!==confirm){
   return message("As senhas não conferem.");
+ }
 
- registration = {name,email,phone,password};
+ registration = {
+  name,
+  email,
+  phone,
+  password
+ };
 
  showScreen("register2");
+
 });
 
-// ETAPA 2: CADASTRO
-document.getElementById("register2").addEventListener("submit",async e=>{
+// CADASTRO ETAPA 2
+$("register2").addEventListener("submit",async e=>{
 
  e.preventDefault();
  clearMessage();
 
- if(!requireDB()) return;
+ if(!registration.email){
+  showScreen("register1");
+  return message("Informe seus dados pessoais novamente.");
+ }
 
- const city = document.getElementById("city").value.trim();
- const neighborhood = document.getElementById("neighborhood").value.trim();
- const street = document.getElementById("street").value.trim();
- const number = document.getElementById("number").value.trim();
+ const city = $("city").value.trim();
+ const neighborhood = $("neighborhood").value.trim();
+ const street = $("street").value.trim();
+ const number = $("number").value.trim();
 
- if(!city || !neighborhood || !street || !number)
+ if(!city || !neighborhood || !street || !number){
   return message("Preencha todos os campos do endereço.");
+ }
 
- const btn = document.getElementById("registerBtn");
+ const btn = $("registerBtn");
 
  btn.disabled = true;
  btn.textContent = "CRIANDO CONTA...";
 
  try{
 
+  // CRIA USUÁRIO
   const {data,error} = await db.auth.signUp({
 
    email:registration.email,
@@ -346,8 +491,13 @@ document.getElementById("register2").addEventListener("submit",async e=>{
 
   if(error) throw error;
 
-  if(!data.user)
+  if(!data.user){
    throw new Error("Não foi possível criar a conta.");
+  }
+
+  // SALVA PERFIL
+  // A tabela profiles deve ter RLS permitindo
+  // INSERT quando id = auth.uid().
 
   const profile = {
 
@@ -362,29 +512,42 @@ document.getElementById("register2").addEventListener("submit",async e=>{
 
   };
 
-  const {error:profileError} = await db
-   .from("profiles")
-   .insert(profile);
+  // Se a confirmação de e-mail estiver ativada,
+  // não existe sessão para inserir diretamente.
+  // Nesse caso, o perfil deve ser criado por um
+  // trigger seguro no banco de dados.
 
-  if(profileError){
+  if(data.session){
 
-   console.error(profileError);
+   const {error:profileError} = await db
+    .from("profiles")
+    .upsert(profile,{onConflict:"id"});
 
-   throw new Error(
-    "Conta criada, mas não foi possível salvar o perfil. Procure o suporte para concluir o cadastro."
-   );
+   if(profileError){
+
+    console.error(profileError);
+
+    throw new Error(
+     "Conta criada, mas houve um erro ao salvar o perfil: "+profileError.message
+    );
+
+   }
+
   }
 
   const emailCadastrado = registration.email;
 
   registration = {};
 
-  document.getElementById("register1").reset();
-  document.getElementById("register2").reset();
+  $("register1").reset();
+  $("register2").reset();
 
   if(data.session){
 
-   message("Cadastro concluído! Bem-vindo à WS SOLUÇÕES.","success");
+   message(
+    "Cadastro concluído! Bem-vindo à WS SOLUÇÕES.",
+    "success"
+   );
 
    setTimeout(()=>{
     location.href = "dashboard.html";
@@ -394,12 +557,18 @@ document.getElementById("register2").addEventListener("submit",async e=>{
 
    showScreen("loginForm");
 
-   document.getElementById("loginEmail").value = emailCadastrado;
+   $("loginEmail").value = emailCadastrado;
 
-   message("Cadastro realizado! Confirme seu e-mail para acessar.","success");
+   message(
+    "Cadastro realizado! Confirme seu e-mail para acessar.",
+    "success"
+   );
+
   }
 
  }catch(error){
+
+  console.error("Erro no cadastro:",error);
 
   message(error.message || "Erro ao realizar cadastro.");
 
@@ -413,14 +582,12 @@ document.getElementById("register2").addEventListener("submit",async e=>{
 });
 
 // LOGIN
-document.getElementById("loginForm").addEventListener("submit",async e=>{
+$("loginForm").addEventListener("submit",async e=>{
 
  e.preventDefault();
  clearMessage();
 
- if(!requireDB()) return;
-
- const btn = document.getElementById("loginBtn");
+ const btn = $("loginBtn");
 
  btn.disabled = true;
  btn.textContent = "AUTENTICANDO...";
@@ -429,13 +596,14 @@ document.getElementById("loginForm").addEventListener("submit",async e=>{
 
   const {data,error} = await db.auth.signInWithPassword({
 
-   email:document.getElementById("loginEmail").value.trim(),
-   password:document.getElementById("loginPassword").value
+   email:$("loginEmail").value.trim(),
+   password:$("loginPassword").value
 
   });
 
   if(error) throw error;
 
+  // VERIFICA PERFIL
   const {data:profile,error:profileError} = await db
    .from("profiles")
    .select("id")
@@ -448,12 +616,17 @@ document.getElementById("loginForm").addEventListener("submit",async e=>{
 
    await db.auth.signOut();
 
-   throw new Error("Cadastro incompleto. Entre em contato com o suporte.");
+   throw new Error(
+    "Cadastro incompleto. Entre em contato com o suporte."
+   );
+
   }
 
   location.href = "dashboard.html";
 
  }catch(error){
+
+  console.error("Erro no login:",error);
 
   message(error.message || "Não foi possível entrar.");
 
@@ -467,16 +640,19 @@ document.getElementById("loginForm").addEventListener("submit",async e=>{
 });
 
 // RECUPERAÇÃO DE SENHA
-document.getElementById("recovery").addEventListener("submit",async e=>{
+$("recovery").addEventListener("submit",async e=>{
 
  e.preventDefault();
  clearMessage();
 
- if(!requireDB()) return;
+ const btn = $("recoveryBtn");
+
+ btn.disabled = true;
+ btn.textContent = "ENVIANDO...";
 
  try{
 
-  const email = document.getElementById("recoveryEmail").value.trim();
+  const email = $("recoveryEmail").value.trim();
 
   const {error} = await db.auth.resetPasswordForEmail(email,{
 
@@ -493,26 +669,38 @@ document.getElementById("recovery").addEventListener("submit",async e=>{
 
  }catch(error){
 
+  console.error("Erro na recuperação:",error);
+
   message(error.message || "Falha na recuperação.");
+
+ }finally{
+
+  btn.disabled = false;
+  btn.textContent = "RECUPERAR SENHA";
 
  }
 
 });
 
-// VERIFICAÇÃO DE SESSÃO
+// VERIFICA SESSÃO
 (async()=>{
 
- if(!requireDB()) return;
+ try{
 
- const {data,error} = await db.auth.getSession();
+  const {data,error} = await db.auth.getSession();
 
- if(error){
-  console.error(error);
-  return;
- }
+  if(error) throw error;
 
- if(data.session){
-  location.href = "dashboard.html";
+  if(data.session){
+   location.href = "dashboard.html";
+  }
+
+ }catch(error){
+
+  console.error("Erro ao verificar sessão:",error);
+
+  message("Não foi possível verificar sua sessão.");
+
  }
 
 })();
