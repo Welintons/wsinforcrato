@@ -1,0 +1,219 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#f4f5f9">
+<title>Configurações - Galaxy A15</title>
+
+<style>
+*{box-sizing:border-box}
+body{
+ margin:0;
+ font-family:Arial, sans-serif;
+ background:#f4f5f9;
+ color:#191b20;
+}
+header{
+ padding:35px 22px 18px;
+ background:#f4f5f9;
+ position:sticky;
+ top:0;
+ z-index:5;
+}
+h1{font-size:29px;margin:0 0 20px;font-weight:700}
+.search{
+ width:100%;padding:17px 20px;
+ border:0;border-radius:18px;
+ background:#e5e7ee;font-size:16px;
+ outline:none;
+}
+main{padding:0 16px 35px}
+.section-title{
+ font-size:17px;font-weight:700;
+ margin:22px 5px 10px;
+}
+.item{
+ display:flex;align-items:center;
+ gap:15px;padding:16px 13px;
+ background:white;border-radius:18px;
+ margin-bottom:8px;
+ cursor:pointer;
+ transition:.15s;
+}
+.item:active{background:#e7eaf2}
+.ico{
+ width:43px;height:43px;
+ border-radius:50%;
+ background:#eef0f8;
+ display:grid;place-items:center;
+ font-size:21px;flex-shrink:0;
+}
+.info{flex:1;min-width:0}
+.info strong{font-size:15px;display:block}
+.info small{font-size:12px;color:#70747d;display:block;margin-top:5px}
+.arrow{color:#858994;font-size:23px}
+.device{
+ background:#dce5ff;
+ border-radius:22px;
+ padding:20px;
+ margin-bottom:15px;
+}
+.device strong{font-size:18px}
+.device p{margin:7px 0 0;color:#515c75;font-size:13px}
+.hidden{display:none}
+footer{text-align:center;padding:20px;color:#888;font-size:12px}
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>Configurações</h1>
+<input class="search" id="search" placeholder="🔍 Pesquisar configurações" oninput="pesquisar()">
+</header>
+
+<main>
+
+<div class="device">
+<strong>Galaxy A15</strong>
+<p>Android 16 · Interface inspirada na Samsung One UI</p>
+</div>
+
+<div class="section-title">Conexões</div>
+<div id="lista">
+
+<div class="item" onclick="abrir('android.settings.WIFI_SETTINGS')">
+<div class="ico">📶</div>
+<div class="info"><strong>Wi-Fi</strong><small>Redes disponíveis</small></div><span class="arrow">›</span>
+</div>
+
+<div class="item" onclick="abrir('android.settings.BLUETOOTH_SETTINGS')">
+<div class="ico">ᛒ</div>
+<div class="info"><strong>Bluetooth</strong><small>Conectar dispositivos</small></div><span class="arrow">›</span>
+</div>
+
+<div class="item" onclick="abrir('android.settings.AIRPLANE_MODE_SETTINGS')">
+<div class="ico">✈️</div>
+<div class="info"><strong>Modo avião</strong><small>Conexões sem fio</small></div><span class="arrow">›</span>
+</div>
+
+<div class="item" onclick="abrir('android.settings.NFC_SETTINGS')">
+<div class="ico">📡</div>
+<div class="info"><strong>NFC</strong><small>Pagamentos por aproximação, se disponível</small></div><span class="arrow">›</span>
+</div>
+
+<div class="section-title">Dispositivo</div>
+
+<div class="item" onclick="abrir('android.settings.DISPLAY_SETTINGS')">
+<div class="ico">☀️</div>
+<div class="info"><strong>Visor</strong><small>Brilho, tela e modo escuro</small></div><span class="arrow">›</span>
+</div>
+
+<div class="item" onclick="abrir('android.settings.SOUND_SETTINGS')">
+<div class="ico">🔊</div>
+<div class="info"><strong>Sons e vibração</strong><small>Volume, toques e vibração</small></div><span class="arrow">›</span>
+</div>
+
+<div class="item" onclick="abrir('android.settings.NOTIFICATION_SETTINGS')">
+<div class="ico">🔔</div>
+<div class="info"><strong>Notificações</strong><small>Alertas e notificações de aplicativos</small></div><span class="arrow">›</span>
+</div>
+
+<div class="item" onclick="abrir('android.settings.BATTERY_SAVER_SETTINGS')">
+<div class="ico">🔋</div>
+<div class="info"><strong>Bateria</strong><small>Economia e consumo de energia</small></div><span class="arrow">›</span>
+</div>
+
+<div class="item" onclick="abrir('android.settings.APPLICATION_SETTINGS')">
+<div class="ico">📱</div>
+<div class="info"><strong>Aplicativos</strong><small>Gerenciar aplicativos instalados</small></div><span class="arrow">›</span>
+</div>
+
+<div class="item" onclick="abrir('android.settings.STORAGE_SETTINGS')">
+<div class="ico">💾</div>
+<div class="info"><strong>Armazenamento</strong><small>Espaço interno do aparelho</small></div><span class="arrow">›</span>
+</div>
+
+<div class="item" onclick="abrir('android.settings.SECURITY_SETTINGS')">
+<div class="ico">🔐</div>
+<div class="info"><strong>Segurança</strong><small>Bloqueio e proteção</small></div><span class="arrow">›</span>
+</div>
+
+<div class="item" onclick="abrir('android.settings.LOCATION_SOURCE_SETTINGS')">
+<div class="ico">📍</div>
+<div class="info"><strong>Localização</strong><small>Serviços de localização</small></div><span class="arrow">›</span>
+</div>
+
+<div class="item" onclick="abrir('android.settings.ACCESSIBILITY_SETTINGS')">
+<div class="ico">♿</div>
+<div class="info"><strong>Acessibilidade</strong><small>Recursos de acessibilidade</small></div><span class="arrow">›</span>
+</div>
+
+<div class="section-title">Sistema</div>
+
+<div class="item" onclick="abrir('android.settings.SYSTEM_SETTINGS')">
+<div class="ico">⚙️</div>
+<div class="info"><strong>Gerenciamento geral</strong><small>Idioma, teclado e data</small></div><span class="arrow">›</span>
+</div>
+
+<div class="item" onclick="abrir('android.settings.DATE_SETTINGS')">
+<div class="ico">🕒</div>
+<div class="info"><strong>Data e hora</strong><small>Relógio e fuso horário</small></div><span class="arrow">›</span>
+</div>
+
+<div class="item" onclick="abrir('android.settings.DEVICE_INFO_SETTINGS')">
+<div class="ico">ℹ️</div>
+<div class="info"><strong>Sobre o telefone</strong><small>Informações do Galaxy A15</small></div><span class="arrow">›</span>
+</div>
+
+<div class="item" onclick="abrir('android.settings.APPLICATION_DEVELOPMENT_SETTINGS')">
+<div class="ico">🛠️</div>
+<div class="info"><strong>Opções do desenvolvedor</strong><small>Configurações avançadas</small></div><span class="arrow">›</span>
+</div>
+
+<div class="section-title">Aplicativos Samsung</div>
+
+<div class="item" onclick="abrirIntent('intent://com.sec.android.app.myfiles/#Intent;scheme=android-app;end')">
+<div class="ico">📁</div>
+<div class="info"><strong>Meus Arquivos</strong><small>Gerenciador de arquivos Samsung</small></div><span class="arrow">›</span>
+</div>
+
+<div class="item" onclick="abrirIntent('intent://com.android.settings/#Intent;scheme=android-app;end')">
+<div class="ico">⚙️</div>
+<div class="info"><strong>Configurações originais</strong><small>Abrir configurações do Android</small></div><span class="arrow">›</span>
+</div>
+
+<div class="item" onclick="abrirIntent('intent://100-000-000/#Intent;scheme=tel;end')">
+<div class="ico">☎️</div>
+<div class="info"><strong>Telefone / Discador</strong><small>Abrir aplicativo de chamadas</small></div><span class="arrow">›</span>
+</div>
+
+</div>
+</main>
+
+<footer>
+Galaxy A15 · Painel de atalhos HTML
+</footer>
+
+<script>
+function abrir(acao){
+ const url='intent:#Intent;action='+acao+';end';
+ window.location.href=url;
+}
+
+function abrirIntent(url){
+ window.location.href=url;
+}
+
+function pesquisar(){
+ const termo=document.getElementById('search').value.toLowerCase();
+ document.querySelectorAll('#lista .item').forEach(item=>{
+  item.classList.toggle('hidden',!item.innerText.toLowerCase().includes(termo));
+ });
+}
+</script>
+
+</body>
+</html>
