@@ -7,35 +7,41 @@
 <style>
 *{box-sizing:border-box}
 body{
- margin:0;background:#101827;color:white;
- font-family:Arial,sans-serif;padding:25px 20px;
- min-height:100vh;
+ margin:0;padding:25px 18px 100px;
+ background:#101827;color:white;
+ font-family:Arial,sans-serif;
 }
-.clock{font-size:48px;font-weight:bold}
-h2{margin-top:35px}
+.clock{font-size:52px;font-weight:bold}
+#date{color:#aab8cc}
+h2{margin-top:30px}
 .search{
- background:#263449;padding:17px;border-radius:30px;
- color:#aab8cc;margin:25px 0;
+ background:#263449;padding:16px;
+ border-radius:30px;margin:25px 0;
+ color:#aab8cc;
 }
 .apps{
- display:grid;grid-template-columns:repeat(3,1fr);
- gap:30px 12px;
+ display:grid;
+ grid-template-columns:repeat(4,1fr);
+ gap:27px 8px;
 }
 .app{
- text-decoration:none;color:white;text-align:center;
- display:flex;flex-direction:column;align-items:center;
- gap:9px;font-size:13px;
+ text-decoration:none;color:white;
+ display:flex;flex-direction:column;
+ align-items:center;gap:8px;
+ font-size:12px;text-align:center;
 }
 .icon{
- width:65px;height:65px;border-radius:20px;
- display:flex;align-items:center;justify-content:center;
- font-size:30px;
+ width:58px;height:58px;border-radius:19px;
+ display:flex;align-items:center;
+ justify-content:center;font-size:28px;
 }
 .dock{
- position:fixed;bottom:20px;left:20px;right:20px;
+ position:fixed;bottom:12px;left:15px;right:15px;
  background:#263449;border-radius:25px;
- padding:20px;display:flex;justify-content:space-around;
+ padding:17px;display:flex;
+ justify-content:space-around;
 }
+.dock a{font-size:25px;text-decoration:none}
 </style>
 </head>
 <body>
@@ -48,59 +54,75 @@ h2{margin-top:35px}
 
 <div class="search">🔎 Pesquisar aplicativos</div>
 
-<h3>Aplicativos</h3>
+<h3>Todos os aplicativos</h3>
 
-<div class="apps">
-
-<a class="app" href="intent://#Intent;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;package=com.android.chrome;end">
-<div class="icon" style="background:#4285F4">🌐</div>
-Chrome
-</a>
-
-<a class="app" href="intent://#Intent;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;package=com.google.android.youtube;end">
-<div class="icon" style="background:#e53935">▶️</div>
-YouTube
-</a>
-
-<a class="app" href="intent://#Intent;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;package=com.sec.android.app.myfiles;end">
-<div class="icon" style="background:#d69e28">📁</div>
-Arquivos
-</a>
-
-<a class="app" href="intent://#Intent;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;package=com.whatsapp;end">
-<div class="icon" style="background:#20b96c">💬</div>
-WhatsApp
-</a>
-
-<a class="app" href="intent://#Intent;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;package=com.sec.android.app.camera;end">
-<div class="icon" style="background:#64748b">📷</div>
-Câmera
-</a>
-
-<a class="app" href="intent://#Intent;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;package=com.android.settings;end">
-<div class="icon" style="background:#52647d">⚙️</div>
-Configurações
-</a>
-
-</div>
+<div class="apps" id="apps"></div>
 
 <div class="dock">
-<span>📞</span>
-<span>💬</span>
-<span>📷</span>
-<span>🌐</span>
+<a href="intent://com.android.chrome/#Intent;scheme=android-app;end">🌐</a>
+<a href="intent://com.google.android.youtube/#Intent;scheme=android-app;end">▶️</a>
+<a href="intent://com.whatsapp/#Intent;scheme=android-app;end">💬</a>
+<a href="intent://com.sec.android.app.camera/#Intent;scheme=android-app;end">📷</a>
 </div>
 
 <script>
-function updateClock(){
- const now=new Date();
+const aplicativos = [
+["Chrome","com.android.chrome","🌐","#4285F4"],
+["YouTube","com.google.android.youtube","▶️","#e53935"],
+["Arquivos","com.sec.android.app.myfiles","📁","#d69e28"],
+["WhatsApp","com.whatsapp","💬","#20b96c"],
+
+["Assistente","com.google.android.googlequicksearchbox","🎙️","#4285F4"],
+["Apple Music","com.apple.android.music","🎵","#e94368"],
+["Google Fotos","com.google.android.apps.photos","🌈","#4285F4"],
+["Gmail","com.google.android.gm","✉️","#e64b42"],
+
+["Maps","com.google.android.apps.maps","📍","#34a853"],
+["Relógio","com.sec.android.app.clockpackage","⏰","#64748b"],
+["Calendário","com.google.android.calendar","📅","#4285F4"],
+["Play Store","com.android.vending","🛍️","#20a4d8"],
+
+["Câmera","com.sec.android.app.camera","📷","#64748b"],
+["Configurações","com.android.settings","⚙️","#8995a5"],
+["Telefone","com.samsung.android.dialer","📞","#20b96c"],
+["Mensagens","com.google.android.apps.messaging","💬","#4285F4"],
+
+["Samsung Internet","com.sec.android.app.sbrowser","🌍","#448aff"],
+["YouTube Music","com.google.android.apps.youtube.music","🎧","#e53935"],
+["Drive","com.google.android.apps.docs","📂","#34a853"],
+["Contatos","com.samsung.android.app.contacts","👤","#4285F4"]
+];
+
+const grade=document.getElementById("apps");
+
+aplicativos.forEach(([nome,pacote,emoji,cor])=>{
+ const a=document.createElement("a");
+ a.className="app";
+ a.href=`intent://${pacote}/#Intent;scheme=android-app;end`;
+
+ const icone=document.createElement("div");
+ icone.className="icon";
+ icone.style.background=cor;
+ icone.textContent=emoji;
+
+ const texto=document.createElement("span");
+ texto.textContent=nome;
+
+ a.append(icone,texto);
+ grade.appendChild(a);
+});
+
+function atualizar(){
+ const agora=new Date();
  document.getElementById("clock").textContent=
- now.toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"});
+ agora.toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"});
  document.getElementById("date").textContent=
- now.toLocaleDateString("pt-BR",{weekday:"long",day:"numeric",month:"long"});
+ agora.toLocaleDateString("pt-BR",{
+ weekday:"long",day:"numeric",month:"long"
+ });
 }
-updateClock();
-setInterval(updateClock,1000);
+atualizar();
+setInterval(atualizar,1000);
 </script>
 
 </body>
