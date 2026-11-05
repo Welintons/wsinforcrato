@@ -3,365 +3,264 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#f4f5f9">
-<title>Galaxy A15 - Configurações</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Atalhos Samsung</title>
 
 <style>
 *{box-sizing:border-box}
 body{
- margin:0;font-family:Arial,sans-serif;
- background:#f4f5f9;color:#191b20;
+  margin:0;
+  background:#101114;
+  color:#fff;
+  font-family:Arial,sans-serif;
 }
 header{
- padding:30px 20px 16px;
- background:#f4f5f9;position:sticky;
- top:0;z-index:5;
+  padding:22px 16px 15px;
+  background:#191a20;
+  position:sticky;
+  top:0;
+  z-index:10;
 }
-h1{font-size:29px;margin:0 0 8px}
-.subtitle{font-size:13px;color:#777;margin-bottom:18px}
-.search{
- width:100%;padding:17px 20px;
- border:0;border-radius:18px;
- background:#e5e7ee;font-size:16px;outline:none;
+h1{font-size:22px;margin:0 0 6px}
+header p{font-size:12px;color:#aaa;margin:0 0 15px}
+#busca{
+  width:100%;
+  padding:14px;
+  border:1px solid #333;
+  border-radius:12px;
+  background:#25262d;
+  color:white;
+  font-size:15px;
+  outline:none;
 }
-main{padding:0 15px 35px}
-.device{
- background:#dce5ff;padding:20px;
- border-radius:22px;margin-bottom:18px;
-}
-.device strong{font-size:19px}
-.device p{margin:7px 0 0;font-size:13px;color:#56627c}
+main{padding:12px}
 .section-title{
- font-size:17px;font-weight:bold;
- margin:23px 5px 12px;
+  font-size:14px;
+  color:#8da7ff;
+  margin:22px 5px 10px;
+  text-transform:uppercase;
+  letter-spacing:1px;
 }
 .item{
- display:flex;align-items:center;gap:14px;
- padding:15px 13px;background:white;
- border-radius:18px;margin-bottom:8px;
- cursor:pointer;transition:.15s;
+  display:flex;
+  align-items:center;
+  gap:13px;
+  padding:13px;
+  background:#1b1c22;
+  border:1px solid #292a31;
+  border-radius:12px;
+  margin-bottom:8px;
+  cursor:pointer;
+  min-height:65px;
 }
-.item:active{background:#e5e9f2}
+.item:active{background:#30323b}
 .ico{
- width:43px;height:43px;
- border-radius:50%;background:#eef0f8;
- display:grid;place-items:center;
- font-size:21px;flex-shrink:0;
+  width:40px;
+  height:40px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#292d3b;
+  border-radius:11px;
+  font-size:20px;
+  flex-shrink:0;
 }
-.info{flex:1;min-width:0}
-.info strong{font-size:14px;display:block}
-.info small{font-size:11px;color:#777;display:block;margin-top:5px}
-.arrow{font-size:23px;color:#858994}
-.hidden{display:none!important}
-footer{text-align:center;padding:20px;color:#888;font-size:12px}
+.info{flex:1}
+.info strong{display:block;font-size:14px}
+.info small{color:#999;font-size:11px;display:block;margin-top:4px}
+.arrow{color:#777;font-size:20px}
+#contador{
+  color:#aaa;
+  font-size:12px;
+  margin:12px 5px;
+}
 </style>
 </head>
 
 <body>
 
 <header>
-<h1>Configurações</h1>
-<div class="subtitle">Samsung Galaxy A15 · One UI</div>
-<input class="search" id="search"
-placeholder="🔍 Pesquisar configurações"
-oninput="pesquisar()">
+  <h1>Atalhos Samsung</h1>
+  <p>Galaxy A15 • One UI • Android 16</p>
+  <input id="busca" type="search" placeholder="Pesquisar configuração...">
 </header>
 
 <main>
+<div id="contador">100 atalhos disponíveis</div>
 
-<div class="device">
-<strong>Galaxy A15</strong>
-<p>Central de atalhos · Android 16</p>
-</div>
+<h2 class="section-title">Conexões</h2>
 
-<div id="lista"></div>
+<div class="item" onclick="abrir('android.settings.WIFI_SETTINGS')">
+<div class="ico">📶</div><div class="info"><strong>Wi-Fi</strong><small>Redes sem fio</small></div><span class="arrow">›</span></div>
+
+<div class="item" onclick="abrir('android.settings.BLUETOOTH_SETTINGS')">
+<div class="ico">ᛒ</div><div class="info"><strong>Bluetooth</strong><small>Dispositivos conectados</small></div><span class="arrow">›</span></div>
+
+<div class="item" onclick="abrir('android.settings.AIRPLANE_MODE_SETTINGS')">
+<div class="ico">✈️</div><div class="info"><strong>Modo avião</strong><small>Configuração de rede móvel</small></div><span class="arrow">›</span></div>
+
+<div class="item" onclick="abrir('android.settings.NFC_SETTINGS')">
+<div class="ico">📳</div><div class="info"><strong>NFC</strong><small>Conexão por aproximação</small></div><span class="arrow">›</span></div>
+
+<div class="item" onclick="abrir('android.settings.DATA_USAGE_SETTINGS')">
+<div class="ico">📊</div><div class="info"><strong>Uso de dados</strong><small>Consumo de internet</small></div><span class="arrow">›</span></div>
+
+<div class="item" onclick="abrir('android.settings.NETWORK_OPERATOR_SETTINGS')">
+<div class="ico">📡</div><div class="info"><strong>Operadora</strong><small>Rede móvel e operadora</small></div><span class="arrow">›</span></div>
+
+<div class="item" onclick="abrir('android.settings.TETHER_SETTINGS')">
+<div class="ico">🔗</div><div class="info"><strong>Roteador Wi-Fi</strong><small>Compartilhamento de internet</small></div><span class="arrow">›</span></div>
+
+<div class="item" onclick="abrir('android.settings.WIRELESS_SETTINGS')">
+<div class="ico">🌐</div><div class="info"><strong>Redes e internet</strong><small>Configurações de conexão</small></div><span class="arrow">›</span></div>
+
+<div class="item" onclick="abrir('android.settings.VPN_SETTINGS')">
+<div class="ico">🔐</div><div class="info"><strong>VPN</strong><small>Rede privada virtual</small></div><span class="arrow">›</span></div>
+
+<div class="item" onclick="abrir('android.settings.BLUETOOTH_SETTINGS')">
+<div class="ico">🎧</div><div class="info"><strong>Dispositivos Bluetooth</strong><small>Gerenciar acessórios Bluetooth</small></div><span class="arrow">›</span></div>
+
+
+<h2 class="section-title">Tela e aparência</h2>
+
+<div class="item" onclick="abrir('android.settings.DISPLAY_SETTINGS')"><div class="ico">📱</div><div class="info"><strong>Tela</strong><small>Configurações de exibição</small></div><span class="arrow">›</span></div>
+<div class="item" onclick="abrir('android.settings.DISPLAY_SETTINGS')"><div class="ico">☀️</div><div class="info"><strong>Brilho</strong><small>Configurações de tela</small></div><span class="arrow">›</span></div>
+<div class="item" onclick="abrir('android.settings.DISPLAY_SETTINGS')"><div class="ico">🌙</div><div class="info"><strong>Modo escuro</strong><small>Aparência da tela</small></div><span class="arrow">›</span></div>
+<div class="item" onclick="abrir('android.settings.DISPLAY_SETTINGS')"><div class="ico">🔠</div><div class="info"><strong>Tamanho da fonte</strong><small>Texto e exibição</small></div><span class="arrow">›</span></div>
+<div class="item" onclick="abrir('android.settings.DISPLAY_SETTINGS')"><div class="ico">🔎</div><div class="info"><strong>Zoom da tela</strong><small>Escala de exibição</small></div><span class="arrow">›</span></div>
+<div class="item" onclick="abrir('android.settings.DISPLAY_SETTINGS')"><div class="ico">⏱️</div><div class="info"><strong>Tempo de tela</strong><small>Suspensão automática</small></div><span class="arrow">›</span></div>
+<div class="item" onclick="abrir('android.settings.DISPLAY_SETTINGS')"><div class="ico">🎨</div><div class="info"><strong>Papel de parede</strong><small>Personalização visual</small></div><span class="arrow">›</span></div>
+<div class="item" onclick="abrir('android.settings.DISPLAY_SETTINGS')"><div class="ico">🔄</div><div class="info"><strong>Rotação da tela</strong><small>Configurações de exibição</small></div><span class="arrow">›</span></div>
+<div class="item" onclick="abrir('android.settings.DISPLAY_SETTINGS')"><div class="ico">🖥️</div><div class="info"><strong>Protetor de tela</strong><small>Opções de exibição</small></div><span class="arrow">›</span></div>
+<div class="item" onclick="abrir('android.settings.DISPLAY_SETTINGS')"><div class="ico">✨</div><div class="info"><strong>Suavidade de movimento</strong><small>Configurações de tela</small></div><span class="arrow">›</span></div>
+
+
+<h2 class="section-title">Som e notificações</h2>
+
+<div class="item" onclick="abrir('android.settings.SOUND_SETTINGS')"><div class="ico">🔊</div><div class="info"><strong>Som</strong><small>Configurações de áudio</small></div><span class="arrow">›</span></div>
+<div class="item" onclick="abrir('android.settings.SOUND_SETTINGS')"><div class="ico">🔔</div><div class="info"><strong>Toque do telefone</strong><small>Som e volume</small></div><span class="arrow">›</span></div>
+<div class="item" onclick="abrir('android.settings.SOUND_SETTINGS')"><div class="ico">📳</div><div class="info"><strong>Vibração</strong><small>Som e vibração</small></div><span class="arrow">›</span></div>
+<div class="item" onclick="abrir('android.settings.NOTIFICATION_SETTINGS')"><div class="ico">🔔</div><div class="info"><strong>Notificações</strong><small>Gerenciar alertas</small></div><span class="arrow">›</span></div>
+<div class="item" onclick="abrir('android.settings.NOTIFICATION_SETTINGS')"><div class="ico">🚫</div><div class="info"><strong>Não perturbe</strong><small>Configurações de notificações</small></div><span class="arrow">›</span></div>
+<div class="item" onclick="abrir('android.settings.NOTIFICATION_SETTINGS')"><div class="ico">🔒</div><div class="info"><strong>Tela de bloqueio</strong><small>Notificações na tela bloqueada</small></div><span class="arrow">›</span></div>
+<div class="item" onclick="abrir('android.settings.SOUND_SETTINGS')"><div class="ico">🎵</div><div class="info"><strong>Volume</strong><small>Configurações de áudio</small></div><span class="arrow">›</span></div>
+<div class="item" onclick="abrir('android.settings.SOUND_SETTINGS')"><div class="ico">🎧</div><div class="info"><strong>Áudio</strong><small>Configurações de som</small></div><span class="arrow">›</span></div>
+<div class="item" onclick="abrir('android.settings.NOTIFICATION_SETTINGS')"><div class="ico">📩</div><div class="info"><strong>Alertas de aplicativos</strong><small>Gerenciar notificações</small></div><span class="arrow">›</span></div>
+<div class="item" onclick="abrir('android.settings.NOTIFICATION_SETTINGS')"><div class="ico">📌</div><div class="info"><strong>Notificações recentes</strong><small>Gerenciar notificações</small></div><span class="arrow">›</span></div>
+
+
+<h2 class="section-title">Aplicativos</h2>
+
+<div class="item" onclick="abrir('android.settings.APPLICATION_SETTINGS')"><div class="ico">📦</div><div class="info"><strong>Aplicativos instalados</strong><small>Gerenciar aplicativos</small></div><span class="arrow">›</span></div>
+<div class="item" onclick="abrir('android.settings.MANAGE_APPLICATIONS_SETTINGS')"><div class="ico">⚙️</div><div class="info"><strong>Gerenciar aplicativos</strong><small>Lista de aplicativos</small></div><span class="arrow">›</span></div>
+<div class="item" onclick="abrir('android.settings.APPLICATION_SETTINGS')"><div class="ico">🧹</div><div class="info"><strong>Aplicativos padrão</strong><small>Configurações de aplicativos</small></div><span class="arrow">›</span></div>
+<div class="item" onclick="abrir('android.settings.APPLICATION_SETTINGS')"><div class="ico">🔋</div><div class="info"><strong>Bateria dos aplicativos</strong><small>Gerenciamento de aplicativos</small></div><span class="arrow">›</span></div>
+<div class="item" onclick="abrir('android.settings.APPLICATION_SETTINGS')"><div class="ico">🗂️</div><div class="info"><strong>Permissões</strong><small>Gerenciar aplicativos</small></div><span class="arrow">›</span></div>
+<div class="item" onclick="abrir('android.settings.APPLICATION_SETTINGS')"><div class="ico">🔔</div><div class="info"><strong>Notificações por aplicativo</strong><small>Gerenciar aplicativos</small></div><span class="arrow">›</span></div>
+<div class="item" onclick="abrir('android.settings.APPLICATION_SETTINGS')"><div class="ico">🛑</div><div class="info"><strong>Forçar parada</strong><small>Gerenciar aplicativos</small></div><span class="arrow">›</span></div>
+<div class="item" onclick="abrir('android.settings.APPLICATION_SETTINGS')"><div class="ico">🧽</div><div class="info"><strong>Armazenamento dos apps</strong><small>Gerenciar aplicativos</small></div><span class="arrow">›</span></div>
+<div class="item" onclick="abrir('android.settings.APPLICATION_SETTINGS')"><div class="ico">🔐</div><div class="info"><strong>Acesso especial</strong><small>Permissões especiais dos apps</small></div><span class="arrow">›</span></div>
+<div class="item" onclick="abrir('android.settings.APPLICATION_SETTINGS')"><div class="ico">📲</div><div class="info"><strong>Instalar aplicativos</strong><small>Configurações de aplicativos</small></div><span class="arrow">›</span></div>
+
+
+<h2 class="section-title">Segurança e privacidade</h2>
+
+<div class="item" onclick="abrir('android.settings.SECURITY_SETTINGS')"><div class="ico">🔐</div><div class="info"><strong>Segurança</strong><small>Proteção do dispositivo</small></div><span class="arrow">›</span></div>
+<div class="item" onclick="abrir('android.settings.PRIVACY_SETTINGS')"><div class="ico">🛡️</div><div class="info"><strong>Privacidade</strong><small>Controles de privacidade</small></div><span class="arrow">›</span></div>
+<div class="item" onclick="abrir('android.settings.LOCATION_SOURCE_SETTINGS')"><div class="ico">📍</div><div class="info"><strong>Localização</strong><small>Serviços de localização</small></div><span class="arrow">›</span></div>
+<div class="item" onclick="abrir('android.settings.SECURITY_SETTINGS')"><div class="ico">🔑</div><div class="info"><strong>Bloqueio de tela</strong><small>Segurança do dispositivo</small></div><span class="arrow">›</span></div>
+<div class="item" onclick="abrir('android.settings.SECURITY_SETTINGS')"><div class="ico">👆</div><div class="info"><strong>Biometria</strong><small>Segurança e desbloqueio</small></div><span class="arrow">›</span></div>
+<div class="item" onclick="abrir('android.settings.PRIVACY_SETTINGS')"><div class="ico">🎥</div><div class="info"><strong>Câmera e microfone</strong><small>Controles de privacidade</small></div><span class="arrow">›</span></div>
+<div class="item" onclick="abrir('android.settings.SECURITY_SETTINGS')"><div class="ico">🧾</div><div class="info"><strong>Certificados</strong><small>Configurações de segurança</small></div><span class="arrow">›</span></div>
+<div class="item" onclick="abrir('android.settings.LOCATION_SOURCE_SETTINGS')"><div class="ico">🛰️</div><div class="info"><strong>Serviços de localização</strong><small>Configurações de localização</small></div><span class="arrow">›</span></div>
+<div class="item" onclick="abrir('android.settings.SECURITY_SETTINGS')"><div class="ico">🔒</div><div class="info"><strong>Outras opções de segurança</strong><small>Segurança do Android</small></div><span class="arrow">›</span></div>
+<div class="item" onclick="abrir('android.settings.PRIVACY_SETTINGS')"><div class="ico">👁️</div><div class="info"><strong>Painel de privacidade</strong><small>Controles de privacidade</small></div><span class="arrow">›</span></div>
+
+
+<h2 class="section-title">Sistema e armazenamento</h2>
+
+<div class="item" onclick="abrir('android.settings.STORAGE_SETTINGS')"><div class="ico">💾</div><div class="info"><strong>Armazenamento</strong><small>Espaço disponível</small></div><span class="arrow">›</span></div>
+<div class="item" onclick="abrir('android.settings.DEVICE_INFO_SETTINGS')"><div class="ico">📱</div><div class="info"><strong>Sobre o telefone</strong><small>Informações do aparelho</small></div><span class="arrow">›</span></div>
+<div class="item" onclick="abrir('android.settings.DATE_SETTINGS')"><div class="ico">📅</div><div class="info"><strong>Data e hora</strong><small>Relógio do sistema</small></div><span class="arrow">›</span></div>
+<div class="item" onclick="abrir('android.settings.SYSTEM_SETTINGS')"><div class="ico">🔄</div><div class="info"><strong>Atualização do sistema</strong><small>Configurações do sistema</small></div><span class="arrow">›</span></div>
+<div class="item" onclick="abrir('android.settings.LANGUAGE_SETTINGS')"><div class="ico">🌎</div><div class="info"><strong>Idioma</strong><small>Preferências de idioma</small></div><span class="arrow">›</span></div>
+<div class="item" onclick="abrir('android.settings.SYSTEM_SETTINGS')"><div class="ico">⌨️</div><div class="info"><strong>Teclado</strong><small>Configurações do sistema</small></div><span class="arrow">›</span></div>
+<div class="item" onclick="abrir('android.settings.SYSTEM_SETTINGS')"><div class="ico">♻️</div><div class="info"><strong>Redefinir</strong><small>Opções de redefinição</small></div><span class="arrow">›</span></div>
+<div class="item" onclick="abrir('android.settings.SYSTEM_SETTINGS')"><div class="ico">📋</div><div class="info"><strong>Backup</strong><small>Configurações do sistema</small></div><span class="arrow">›</span></div>
+<div class="item" onclick="abrir('android.settings.SYSTEM_SETTINGS')"><div class="ico">👥</div><div class="info"><strong>Usuários</strong><small>Configurações do sistema</small></div><span class="arrow">›</span></div>
+<div class="item" onclick="abrir('android.settings.STORAGE_SETTINGS')"><div class="ico">🗃️</div><div class="info"><strong>Limpeza de armazenamento</strong><small>Gerenciar espaço</small></div><span class="arrow">›</span></div>
+
+
+<h2 class="section-title">Acessibilidade</h2>
+
+<div class="item" onclick="abrir('android.settings.ACCESSIBILITY_SETTINGS')"><div class="ico">♿</div><div class="info"><strong>Acessibilidade</strong><small>Recursos de acessibilidade</small></div><span class="arrow">›</span></div>
+<div class="item" onclick="abrir('android.settings.ACCESSIBILITY_SETTINGS')"><div class="ico">🔍</div><div class="info"><strong>Ampliação</strong><small>Recursos visuais</small></div><span class="arrow">›</span></div>
+<div class="item" onclick="abrir('android.settings.ACCESSIBILITY_SETTINGS')"><div class="ico">🗣️</div><div class="info"><strong>Leitor de tela</strong><small>Recursos de fala</small></div><span class="arrow">›</span></div>
+<div class="item" onclick="abrir('android.settings.ACCESSIBILITY_SETTINGS')"><div class="ico">📝</div><div class="info"><strong>Legendas</strong><small>Recursos de acessibilidade</small></div><span class="arrow">›</span></div>
+<div class="item" onclick="abrir('android.settings.ACCESSIBILITY_SETTINGS')"><div class="ico">🎨</div><div class="info"><strong>Correção de cores</strong><small>Recursos visuais</small></div><span class="arrow">›</span></div>
+<div class="item" onclick="abrir('android.settings.ACCESSIBILITY_SETTINGS')"><div class="ico">🖱️</div><div class="info"><strong>Interação e destreza</strong><small>Controles de acessibilidade</small></div><span class="arrow">›</span></div>
+<div class="item" onclick="abrir('android.settings.ACCESSIBILITY_SETTINGS')"><div class="ico">🔊</div><div class="info"><strong>Áudio mono</strong><small>Recursos de áudio</small></div><span class="arrow">›</span></div>
+<div class="item" onclick="abrir('android.settings.ACCESSIBILITY_SETTINGS')"><div class="ico">⏳</div><div class="info"><strong>Tempo de resposta</strong><small>Interação e acessibilidade</small></div><span class="arrow">›</span></div>
+<div class="item" onclick="abrir('android.settings.ACCESSIBILITY_SETTINGS')"><div class="ico">🧏</div><div class="info"><strong>Melhorias auditivas</strong><small>Recursos auditivos</small></div><span class="arrow">›</span></div>
+<div class="item" onclick="abrir('android.settings.ACCESSIBILITY_SETTINGS')"><div class="ico">👁️</div><div class="info"><strong>Melhorias visuais</strong><small>Recursos visuais</small></div><span class="arrow">›</span></div>
+
+
+<h2 class="section-title">Ferramentas e outros</h2>
+
+<div class="item" onclick="abrirIntent('intent://com.android.settings/#Intent;scheme=android-app;end')"><div class="ico">⚙️</div><div class="info"><strong>Configurações originais</strong><small>Abrir aplicativo Configurações</small></div><span class="arrow">›</span></div>
+<div class="item" onclick="abrirIntent('intent://com.sec.android.app.myfiles/#Intent;scheme=android-app;end')"><div class="ico">📁</div><div class="info"><strong>Meus Arquivos</strong><small>Gerenciador de arquivos Samsung</small></div><span class="arrow">›</span></div>
+<div class="item" onclick="abrirIntent('intent://100-000-000/#Intent;scheme=tel;end')"><div class="ico">📞</div><div class="info"><strong>Discador</strong><small>Abrir telefone</small></div><span class="arrow">›</span></div>
+<div class="item" onclick="abrir('android.settings.APPLICATION_DEVELOPMENT_SETTINGS')"><div class="ico">🧑‍💻</div><div class="info"><strong>Opções do desenvolvedor</strong><small>Ferramentas avançadas</small></div><span class="arrow">›</span></div>
+<div class="item" onclick="abrir('android.settings.DEVICE_INFO_SETTINGS')"><div class="ico">🔢</div><div class="info"><strong>Versão do Android</strong><small>Informações do dispositivo</small></div><span class="arrow">›</span></div>
+<div class="item" onclick="abrir('android.settings.SYSTEM_SETTINGS')"><div class="ico">🧰</div><div class="info"><strong>Configurações adicionais</strong><small>Opções do sistema</small></div><span class="arrow">›</span></div>
+<div class="item" onclick="abrir('android.settings.APPLICATION_SETTINGS')"><div class="ico">📲</div><div class="info"><strong>Gerenciador de permissões</strong><small>Configurações de aplicativos</small></div><span class="arrow">›</span></div>
+<div class="item" onclick="abrir('android.settings.STORAGE_SETTINGS')"><div class="ico">🗑️</div><div class="info"><strong>Espaço interno</strong><small>Armazenamento do telefone</small></div><span class="arrow">›</span></div>
+<div class="item" onclick="abrir('android.settings.SYSTEM_SETTINGS')"><div class="ico">🔧</div><div class="info"><strong>Informações do sistema</strong><small>Configurações gerais</small></div><span class="arrow">›</span></div>
+<div class="item" onclick="abrirIntent('intent://com.android.settings/#Intent;scheme=android-app;end')"><div class="ico">🏠</div><div class="info"><strong>Página inicial das configurações</strong><small>Menu principal do Android</small></div><span class="arrow">›</span></div>
 
 </main>
 
-<footer>Galaxy A15 · Painel de configurações</footer>
-
 <script>
-
-// TIPOS:
-// action = abre tela do Android
-// app = abre aplicativo Samsung/Android
-
-const categorias = [
-
-{
-nome:"📡 Conexões",
-itens:[
-["Wi-Fi","📶","action","android.settings.WIFI_SETTINGS"],
-["Bluetooth","ᛒ","bluetooth"],
-["Conexões alternativas","🌐","action","android.settings.WIRELESS_SETTINGS"],
-["Modo avião","✈️","action","android.settings.AIRPLANE_MODE_SETTINGS"],
-["NFC","📡","action","android.settings.NFC_SETTINGS"],
-["Uso de dados","📊","action","android.settings.DATA_USAGE_SETTINGS"],
-["Redes móveis","📱","action","android.settings.NETWORK_OPERATOR_SETTINGS"],
-["Hotspot e roteador","📡","action","android.settings.TETHER_SETTINGS"],
-["VPN","🔒","action","android.settings.VPN_SETTINGS"],
-["Dispositivos conectados","🔗","action","android.settings.CONNECTED_DEVICE_SETTINGS"]
-]
-},
-
-{
-nome:"🖥️ Visor e tela",
-itens:[
-["Visor","☀️","action","android.settings.DISPLAY_SETTINGS"],
-["Brilho","🌞","action","android.settings.DISPLAY_SETTINGS"],
-["Modo escuro","🌙","action","android.settings.DISPLAY_SETTINGS"],
-["Tamanho da fonte","🔠","action","android.settings.FONT_SIZE"],
-["Tamanho da tela","🔍","action","android.settings.DISPLAY_SIZE"],
-["Papel de parede","🖼️","action","android.settings.WALLPAPER_SETTINGS"],
-["Tela inicial","🏠","action","android.settings.HOME_SETTINGS"],
-["Proteção de tela","🛡️","action","android.settings.DREAM_SETTINGS"],
-["Tela de bloqueio","🔐","action","android.settings.SECURITY_SETTINGS"],
-["Rotação da tela","🔄","action","android.settings.DISPLAY_SETTINGS"]
-]
-},
-
-{
-nome:"🔊 Sons e notificações",
-itens:[
-["Sons e vibração","🔊","action","android.settings.SOUND_SETTINGS"],
-["Volume","🔉","action","android.settings.SOUND_SETTINGS"],
-["Toque do telefone","🎵","action","android.settings.SOUND_SETTINGS"],
-["Notificações","🔔","action","android.settings.NOTIFICATION_SETTINGS"],
-["Não perturbe","🌙","action","android.settings.ZEN_MODE_SETTINGS"],
-["Acesso às notificações","📨","action","android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS"],
-["Legendas","💬","action","android.settings.CAPTIONING_SETTINGS"],
-["Acesso Não perturbe","🔕","action","android.settings.NOTIFICATION_POLICY_ACCESS_SETTINGS"],
-["Acessibilidade sonora","🎧","action","android.settings.ACCESSIBILITY_SETTINGS"],
-["Configurações de som","🎼","action","android.settings.SOUND_SETTINGS"]
-]
-},
-
-{
-nome:"🔋 Bateria e armazenamento",
-itens:[
-["Bateria","🔋","action","android.settings.BATTERY_SAVER_SETTINGS"],
-["Economia de energia","⚡","action","android.settings.BATTERY_SAVER_SETTINGS"],
-["Otimização de bateria","🔌","action","android.settings.IGNORE_BATTERY_OPTIMIZATION_SETTINGS"],
-["Armazenamento","💾","action","android.settings.STORAGE_SETTINGS"],
-["Armazenamento interno","📁","action","android.settings.STORAGE_SETTINGS"],
-["Uso de aplicativos","📊","action","android.settings.USAGE_ACCESS_SETTINGS"],
-["Gerenciar aplicativos","📦","action","android.settings.MANAGE_ALL_APPLICATIONS_SETTINGS"],
-["Informações dos apps","ℹ️","action","android.settings.APPLICATION_SETTINGS"],
-["Acesso especial","🔑","action","android.settings.MANAGE_APPLICATIONS_SETTINGS"],
-["Gerenciamento de bateria","🔋","action","android.settings.BATTERY_SAVER_SETTINGS"]
-]
-},
-
-{
-nome:"🔐 Segurança e privacidade",
-itens:[
-["Segurança","🛡️","action","android.settings.SECURITY_SETTINGS"],
-["Privacidade","🔒","action","android.settings.PRIVACY_SETTINGS"],
-["Localização","📍","action","android.settings.LOCATION_SOURCE_SETTINGS"],
-["Permissões de aplicativos","🔑","action","android.settings.APPLICATION_SETTINGS"],
-["Administrador do dispositivo","⚙️","action","android.settings.DEVICE_ADMIN_SETTINGS"],
-["Certificados confiáveis","📜","action","android.settings.TRUSTED_CREDENTIALS_USER"],
-["Informações de segurança","🔐","action","android.settings.SECURITY_SETTINGS"],
-["Controle de privacidade","👁️","action","android.settings.PRIVACY_SETTINGS"],
-["Acesso à localização","🗺️","action","android.settings.LOCATION_SOURCE_SETTINGS"],
-["Bloqueio do aparelho","🔒","action","android.settings.SECURITY_SETTINGS"]
-]
-},
-
-{
-nome:"📱 Aplicativos",
-itens:[
-["Aplicativos instalados","📱","action","android.settings.APPLICATION_SETTINGS"],
-["Aplicativos padrão","⭐","action","android.settings.MANAGE_DEFAULT_APPS_SETTINGS"],
-["Gerenciar aplicativos","📦","action","android.settings.MANAGE_ALL_APPLICATIONS_SETTINGS"],
-["Informações dos aplicativos","ℹ️","action","android.settings.APPLICATION_SETTINGS"],
-["Permissões","🔑","action","android.settings.APPLICATION_SETTINGS"],
-["Instalar aplicativos","📥","action","android.settings.SECURITY_SETTINGS"],
-["Acesso às notificações","🔔","action","android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS"],
-["Acesso de uso","📊","action","android.settings.USAGE_ACCESS_SETTINGS"],
-["Serviços de impressão","🖨️","action","android.settings.ACTION_PRINT_SETTINGS"],
-["Aplicativos padrão do sistema","⚙️","action","android.settings.MANAGE_DEFAULT_APPS_SETTINGS"]
-]
-},
-
-{
-nome:"🌎 Sistema e gerenciamento",
-itens:[
-["Gerenciamento geral","⚙️","action","android.settings.SYSTEM_SETTINGS"],
-["Idioma","🌎","action","android.settings.LOCALE_SETTINGS"],
-["Data e hora","🕒","action","android.settings.DATE_SETTINGS"],
-["Teclado","⌨️","action","android.settings.INPUT_METHOD_SETTINGS"],
-["Configuração do teclado","🔤","action","android.settings.INPUT_METHOD_SETTINGS"],
-["Backup","☁️","action","android.settings.BACKUP_SETTINGS"],
-["Redefinição","♻️","action","android.settings.FACTORY_RESET_SETTINGS"],
-["Atualização do sistema","⬆️","action","android.settings.SYSTEM_UPDATE_SETTINGS"],
-["Opções do desenvolvedor","🛠️","action","android.settings.APPLICATION_DEVELOPMENT_SETTINGS"],
-["Informações do aparelho","ℹ️","action","android.settings.DEVICE_INFO_SETTINGS"]
-]
-},
-
-{
-nome:"♿ Acessibilidade",
-itens:[
-["Acessibilidade","♿","action","android.settings.ACCESSIBILITY_SETTINGS"],
-["TalkBack","🗣️","action","android.settings.ACCESSIBILITY_SETTINGS"],
-["Ampliação","🔎","action","android.settings.ACCESSIBILITY_SETTINGS"],
-["Correção de cores","🎨","action","android.settings.ACCESSIBILITY_SETTINGS"],
-["Inversão de cores","🌈","action","android.settings.ACCESSIBILITY_SETTINGS"],
-["Menu de acessibilidade","☰","action","android.settings.ACCESSIBILITY_SETTINGS"],
-["Controle por interação","👆","action","android.settings.ACCESSIBILITY_SETTINGS"],
-["Legendas ao vivo","💬","action","android.settings.ACCESSIBILITY_SETTINGS"],
-["Texto em alto contraste","🔠","action","android.settings.ACCESSIBILITY_SETTINGS"],
-["Atalhos de acessibilidade","♿","action","android.settings.ACCESSIBILITY_SETTINGS"]
-]
-},
-
-{
-nome:"👥 Contas e compartilhamento",
-itens:[
-["Contas","👤","action","android.settings.SYNC_SETTINGS"],
-["Adicionar conta","➕","action","android.settings.ADD_ACCOUNT_SETTINGS"],
-["Sincronização","🔄","action","android.settings.SYNC_SETTINGS"],
-["Configurações Google","G","app","com.google.android.gms"],
-["Compartilhamento","📤","action","android.settings.SHARE_SETTINGS"],
-["Impressão","🖨️","action","android.settings.ACTION_PRINT_SETTINGS"],
-["NFC e pagamentos","💳","action","android.settings.NFC_SETTINGS"],
-["Credenciais","🔑","action","android.settings.SECURITY_SETTINGS"],
-["Dispositivos conectados","🔗","action","android.settings.CONNECTED_DEVICE_SETTINGS"],
-["Configuração de contas","👥","action","android.settings.ACCOUNT_SYNC_SETTINGS"]
-]
-},
-
-{
-nome:"🛠️ Aplicativos Samsung",
-itens:[
-["Meus Arquivos","📁","known","intent://com.sec.android.app.myfiles/#Intent;scheme=android-app;end"],
-["Configurações originais","⚙️","known","intent://com.android.settings/#Intent;scheme=android-app;end"],
-["Telefone / Discador","☎️","known","intent://100-000-000/#Intent;scheme=tel;end"],
-["Chrome","🌐","app","com.android.chrome"],
-["Câmera","📷","app","com.sec.android.app.camera"],
-["Galeria","🖼️","app","com.sec.android.gallery3d"],
-["Relógio","⏰","app","com.sec.android.app.clockpackage"],
-["Calculadora","🧮","app","com.sec.android.app.popupcalculator"],
-["Mensagens","💬","app","com.samsung.android.messaging"],
-["Configurações Samsung","⚙️","known","intent://com.android.settings/#Intent;scheme=android-app;end"]
-]
-
-];
-
-// Criar interface
-
-const lista=document.getElementById("lista");
-
-categorias.forEach(cat=>{
-
- const titulo=document.createElement("div");
- titulo.className="section-title";
- titulo.textContent=cat.nome;
- lista.appendChild(titulo);
-
- cat.itens.forEach(item=>{
-
-  const el=document.createElement("div");
-  el.className="item";
-
-  el.innerHTML=`
-  <div class="ico">${item[1]}</div>
-  <div class="info">
-  <strong>${item[0]}</strong>
-  <small>Toque para abrir</small>
-  </div>
-  <span class="arrow">›</span>`;
-
-  el.dataset.nome=item[0].toLowerCase();
-  el.dataset.categoria=cat.nome.toLowerCase();
-
-  el.onclick=()=>executar(item);
-
-  lista.appendChild(el);
- });
-});
-
-// ABERTURA ORIGINAL PRESERVADA
-
 function abrir(acao){
- const url='intent:#Intent;action='+acao+';end';
- window.location.href=url;
+  window.location.href = 'intent:#Intent;action=' + acao + ';end';
 }
 
 function abrirIntent(url){
- window.location.href=url;
+  window.location.href = url;
 }
 
-// Bluetooth: ação oficial com pacote de Configurações.
-// Alternativa: botão Conexões alternativas.
+const busca = document.getElementById('busca');
+const itens = document.querySelectorAll('.item');
+const secoes = document.querySelectorAll('.section-title');
+const contador = document.getElementById('contador');
 
-function abrirBluetooth(){
- const url='intent:#Intent;action=android.settings.BLUETOOTH_SETTINGS;package=com.android.settings;end';
- window.location.href=url;
-}
+busca.addEventListener('input', function(){
+  const termo = this.value.toLocaleLowerCase('pt-BR');
+  let encontrados = 0;
 
-function executar(item){
+  itens.forEach(function(item){
+    const corresponde = item.innerText.toLocaleLowerCase('pt-BR').includes(termo);
+    item.style.display = corresponde ? 'flex' : 'none';
+    if(corresponde) encontrados++;
+  });
 
- const tipo=item[2];
- const destino=item[3];
+  secoes.forEach(function(secao){
+    let proximo = secao.nextElementSibling;
+    let temItem = false;
 
- if(tipo==="action"){
-  abrir(destino);
- }
+    while(proximo && !proximo.classList.contains('section-title')){
+      if(proximo.classList.contains('item') && proximo.style.display !== 'none'){
+        temItem = true;
+        break;
+      }
+      proximo = proximo.nextElementSibling;
+    }
 
- if(tipo==="known"){
-  abrirIntent(destino);
- }
+    secao.style.display = temItem ? 'block' : 'none';
+  });
 
- if(tipo==="app"){
-  abrirIntent(
-   'intent://'+destino+'/#Intent;scheme=android-app;end'
-  );
- }
-
- if(tipo==="bluetooth"){
-  abrirBluetooth();
- }
-}
-
-// Pesquisa original melhorada
-
-function pesquisar(){
-
- const termo=document.getElementById("search")
- .value.toLowerCase().trim();
-
- document.querySelectorAll("#lista .item").forEach(item=>{
-
-  const texto=item.innerText.toLowerCase();
-  const categoria=item.dataset.categoria;
-
-  item.classList.toggle(
-   "hidden",
-   !texto.includes(termo) &&
-   !categoria.includes(termo)
-  );
- });
-
- document.querySelectorAll("#lista .section-title")
- .forEach(titulo=>{
-
-  let proximo=titulo.nextElementSibling;
-  let temVisivel=false;
-
-  while(proximo && !proximo.classList.contains("section-title")){
-   if(!proximo.classList.contains("hidden")){
-    temVisivel=true;
-   }
-   proximo=proximo.nextElementSibling;
-  }
-
-  titulo.classList.toggle("hidden",!temVisivel);
- });
-}
-
+  contador.textContent = encontrados + ' atalhos encontrados';
+});
 </script>
 
 </body>
