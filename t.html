@@ -1,13 +1,15 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Meu Launcher</title>
+<title>WS Launcher</title>
+
 <style>
 *{box-sizing:border-box}
 body{
- margin:0;padding:25px 18px 100px;
+ margin:0;padding:25px 18px 110px;
  background:#101827;color:white;
  font-family:Arial,sans-serif;
 }
@@ -35,6 +37,15 @@ h2{margin-top:30px}
  display:flex;align-items:center;
  justify-content:center;font-size:28px;
 }
+.controls{
+ display:grid;grid-template-columns:repeat(2,1fr);
+ gap:12px;margin:20px 0;
+}
+.control{
+ border:0;border-radius:16px;
+ background:#263449;color:white;
+ padding:17px 8px;font-size:14px;
+}
 .dock{
  position:fixed;bottom:12px;left:15px;right:15px;
  background:#263449;border-radius:25px;
@@ -44,6 +55,7 @@ h2{margin-top:30px}
 .dock a{font-size:25px;text-decoration:none}
 </style>
 </head>
+
 <body>
 
 <div class="clock" id="clock">00:00</div>
@@ -54,8 +66,18 @@ h2{margin-top:30px}
 
 <div class="search">🔎 Pesquisar aplicativos</div>
 
-<h3>Todos os aplicativos</h3>
+<h3>Controles do telefone</h3>
 
+<div class="controls">
+<button class="control" onclick="executar('home')">🏠 Home</button>
+<button class="control" onclick="notificacoes()">🔔 Notificações</button>
+<button class="control" onclick="executar('bluetooth')">📶 Bluetooth</button>
+<button class="control" onclick="executar('wifi')">📡 Wi-Fi</button>
+<button class="control" onclick="executar('launcher')">⚙️ Launcher padrão</button>
+<button class="control" onclick="executar('settings')">🛠️ Sistema</button>
+</div>
+
+<h3>Todos os aplicativos</h3>
 <div class="apps" id="apps"></div>
 
 <div class="dock">
@@ -66,27 +88,39 @@ h2{margin-top:30px}
 </div>
 
 <script>
-const aplicativos = [
+const comandos={
+ home:"intent:#Intent;action=android.intent.action.MAIN;category=android.intent.category.HOME;end",
+ bluetooth:"intent:#Intent;action=android.settings.BLUETOOTH_SETTINGS;end",
+ wifi:"intent:#Intent;action=android.settings.WIFI_SETTINGS;end",
+ launcher:"intent:#Intent;action=android.settings.HOME_SETTINGS;end",
+ settings:"intent:#Intent;action=android.settings.SETTINGS;end"
+};
+
+function executar(nome){
+ location.href=comandos[nome];
+}
+
+function notificacoes(){
+ alert("A abertura direta da barra de notificações exige integração nativa Android.");
+}
+
+const aplicativos=[
 ["Chrome","com.android.chrome","🌐","#4285F4"],
 ["YouTube","com.google.android.youtube","▶️","#e53935"],
 ["Arquivos","com.sec.android.app.myfiles","📁","#d69e28"],
 ["WhatsApp","com.whatsapp","💬","#20b96c"],
-
 ["Assistente","com.google.android.googlequicksearchbox","🎙️","#4285F4"],
 ["Apple Music","com.apple.android.music","🎵","#e94368"],
 ["Google Fotos","com.google.android.apps.photos","🌈","#4285F4"],
 ["Gmail","com.google.android.gm","✉️","#e64b42"],
-
 ["Maps","com.google.android.apps.maps","📍","#34a853"],
 ["Relógio","com.sec.android.app.clockpackage","⏰","#64748b"],
 ["Calendário","com.google.android.calendar","📅","#4285F4"],
 ["Play Store","com.android.vending","🛍️","#20a4d8"],
-
 ["Câmera","com.sec.android.app.camera","📷","#64748b"],
 ["Configurações","com.android.settings","⚙️","#8995a5"],
 ["Telefone","com.samsung.android.dialer","📞","#20b96c"],
 ["Mensagens","com.google.android.apps.messaging","💬","#4285F4"],
-
 ["Samsung Internet","com.sec.android.app.sbrowser","🌍","#448aff"],
 ["YouTube Music","com.google.android.apps.youtube.music","🎧","#e53935"],
 ["Drive","com.google.android.apps.docs","📂","#34a853"],
@@ -115,12 +149,15 @@ aplicativos.forEach(([nome,pacote,emoji,cor])=>{
 function atualizar(){
  const agora=new Date();
  document.getElementById("clock").textContent=
- agora.toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"});
+ agora.toLocaleTimeString("pt-BR",{
+ hour:"2-digit",minute:"2-digit"
+ });
  document.getElementById("date").textContent=
  agora.toLocaleDateString("pt-BR",{
  weekday:"long",day:"numeric",month:"long"
  });
 }
+
 atualizar();
 setInterval(atualizar,1000);
 </script>
