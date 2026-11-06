@@ -32,13 +32,16 @@
 </main>
 
 <script>
-const URL = "https://tnogcviolluveumzrhyy.supabase.co";
-const KEY = "sb_publishable_cOoVzxE6nEJXfpOXZFhlIg_qDBWo7L1";
+const SUPABASE_URL = "https://tnogcviolluveumzrhyy.supabase.co";
+const SUPABASE_KEY = "sb_publishable_cOoVzxE6nEJXfpOXZFhlIg_qDBWo7L1";
 
 const POST_ID = "372f4f55-2bf5-4125-8016-62c8d7f68deb";
 const CONTA_B_ID = "8fe70252-9056-4db3-a281-ab5beccd1459";
 
-const db = supabase.createClient(URL, KEY);
+const supabaseClient = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+);
 
 function mostrar(html) {
     document.getElementById("resultado").innerHTML += html;
@@ -60,7 +63,7 @@ async function testar() {
         }
 
         const { data: login, error: loginError } =
-            await db.auth.signInWithPassword({ email, password });
+            await supabaseClient.auth.signInWithPassword({ email, password });
 
         if (loginError) throw loginError;
 
@@ -72,8 +75,8 @@ async function testar() {
             <p class="text-green-400">Conta B autenticada.</p>
         `;
 
-        // TESTE UPDATE: mantém o conteúdo original, sem alterá-lo.
-        const { data: updateData, error: updateError } = await db
+        // TESTE UPDATE
+        const { data: updateData, error: updateError } = await supabaseClient
             .from("posts")
             .update({
                 content: "PUBLICAÇÃO PRIVADA - TESTE DE SEGURANÇA"
@@ -88,11 +91,7 @@ async function testar() {
                     <p>${updateError.message}</p>
                 </div>
             `);
-            mostrar(`
-                <p class="text-yellow-300">
-                    O DELETE não será executado porque o UPDATE retornou erro.
-                </p>
-            `);
+            mostrar("<p class='text-yellow-300'>DELETE não executado.</p>");
             return;
         }
 
@@ -100,7 +99,7 @@ async function testar() {
             mostrar(`
                 <div class="bg-red-950 border border-red-700 p-3 rounded-lg">
                     <b class="text-red-400">FALHA: UPDATE PERMITIDO</b>
-                    <p>A Conta B conseguiu atualizar a publicação da Conta A.</p>
+                    <p>A Conta B conseguiu atualizar a publicação.</p>
                 </div>
             `);
             return;
@@ -114,7 +113,7 @@ async function testar() {
         `);
 
         // TESTE DELETE
-        const { data: deleteData, error: deleteError } = await db
+        const { data: deleteData, error: deleteError } = await supabaseClient
             .from("posts")
             .delete()
             .eq("id", POST_ID)
@@ -134,7 +133,7 @@ async function testar() {
             mostrar(`
                 <div class="bg-red-950 border border-red-700 p-3 rounded-lg">
                     <b class="text-red-400">FALHA: DELETE PERMITIDO</b>
-                    <p>A Conta B conseguiu excluir a publicação da Conta A.</p>
+                    <p>A Conta B conseguiu excluir a publicação.</p>
                 </div>
             `);
             return;
@@ -147,13 +146,6 @@ async function testar() {
             </div>
         `);
 
-        mostrar(`
-            <div class="border border-green-600 rounded-lg p-3">
-                <b class="text-green-400">TESTE CONCLUÍDO</b>
-                <p>As duas operações não afetaram a publicação.</p>
-            </div>
-        `);
-
     } catch (e) {
         mostrar(`
             <div class="bg-red-950 border border-red-700 p-3 rounded-lg">
@@ -162,10 +154,11 @@ async function testar() {
             </div>
         `);
     } finally {
-        await db.auth.signOut();
+        await supabaseClient.auth.signOut();
         btn.disabled = false;
     }
 }
 </script>
+
 </body>
 </html>
