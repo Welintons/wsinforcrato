@@ -3,160 +3,514 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>FaceCrato — Teste RLS 2</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FaceCrato Security Lab</title>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+body { background:#080d18; color:#e5e7eb; font-family:Arial,sans-serif; }
+.panel { background:#111827; border:1px solid #263449; border-radius:14px; }
+.field { background:#0b1220; border:1px solid #334155; color:white; }
+.btn { background:#2563eb; }
+.btn:disabled { opacity:.5; }
+.status { font-size:12px; padding:4px 9px; border-radius:20px; }
+.pending { background:#334155; color:#cbd5e1; }
+.ok { background:#064e3b; color:#6ee7b7; }
+.fail { background:#7f1d1d; color:#fecaca; }
+.warn { background:#78350f; color:#fde68a; }
+</style>
 </head>
 
-<body class="bg-slate-950 text-white min-h-screen flex items-center justify-center p-4">
+<body class="min-h-screen p-4">
 
-<main class="w-full max-w-md bg-slate-900 border border-slate-700 rounded-2xl p-6">
-    <h1 class="text-2xl font-bold">FaceCrato</h1>
-    <p class="text-slate-400 text-sm mb-6">Teste RLS — alteração e exclusão</p>
+<div class="max-w-5xl mx-auto">
 
-    <div class="space-y-3">
-        <input id="email" type="email" placeholder="E-mail da Conta B"
-        class="w-full p-3 rounded-lg bg-slate-800 border border-slate-700">
+<header class="mb-6">
+    <div class="flex items-center gap-3">
+        <div class="w-12 h-12 rounded-xl bg-blue-600 flex items-center justify-center font-black text-xl">FC</div>
+        <div>
+            <h1 class="text-2xl font-black">Security Lab</h1>
+            <p class="text-slate-400 text-sm">FaceCrato • Diagnóstico de segurança</p>
+        </div>
+    </div>
+</header>
 
-        <input id="password" type="password" placeholder="Senha da Conta B"
-        class="w-full p-3 rounded-lg bg-slate-800 border border-slate-700">
+<section class="panel p-4 mb-4">
+    <h2 class="font-bold mb-3">Contas de teste</h2>
 
-        <button id="btn" onclick="testar()"
-        class="w-full bg-blue-600 p-3 rounded-lg font-bold">
-            Testar UPDATE e DELETE
-        </button>
+    <div class="grid md:grid-cols-2 gap-4">
+        <div>
+            <p class="text-blue-400 text-sm font-bold mb-2">CONTA A</p>
+            <input id="emailA" type="email" placeholder="E-mail da Conta A"
+            class="field w-full rounded-lg p-3 mb-2">
+            <input id="passA" type="password" placeholder="Senha da Conta A"
+            class="field w-full rounded-lg p-3">
+        </div>
+
+        <div>
+            <p class="text-purple-400 text-sm font-bold mb-2">CONTA B</p>
+            <input id="emailB" type="email" placeholder="E-mail da Conta B"
+            class="field w-full rounded-lg p-3 mb-2">
+            <input id="passB" type="password" placeholder="Senha da Conta B"
+            class="field w-full rounded-lg p-3">
+        </div>
     </div>
 
-    <div id="resultado" class="mt-5 text-sm space-y-3"></div>
-</main>
+    <p class="text-xs text-slate-500 mt-3">
+        As senhas são usadas somente durante o teste e não são salvas pelo painel.
+    </p>
+
+    <button id="runBtn" onclick="executarDiagnostico()"
+    class="btn w-full rounded-lg p-3 font-bold mt-4">
+        Executar diagnóstico completo
+    </button>
+</section>
+
+<section class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
+    <div class="panel p-4">
+        <p class="text-xs text-slate-400">Testes</p>
+        <p id="total" class="text-2xl font-black">0</p>
+    </div>
+    <div class="panel p-4">
+        <p class="text-xs text-slate-400">Aprovados</p>
+        <p id="approved" class="text-2xl font-black text-green-400">0</p>
+    </div>
+    <div class="panel p-4">
+        <p class="text-xs text-slate-400">Falhas</p>
+        <p id="failed" class="text-2xl font-black text-red-400">0</p>
+    </div>
+    <div class="panel p-4">
+        <p class="text-xs text-slate-400">Avisos</p>
+        <p id="warnings" class="text-2xl font-black text-yellow-400">0</p>
+    </div>
+</section>
+
+<section class="panel p-4 mb-4">
+    <div class="flex justify-between items-center mb-3">
+        <h2 class="font-bold">Resultado das verificações</h2>
+        <span id="progress" class="text-xs text-slate-400">Aguardando</span>
+    </div>
+    <div class="w-full bg-slate-800 rounded-full h-2">
+        <div id="progressBar" class="bg-blue-500 h-2 rounded-full" style="width:0%"></div>
+    </div>
+</section>
+
+<section class="panel p-4 mb-4">
+    <h2 class="font-bold mb-3">Diagnóstico das tabelas</h2>
+    <div id="tableResults" class="space-y-2">
+        <p class="text-slate-500 text-sm">Execute o diagnóstico para começar.</p>
+    </div>
+</section>
+
+<section class="panel p-4 mb-4">
+    <h2 class="font-bold mb-3">Segurança entre contas</h2>
+    <div id="securityResults" class="space-y-2">
+        <p class="text-slate-500 text-sm">Aguardando testes.</p>
+    </div>
+</section>
+
+<section class="panel p-4 mb-4">
+    <h2 class="font-bold mb-3">Log técnico</h2>
+    <div id="logs" class="bg-black/40 rounded-lg p-3 text-xs space-y-2 max-h-72 overflow-auto">
+        <p class="text-slate-500">Nenhuma operação executada.</p>
+    </div>
+</section>
+
+<button onclick="limparResultados()"
+class="w-full border border-slate-600 rounded-lg p-3 text-slate-300">
+    Limpar resultados
+</button>
+
+<p class="text-center text-xs text-slate-600 mt-5">
+    FaceCrato Security Lab • Ferramenta de diagnóstico
+</p>
+
+</div>
 
 <script>
 const SUPABASE_URL = "https://tnogcviolluveumzrhyy.supabase.co";
 const SUPABASE_KEY = "sb_publishable_cOoVzxE6nEJXfpOXZFhlIg_qDBWo7L1";
 
-const POST_ID = "372f4f55-2bf5-4125-8016-62c8d7f68deb";
-const CONTA_B_ID = "8fe70252-9056-4db3-a281-ab5beccd1459";
+const ID_A = "973c0d73-fab4-4e3d-8b9c-e001c02e0cb2";
+const ID_B = "8fe70252-9056-4db3-a281-ab5beccd1459";
 
-const supabaseClient = window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_KEY
-);
+const POST_PRIVADO = "372f4f55-2bf5-4125-8016-62c8d7f68deb";
 
-function mostrar(html) {
-    document.getElementById("resultado").innerHTML += html;
+const TABELAS = [
+    "profiles",
+    "blocks",
+    "friendships",
+    "posts",
+    "post_media",
+    "comments",
+    "reactions",
+    "saved_posts",
+    "post_shares",
+    "notifications",
+    "reports"
+];
+
+let resultados = [];
+let executando = false;
+
+function criarCliente(nome) {
+    return window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
+        auth: {
+            persistSession: false,
+            autoRefreshToken: false,
+            detectSessionInUrl: false,
+            storageKey: "facecrato-lab-" + nome
+        }
+    });
 }
 
-async function testar() {
-    const btn = document.getElementById("btn");
-    const resultado = document.getElementById("resultado");
+function log(mensagem, tipo = "info") {
+    const area = document.getElementById("logs");
+    if (area.querySelector(".text-slate-500")) area.innerHTML = "";
 
+    const cores = {
+        info: "text-slate-300",
+        ok: "text-green-400",
+        fail: "text-red-400",
+        warn: "text-yellow-400"
+    };
+
+    const linha = document.createElement("p");
+    linha.className = cores[tipo] || cores.info;
+    linha.textContent = "[" + new Date().toLocaleTimeString() + "] " + mensagem;
+    area.prepend(linha);
+}
+
+function registrar(grupo, nome, estado, detalhe = "") {
+    resultados.push({ grupo, nome, estado, detalhe });
+    atualizarPainel();
+    log(nome + " — " + detalhe, estado);
+}
+
+function atualizarPainel() {
+    const total = resultados.length;
+    const aprovados = resultados.filter(x => x.estado === "ok").length;
+    const falhas = resultados.filter(x => x.estado === "fail").length;
+    const avisos = resultados.filter(x => x.estado === "warn").length;
+
+    document.getElementById("total").textContent = total;
+    document.getElementById("approved").textContent = aprovados;
+    document.getElementById("failed").textContent = falhas;
+    document.getElementById("warnings").textContent = avisos;
+
+    const tabela = document.getElementById("tableResults");
+    const seguranca = document.getElementById("securityResults");
+
+    tabela.innerHTML = "";
+    seguranca.innerHTML = "";
+
+    resultados.forEach(item => {
+        const alvo = item.grupo === "tabela" ? tabela : seguranca;
+
+        const linha = document.createElement("div");
+        linha.className = "flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 py-2";
+
+        const texto = document.createElement("div");
+        const nome = document.createElement("p");
+        nome.className = "text-sm font-semibold";
+        nome.textContent = item.nome;
+
+        const detalhe = document.createElement("p");
+        detalhe.className = "text-xs text-slate-400";
+        detalhe.textContent = item.detalhe;
+
+        texto.append(nome, detalhe);
+
+        const badge = document.createElement("span");
+        badge.className = "status " + item.estado;
+        badge.textContent = {
+            ok: "APROVADO",
+            fail: "FALHA",
+            warn: "AVISO"
+        }[item.estado];
+
+        linha.append(texto, badge);
+        alvo.appendChild(linha);
+    });
+
+    const percentual = Math.min(100, total / 16 * 100);
+    document.getElementById("progressBar").style.width = percentual + "%";
+    document.getElementById("progress").textContent = total + " verificações";
+}
+
+async function testarTabela(cliente, tabela, filtro) {
+    let consulta = cliente.from(tabela).select("id", {
+        count: "exact",
+        head: true
+    });
+
+    if (filtro) consulta = filtro(consulta);
+
+    const { error, count } = await consulta;
+
+    if (error) {
+        registrar(
+            "tabela",
+            tabela,
+            "fail",
+            error.message
+        );
+    } else {
+        registrar(
+            "tabela",
+            tabela,
+            "ok",
+            "Consulta autorizada. Registros visíveis: " + (count ?? "não informado")
+        );
+    }
+}
+
+async function executarDiagnostico() {
+    if (executando) return;
+
+    const emailA = document.getElementById("emailA").value.trim();
+    const passA = document.getElementById("passA").value;
+    const emailB = document.getElementById("emailB").value.trim();
+    const passB = document.getElementById("passB").value;
+
+    if (!emailA || !passA || !emailB || !passB) {
+        alert("Preencha e-mail e senha das duas contas.");
+        return;
+    }
+
+    executando = true;
+    resultados = [];
+    atualizarPainel();
+
+    const btn = document.getElementById("runBtn");
     btn.disabled = true;
-    resultado.innerHTML = "<p class='text-yellow-400'>Autenticando...</p>";
+    btn.textContent = "Executando diagnóstico...";
+
+    let clienteA;
+    let clienteB;
+    let clienteAnon;
 
     try {
-        const email = document.getElementById("email").value.trim();
-        const password = document.getElementById("password").value;
+        clienteA = criarCliente("conta-a");
+        clienteB = criarCliente("conta-b");
+        clienteAnon = criarCliente("anonimo");
 
-        if (!email || !password) {
-            throw new Error("Informe e-mail e senha.");
+        log("Iniciando diagnóstico.");
+
+        // AUTENTICAÇÃO A
+        const { data: authA, error: errorA } =
+            await clienteA.auth.signInWithPassword({
+                email: emailA,
+                password: passA
+            });
+
+        if (errorA) throw new Error("Login A: " + errorA.message);
+
+        if (authA.user.id !== ID_A) {
+            throw new Error("A primeira conta não corresponde à Conta A.");
         }
 
-        const { data: login, error: loginError } =
-            await supabaseClient.auth.signInWithPassword({ email, password });
+        registrar("seguranca", "Autenticação Conta A", "ok", "UUID confirmado.");
 
-        if (loginError) throw loginError;
+        // AUTENTICAÇÃO B
+        const { data: authB, error: errorB } =
+            await clienteB.auth.signInWithPassword({
+                email: emailB,
+                password: passB
+            });
 
-        if (login.user.id !== CONTA_B_ID) {
-            throw new Error("A conta autenticada não é a Conta B.");
+        if (errorB) throw new Error("Login B: " + errorB.message);
+
+        if (authB.user.id !== ID_B) {
+            throw new Error("A segunda conta não corresponde à Conta B.");
         }
 
-        resultado.innerHTML = `
-            <p class="text-green-400">Conta B autenticada.</p>
-        `;
+        registrar("seguranca", "Autenticação Conta B", "ok", "UUID confirmado.");
 
-        // TESTE UPDATE
-        const { data: updateData, error: updateError } = await supabaseClient
+        // TABELAS — CONTA A
+        log("Verificando acesso às tabelas pela Conta A.");
+
+        for (const tabela of TABELAS) {
+            let filtro = null;
+
+            if (tabela === "profiles") {
+                filtro = q => q.eq("id", ID_A);
+            }
+
+            if (tabela === "blocks") {
+                filtro = q => q.eq("blocker_id", ID_A);
+            }
+
+            if (tabela === "friendships") {
+                filtro = q => q.or("user_a.eq." + ID_A + ",user_b.eq." + ID_A);
+            }
+
+            if (tabela === "posts") {
+                filtro = q => q.eq("user_id", ID_A);
+            }
+
+            if (tabela === "comments") {
+                filtro = q => q.eq("user_id", ID_A);
+            }
+
+            if (tabela === "reactions") {
+                filtro = q => q.eq("user_id", ID_A);
+            }
+
+            if (tabela === "saved_posts") {
+                filtro = q => q.eq("user_id", ID_A);
+            }
+
+            if (tabela === "post_shares") {
+                filtro = q => q.eq("user_id", ID_A);
+            }
+
+            if (tabela === "notifications") {
+                filtro = q => q.eq("recipient_id", ID_A);
+            }
+
+            if (tabela === "reports") {
+                filtro = q => q.eq("reporter_id", ID_A);
+            }
+
+            await testarTabela(clienteA, tabela, filtro);
+        }
+
+        // TABELAS — CONTA B
+        log("Verificando acesso às tabelas pela Conta B.");
+
+        for (const tabela of TABELAS) {
+            let filtro = null;
+
+            if (tabela === "profiles") {
+                filtro = q => q.eq("id", ID_B);
+            }
+
+            if (tabela === "blocks") {
+                filtro = q => q.eq("blocker_id", ID_B);
+            }
+
+            if (tabela === "friendships") {
+                filtro = q => q.or("user_a.eq." + ID_B + ",user_b.eq." + ID_B);
+            }
+
+            if (tabela === "posts") {
+                filtro = q => q.eq("user_id", ID_B);
+            }
+
+            if (tabela === "comments") {
+                filtro = q => q.eq("user_id", ID_B);
+            }
+
+            if (tabela === "reactions") {
+                filtro = q => q.eq("user_id", ID_B);
+            }
+
+            if (tabela === "saved_posts") {
+                filtro = q => q.eq("user_id", ID_B);
+            }
+
+            if (tabela === "post_shares") {
+                filtro = q => q.eq("user_id", ID_B);
+            }
+
+            if (tabela === "notifications") {
+                filtro = q => q.eq("recipient_id", ID_B);
+            }
+
+            if (tabela === "reports") {
+                filtro = q => q.eq("reporter_id", ID_B);
+            }
+
+            await testarTabela(clienteB, tabela, filtro);
+        }
+
+        // TESTE DA PUBLICAÇÃO PRIVADA
+        log("Testando isolamento da publicação privada.");
+
+        const { data: postA, error: postAError } = await clienteA
             .from("posts")
-            .update({
-                content: "PUBLICAÇÃO PRIVADA - TESTE DE SEGURANÇA"
-            })
-            .eq("id", POST_ID)
-            .select("id");
+            .select("id,visibility")
+            .eq("id", POST_PRIVADO);
 
-        if (updateError) {
-            mostrar(`
-                <div class="bg-yellow-950 border border-yellow-700 p-3 rounded-lg">
-                    <b class="text-yellow-300">UPDATE: erro/bloqueio</b>
-                    <p>${updateError.message}</p>
-                </div>
-            `);
-            mostrar("<p class='text-yellow-300'>DELETE não executado.</p>");
-            return;
+        if (postAError) {
+            registrar("seguranca", "Conta A — publicação privada", "fail", postAError.message);
+        } else if (postA.length === 1 && postA[0].visibility === "private") {
+            registrar("seguranca", "Conta A — publicação privada", "ok", "Autora consegue visualizar.");
+        } else {
+            registrar("seguranca", "Conta A — publicação privada", "warn", "Publicação não retornada ou não está privada.");
         }
 
-        if (updateData.length > 0) {
-            mostrar(`
-                <div class="bg-red-950 border border-red-700 p-3 rounded-lg">
-                    <b class="text-red-400">FALHA: UPDATE PERMITIDO</b>
-                    <p>A Conta B conseguiu atualizar a publicação.</p>
-                </div>
-            `);
-            return;
-        }
-
-        mostrar(`
-            <div class="bg-green-950 border border-green-700 p-3 rounded-lg">
-                <b class="text-green-400">UPDATE BLOQUEADO</b>
-                <p>A Conta B não conseguiu alterar a publicação.</p>
-            </div>
-        `);
-
-        // TESTE DELETE
-        const { data: deleteData, error: deleteError } = await supabaseClient
+        const { data: postB, error: postBError } = await clienteB
             .from("posts")
-            .delete()
-            .eq("id", POST_ID)
-            .select("id");
+            .select("id")
+            .eq("id", POST_PRIVADO);
 
-        if (deleteError) {
-            mostrar(`
-                <div class="bg-yellow-950 border border-yellow-700 p-3 rounded-lg">
-                    <b class="text-yellow-300">DELETE: erro/bloqueio</b>
-                    <p>${deleteError.message}</p>
-                </div>
-            `);
-            return;
+        if (postBError) {
+            registrar("seguranca", "Conta B — publicação privada", "fail", postBError.message);
+        } else if (postB.length === 0) {
+            registrar("seguranca", "Conta B — publicação privada", "ok", "Publicação não visível.");
+        } else {
+            registrar("seguranca", "Conta B — publicação privada", "fail", "Conta B conseguiu visualizar a publicação!");
         }
 
-        if (deleteData.length > 0) {
-            mostrar(`
-                <div class="bg-red-950 border border-red-700 p-3 rounded-lg">
-                    <b class="text-red-400">FALHA: DELETE PERMITIDO</b>
-                    <p>A Conta B conseguiu excluir a publicação.</p>
-                </div>
-            `);
-            return;
+        // TESTE ANÔNIMO
+        log("Testando acesso sem autenticação.");
+
+        const { data: anonPost, error: anonError } = await clienteAnon
+            .from("posts")
+            .select("id")
+            .eq("id", POST_PRIVADO);
+
+        if (anonError) {
+            registrar("seguranca", "Anônimo — publicação privada", "fail", anonError.message);
+        } else if (anonPost.length === 0) {
+            registrar("seguranca", "Anônimo — publicação privada", "ok", "Visitante não consegue visualizar.");
+        } else {
+            registrar("seguranca", "Anônimo — publicação privada", "fail", "Visitante conseguiu visualizar!");
         }
 
-        mostrar(`
-            <div class="bg-green-950 border border-green-700 p-3 rounded-lg">
-                <b class="text-green-400">DELETE BLOQUEADO</b>
-                <p>A Conta B não conseguiu excluir a publicação.</p>
-            </div>
-        `);
+        // TESTE DO PERFIL PÚBLICO
+        const { data: perfilPublico, error: perfilError } = await clienteAnon
+            .from("profiles")
+            .select("id")
+            .eq("id", ID_A);
 
-    } catch (e) {
-        mostrar(`
-            <div class="bg-red-950 border border-red-700 p-3 rounded-lg">
-                <b class="text-red-400">ERRO</b>
-                <p>${e.message}</p>
-            </div>
-        `);
+        if (perfilError) {
+            registrar("seguranca", "Anônimo — perfil público", "fail", perfilError.message);
+        } else if (perfilPublico.length > 0) {
+            registrar("seguranca", "Anônimo — perfil público", "ok", "Perfil da Conta A acessível.");
+        } else {
+            registrar("seguranca", "Anônimo — perfil público", "warn", "Perfil não retornado. Verifique is_private e a policy pública.");
+        }
+
+        log("Diagnóstico concluído.", "ok");
+
+    } catch (error) {
+        registrar("seguranca", "Execução do diagnóstico", "fail", error.message);
+        log(error.message, "fail");
+
     } finally {
-        await supabaseClient.auth.signOut();
+        if (clienteA) await clienteA.auth.signOut();
+        if (clienteB) await clienteB.auth.signOut();
+
+        executando = false;
         btn.disabled = false;
+        btn.textContent = "Executar diagnóstico novamente";
+
+        document.getElementById("progress").textContent = "Diagnóstico finalizado";
     }
+}
+
+function limparResultados() {
+    resultados = [];
+    atualizarPainel();
+    document.getElementById("logs").innerHTML =
+        '<p class="text-slate-500">Nenhuma operação executada.</p>';
+    document.getElementById("progress").textContent = "Aguardando";
+    document.getElementById("progressBar").style.width = "0%";
 }
 </script>
 
