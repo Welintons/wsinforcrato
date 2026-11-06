@@ -5,14 +5,17 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>FaceCrato — Security Lab 2</title>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.tailwindcss.com"></script>
+
 <style>
 body{background:#080d18;color:#e5e7eb;font-family:Arial}
 .panel{background:#111827;border:1px solid #29364a;border-radius:14px}
 .field{background:#0b1220;border:1px solid #334155;color:white}
 </style>
 </head>
+
 <body class="min-h-screen p-4">
 
 <main class="max-w-2xl mx-auto space-y-4">
@@ -23,21 +26,28 @@ body{background:#080d18;color:#e5e7eb;font-family:Arial}
 </header>
 
 <section class="panel p-4 space-y-3">
+
 <h2 class="font-bold">Autenticação</h2>
 
 <div>
 <label class="text-xs text-blue-400">CONTA A</label>
-<input id="emailA" type="email" placeholder="E-mail da Conta A"
+<input id="emailA" type="email"
+placeholder="E-mail da Conta A"
 class="field w-full rounded-lg p-3 mt-1 mb-2">
-<input id="passA" type="password" placeholder="Senha da Conta A"
+
+<input id="passA" type="password"
+placeholder="Senha da Conta A"
 class="field w-full rounded-lg p-3">
 </div>
 
 <div>
 <label class="text-xs text-purple-400">CONTA B</label>
-<input id="emailB" type="email" placeholder="E-mail da Conta B"
+<input id="emailB" type="email"
+placeholder="E-mail da Conta B"
 class="field w-full rounded-lg p-3 mt-1 mb-2">
-<input id="passB" type="password" placeholder="Senha da Conta B"
+
+<input id="passB" type="password"
+placeholder="Senha da Conta B"
 class="field w-full rounded-lg p-3">
 </div>
 
@@ -45,21 +55,26 @@ class="field w-full rounded-lg p-3">
 class="w-full bg-blue-600 rounded-lg p-3 font-bold">
 Executar bateria de testes
 </button>
+
 </section>
 
 <section class="grid grid-cols-3 gap-2">
+
 <div class="panel p-3 text-center">
 <p class="text-xs text-slate-400">Testes</p>
 <strong id="total" class="text-2xl">0</strong>
 </div>
+
 <div class="panel p-3 text-center">
 <p class="text-xs text-slate-400">Aprovados</p>
 <strong id="ok" class="text-2xl text-green-400">0</strong>
 </div>
+
 <div class="panel p-3 text-center">
 <p class="text-xs text-slate-400">Falhas</p>
 <strong id="fail" class="text-2xl text-red-400">0</strong>
 </div>
+
 </section>
 
 <section class="panel p-4">
@@ -79,32 +94,58 @@ Executar bateria de testes
 </main>
 
 <script>
-const SUPABASE_URL = "https://tnogcviolluveumzrhyy.supabase.co";
-const SUPABASE_KEY = "sb_publishable_cOoVzxE6nEJXfpOXZFhlIg_qDBWo7L";
+// =====================================
+// CONFIGURAÇÃO SUPABASE
+// =====================================
+
+const SUPABASE_URL =
+"https://tnogcviolluveumzrhyy.supabase.co";
+
+const SUPABASE_KEY =
+"sb_publishable_cOoVzxE6nEJXfpOXZFhlIg_qDBWo7L1";
 
 const ID_A = "973c0d73-fab4-4e3d-8b9c-e001c02e0cb2";
 const ID_B = "8fe70252-9056-4db3-a281-ab5beccd1459";
 
-function criarCliente(nome) {
-    return window.supabase.createClient(
-        SUPABASE_URL,
-        SUPABASE_KEY,
-        {
-            auth: {
-                persistSession: false,
-                autoRefreshToken: false,
-                detectSessionInUrl: false,
-                storageKey: "facecrato-test-" + nome
-            }
+// Dois clientes independentes
+const supabaseA = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY,
+    {
+        auth: {
+            persistSession: false,
+            autoRefreshToken: false,
+            detectSessionInUrl: false,
+            storageKey: "facecrato-a"
         }
-    );
-}
+    }
+);
+
+const supabaseB = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY,
+    {
+        auth: {
+            persistSession: false,
+            autoRefreshToken: false,
+            detectSessionInUrl: false,
+            storageKey: "facecrato-b"
+        }
+    }
+);
+
+// =====================================
+// CONTROLE DE RESULTADOS
+// =====================================
 
 let resultados = [];
 
 function log(msg) {
     const area = document.getElementById("logs");
-    if (area.querySelector(".text-slate-500")) area.innerHTML = "";
+
+    if (area.querySelector(".text-slate-500")) {
+        area.innerHTML = "";
+    }
 
     const p = document.createElement("p");
     p.textContent = new Date().toLocaleTimeString() + " — " + msg;
@@ -119,8 +160,10 @@ function resultado(nome, estado, detalhe) {
 
 function atualizar() {
     document.getElementById("total").textContent = resultados.length;
+
     document.getElementById("ok").textContent =
         resultados.filter(x => x.estado === "ok").length;
+
     document.getElementById("fail").textContent =
         resultados.filter(x => x.estado === "fail").length;
 
@@ -138,7 +181,9 @@ function atualizar() {
         const badge = document.createElement("span");
         badge.className = "text-xs font-bold " +
             (r.estado === "ok" ? "text-green-400" : "text-red-400");
-        badge.textContent = r.estado === "ok" ? "APROVADO" : "FALHA";
+
+        badge.textContent =
+            r.estado === "ok" ? "APROVADO" : "FALHA";
 
         const detalhe = document.createElement("p");
         detalhe.className = "text-xs text-slate-400 mt-1";
@@ -149,17 +194,67 @@ function atualizar() {
     });
 }
 
+// =====================================
+// CRIAÇÃO DE PUBLICAÇÃO TEMPORÁRIA
+// =====================================
+
 async function criarPost(cliente, usuario, conteudo) {
-    return await cliente.from("posts").insert({
-        user_id: usuario,
-        content: conteudo,
-        post_type: "text",
-        visibility: "private",
-        comments_permission: "nobody"
-    }).select("id").single();
+    return await cliente
+        .from("posts")
+        .insert({
+            user_id: usuario,
+            content: conteudo,
+            post_type: "text",
+            visibility: "private",
+            comments_permission: "nobody"
+        })
+        .select("id")
+        .single();
 }
 
+// =====================================
+// CLASSIFICAR ERROS
+// =====================================
+
+function classificarErro(error) {
+    const msg = (error?.message || "").toLowerCase();
+
+    if (
+        msg.includes("invalid api key") ||
+        msg.includes("apikey") ||
+        msg.includes("api key")
+    ) {
+        return "Chave API inválida ou não reconhecida.";
+    }
+
+    if (
+        msg.includes("invalid login credentials")
+    ) {
+        return "E-mail ou senha incorretos.";
+    }
+
+    if (
+        msg.includes("email not confirmed")
+    ) {
+        return "O e-mail desta conta ainda não foi confirmado.";
+    }
+
+    if (
+        msg.includes("row-level security") ||
+        msg.includes("violates row-level security")
+    ) {
+        return "Operação bloqueada pela RLS.";
+    }
+
+    return error?.message || "Erro não identificado.";
+}
+
+// =====================================
+// EXECUÇÃO DA BATERIA
+// =====================================
+
 async function executar() {
+
     const btn = document.getElementById("run");
 
     if (btn.disabled) return;
@@ -180,188 +275,373 @@ async function executar() {
     resultados = [];
     atualizar();
 
-    let a, b;
     let postA = null;
     let postB = null;
     let postFalsificado = null;
 
     try {
+
+        // TESTE DA BIBLIOTECA
+
         if (!window.supabase) {
-            throw new Error("Biblioteca Supabase não carregou. Verifique a internet.");
+            throw new Error("Biblioteca Supabase não carregou.");
         }
 
-        a = criarCliente("conta-a");
-        b = criarCliente("conta-b");
+        resultado(
+            "Biblioteca Supabase",
+            "ok",
+            "SDK carregado corretamente."
+        );
 
         // AUTENTICAÇÃO A
-        const loginA = await a.auth.signInWithPassword({
+
+        const loginA = await supabaseA.auth.signInWithPassword({
             email: emailA,
             password: passA
         });
 
-        if (loginA.error) throw new Error("Login A: " + loginA.error.message);
-        if (loginA.data.user.id !== ID_A) {
-            throw new Error("Conta A incorreta.");
+        if (loginA.error) {
+            throw new Error("LOGIN A: " + classificarErro(loginA.error));
         }
 
-        resultado("Autenticação Conta A", "ok", "UUID confirmado.");
+        if (loginA.data.user.id !== ID_A) {
+            throw new Error("A conta informada não corresponde ao UUID A.");
+        }
+
+        resultado(
+            "Autenticação Conta A",
+            "ok",
+            "UUID confirmado."
+        );
 
         // AUTENTICAÇÃO B
-        const loginB = await b.auth.signInWithPassword({
+
+        const loginB = await supabaseB.auth.signInWithPassword({
             email: emailB,
             password: passB
         });
 
-        if (loginB.error) throw new Error("Login B: " + loginB.error.message);
-        if (loginB.data.user.id !== ID_B) {
-            throw new Error("Conta B incorreta.");
+        if (loginB.error) {
+            throw new Error("LOGIN B: " + classificarErro(loginB.error));
         }
 
-        resultado("Autenticação Conta B", "ok", "UUID confirmado.");
+        if (loginB.data.user.id !== ID_B) {
+            throw new Error("A conta informada não corresponde ao UUID B.");
+        }
 
-        // INSERT A
-        const criarA = await criarPost(a, ID_A, "TESTE TEMPORÁRIO SECURITY LAB A");
+        resultado(
+            "Autenticação Conta B",
+            "ok",
+            "UUID confirmado."
+        );
 
-        if (criarA.error) throw new Error("INSERT A: " + criarA.error.message);
+        // INSERT PRÓPRIO A
+
+        const criarA = await criarPost(
+            supabaseA,
+            ID_A,
+            "TESTE TEMPORÁRIO SECURITY LAB A"
+        );
+
+        if (criarA.error) {
+            resultado(
+                "INSERT próprio — Conta A",
+                "fail",
+                classificarErro(criarA.error)
+            );
+            throw new Error("Não foi possível criar a publicação de A.");
+        }
 
         postA = criarA.data.id;
-        resultado("INSERT próprio — Conta A", "ok", "Publicação temporária criada.");
 
-        // UPDATE A
-        const updateA = await a.from("posts")
-            .update({ content: "TESTE A — CONTEÚDO ALTERADO" })
+        resultado(
+            "INSERT próprio — Conta A",
+            "ok",
+            "Publicação temporária criada."
+        );
+
+        // UPDATE PRÓPRIO A
+
+        const updateA = await supabaseA
+            .from("posts")
+            .update({
+                content: "TESTE A — CONTEÚDO ALTERADO"
+            })
             .eq("id", postA)
             .select("id");
 
         if (updateA.error) {
-            resultado("UPDATE próprio — Conta A", "fail", updateA.error.message);
+            resultado(
+                "UPDATE próprio — Conta A",
+                "fail",
+                classificarErro(updateA.error)
+            );
         } else if (updateA.data.length === 1) {
-            resultado("UPDATE próprio — Conta A", "ok", "Autor conseguiu editar.");
+            resultado(
+                "UPDATE próprio — Conta A",
+                "ok",
+                "Autor conseguiu editar."
+            );
         } else {
-            resultado("UPDATE próprio — Conta A", "fail", "Nenhuma linha alterada.");
+            resultado(
+                "UPDATE próprio — Conta A",
+                "fail",
+                "Nenhuma linha alterada."
+            );
         }
 
-        // INSERT FALSIFICADO
+        // INSERT COM IDENTIDADE FALSA
+
         const falsificado = await criarPost(
-            b, ID_A, "TESTE DE FALSIFICAÇÃO DE IDENTIDADE"
+            supabaseB,
+            ID_A,
+            "TESTE DE FALSIFICAÇÃO DE IDENTIDADE"
         );
 
         if (falsificado.error) {
-            const msg = falsificado.error.message;
-            if (msg.toLowerCase().includes("row-level security")) {
-                resultado("INSERT com identidade falsa — Conta B", "ok",
-                    "RLS rejeitou a tentativa.");
+
+            const msg = falsificado.error.message.toLowerCase();
+
+            if (
+                msg.includes("row-level security") ||
+                msg.includes("violates row-level security")
+            ) {
+                resultado(
+                    "INSERT identidade falsa — Conta B",
+                    "ok",
+                    "RLS rejeitou a tentativa."
+                );
             } else {
-                resultado("INSERT com identidade falsa — Conta B", "fail",
-                    "Recusado, mas não confirmado como bloqueio RLS: " + msg);
+                resultado(
+                    "INSERT identidade falsa — Conta B",
+                    "fail",
+                    "Operação recusada, mas sem confirmação de bloqueio RLS: " +
+                    classificarErro(falsificado.error)
+                );
             }
+
         } else {
+
             postFalsificado = falsificado.data.id;
-            resultado("INSERT com identidade falsa — Conta B", "fail",
-                "Conta B criou registro em nome da Conta A!");
+
+            resultado(
+                "INSERT identidade falsa — Conta B",
+                "fail",
+                "Conta B criou publicação em nome de A!"
+            );
         }
 
         // UPDATE CRUZADO
-        const updateB = await b.from("posts")
-            .update({ content: "ALTERAÇÃO NÃO AUTORIZADA" })
+
+        const updateB = await supabaseB
+            .from("posts")
+            .update({
+                content: "ALTERAÇÃO NÃO AUTORIZADA"
+            })
             .eq("id", postA)
             .select("id");
 
         if (updateB.error) {
-            resultado("UPDATE cruzado — Conta B", "fail", updateB.error.message);
+
+            resultado(
+                "UPDATE cruzado — Conta B",
+                "fail",
+                classificarErro(updateB.error)
+            );
+
         } else if (updateB.data.length === 0) {
-            resultado("UPDATE cruzado — Conta B", "ok",
-                "Conta B não alterou a publicação de A.");
+
+            resultado(
+                "UPDATE cruzado — Conta B",
+                "ok",
+                "Conta B não alterou a publicação de A."
+            );
+
         } else {
-            resultado("UPDATE cruzado — Conta B", "fail",
-                "Conta B conseguiu alterar a publicação de A!");
+
+            resultado(
+                "UPDATE cruzado — Conta B",
+                "fail",
+                "Conta B conseguiu alterar a publicação de A!"
+            );
         }
 
         // DELETE CRUZADO
-        const deleteB = await b.from("posts")
+
+        const deleteB = await supabaseB
+            .from("posts")
             .delete()
             .eq("id", postA)
             .select("id");
 
         if (deleteB.error) {
-            resultado("DELETE cruzado — Conta B", "fail", deleteB.error.message);
+
+            resultado(
+                "DELETE cruzado — Conta B",
+                "fail",
+                classificarErro(deleteB.error)
+            );
+
         } else if (deleteB.data.length === 0) {
-            resultado("DELETE cruzado — Conta B", "ok",
-                "Conta B não excluiu a publicação de A.");
+
+            resultado(
+                "DELETE cruzado — Conta B",
+                "ok",
+                "Conta B não excluiu a publicação de A."
+            );
+
         } else {
-            resultado("DELETE cruzado — Conta B", "fail",
-                "Conta B conseguiu excluir a publicação de A!");
+
+            resultado(
+                "DELETE cruzado — Conta B",
+                "fail",
+                "Conta B conseguiu excluir a publicação de A!"
+            );
+
             postA = null;
         }
 
-        // INSERT B
-        const criarB = await criarPost(b, ID_B, "TESTE TEMPORÁRIO SECURITY LAB B");
+        // INSERT PRÓPRIO B
+
+        const criarB = await criarPost(
+            supabaseB,
+            ID_B,
+            "TESTE TEMPORÁRIO SECURITY LAB B"
+        );
 
         if (criarB.error) {
-            resultado("INSERT próprio — Conta B", "fail", criarB.error.message);
-        } else {
-            postB = criarB.data.id;
-            resultado("INSERT próprio — Conta B", "ok", "Publicação própria criada.");
 
-            // UPDATE B
-            const updateProprio = await b.from("posts")
-                .update({ content: "TESTE B — CONTEÚDO ALTERADO" })
+            resultado(
+                "INSERT próprio — Conta B",
+                "fail",
+                classificarErro(criarB.error)
+            );
+
+        } else {
+
+            postB = criarB.data.id;
+
+            resultado(
+                "INSERT próprio — Conta B",
+                "ok",
+                "Publicação própria criada."
+            );
+
+            // UPDATE PRÓPRIO B
+
+            const updateProprio = await supabaseB
+                .from("posts")
+                .update({
+                    content: "TESTE B — CONTEÚDO ALTERADO"
+                })
                 .eq("id", postB)
                 .select("id");
 
             if (updateProprio.error) {
-                resultado("UPDATE próprio — Conta B", "fail", updateProprio.error.message);
+
+                resultado(
+                    "UPDATE próprio — Conta B",
+                    "fail",
+                    classificarErro(updateProprio.error)
+                );
+
             } else if (updateProprio.data.length === 1) {
-                resultado("UPDATE próprio — Conta B", "ok", "Autor conseguiu editar.");
+
+                resultado(
+                    "UPDATE próprio — Conta B",
+                    "ok",
+                    "Autor conseguiu editar."
+                );
+
             } else {
-                resultado("UPDATE próprio — Conta B", "fail", "Nenhuma linha alterada.");
+
+                resultado(
+                    "UPDATE próprio — Conta B",
+                    "fail",
+                    "Nenhuma linha alterada."
+                );
             }
 
-            // DELETE B
-            const deleteProprio = await b.from("posts")
+            // DELETE PRÓPRIO B
+
+            const deleteProprio = await supabaseB
+                .from("posts")
                 .delete()
                 .eq("id", postB)
                 .select("id");
 
             if (deleteProprio.error) {
-                resultado("DELETE próprio — Conta B", "fail", deleteProprio.error.message);
+
+                resultado(
+                    "DELETE próprio — Conta B",
+                    "fail",
+                    classificarErro(deleteProprio.error)
+                );
+
             } else if (deleteProprio.data.length === 1) {
-                resultado("DELETE próprio — Conta B", "ok", "Autor conseguiu excluir.");
+
+                resultado(
+                    "DELETE próprio — Conta B",
+                    "ok",
+                    "Autor conseguiu excluir."
+                );
+
                 postB = null;
+
             } else {
-                resultado("DELETE próprio — Conta B", "fail", "Nenhuma linha excluída.");
+
+                resultado(
+                    "DELETE próprio — Conta B",
+                    "fail",
+                    "Nenhuma linha excluída."
+                );
             }
         }
 
     } catch (e) {
-        resultado("Execução interrompida", "fail", e.message);
+
+        resultado(
+            "Execução interrompida",
+            "fail",
+            e.message
+        );
 
     } finally {
-        // LIMPEZA
-        if (a) {
-            for (const id of [postA, postFalsificado]) {
-                if (!id) continue;
 
-                const cleanup = await a.from("posts").delete().eq("id", id);
+        // LIMPEZA DOS REGISTROS TEMPORÁRIOS
 
-                log(cleanup.error
-                    ? "Falha na limpeza " + id + ": " + cleanup.error.message
-                    : "Registro temporário removido: " + id);
-            }
+        for (const id of [postA, postFalsificado]) {
 
-            await a.auth.signOut();
+            if (!id) continue;
+
+            const cleanup = await supabaseA
+                .from("posts")
+                .delete()
+                .eq("id", id);
+
+            log(
+                cleanup.error
+                ? "Falha na limpeza " + id + ": " + cleanup.error.message
+                : "Registro temporário removido: " + id
+            );
         }
 
-        if (b) {
-            if (postB) {
-                const cleanup = await b.from("posts").delete().eq("id", postB);
-                log(cleanup.error
-                    ? "Falha na limpeza B: " + cleanup.error.message
-                    : "Registro temporário B removido.");
-            }
+        if (postB) {
 
-            await b.auth.signOut();
+            const cleanup = await supabaseB
+                .from("posts")
+                .delete()
+                .eq("id", postB);
+
+            log(
+                cleanup.error
+                ? "Falha na limpeza B: " + cleanup.error.message
+                : "Registro temporário B removido."
+            );
         }
+
+        await supabaseA.auth.signOut();
+        await supabaseB.auth.signOut();
 
         btn.disabled = false;
         btn.textContent = "Executar novamente";
