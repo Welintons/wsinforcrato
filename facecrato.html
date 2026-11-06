@@ -1,0 +1,155 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FaceCrato — Teste de Segurança</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-slate-950 text-white min-h-screen flex items-center justify-center p-4">
+
+<main class="w-full max-w-md bg-slate-900 border border-slate-700 rounded-2xl p-6">
+
+    <h1 class="text-2xl font-bold">FaceCrato</h1>
+    <p class="text-slate-400 text-sm mb-6">Teste de isolamento RLS</p>
+
+    <div class="space-y-3">
+
+        <input id="email" type="email"
+        placeholder="E-mail da Conta B"
+        autocomplete="username"
+        class="w-full p-3 rounded-lg bg-slate-800 border border-slate-700 outline-none">
+
+        <input id="password" type="password"
+        placeholder="Senha da Conta B"
+        autocomplete="current-password"
+        class="w-full p-3 rounded-lg bg-slate-800 border border-slate-700 outline-none">
+
+        <button id="testButton" onclick="entrarETestar()"
+        class="w-full bg-blue-600 hover:bg-blue-700 p-3 rounded-lg font-bold">
+            Entrar e testar acesso
+        </button>
+
+    </div>
+
+    <div id="resultado" class="mt-5 text-sm"></div>
+
+</main>
+
+<script>
+const SUPABASE_URL = "https://tnogcviolluveumzrhyy.supabase.co";
+const SUPABASE_KEY = "sb_publishable_cOoVzxE6nEJXfpOXZFhlIg_qDBWo7L1";
+
+const POST_ID = "372f4f55-2bf5-4125-8016-62c8d7f68deb";
+const CONTA_A_ID = "973c0d73-fab4-4e3d-8b9c-e001c02e0cb2";
+const CONTA_B_ID = "8fe70252-9056-4db3-a281-ab5beccd1459";
+
+const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+async function entrarETestar() {
+
+    const resultado = document.getElementById("resultado");
+    const botao = document.getElementById("testButton");
+
+    botao.disabled = true;
+    botao.textContent = "Testando...";
+
+    resultado.innerHTML = `
+        <p class="text-yellow-400">Autenticando Conta B...</p>
+    `;
+
+    try {
+
+        const email = document.getElementById("email").value.trim();
+        const password = document.getElementById("password").value;
+
+        if (!email || !password) {
+            throw new Error("Informe o e-mail e a senha.");
+        }
+
+        // Login real da Conta B
+        const { data: login, error: loginError } =
+            await db.auth.signInWithPassword({
+                email,
+                password
+            });
+
+        if (loginError) throw loginError;
+
+        // Confirma a identidade da conta utilizada
+        if (login.user.id !== CONTA_B_ID) {
+            await db.auth.signOut();
+            throw new Error(
+                "A conta autenticada não é a Conta B cadastrada para este teste."
+            );
+        }
+
+        resultado.innerHTML = `
+            <p class="text-yellow-400">Conta B autenticada. Consultando publicação...</p>
+        `;
+
+        // Consulta a publicação privada da Conta A
+        const { data, error } = await db
+            .from("posts")
+            .select("id, content, visibility, user_id")
+            .eq("id", POST_ID);
+
+        if (error) throw error;
+
+        if (data.length === 0) {
+
+            resultado.innerHTML = `
+                <div class="bg-green-950 border border-green-700 rounded-xl p-4">
+                    <h2 class="text-green-400 font-bold text-lg">
+                        ISOLAMENTO APROVADO
+                    </h2>
+                    <p class="mt-2">
+                        A Conta B não conseguiu visualizar a publicação privada da Conta A.
+                    </p>
+                    <p class="text-xs text-green-300 mt-3">
+                        Usuário autenticado: ${login.user.id}
+                    </p>
+                </div>
+            `;
+
+        } else {
+
+            resultado.innerHTML = `
+                <div class="bg-red-950 border border-red-700 rounded-xl p-4">
+                    <h2 class="text-red-400 font-bold text-lg">
+                        FALHA DE ISOLAMENTO
+                    </h2>
+                    <p class="mt-2">
+                        A Conta B conseguiu consultar a publicação privada.
+                    </p>
+                    <pre class="mt-3 whitespace-pre-wrap text-xs">${JSON.stringify(data, null, 2)}</pre>
+                </div>
+            `;
+        }
+
+    } catch (error) {
+
+        resultado.innerHTML = `
+            <div class="bg-yellow-950 border border-yellow-700 rounded-xl p-4">
+                <h2 class="text-yellow-400 font-bold">ERRO NO TESTE</h2>
+                <p class="mt-2">${error.message}</p>
+            </div>
+        `;
+
+    } finally {
+
+        // Encerra a sessão de teste
+        await db.auth.signOut();
+
+        botao.disabled = false;
+        botao.textContent = "Entrar e testar novamente";
+    }
+}
+</script>
+
+</body>
+</html>
