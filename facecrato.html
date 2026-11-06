@@ -3,516 +3,349 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FaceCrato Security Lab</title>
-
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FaceCrato — Security Lab 2</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.tailwindcss.com"></script>
-
 <style>
-body { background:#080d18; color:#e5e7eb; font-family:Arial,sans-serif; }
-.panel { background:#111827; border:1px solid #263449; border-radius:14px; }
-.field { background:#0b1220; border:1px solid #334155; color:white; }
-.btn { background:#2563eb; }
-.btn:disabled { opacity:.5; }
-.status { font-size:12px; padding:4px 9px; border-radius:20px; }
-.pending { background:#334155; color:#cbd5e1; }
-.ok { background:#064e3b; color:#6ee7b7; }
-.fail { background:#7f1d1d; color:#fecaca; }
-.warn { background:#78350f; color:#fde68a; }
+body{background:#080d18;color:#e5e7eb;font-family:Arial}
+.panel{background:#111827;border:1px solid #29364a;border-radius:14px}
+.field{background:#0b1220;border:1px solid #334155;color:white}
 </style>
 </head>
-
 <body class="min-h-screen p-4">
 
-<div class="max-w-5xl mx-auto">
+<main class="max-w-2xl mx-auto space-y-4">
 
-<header class="mb-6">
-    <div class="flex items-center gap-3">
-        <div class="w-12 h-12 rounded-xl bg-blue-600 flex items-center justify-center font-black text-xl">FC</div>
-        <div>
-            <h1 class="text-2xl font-black">Security Lab</h1>
-            <p class="text-slate-400 text-sm">FaceCrato • Diagnóstico de segurança</p>
-        </div>
-    </div>
+<header class="py-3">
+<h1 class="text-2xl font-black">FaceCrato Security Lab</h1>
+<p class="text-slate-400 text-sm">Bateria 2 — INSERT / UPDATE / DELETE</p>
 </header>
 
-<section class="panel p-4 mb-4">
-    <h2 class="font-bold mb-3">Contas de teste</h2>
+<section class="panel p-4 space-y-3">
+<h2 class="font-bold">Autenticação</h2>
 
-    <div class="grid md:grid-cols-2 gap-4">
-        <div>
-            <p class="text-blue-400 text-sm font-bold mb-2">CONTA A</p>
-            <input id="emailA" type="email" placeholder="E-mail da Conta A"
-            class="field w-full rounded-lg p-3 mb-2">
-            <input id="passA" type="password" placeholder="Senha da Conta A"
-            class="field w-full rounded-lg p-3">
-        </div>
-
-        <div>
-            <p class="text-purple-400 text-sm font-bold mb-2">CONTA B</p>
-            <input id="emailB" type="email" placeholder="E-mail da Conta B"
-            class="field w-full rounded-lg p-3 mb-2">
-            <input id="passB" type="password" placeholder="Senha da Conta B"
-            class="field w-full rounded-lg p-3">
-        </div>
-    </div>
-
-    <p class="text-xs text-slate-500 mt-3">
-        As senhas são usadas somente durante o teste e não são salvas pelo painel.
-    </p>
-
-    <button id="runBtn" onclick="executarDiagnostico()"
-    class="btn w-full rounded-lg p-3 font-bold mt-4">
-        Executar diagnóstico completo
-    </button>
-</section>
-
-<section class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
-    <div class="panel p-4">
-        <p class="text-xs text-slate-400">Testes</p>
-        <p id="total" class="text-2xl font-black">0</p>
-    </div>
-    <div class="panel p-4">
-        <p class="text-xs text-slate-400">Aprovados</p>
-        <p id="approved" class="text-2xl font-black text-green-400">0</p>
-    </div>
-    <div class="panel p-4">
-        <p class="text-xs text-slate-400">Falhas</p>
-        <p id="failed" class="text-2xl font-black text-red-400">0</p>
-    </div>
-    <div class="panel p-4">
-        <p class="text-xs text-slate-400">Avisos</p>
-        <p id="warnings" class="text-2xl font-black text-yellow-400">0</p>
-    </div>
-</section>
-
-<section class="panel p-4 mb-4">
-    <div class="flex justify-between items-center mb-3">
-        <h2 class="font-bold">Resultado das verificações</h2>
-        <span id="progress" class="text-xs text-slate-400">Aguardando</span>
-    </div>
-    <div class="w-full bg-slate-800 rounded-full h-2">
-        <div id="progressBar" class="bg-blue-500 h-2 rounded-full" style="width:0%"></div>
-    </div>
-</section>
-
-<section class="panel p-4 mb-4">
-    <h2 class="font-bold mb-3">Diagnóstico das tabelas</h2>
-    <div id="tableResults" class="space-y-2">
-        <p class="text-slate-500 text-sm">Execute o diagnóstico para começar.</p>
-    </div>
-</section>
-
-<section class="panel p-4 mb-4">
-    <h2 class="font-bold mb-3">Segurança entre contas</h2>
-    <div id="securityResults" class="space-y-2">
-        <p class="text-slate-500 text-sm">Aguardando testes.</p>
-    </div>
-</section>
-
-<section class="panel p-4 mb-4">
-    <h2 class="font-bold mb-3">Log técnico</h2>
-    <div id="logs" class="bg-black/40 rounded-lg p-3 text-xs space-y-2 max-h-72 overflow-auto">
-        <p class="text-slate-500">Nenhuma operação executada.</p>
-    </div>
-</section>
-
-<button onclick="limparResultados()"
-class="w-full border border-slate-600 rounded-lg p-3 text-slate-300">
-    Limpar resultados
-</button>
-
-<p class="text-center text-xs text-slate-600 mt-5">
-    FaceCrato Security Lab • Ferramenta de diagnóstico
-</p>
-
+<div>
+<label class="text-xs text-blue-400">CONTA A</label>
+<input id="emailA" type="email" placeholder="E-mail da Conta A"
+class="field w-full rounded-lg p-3 mt-1 mb-2">
+<input id="passA" type="password" placeholder="Senha da Conta A"
+class="field w-full rounded-lg p-3">
 </div>
 
+<div>
+<label class="text-xs text-purple-400">CONTA B</label>
+<input id="emailB" type="email" placeholder="E-mail da Conta B"
+class="field w-full rounded-lg p-3 mt-1 mb-2">
+<input id="passB" type="password" placeholder="Senha da Conta B"
+class="field w-full rounded-lg p-3">
+</div>
+
+<button id="run" onclick="executar()"
+class="w-full bg-blue-600 rounded-lg p-3 font-bold">
+Executar bateria de testes
+</button>
+</section>
+
+<section class="grid grid-cols-3 gap-2">
+<div class="panel p-3 text-center">
+<p class="text-xs text-slate-400">Testes</p>
+<strong id="total" class="text-2xl">0</strong>
+</div>
+<div class="panel p-3 text-center">
+<p class="text-xs text-slate-400">Aprovados</p>
+<strong id="ok" class="text-2xl text-green-400">0</strong>
+</div>
+<div class="panel p-3 text-center">
+<p class="text-xs text-slate-400">Falhas</p>
+<strong id="fail" class="text-2xl text-red-400">0</strong>
+</div>
+</section>
+
+<section class="panel p-4">
+<h2 class="font-bold mb-3">Resultados</h2>
+<div id="results" class="space-y-3">
+<p class="text-slate-500 text-sm">Aguardando execução.</p>
+</div>
+</section>
+
+<section class="panel p-4">
+<h2 class="font-bold mb-3">Log técnico</h2>
+<div id="logs" class="text-xs space-y-2 max-h-64 overflow-auto">
+<p class="text-slate-500">Nenhuma operação executada.</p>
+</div>
+</section>
+
+</main>
+
 <script>
-const SUPABASE_URL = "https://tnogcviolluveumzrhyy.supabase.co";
-const SUPABASE_KEY = "sb_publishable_cOoVzxE6nEJXfpOXZFhlIg_qDBWo7L1";
+const URL = "https://tnogcviolluveumzrhyy.supabase.co";
+const KEY = "sb_publishable_cOoVzxE6nEJXfpOXZFhlIg_qDBWo7L";
 
 const ID_A = "973c0d73-fab4-4e3d-8b9c-e001c02e0cb2";
 const ID_B = "8fe70252-9056-4db3-a281-ab5beccd1459";
 
-const POST_PRIVADO = "372f4f55-2bf5-4125-8016-62c8d7f68deb";
+const clientA = () => window.supabase.createClient(URL, KEY, {
+    auth:{persistSession:false,autoRefreshToken:false,storageKey:"lab-a"}
+});
 
-const TABELAS = [
-    "profiles",
-    "blocks",
-    "friendships",
-    "posts",
-    "post_media",
-    "comments",
-    "reactions",
-    "saved_posts",
-    "post_shares",
-    "notifications",
-    "reports"
-];
+const clientB = () => window.supabase.createClient(URL, KEY, {
+    auth:{persistSession:false,autoRefreshToken:false,storageKey:"lab-b"}
+});
 
 let resultados = [];
-let executando = false;
 
-function criarCliente(nome) {
-    return window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
-        auth: {
-            persistSession: false,
-            autoRefreshToken: false,
-            detectSessionInUrl: false,
-            storageKey: "facecrato-lab-" + nome
-        }
-    });
-}
-
-function log(mensagem, tipo = "info") {
+function log(msg){
     const area = document.getElementById("logs");
-    if (area.querySelector(".text-slate-500")) area.innerHTML = "";
-
-    const cores = {
-        info: "text-slate-300",
-        ok: "text-green-400",
-        fail: "text-red-400",
-        warn: "text-yellow-400"
-    };
-
-    const linha = document.createElement("p");
-    linha.className = cores[tipo] || cores.info;
-    linha.textContent = "[" + new Date().toLocaleTimeString() + "] " + mensagem;
-    area.prepend(linha);
+    if(area.querySelector(".text-slate-500")) area.innerHTML="";
+    const p=document.createElement("p");
+    p.textContent=new Date().toLocaleTimeString()+" — "+msg;
+    area.prepend(p);
 }
 
-function registrar(grupo, nome, estado, detalhe = "") {
-    resultados.push({ grupo, nome, estado, detalhe });
-    atualizarPainel();
-    log(nome + " — " + detalhe, estado);
+function resultado(nome,estado,detalhe){
+    resultados.push({nome,estado,detalhe});
+    atualizar();
+
+    log(nome+": "+detalhe);
 }
 
-function atualizarPainel() {
-    const total = resultados.length;
-    const aprovados = resultados.filter(x => x.estado === "ok").length;
-    const falhas = resultados.filter(x => x.estado === "fail").length;
-    const avisos = resultados.filter(x => x.estado === "warn").length;
+function atualizar(){
+    document.getElementById("total").textContent=resultados.length;
+    document.getElementById("ok").textContent=
+        resultados.filter(x=>x.estado==="ok").length;
+    document.getElementById("fail").textContent=
+        resultados.filter(x=>x.estado==="fail").length;
 
-    document.getElementById("total").textContent = total;
-    document.getElementById("approved").textContent = aprovados;
-    document.getElementById("failed").textContent = falhas;
-    document.getElementById("warnings").textContent = avisos;
+    const area=document.getElementById("results");
+    area.innerHTML="";
 
-    const tabela = document.getElementById("tableResults");
-    const seguranca = document.getElementById("securityResults");
+    resultados.forEach(r=>{
+        const div=document.createElement("div");
+        div.className="border-b border-slate-700 pb-3";
 
-    tabela.innerHTML = "";
-    seguranca.innerHTML = "";
+        const titulo=document.createElement("p");
+        titulo.className="font-semibold text-sm";
+        titulo.textContent=r.nome;
 
-    resultados.forEach(item => {
-        const alvo = item.grupo === "tabela" ? tabela : seguranca;
+        const detalhe=document.createElement("p");
+        detalhe.className="text-xs text-slate-400 mt-1";
+        detalhe.textContent=r.detalhe;
 
-        const linha = document.createElement("div");
-        linha.className = "flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 py-2";
+        const badge=document.createElement("span");
+        badge.className="text-xs font-bold "+
+            (r.estado==="ok"?"text-green-400":"text-red-400");
+        badge.textContent=r.estado==="ok"?"APROVADO":"FALHA";
 
-        const texto = document.createElement("div");
-        const nome = document.createElement("p");
-        nome.className = "text-sm font-semibold";
-        nome.textContent = item.nome;
-
-        const detalhe = document.createElement("p");
-        detalhe.className = "text-xs text-slate-400";
-        detalhe.textContent = item.detalhe;
-
-        texto.append(nome, detalhe);
-
-        const badge = document.createElement("span");
-        badge.className = "status " + item.estado;
-        badge.textContent = {
-            ok: "APROVADO",
-            fail: "FALHA",
-            warn: "AVISO"
-        }[item.estado];
-
-        linha.append(texto, badge);
-        alvo.appendChild(linha);
+        div.append(titulo,badge,detalhe);
+        area.appendChild(div);
     });
-
-    const percentual = Math.min(100, total / 16 * 100);
-    document.getElementById("progressBar").style.width = percentual + "%";
-    document.getElementById("progress").textContent = total + " verificações";
 }
 
-async function testarTabela(cliente, tabela, filtro) {
-    let consulta = cliente.from(tabela).select("id", {
-        count: "exact",
-        head: true
-    });
-
-    if (filtro) consulta = filtro(consulta);
-
-    const { error, count } = await consulta;
-
-    if (error) {
-        registrar(
-            "tabela",
-            tabela,
-            "fail",
-            error.message
-        );
-    } else {
-        registrar(
-            "tabela",
-            tabela,
-            "ok",
-            "Consulta autorizada. Registros visíveis: " + (count ?? "não informado")
-        );
-    }
+function criarPost(cliente,usuario,conteudo){
+    return cliente.from("posts").insert({
+        user_id:usuario,
+        content:conteudo,
+        post_type:"text",
+        visibility:"private",
+        comments_permission:"nobody"
+    }).select("id").single();
 }
 
-async function executarDiagnostico() {
-    if (executando) return;
+async function executar(){
+    if(document.getElementById("run").disabled)return;
 
-    const emailA = document.getElementById("emailA").value.trim();
-    const passA = document.getElementById("passA").value;
-    const emailB = document.getElementById("emailB").value.trim();
-    const passB = document.getElementById("passB").value;
+    const emailA=document.getElementById("emailA").value.trim();
+    const passA=document.getElementById("passA").value;
+    const emailB=document.getElementById("emailB").value.trim();
+    const passB=document.getElementById("passB").value;
 
-    if (!emailA || !passA || !emailB || !passB) {
-        alert("Preencha e-mail e senha das duas contas.");
+    if(!emailA||!passA||!emailB||!passB){
+        alert("Preencha os dados das duas contas.");
         return;
     }
 
-    executando = true;
-    resultados = [];
-    atualizarPainel();
+    const btn=document.getElementById("run");
+    btn.disabled=true;
+    btn.textContent="Executando testes...";
 
-    const btn = document.getElementById("runBtn");
-    btn.disabled = true;
-    btn.textContent = "Executando diagnóstico...";
+    resultados=[];
+    atualizar();
 
-    let clienteA;
-    let clienteB;
-    let clienteAnon;
+    let a,b;
+    let postA=null;
+    let postB=null;
+    let postFalsificado=null;
 
-    try {
-        clienteA = criarCliente("conta-a");
-        clienteB = criarCliente("conta-b");
-        clienteAnon = criarCliente("anonimo");
+    try{
+        a=clientA();
+        b=clientB();
 
-        log("Iniciando diagnóstico.");
+        // LOGIN A
+        const loginA=await a.auth.signInWithPassword({
+            email:emailA,password:passA
+        });
 
-        // AUTENTICAÇÃO A
-        const { data: authA, error: errorA } =
-            await clienteA.auth.signInWithPassword({
-                email: emailA,
-                password: passA
-            });
+        if(loginA.error)throw new Error("Login A: "+loginA.error.message);
+        if(loginA.data.user.id!==ID_A)throw new Error("Conta A incorreta.");
 
-        if (errorA) throw new Error("Login A: " + errorA.message);
+        resultado("Autenticação da Conta A","ok","Identidade confirmada.");
 
-        if (authA.user.id !== ID_A) {
-            throw new Error("A primeira conta não corresponde à Conta A.");
+        // LOGIN B
+        const loginB=await b.auth.signInWithPassword({
+            email:emailB,password:passB
+        });
+
+        if(loginB.error)throw new Error("Login B: "+loginB.error.message);
+        if(loginB.data.user.id!==ID_B)throw new Error("Conta B incorreta.");
+
+        resultado("Autenticação da Conta B","ok","Identidade confirmada.");
+
+        // A CRIA PUBLICAÇÃO
+        const criarA=await criarPost(a,ID_A,"TESTE TEMPORÁRIO SECURITY LAB A");
+
+        if(criarA.error)throw new Error("INSERT Conta A: "+criarA.error.message);
+
+        postA=criarA.data.id;
+        resultado("INSERT — Conta A","ok","Publicação temporária criada.");
+
+        // A ALTERA SUA PRÓPRIA PUBLICAÇÃO
+        const updateA=await a.from("posts")
+            .update({content:"TESTE A — CONTEÚDO ALTERADO"})
+            .eq("id",postA)
+            .select("id");
+
+        if(updateA.error){
+            resultado("UPDATE próprio — Conta A","fail",updateA.error.message);
+        }else if(updateA.data.length===1){
+            resultado("UPDATE próprio — Conta A","ok","Autor conseguiu editar.");
+        }else{
+            resultado("UPDATE próprio — Conta A","fail","Nenhuma linha alterada.");
         }
 
-        registrar("seguranca", "Autenticação Conta A", "ok", "UUID confirmado.");
+        // B TENTA FALSIFICAR A IDENTIDADE NO INSERT
+        const falsificado=await criarPost(
+            b,ID_A,"TESTE DE FALSIFICAÇÃO DE IDENTIDADE"
+        );
 
-        // AUTENTICAÇÃO B
-        const { data: authB, error: errorB } =
-            await clienteB.auth.signInWithPassword({
-                email: emailB,
-                password: passB
-            });
-
-        if (errorB) throw new Error("Login B: " + errorB.message);
-
-        if (authB.user.id !== ID_B) {
-            throw new Error("A segunda conta não corresponde à Conta B.");
+        if(falsificado.error){
+            const msg=falsificado.error.message;
+            if(msg.toLowerCase().includes("row-level security")){
+                resultado("INSERT com identidade falsa — Conta B","ok",
+                    "RLS rejeitou a tentativa.");
+            }else{
+                resultado("INSERT com identidade falsa — Conta B","fail",
+                    "Operação recusada, mas não foi possível confirmar que foi pelo RLS: "+msg);
+            }
+        }else{
+            postFalsificado=falsificado.data.id;
+            resultado("INSERT com identidade falsa — Conta B","fail",
+                "Conta B conseguiu criar registro em nome da Conta A!");
         }
 
-        registrar("seguranca", "Autenticação Conta B", "ok", "UUID confirmado.");
+        // B TENTA ALTERAR POST DE A
+        const updateB=await b.from("posts")
+            .update({content:"ALTERAÇÃO NÃO AUTORIZADA"})
+            .eq("id",postA)
+            .select("id");
 
-        // TABELAS — CONTA A
-        log("Verificando acesso às tabelas pela Conta A.");
-
-        for (const tabela of TABELAS) {
-            let filtro = null;
-
-            if (tabela === "profiles") {
-                filtro = q => q.eq("id", ID_A);
-            }
-
-            if (tabela === "blocks") {
-                filtro = q => q.eq("blocker_id", ID_A);
-            }
-
-            if (tabela === "friendships") {
-                filtro = q => q.or("user_a.eq." + ID_A + ",user_b.eq." + ID_A);
-            }
-
-            if (tabela === "posts") {
-                filtro = q => q.eq("user_id", ID_A);
-            }
-
-            if (tabela === "comments") {
-                filtro = q => q.eq("user_id", ID_A);
-            }
-
-            if (tabela === "reactions") {
-                filtro = q => q.eq("user_id", ID_A);
-            }
-
-            if (tabela === "saved_posts") {
-                filtro = q => q.eq("user_id", ID_A);
-            }
-
-            if (tabela === "post_shares") {
-                filtro = q => q.eq("user_id", ID_A);
-            }
-
-            if (tabela === "notifications") {
-                filtro = q => q.eq("recipient_id", ID_A);
-            }
-
-            if (tabela === "reports") {
-                filtro = q => q.eq("reporter_id", ID_A);
-            }
-
-            await testarTabela(clienteA, tabela, filtro);
+        if(updateB.error){
+            resultado("UPDATE cruzado — Conta B","fail",updateB.error.message);
+        }else if(updateB.data.length===0){
+            resultado("UPDATE cruzado — Conta B","ok",
+                "Conta B não alterou a publicação de A.");
+        }else{
+            resultado("UPDATE cruzado — Conta B","fail",
+                "Conta B conseguiu alterar a publicação de A!");
         }
 
-        // TABELAS — CONTA B
-        log("Verificando acesso às tabelas pela Conta B.");
+        // B TENTA EXCLUIR POST DE A
+        const deleteB=await b.from("posts")
+            .delete()
+            .eq("id",postA)
+            .select("id");
 
-        for (const tabela of TABELAS) {
-            let filtro = null;
-
-            if (tabela === "profiles") {
-                filtro = q => q.eq("id", ID_B);
-            }
-
-            if (tabela === "blocks") {
-                filtro = q => q.eq("blocker_id", ID_B);
-            }
-
-            if (tabela === "friendships") {
-                filtro = q => q.or("user_a.eq." + ID_B + ",user_b.eq." + ID_B);
-            }
-
-            if (tabela === "posts") {
-                filtro = q => q.eq("user_id", ID_B);
-            }
-
-            if (tabela === "comments") {
-                filtro = q => q.eq("user_id", ID_B);
-            }
-
-            if (tabela === "reactions") {
-                filtro = q => q.eq("user_id", ID_B);
-            }
-
-            if (tabela === "saved_posts") {
-                filtro = q => q.eq("user_id", ID_B);
-            }
-
-            if (tabela === "post_shares") {
-                filtro = q => q.eq("user_id", ID_B);
-            }
-
-            if (tabela === "notifications") {
-                filtro = q => q.eq("recipient_id", ID_B);
-            }
-
-            if (tabela === "reports") {
-                filtro = q => q.eq("reporter_id", ID_B);
-            }
-
-            await testarTabela(clienteB, tabela, filtro);
+        if(deleteB.error){
+            resultado("DELETE cruzado — Conta B","fail",deleteB.error.message);
+        }else if(deleteB.data.length===0){
+            resultado("DELETE cruzado — Conta B","ok",
+                "Conta B não excluiu a publicação de A.");
+        }else{
+            resultado("DELETE cruzado — Conta B","fail",
+                "Conta B conseguiu excluir a publicação de A!");
+            postA=null;
         }
 
-        // TESTE DA PUBLICAÇÃO PRIVADA
-        log("Testando isolamento da publicação privada.");
+        // B CRIA PUBLICAÇÃO PRÓPRIA
+        const criarB=await criarPost(b,ID_B,"TESTE TEMPORÁRIO SECURITY LAB B");
 
-        const { data: postA, error: postAError } = await clienteA
-            .from("posts")
-            .select("id,visibility")
-            .eq("id", POST_PRIVADO);
+        if(criarB.error){
+            resultado("INSERT próprio — Conta B","fail",criarB.error.message);
+        }else{
+            postB=criarB.data.id;
+            resultado("INSERT próprio — Conta B","ok","Publicação própria criada.");
 
-        if (postAError) {
-            registrar("seguranca", "Conta A — publicação privada", "fail", postAError.message);
-        } else if (postA.length === 1 && postA[0].visibility === "private") {
-            registrar("seguranca", "Conta A — publicação privada", "ok", "Autora consegue visualizar.");
-        } else {
-            registrar("seguranca", "Conta A — publicação privada", "warn", "Publicação não retornada ou não está privada.");
+            // B ALTERA SUA PUBLICAÇÃO
+            const updateProprio=await b.from("posts")
+                .update({content:"TESTE B — CONTEÚDO ALTERADO"})
+                .eq("id",postB)
+                .select("id");
+
+            if(updateProprio.error){
+                resultado("UPDATE próprio — Conta B","fail",updateProprio.error.message);
+            }else if(updateProprio.data.length===1){
+                resultado("UPDATE próprio — Conta B","ok","Autor conseguiu editar.");
+            }else{
+                resultado("UPDATE próprio — Conta B","fail","Nenhuma linha alterada.");
+            }
+
+            // B EXCLUI SUA PUBLICAÇÃO
+            const deleteProprio=await b.from("posts")
+                .delete()
+                .eq("id",postB)
+                .select("id");
+
+            if(deleteProprio.error){
+                resultado("DELETE próprio — Conta B","fail",deleteProprio.error.message);
+            }else if(deleteProprio.data.length===1){
+                resultado("DELETE próprio — Conta B","ok","Autor conseguiu excluir.");
+                postB=null;
+            }else{
+                resultado("DELETE próprio — Conta B","fail","Nenhuma linha excluída.");
+            }
         }
 
-        const { data: postB, error: postBError } = await clienteB
-            .from("posts")
-            .select("id")
-            .eq("id", POST_PRIVADO);
+    }catch(e){
+        resultado("Execução interrompida","fail",e.message);
+        log("ERRO: "+e.message);
 
-        if (postBError) {
-            registrar("seguranca", "Conta B — publicação privada", "fail", postBError.message);
-        } else if (postB.length === 0) {
-            registrar("seguranca", "Conta B — publicação privada", "ok", "Publicação não visível.");
-        } else {
-            registrar("seguranca", "Conta B — publicação privada", "fail", "Conta B conseguiu visualizar a publicação!");
+    }finally{
+        // LIMPEZA DOS REGISTROS TEMPORÁRIOS
+        if(a){
+            for(const id of [postA,postFalsificado]){
+                if(!id)continue;
+                const cleanup=await a.from("posts").delete().eq("id",id);
+                log(cleanup.error
+                    ?"Falha na limpeza do registro "+id+": "+cleanup.error.message
+                    :"Registro temporário removido: "+id);
+            }
+            await a.auth.signOut();
         }
 
-        // TESTE ANÔNIMO
-        log("Testando acesso sem autenticação.");
-
-        const { data: anonPost, error: anonError } = await clienteAnon
-            .from("posts")
-            .select("id")
-            .eq("id", POST_PRIVADO);
-
-        if (anonError) {
-            registrar("seguranca", "Anônimo — publicação privada", "fail", anonError.message);
-        } else if (anonPost.length === 0) {
-            registrar("seguranca", "Anônimo — publicação privada", "ok", "Visitante não consegue visualizar.");
-        } else {
-            registrar("seguranca", "Anônimo — publicação privada", "fail", "Visitante conseguiu visualizar!");
+        if(b){
+            if(postB){
+                const cleanup=await b.from("posts").delete().eq("id",postB);
+                log(cleanup.error
+                    ?"Falha na limpeza do registro B: "+cleanup.error.message
+                    :"Registro temporário B removido.");
+            }
+            await b.auth.signOut();
         }
 
-        // TESTE DO PERFIL PÚBLICO
-        const { data: perfilPublico, error: perfilError } = await clienteAnon
-            .from("profiles")
-            .select("id")
-            .eq("id", ID_A);
-
-        if (perfilError) {
-            registrar("seguranca", "Anônimo — perfil público", "fail", perfilError.message);
-        } else if (perfilPublico.length > 0) {
-            registrar("seguranca", "Anônimo — perfil público", "ok", "Perfil da Conta A acessível.");
-        } else {
-            registrar("seguranca", "Anônimo — perfil público", "warn", "Perfil não retornado. Verifique is_private e a policy pública.");
-        }
-
-        log("Diagnóstico concluído.", "ok");
-
-    } catch (error) {
-        registrar("seguranca", "Execução do diagnóstico", "fail", error.message);
-        log(error.message, "fail");
-
-    } finally {
-        if (clienteA) await clienteA.auth.signOut();
-        if (clienteB) await clienteB.auth.signOut();
-
-        executando = false;
-        btn.disabled = false;
-        btn.textContent = "Executar diagnóstico novamente";
-
-        document.getElementById("progress").textContent = "Diagnóstico finalizado";
+        btn.disabled=false;
+        btn.textContent="Executar novamente";
     }
 }
-
-function limparResultados() {
-    resultados = [];
-    atualizarPainel();
-    document.getElementById("logs").innerHTML =
-        '<p class="text-slate-500">Nenhuma operação executada.</p>';
-    document.getElementById("progress").textContent = "Aguardando";
-    document.getElementById("progressBar").style.width = "0%";
-}
 </script>
-
 </body>
 </html>
