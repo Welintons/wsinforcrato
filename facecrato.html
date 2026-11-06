@@ -79,273 +79,295 @@ Executar bateria de testes
 </main>
 
 <script>
-const URL = "https://tnogcviolluveumzrhyy.supabase.co";
-const KEY = "sb_publishable_cOoVzxE6nEJXfpOXZFhlIg_qDBWo7L";
+const SUPABASE_URL = "https://tnogcviolluveumzrhyy.supabase.co";
+const SUPABASE_KEY = "sb_publishable_cOoVzxE6nEJXfpOXZFhlIg_qDBWo7L";
 
 const ID_A = "973c0d73-fab4-4e3d-8b9c-e001c02e0cb2";
 const ID_B = "8fe70252-9056-4db3-a281-ab5beccd1459";
 
-const clientA = () => window.supabase.createClient(URL, KEY, {
-    auth:{persistSession:false,autoRefreshToken:false,storageKey:"lab-a"}
-});
-
-const clientB = () => window.supabase.createClient(URL, KEY, {
-    auth:{persistSession:false,autoRefreshToken:false,storageKey:"lab-b"}
-});
+function criarCliente(nome) {
+    return window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY,
+        {
+            auth: {
+                persistSession: false,
+                autoRefreshToken: false,
+                detectSessionInUrl: false,
+                storageKey: "facecrato-test-" + nome
+            }
+        }
+    );
+}
 
 let resultados = [];
 
-function log(msg){
+function log(msg) {
     const area = document.getElementById("logs");
-    if(area.querySelector(".text-slate-500")) area.innerHTML="";
-    const p=document.createElement("p");
-    p.textContent=new Date().toLocaleTimeString()+" — "+msg;
+    if (area.querySelector(".text-slate-500")) area.innerHTML = "";
+
+    const p = document.createElement("p");
+    p.textContent = new Date().toLocaleTimeString() + " — " + msg;
     area.prepend(p);
 }
 
-function resultado(nome,estado,detalhe){
-    resultados.push({nome,estado,detalhe});
+function resultado(nome, estado, detalhe) {
+    resultados.push({ nome, estado, detalhe });
     atualizar();
-
-    log(nome+": "+detalhe);
+    log(nome + ": " + detalhe);
 }
 
-function atualizar(){
-    document.getElementById("total").textContent=resultados.length;
-    document.getElementById("ok").textContent=
-        resultados.filter(x=>x.estado==="ok").length;
-    document.getElementById("fail").textContent=
-        resultados.filter(x=>x.estado==="fail").length;
+function atualizar() {
+    document.getElementById("total").textContent = resultados.length;
+    document.getElementById("ok").textContent =
+        resultados.filter(x => x.estado === "ok").length;
+    document.getElementById("fail").textContent =
+        resultados.filter(x => x.estado === "fail").length;
 
-    const area=document.getElementById("results");
-    area.innerHTML="";
+    const area = document.getElementById("results");
+    area.innerHTML = "";
 
-    resultados.forEach(r=>{
-        const div=document.createElement("div");
-        div.className="border-b border-slate-700 pb-3";
+    resultados.forEach(r => {
+        const div = document.createElement("div");
+        div.className = "border-b border-slate-700 pb-3";
 
-        const titulo=document.createElement("p");
-        titulo.className="font-semibold text-sm";
-        titulo.textContent=r.nome;
+        const titulo = document.createElement("p");
+        titulo.className = "font-semibold text-sm";
+        titulo.textContent = r.nome;
 
-        const detalhe=document.createElement("p");
-        detalhe.className="text-xs text-slate-400 mt-1";
-        detalhe.textContent=r.detalhe;
+        const badge = document.createElement("span");
+        badge.className = "text-xs font-bold " +
+            (r.estado === "ok" ? "text-green-400" : "text-red-400");
+        badge.textContent = r.estado === "ok" ? "APROVADO" : "FALHA";
 
-        const badge=document.createElement("span");
-        badge.className="text-xs font-bold "+
-            (r.estado==="ok"?"text-green-400":"text-red-400");
-        badge.textContent=r.estado==="ok"?"APROVADO":"FALHA";
+        const detalhe = document.createElement("p");
+        detalhe.className = "text-xs text-slate-400 mt-1";
+        detalhe.textContent = r.detalhe;
 
-        div.append(titulo,badge,detalhe);
+        div.append(titulo, badge, detalhe);
         area.appendChild(div);
     });
 }
 
-function criarPost(cliente,usuario,conteudo){
-    return cliente.from("posts").insert({
-        user_id:usuario,
-        content:conteudo,
-        post_type:"text",
-        visibility:"private",
-        comments_permission:"nobody"
+async function criarPost(cliente, usuario, conteudo) {
+    return await cliente.from("posts").insert({
+        user_id: usuario,
+        content: conteudo,
+        post_type: "text",
+        visibility: "private",
+        comments_permission: "nobody"
     }).select("id").single();
 }
 
-async function executar(){
-    if(document.getElementById("run").disabled)return;
+async function executar() {
+    const btn = document.getElementById("run");
 
-    const emailA=document.getElementById("emailA").value.trim();
-    const passA=document.getElementById("passA").value;
-    const emailB=document.getElementById("emailB").value.trim();
-    const passB=document.getElementById("passB").value;
+    if (btn.disabled) return;
 
-    if(!emailA||!passA||!emailB||!passB){
+    const emailA = document.getElementById("emailA").value.trim();
+    const passA = document.getElementById("passA").value;
+    const emailB = document.getElementById("emailB").value.trim();
+    const passB = document.getElementById("passB").value;
+
+    if (!emailA || !passA || !emailB || !passB) {
         alert("Preencha os dados das duas contas.");
         return;
     }
 
-    const btn=document.getElementById("run");
-    btn.disabled=true;
-    btn.textContent="Executando testes...";
+    btn.disabled = true;
+    btn.textContent = "Executando testes...";
 
-    resultados=[];
+    resultados = [];
     atualizar();
 
-    let a,b;
-    let postA=null;
-    let postB=null;
-    let postFalsificado=null;
+    let a, b;
+    let postA = null;
+    let postB = null;
+    let postFalsificado = null;
 
-    try{
-        a=clientA();
-        b=clientB();
-
-        // LOGIN A
-        const loginA=await a.auth.signInWithPassword({
-            email:emailA,password:passA
-        });
-
-        if(loginA.error)throw new Error("Login A: "+loginA.error.message);
-        if(loginA.data.user.id!==ID_A)throw new Error("Conta A incorreta.");
-
-        resultado("Autenticação da Conta A","ok","Identidade confirmada.");
-
-        // LOGIN B
-        const loginB=await b.auth.signInWithPassword({
-            email:emailB,password:passB
-        });
-
-        if(loginB.error)throw new Error("Login B: "+loginB.error.message);
-        if(loginB.data.user.id!==ID_B)throw new Error("Conta B incorreta.");
-
-        resultado("Autenticação da Conta B","ok","Identidade confirmada.");
-
-        // A CRIA PUBLICAÇÃO
-        const criarA=await criarPost(a,ID_A,"TESTE TEMPORÁRIO SECURITY LAB A");
-
-        if(criarA.error)throw new Error("INSERT Conta A: "+criarA.error.message);
-
-        postA=criarA.data.id;
-        resultado("INSERT — Conta A","ok","Publicação temporária criada.");
-
-        // A ALTERA SUA PRÓPRIA PUBLICAÇÃO
-        const updateA=await a.from("posts")
-            .update({content:"TESTE A — CONTEÚDO ALTERADO"})
-            .eq("id",postA)
-            .select("id");
-
-        if(updateA.error){
-            resultado("UPDATE próprio — Conta A","fail",updateA.error.message);
-        }else if(updateA.data.length===1){
-            resultado("UPDATE próprio — Conta A","ok","Autor conseguiu editar.");
-        }else{
-            resultado("UPDATE próprio — Conta A","fail","Nenhuma linha alterada.");
+    try {
+        if (!window.supabase) {
+            throw new Error("Biblioteca Supabase não carregou. Verifique a internet.");
         }
 
-        // B TENTA FALSIFICAR A IDENTIDADE NO INSERT
-        const falsificado=await criarPost(
-            b,ID_A,"TESTE DE FALSIFICAÇÃO DE IDENTIDADE"
+        a = criarCliente("conta-a");
+        b = criarCliente("conta-b");
+
+        // AUTENTICAÇÃO A
+        const loginA = await a.auth.signInWithPassword({
+            email: emailA,
+            password: passA
+        });
+
+        if (loginA.error) throw new Error("Login A: " + loginA.error.message);
+        if (loginA.data.user.id !== ID_A) {
+            throw new Error("Conta A incorreta.");
+        }
+
+        resultado("Autenticação Conta A", "ok", "UUID confirmado.");
+
+        // AUTENTICAÇÃO B
+        const loginB = await b.auth.signInWithPassword({
+            email: emailB,
+            password: passB
+        });
+
+        if (loginB.error) throw new Error("Login B: " + loginB.error.message);
+        if (loginB.data.user.id !== ID_B) {
+            throw new Error("Conta B incorreta.");
+        }
+
+        resultado("Autenticação Conta B", "ok", "UUID confirmado.");
+
+        // INSERT A
+        const criarA = await criarPost(a, ID_A, "TESTE TEMPORÁRIO SECURITY LAB A");
+
+        if (criarA.error) throw new Error("INSERT A: " + criarA.error.message);
+
+        postA = criarA.data.id;
+        resultado("INSERT próprio — Conta A", "ok", "Publicação temporária criada.");
+
+        // UPDATE A
+        const updateA = await a.from("posts")
+            .update({ content: "TESTE A — CONTEÚDO ALTERADO" })
+            .eq("id", postA)
+            .select("id");
+
+        if (updateA.error) {
+            resultado("UPDATE próprio — Conta A", "fail", updateA.error.message);
+        } else if (updateA.data.length === 1) {
+            resultado("UPDATE próprio — Conta A", "ok", "Autor conseguiu editar.");
+        } else {
+            resultado("UPDATE próprio — Conta A", "fail", "Nenhuma linha alterada.");
+        }
+
+        // INSERT FALSIFICADO
+        const falsificado = await criarPost(
+            b, ID_A, "TESTE DE FALSIFICAÇÃO DE IDENTIDADE"
         );
 
-        if(falsificado.error){
-            const msg=falsificado.error.message;
-            if(msg.toLowerCase().includes("row-level security")){
-                resultado("INSERT com identidade falsa — Conta B","ok",
+        if (falsificado.error) {
+            const msg = falsificado.error.message;
+            if (msg.toLowerCase().includes("row-level security")) {
+                resultado("INSERT com identidade falsa — Conta B", "ok",
                     "RLS rejeitou a tentativa.");
-            }else{
-                resultado("INSERT com identidade falsa — Conta B","fail",
-                    "Operação recusada, mas não foi possível confirmar que foi pelo RLS: "+msg);
+            } else {
+                resultado("INSERT com identidade falsa — Conta B", "fail",
+                    "Recusado, mas não confirmado como bloqueio RLS: " + msg);
             }
-        }else{
-            postFalsificado=falsificado.data.id;
-            resultado("INSERT com identidade falsa — Conta B","fail",
-                "Conta B conseguiu criar registro em nome da Conta A!");
+        } else {
+            postFalsificado = falsificado.data.id;
+            resultado("INSERT com identidade falsa — Conta B", "fail",
+                "Conta B criou registro em nome da Conta A!");
         }
 
-        // B TENTA ALTERAR POST DE A
-        const updateB=await b.from("posts")
-            .update({content:"ALTERAÇÃO NÃO AUTORIZADA"})
-            .eq("id",postA)
+        // UPDATE CRUZADO
+        const updateB = await b.from("posts")
+            .update({ content: "ALTERAÇÃO NÃO AUTORIZADA" })
+            .eq("id", postA)
             .select("id");
 
-        if(updateB.error){
-            resultado("UPDATE cruzado — Conta B","fail",updateB.error.message);
-        }else if(updateB.data.length===0){
-            resultado("UPDATE cruzado — Conta B","ok",
+        if (updateB.error) {
+            resultado("UPDATE cruzado — Conta B", "fail", updateB.error.message);
+        } else if (updateB.data.length === 0) {
+            resultado("UPDATE cruzado — Conta B", "ok",
                 "Conta B não alterou a publicação de A.");
-        }else{
-            resultado("UPDATE cruzado — Conta B","fail",
+        } else {
+            resultado("UPDATE cruzado — Conta B", "fail",
                 "Conta B conseguiu alterar a publicação de A!");
         }
 
-        // B TENTA EXCLUIR POST DE A
-        const deleteB=await b.from("posts")
+        // DELETE CRUZADO
+        const deleteB = await b.from("posts")
             .delete()
-            .eq("id",postA)
+            .eq("id", postA)
             .select("id");
 
-        if(deleteB.error){
-            resultado("DELETE cruzado — Conta B","fail",deleteB.error.message);
-        }else if(deleteB.data.length===0){
-            resultado("DELETE cruzado — Conta B","ok",
+        if (deleteB.error) {
+            resultado("DELETE cruzado — Conta B", "fail", deleteB.error.message);
+        } else if (deleteB.data.length === 0) {
+            resultado("DELETE cruzado — Conta B", "ok",
                 "Conta B não excluiu a publicação de A.");
-        }else{
-            resultado("DELETE cruzado — Conta B","fail",
+        } else {
+            resultado("DELETE cruzado — Conta B", "fail",
                 "Conta B conseguiu excluir a publicação de A!");
-            postA=null;
+            postA = null;
         }
 
-        // B CRIA PUBLICAÇÃO PRÓPRIA
-        const criarB=await criarPost(b,ID_B,"TESTE TEMPORÁRIO SECURITY LAB B");
+        // INSERT B
+        const criarB = await criarPost(b, ID_B, "TESTE TEMPORÁRIO SECURITY LAB B");
 
-        if(criarB.error){
-            resultado("INSERT próprio — Conta B","fail",criarB.error.message);
-        }else{
-            postB=criarB.data.id;
-            resultado("INSERT próprio — Conta B","ok","Publicação própria criada.");
+        if (criarB.error) {
+            resultado("INSERT próprio — Conta B", "fail", criarB.error.message);
+        } else {
+            postB = criarB.data.id;
+            resultado("INSERT próprio — Conta B", "ok", "Publicação própria criada.");
 
-            // B ALTERA SUA PUBLICAÇÃO
-            const updateProprio=await b.from("posts")
-                .update({content:"TESTE B — CONTEÚDO ALTERADO"})
-                .eq("id",postB)
+            // UPDATE B
+            const updateProprio = await b.from("posts")
+                .update({ content: "TESTE B — CONTEÚDO ALTERADO" })
+                .eq("id", postB)
                 .select("id");
 
-            if(updateProprio.error){
-                resultado("UPDATE próprio — Conta B","fail",updateProprio.error.message);
-            }else if(updateProprio.data.length===1){
-                resultado("UPDATE próprio — Conta B","ok","Autor conseguiu editar.");
-            }else{
-                resultado("UPDATE próprio — Conta B","fail","Nenhuma linha alterada.");
+            if (updateProprio.error) {
+                resultado("UPDATE próprio — Conta B", "fail", updateProprio.error.message);
+            } else if (updateProprio.data.length === 1) {
+                resultado("UPDATE próprio — Conta B", "ok", "Autor conseguiu editar.");
+            } else {
+                resultado("UPDATE próprio — Conta B", "fail", "Nenhuma linha alterada.");
             }
 
-            // B EXCLUI SUA PUBLICAÇÃO
-            const deleteProprio=await b.from("posts")
+            // DELETE B
+            const deleteProprio = await b.from("posts")
                 .delete()
-                .eq("id",postB)
+                .eq("id", postB)
                 .select("id");
 
-            if(deleteProprio.error){
-                resultado("DELETE próprio — Conta B","fail",deleteProprio.error.message);
-            }else if(deleteProprio.data.length===1){
-                resultado("DELETE próprio — Conta B","ok","Autor conseguiu excluir.");
-                postB=null;
-            }else{
-                resultado("DELETE próprio — Conta B","fail","Nenhuma linha excluída.");
+            if (deleteProprio.error) {
+                resultado("DELETE próprio — Conta B", "fail", deleteProprio.error.message);
+            } else if (deleteProprio.data.length === 1) {
+                resultado("DELETE próprio — Conta B", "ok", "Autor conseguiu excluir.");
+                postB = null;
+            } else {
+                resultado("DELETE próprio — Conta B", "fail", "Nenhuma linha excluída.");
             }
         }
 
-    }catch(e){
-        resultado("Execução interrompida","fail",e.message);
-        log("ERRO: "+e.message);
+    } catch (e) {
+        resultado("Execução interrompida", "fail", e.message);
 
-    }finally{
-        // LIMPEZA DOS REGISTROS TEMPORÁRIOS
-        if(a){
-            for(const id of [postA,postFalsificado]){
-                if(!id)continue;
-                const cleanup=await a.from("posts").delete().eq("id",id);
+    } finally {
+        // LIMPEZA
+        if (a) {
+            for (const id of [postA, postFalsificado]) {
+                if (!id) continue;
+
+                const cleanup = await a.from("posts").delete().eq("id", id);
+
                 log(cleanup.error
-                    ?"Falha na limpeza do registro "+id+": "+cleanup.error.message
-                    :"Registro temporário removido: "+id);
+                    ? "Falha na limpeza " + id + ": " + cleanup.error.message
+                    : "Registro temporário removido: " + id);
             }
+
             await a.auth.signOut();
         }
 
-        if(b){
-            if(postB){
-                const cleanup=await b.from("posts").delete().eq("id",postB);
+        if (b) {
+            if (postB) {
+                const cleanup = await b.from("posts").delete().eq("id", postB);
                 log(cleanup.error
-                    ?"Falha na limpeza do registro B: "+cleanup.error.message
-                    :"Registro temporário B removido.");
+                    ? "Falha na limpeza B: " + cleanup.error.message
+                    : "Registro temporário B removido.");
             }
+
             await b.auth.signOut();
         }
 
-        btn.disabled=false;
-        btn.textContent="Executar novamente";
+        btn.disabled = false;
+        btn.textContent = "Executar novamente";
     }
 }
 </script>
+
 </body>
 </html>
