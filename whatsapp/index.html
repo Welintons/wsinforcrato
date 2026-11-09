@@ -1,196 +1,203 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" class="h-full">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chat Moderno</title>
-    <!-- Tailwind CSS CDN -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Chat App - Tela de Conversa</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Supabase JS SDK -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <!-- FontAwesome para Ícones -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
-                        darkBg: '#0f172a',
-                        sidebarBg: '#1e293b',
-                        chatBg: '#0b0f19',
-                        accentGreen: '#10b981'
+                        appBg: '#0b141a',
+                        surface: '#111b21',
+                        surfaceLight: '#202c33',
+                        accent: '#00a884',
+                        mutedText: '#8696a0',
+                        msgOut: '#005c4b',
+                        msgIn: '#202c33'
                     }
                 }
             }
         }
     </script>
 </head>
-<body class="bg-darkBg text-gray-100 h-screen flex overflow-hidden">
+<body class="bg-appBg text-gray-100 h-full flex flex-col select-none overflow-hidden font-sans">
 
-    <!-- SIDEBAR: Lista de Contatos / Conversas -->
-    <div class="w-full md:w-80 bg-sidebarBg border-r border-slate-700 flex flex-col">
-        <!-- Header da Sidebar -->
-        <div class="p-4 bg-slate-800 flex items-center justify-between border-b border-slate-700">
-            <div class="flex items-center space-x-3">
-                <div class="w-10 h-10 rounded-full bg-accentGreen flex items-center justify-center font-bold text-slate-900" id="user-avatar">W</div>
-                <div>
-                    <h2 class="font-semibold text-sm" id="current-username">Carregando...</h2>
-                    <span class="text-xs text-emerald-400 flex items-center"><i class="fa-solid fa-circle text-[8px] mr-1"></i> Online</span>
+    <!-- HEADER DO CHAT -->
+    <header class="bg-surface px-4 py-3 flex items-center justify-between border-b border-gray-800 shrink-0 z-10">
+        <div class="flex items-center space-x-3">
+            <button onclick="voltarParaConversas()" class="text-mutedText hover:text-white mr-1">
+                <i class="fa-solid fa-arrow-left text-lg"></i>
+            </button>
+            <div class="w-10 h-10 rounded-full bg-slate-700 flex items-center justify-center font-bold text-white text-sm">
+                CG
+            </div>
+            <div>
+                <h2 class="font-semibold text-sm text-gray-100">Comunidade Geral</h2>
+                <span class="text-[10px] text-accent flex items-center"><i class="fa-solid fa-circle text-[6px] mr-1"></i> online</span>
+            </div>
+        </div>
+        <div class="flex items-center space-x-5 text-mutedText text-lg">
+            <button class="hover:text-accent transition"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+        </div>
+    </header>
+
+    <!-- ÁREA DE MENSAGENS -->
+    <main id="messages-container" class="flex-1 p-4 overflow-y-auto space-y-3 flex flex-col bg-[#080c10]">
+        <!-- Exemplo de mensagem enviada por mim (com ID e timestamp simulado) -->
+        <div class="flex flex-col max-w-[80%] ml-auto items-end group" 
+             ontouchstart="iniciarToqueLongo(event, 'msg-1', 'Olá, tudo bem com o sistema?', true, '2026-11-08T22:30:00Z')"
+             onmousedown="iniciarToqueLongo(event, 'msg-1', 'Olá, tudo bem com o sistema?', true, '2026-11-08T22:30:00Z')"
+             ontouchend="cancelarToqueLongo()" onmouseup="cancelarToqueLongo()">
+            <div class="bg-msgOut text-white px-3 py-2 rounded-lg rounded-br-none text-sm shadow relative cursor-pointer">
+                <span>Olá, tudo bem com o sistema?</span>
+                <div class="flex items-center justify-end space-x-1 mt-1">
+                    <span class="text-[9px] text-emerald-200/70">22:30</span>
+                    <i class="fa-solid fa-check-double text-[10px] text-accent"></i>
                 </div>
             </div>
-            <button onclick="mudarUsuario()" class="text-slate-400 hover:text-white text-xs bg-slate-700 px-2 py-1 rounded">Trocar Nome</button>
         </div>
 
-        <!-- Barra de Busca -->
-        <div class="p-3">
-            <div class="bg-slate-900 rounded-lg flex items-center px-3 py-2 text-sm text-slate-400">
-                <i class="fa-solid fa-search mr-2"></i>
-                <input type="text" placeholder="Pesquisar ou começar nova conversa" class="bg-transparent border-none outline-none w-text-white text-xs w-full text-white">
-            </div>
-        </div>
-
-        <!-- Lista de Chats -->
-        <div class="flex-1 overflow-y-auto divide-y divide-slate-800/50">
-            <div onclick="abrirChat('Geral')" class="p-3 hover:bg-slate-800/60 cursor-pointer flex items-center space-x-3 transition">
-                <div class="w-12 h-12 rounded-full bg-indigo-600 flex items-center justify-center text-lg font-bold"><i class="fa-solid fa-comments"></i></div>
-                <div class="flex-1">
-                    <div class="flex justify-between items-center">
-                        <h3 class="font-medium text-sm">Chat Geral</h3>
-                        <span class="text-[10px] text-slate-500">Agora</span>
-                    </div>
-                    <p class="text-xs text-slate-400 truncate">Clique para entrar na sala pública...</p>
+        <!-- Exemplo de mensagem recebida -->
+        <div class="flex flex-col max-w-[80%] mr-auto items-start">
+            <div class="bg-msgIn text-gray-100 px-3 py-2 rounded-lg rounded-bl-none text-sm shadow">
+                <span class="block text-[10px] font-bold text-accent mb-0.5">Wellington</span>
+                <span>Tudo ótimo! Estrutura rodando liso.</span>
+                <div class="flex items-center justify-end space-x-1 mt-1">
+                    <span class="text-[9px] text-mutedText">22:31</span>
                 </div>
             </div>
         </div>
-    </div>
+    </main>
 
-    <!-- ÁREA PRINCIPAL DO CHAT -->
-    <div class="flex-1 flex flex-col bg-chatBg hidden md:flex" id="chat-area">
-        <!-- Header do Chat -->
-        <div class="p-4 bg-slate-800 border-b border-slate-700 flex items-center justify-between">
-            <div class="flex items-center space-x-3">
-                <div class="w-10 h-10 rounded-full bg-indigo-600 flex items-center justify-center font-bold"><i class="fa-solid fa-comments"></i></div>
-                <div>
-                    <h2 class="font-semibold text-sm" id="chat-title">Chat Geral</h2>
-                    <span class="text-xs text-slate-400">Mensagens em tempo real</span>
-                </div>
+    <!-- INPUT DE ENVIO -->
+    <footer class="p-2 bg-surface border-t border-gray-800 flex items-center space-x-2 shrink-0">
+        <button class="text-mutedText hover:text-white p-2 text-lg"><i class="fa-regular fa-face-smile"></i></button>
+        <button class="text-mutedText hover:text-white p-2 text-lg"><i class="fa-solid fa-paperclip"></i></button>
+        <input type="text" id="message-input" placeholder="Mensagem" 
+               class="flex-1 bg-surfaceLight border border-transparent rounded-lg px-4 py-2 text-sm text-white focus:outline-none focus:border-accent">
+        <button onclick="enviarMensagem()" class="bg-accent text-appBg w-10 h-10 rounded-full flex items-center justify-center font-bold transition hover:bg-emerald-400">
+            <i class="fa-solid fa-paper-plane text-sm"></i>
+        </button>
+    </footer>
+
+    <!-- MODAL / MENU DE AÇÕES DA MENSAGEM (Ao manter pressionado) -->
+    <div id="action-menu" class="fixed inset-0 bg-black/60 backdrop-blur-xs z-50 hidden flex items-end justify-center pb-8 transition-opacity" onclick="fecharMenuAcoes(event)">
+        <div class="bg-surface border border-gray-700 w-11/12 max-w-sm rounded-2xl p-2 shadow-2xl space-y-1" onclick="event.stopPropagation()">
+            <div class="text-center py-2 border-b border-gray-800 mb-1">
+                <span class="text-xs text-mutedText font-medium">Ações da Mensagem</span>
             </div>
-            <div class="flex space-x-4 text-slate-400">
-                <i class="fa-solid fa-magnifying-glass cursor-pointer hover:text-white"></i>
-                <i class="fa-solid fa-ellipsis-vertical cursor-pointer hover:text-white"></i>
-            </div>
-        </div>
-
-        <!-- Histórico de Mensagens -->
-        <div id="messages-container" class="flex-1 p-4 overflow-y-auto space-y-3 flex flex-col">
-            <!-- As mensagens entram aqui via JS -->
-        </div>
-
-        <!-- Caixa de Entrada / Envio -->
-        <div class="p-3 bg-slate-800 border-t border-slate-700 flex items-center space-x-2">
-            <button class="text-slate-400 hover:text-white p-2"><i class="fa-solid fa-face-smile text-lg"></i></button>
-            <button class="text-slate-400 hover:text-white p-2"><i class="fa-solid fa-paperclip text-lg"></i></button>
-            <input type="text" id="message-input" placeholder="Digite uma mensagem..." 
-                   class="flex-1 bg-slate-900 border border-slate-700 rounded-lg px-4 py-2.5 text-sm text-white focus:outline-none focus:border-emerald-500"
-                   onkeypress="if(event.key === 'Enter') enviarMensagem()">
-            <button onclick="enviarMensagem()" class="bg-emerald-600 hover:bg-emerald-500 text-white w-10 h-10 rounded-lg flex items-center justify-center transition">
-                <i class="fa-solid fa-paper-plane"></i>
+            <button onclick="acaoCopiar()" class="w-full text-left px-4 py-3 text-sm text-gray-200 hover:bg-surfaceLight rounded-xl flex items-center space-x-3 transition">
+                <i class="fa-solid fa-copy text-mutedText w-5"></i><span>Copiar texto</span>
+            </button>
+            <button id="btn-editar" onclick="acaoEditar()" class="w-full text-left px-4 py-3 text-sm text-gray-200 hover:bg-surfaceLight rounded-xl flex items-center space-x-3 transition">
+                <i class="fa-solid fa-pen text-mutedText w-5"></i><span>Editar mensagem</span>
+            </button>
+            <button id="btn-apagar-todos" onclick="acaoApagarParaTodos()" class="w-full text-left px-4 py-3 text-sm text-red-400 hover:bg-surfaceLight rounded-xl flex items-center space-x-3 transition">
+                <i class="fa-solid fa-trash-can w-5"></i><span>Apagar para todos</span>
+            </button>
+            <button onclick="acaoApagarParaMim()" class="w-full text-left px-4 py-3 text-sm text-gray-200 hover:bg-surfaceLight rounded-xl flex items-center space-x-3 transition">
+                <i class="fa-solid fa-eye-slash text-mutedText w-5"></i><span>Apagar para mim</span>
             </button>
         </div>
     </div>
 
-    <!-- Configuração do Supabase & Lógica -->
+    <!-- LÓGICA DO TOQUE LONGO E REGRA DE 2 MINUTOS -->
     <script>
-        // Substitua pelas suas credenciais do projeto Supabase
-        const SUPABASE_URL = 'SUA_SUPABASE_URL_AQUI';
-        const SUPABASE_ANON_KEY = 'SUA_SUPABASE_ANON_KEY_AQUI';
-        
-        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        let timerToqueLongo = null;
+        let mensagemSelecionada = { id: null, texto: '', ehMinha: false, createdAt: null };
 
-        // Identificação do Usuário Local
-        let meuUsuario = localStorage.getItem('chat_usuario') || '';
-        if (!meuUsuario) {
-            meuUsuario = prompt('Digite seu nome para entrar no chat:') || 'Usuário ' + Math.floor(Math.random() * 1000);
-            localStorage.setItem('chat_usuario', meuUsuario);
+        // Inicia a contagem ao pressionar a mensagem (Segurar por 500ms)
+        function iniciarToqueLongo(event, id, texto, ehMinha, createdAt) {
+            // Apenas para mensagens próprias ou conforme regra desejada
+            timerToqueLongo = setTimeout(() => {
+                abrirMenuAcoes(id, texto, ehMinha, createdAt);
+            }, 500);
         }
-        document.getElementById('current-username').innerText = meuUsuario;
-        document.getElementById('user-avatar').innerText = meuUsuario.charAt(0).toUpperCase();
 
-        function mudarUsuario() {
-            const novoNome = prompt('Novo nome de usuário:', meuUsuario);
-            if (novoNome) {
-                meuUsuario = novoNome;
-                localStorage.setItem('chat_usuario', meuUsuario);
-                document.getElementById('current-username').innerText = meuUsuario;
-                document.getElementById('user-avatar').innerText = meuUsuario.charAt(0).toUpperCase();
+        // Cancela se o usuário soltar o dedo antes dos 500ms (foi só um toque normal)
+        function cancelarToqueLongo() {
+            if (timerToqueLongo) {
+                clearTimeout(timerToqueLongo);
+                timerToqueLongo = null;
             }
         }
 
-        // Carregar mensagens iniciais
-        async function carregarMensagens() {
-            const { data, error } = await supabase
-                .from('mensagens')
-                .select('*')
-                .order('created_at', { ascending: true })
-                .limit(50);
+        function abrirMenuAcoes(id, texto, ehMinha, createdAt) {
+            mensagemSelecionada = { id, texto, ehMinha, createdAt };
+            
+            const btnEditar = document.getElementById('btn-editar');
+            const btnApagarTodos = document.getElementById('btn-apagar-todos');
 
-            if (error) {
-                console.error('Erro ao carregar:', error);
-                return;
+            // Verifica se a mensagem é do usuário e se está dentro do limite de 2 minutos
+            const agora = new Date();
+            const dataMsg = new Date(createdAt);
+            const diferencaMinutos = (agora - dataMsg) / 1000 / 60;
+
+            if (ehMinha && diferencaMinutos <= 2) {
+                btnEditar.style.display = 'flex';
+                btnApagarTodos.style.display = 'flex';
+            } else {
+                // Se passou de 2 minutos ou não é do usuário, esconde edição/apagar para todos
+                btnEditar.style.display = 'none';
+                if (!ehMinha) {
+                    btnApagarTodos.style.display = 'none';
+                } else {
+                    btnApagarTodos.style.display = 'flex'; // Apagar para mim sempre pode
+                }
             }
 
-            const container = document.getElementById('messages-container');
-            container.innerHTML = '';
-            data.forEach(msg => renderizarMensagem(msg));
-            container.scrollTop = container.scrollHeight;
+            document.getElementById('action-menu').classList.remove('hidden');
         }
 
-        // Renderizar mensagem individual na tela
-        function renderizarMensagem(msg) {
-            const container = document.getElementById('messages-container');
-            const ehMinha = msg.usuario === meuUsuario;
-
-            const div = document.createElement('div');
-            div.className = `flex flex-col max-w-[70%] ${ehMinha ? 'ml-auto items-end' : 'mr-auto items-start'}`;
-
-            div.innerHTML = `
-                <div class="px-4 py-2 rounded-lg text-sm shadow ${ehMinha ? 'bg-emerald-700 text-white rounded-br-none' : 'bg-slate-800 text-slate-100 rounded-bl-none'}">
-                    ${!ehMinha ? `<span class="block text-[10px] font-bold text-emerald-400 mb-0.5">${msg.usuario}</span>` : ''}
-                    <span>${msg.texto}</span>
-                </div>
-                <span class="text-[9px] text-slate-500 mt-1">${new Date(msg.created_at).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
-            `;
-            container.appendChild(div);
-            container.scrollTop = container.scrollHeight;
+        function fecharMenuAcoes(event) {
+            if (event.target.id === 'action-menu') {
+                document.getElementById('action-menu').classList.add('hidden');
+            }
         }
 
-        // Enviar mensagem para o Supabase
-        async function enviarMensagem() {
+        function acaoCopiar() {
+            navigator.clipboard.writeText(mensagemSelecionada.texto);
+            alert('Texto copiado!');
+            document.getElementById('action-menu').classList.add('hidden');
+        }
+
+        function acaoEditar() {
+            document.getElementById('action-menu').classList.add('hidden');
+            const novoTexto = prompt('Editar mensagem:', mensagemSelecionada.texto);
+            if (novoTexto && novoTexto.trim() !== '') {
+                alert(`Mensagem ${mensagemSelecionada.id} atualizada para: ${novoTexto}`);
+                // Aqui entrará a chamada de update no Supabase
+            }
+        }
+
+        function acaoApagarParaTodos() {
+            document.getElementById('action-menu').classList.add('hidden');
+            if (confirm('Deseja apagar esta mensagem para todos?')) {
+                alert('Mensagem apagada para todos.');
+                // Aqui entrará a exclusão/atualização no Supabase
+            }
+        }
+
+        function acaoApagarParaMim() {
+            document.getElementById('action-menu').classList.add('hidden');
+            alert('Mensagem apagada para você.');
+        }
+
+        function voltarParaConversas() {
+            alert('Voltando para a lista de conversas...');
+        }
+
+        function enviarMensagem() {
             const input = document.getElementById('message-input');
-            const texto = input.value.trim();
-            if (!texto) return;
-
+            if (!input.value.trim()) return;
+            alert('Enviando: ' + input.value);
             input.value = '';
-
-            const { error } = await supabase
-                .from('mensagens')
-                .insert([{ usuario: meuUsuario, texto: texto }]);
-
-            if (error) {
-                alert('Erro ao enviar mensagem: ' + error.message);
-            }
         }
-
-        // Ouvir novas mensagens em tempo real (Realtime)
-        supabase
-            .channel('public:mensagens')
-            .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'mensagens' }, payload => {
-                renderizarMensagem(payload.new);
-            })
-            .subscribe();
-
-        // Inicializar
-        carregarMensagens();
     </script>
 </body>
 </html>
