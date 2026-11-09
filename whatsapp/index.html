@@ -1,420 +1,266 @@
+
 <!DOCTYPE html>
-<html lang="pt-BR" class="h-full">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NexusChat - Mensageria Instantânea</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome Ícones -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        darkBg: '#0b0f19',
-                        surface: '#131c2e',
-                        surfaceLight: '#1e293b',
-                        accent: '#3b82f6',
-                        accentHover: '#2563eb',
-                        mutedText: '#94a3b8',
-                        msgOut: '#1d4ed8',
-                        msgIn: '#1e293b'
-                    }
-                }
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0b0f19">
+    <meta name="robots" content="noindex,nofollow">
+
+    <title>NexusChat</title>
+
+    <style>
+        :root {
+            --bg: #0b0f19;
+            --surface: #131c2e;
+            --blue: #3b82f6;
+            --muted: #94a3b8;
+            --green: #10b981;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background:
+                radial-gradient(
+                    circle at 50% 40%,
+                    rgba(59,130,246,.12),
+                    transparent 45%
+                ),
+                var(--bg);
+            color: #f8fafc;
+            font-family: Inter, system-ui, sans-serif;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 320px;
+            text-align: center;
+        }
+
+        .logo {
+            width: 68px;
+            height: 68px;
+            margin: 0 auto 20px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 21px;
+            background: linear-gradient(
+                135deg,
+                #3b82f6,
+                #1d4ed8
+            );
+
+            font-size: 32px;
+            font-weight: 800;
+
+            box-shadow: 0 10px 35px rgba(37,99,235,.25);
+        }
+
+        .brand {
+            font-size: 25px;
+            font-weight: 800;
+            letter-spacing: -1px;
+        }
+
+        .subtitle {
+            color: var(--muted);
+            font-size: 13px;
+            margin-top: 7px;
+        }
+
+        .loading-area {
+            margin-top: 42px;
+        }
+
+        .loading-track {
+            height: 4px;
+            width: 100%;
+            background: #1e293b;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .loading-bar {
+            width: 35%;
+            height: 100%;
+            background: var(--blue);
+            border-radius: inherit;
+            animation: loading 1.2s ease-in-out infinite;
+        }
+
+        @keyframes loading {
+            0% {
+                transform: translateX(-110%);
+            }
+
+            100% {
+                transform: translateX(390%);
             }
         }
-    </script>
+
+        .status {
+            color: var(--muted);
+            font-size: 12px;
+            margin-top: 15px;
+        }
+
+        .error {
+            display: none;
+            margin-top: 25px;
+            padding: 15px;
+            border: 1px solid rgba(239,68,68,.25);
+            border-radius: 12px;
+            background: rgba(239,68,68,.08);
+            color: #fca5a5;
+            font-size: 12px;
+            line-height: 1.6;
+        }
+
+        .retry {
+            display: none;
+            margin-top: 12px;
+            padding: 10px 18px;
+            background: var(--blue);
+            color: white;
+            border: none;
+            border-radius: 9px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .footer {
+            margin-top: 55px;
+            font-size: 10px;
+            color: #475569;
+        }
+
+        body.failed .loading-area {
+            display: none;
+        }
+
+        body.failed .error,
+        body.failed .retry {
+            display: block;
+        }
+    </style>
 </head>
-<body class="bg-darkBg text-gray-100 h-full flex flex-col select-none overflow-hidden font-sans">
 
-    <!-- ================= CONTEÚDO PRINCIPAL (ABAS) ================= -->
-    <main id="app-container" class="flex-1 overflow-y-auto relative flex flex-col">
+<body>
 
-        <!-- 1. ABA CONVERSAS -->
-        <section id="tab-conversas" class="tab-pane flex flex-col h-full">
-            <header class="bg-surface px-4 py-3 flex items-center justify-between border-b border-slate-800 shrink-0">
-                <div class="flex items-center space-x-2">
-                    <h1 class="text-xl font-bold tracking-wider text-white">Nexus<span class="text-accent">Chat</span></h1>
-                </div>
-                <div class="flex items-center space-x-4 text-mutedText text-base">
-                    <button class="hover:text-accent transition"><i class="fa-solid fa-magnifying-glass"></i></button>
-                    <button class="hover:text-accent transition"><i class="fa-solid fa-pen-to-square"></i></button>
-                </div>
-            </header>
+    <main class="container">
 
-            <div class="px-4 py-2 bg-surface/50 flex space-x-2 overflow-x-auto shrink-0 border-b border-slate-800/60 scrollbar-none">
-                <button class="bg-accent text-white text-xs px-3 py-1 rounded-full font-medium shrink-0">Todas</button>
-                <button class="bg-surfaceLight text-mutedText text-xs px-3 py-1 rounded-full font-medium shrink-0 hover:text-white">Não lidas</button>
-                <button class="bg-surfaceLight text-mutedText text-xs px-3 py-1 rounded-full font-medium shrink-0 hover:text-white">Favoritas</button>
-                <button class="bg-surfaceLight text-mutedText text-xs px-3 py-1 rounded-full font-medium shrink-0 hover:text-white">Grupos</button>
+        <div class="logo">N</div>
+
+        <div class="brand">NexusChat</div>
+
+        <div class="subtitle">
+            Sua comunicação em um só lugar.
+        </div>
+
+        <section class="loading-area">
+            <div class="loading-track">
+                <div class="loading-bar"></div>
             </div>
 
-            <div class="flex-1 overflow-y-auto divide-y divide-slate-800/40">
-                <div onclick="abrirTelaChat('Comunidade Dev Crato', 'online')" class="flex items-center px-4 py-3 hover:bg-surfaceLight/40 active:bg-surfaceLight cursor-pointer transition">
-                    <div class="relative mr-3 shrink-0">
-                        <div class="w-12 h-12 rounded-full bg-slate-700 flex items-center text-white justify-center font-bold text-lg">
-                            <i class="fa-solid fa-code text-accent"></i>
-                        </div>
-                        <span class="absolute bottom-0 right-0 w-3.5 h-3.5 bg-emerald-500 border-2 border-darkBg rounded-full"></span>
-                    </div>
-                    <div class="flex-1 min-w-0">
-                        <div class="flex justify-between items-baseline mb-1">
-                            <h2 class="font-semibold text-sm text-gray-100 truncate">Comunidade Dev Crato</h2>
-                            <span class="text-[11px] text-mutedText shrink-0">11:15</span>
-                        </div>
-                        <div class="flex justify-between items-center">
-                            <p class="text-xs text-mutedText truncate pr-2">Wellington: O app está rodando liso!</p>
-                            <span class="bg-accent text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full shrink-0">3</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div onclick="abrirTelaChat('Mila', 'online')" class="flex items-center px-4 py-3 hover:bg-surfaceLight/40 active:bg-surfaceLight cursor-pointer transition">
-                    <div class="relative mr-3 shrink-0">
-                        <div class="w-12 h-12 rounded-full bg-indigo-900 flex items-center text-white justify-center font-bold text-base">M</div>
-                        <span class="absolute bottom-0 right-0 w-3.5 h-3.5 bg-emerald-500 border-2 border-darkBg rounded-full"></span>
-                    </div>
-                    <div class="flex-1 min-w-0">
-                        <div class="flex justify-between items-baseline mb-1">
-                            <h2 class="font-semibold text-sm text-gray-100 truncate">Mila</h2>
-                            <span class="text-[11px] text-mutedText shrink-0">Ontem</span>
-                        </div>
-                        <div class="flex justify-between items-center">
-                            <p class="text-xs text-mutedText truncate pr-2">Combinado, amor!</p>
-                        </div>
-                    </div>
-                </div>
+            <div class="status" id="status">
+                Verificando autenticação...
             </div>
         </section>
 
-        <!-- 2. ABA STATUS -->
-        <section id="tab-status" class="tab-pane hidden flex flex-col h-full p-4">
-            <h2 class="text-lg font-bold mb-4 text-white">Status (24h)</h2>
-            <div class="flex items-center space-x-3 mb-6 bg-surface p-3 rounded-xl border border-slate-800">
-                <div class="relative">
-                    <div class="w-14 h-14 rounded-full bg-slate-700 flex items-center justify-center text-xl font-bold text-accent">W</div>
-                    <button class="absolute bottom-0 right-0 w-5 h-5 bg-accent rounded-full text-white text-xs flex items-center justify-center border-2 border-darkBg">+</button>
-                </div>
-                <div>
-                    <h3 class="font-semibold text-sm text-gray-100">Meu Status</h3>
-                    <p class="text-xs text-mutedText">Toque para adicionar uma publicação</p>
-                </div>
-            </div>
-            <h4 class="text-xs font-semibold text-mutedText uppercase tracking-wider mb-3">Atualizações Recentes</h4>
-            <div class="flex-1 text-center py-10 text-mutedText text-xs">Nenhum status recente dos contatos</div>
-        </section>
+        <div class="error" id="error">
+            Não foi possível verificar sua sessão.
+            Verifique sua conexão e tente novamente.
+        </div>
 
-        <!-- 3. ABA COMUNIDADES -->
-        <section id="tab-comunidades" class="tab-pane hidden flex flex-col h-full p-4">
-            <div class="flex justify-between items-center mb-4">
-                <h2 class="text-lg font-bold text-white">Comunidades e Grupos</h2>
-                <button class="bg-accent text-white text-xs px-3 py-1.5 rounded-lg font-medium hover:bg-accentHover"><i class="fa-solid fa-plus mr-1"></i> Novo Grupo</button>
-            </div>
-            <div class="space-y-3">
-                <div onclick="abrirTelaChat('Equipe Técnica WS', 'grupo')" class="bg-surface p-3 rounded-xl border border-slate-800 flex items-center space-x-3 cursor-pointer hover:bg-surfaceLight transition">
-                    <div class="w-12 h-12 rounded-xl bg-blue-900/40 text-accent flex items-center justify-center text-lg font-bold"><i class="fa-solid fa-users"></i></div>
-                    <div class="flex-1 min-w-0">
-                        <h3 class="font-semibold text-sm text-gray-100 truncate">Equipe Técnica WS</h3>
-                        <p class="text-xs text-mutedText truncate">5 participantes • Última mensagem às 09:40</p>
-                    </div>
-                </div>
-            </div>
-        </section>
+        <button class="retry" id="retry">
+            Tentar novamente
+        </button>
 
-        <!-- 4. ABA ÁUDIOS -->
-        <section id="tab-ligacoes" class="tab-pane hidden flex flex-col h-full p-4">
-            <h2 class="text-lg font-bold mb-4 text-white">Mensagens de Voz & Áudios</h2>
-            <div class="flex-1 text-center py-10 text-mutedText text-xs">Nenhum histórico de áudio recente</div>
-        </section>
-
-        <!-- 5. ABA PERFIL -->
-        <section id="tab-perfil" class="tab-pane hidden flex flex-col h-full p-4 space-y-4 overflow-y-auto">
-            <h2 class="text-lg font-bold text-white mb-2">Meu Perfil</h2>
-            <div class="flex items-center space-x-4 bg-surface p-4 rounded-xl border border-slate-800">
-                <div class="w-16 h-16 rounded-full bg-accent flex items-center justify-center text-white text-2xl font-bold">W</div>
-                <div>
-                    <h3 class="font-bold text-base text-gray-100">Wellington Silva</h3>
-                    <p class="text-xs text-accent">@wellington</p>
-                    <p class="text-xs text-mutedText mt-1">Disponível para projetos</p>
-                </div>
-            </div>
-            <div class="bg-surface rounded-xl border border-slate-800 divide-y divide-slate-800 overflow-hidden text-sm">
-                <button class="w-full px-4 py-3 text-left flex items-center space-x-3 hover:bg-surfaceLight transition"><i class="fa-solid fa-lock text-mutedText w-5"></i><span>Privacidade e Segurança</span></button>
-                <button class="w-full px-4 py-3 text-left flex items-center space-x-3 hover:bg-surfaceLight transition"><i class="fa-solid fa-bell text-mutedText w-5"></i><span>Notificações Nativas</span></button>
-                <button class="w-full px-4 py-3 text-left flex items-center space-x-3 hover:bg-surfaceLight transition"><i class="fa-solid fa-database text-mutedText w-5"></i><span>Armazenamento e Dados</span></button>
-                <button class="w-full px-4 py-3 text-left flex items-center space-x-3 hover:bg-surfaceLight transition text-red-400"><i class="fa-solid fa-right-from-bracket w-5"></i><span>Sair da conta</span></button>
-            </div>
-        </section>
+        <footer class="footer">
+            NEXUSCHAT · AMBIENTE SEGURO
+        </footer>
 
     </main>
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="./supabase.js"></script>
 
-    <!-- ================= TELA DE CHAT INTERNO ================= -->
-    <div id="screen-chat" class="absolute inset-0 bg-darkBg z-30 hidden flex flex-col">
-        <header class="bg-surface px-4 py-3 flex items-center justify-between border-b border-slate-800 shrink-0">
-            <div class="flex items-center space-x-3">
-                <button onclick="fecharTelaChat()" class="text-mutedText hover:text-white mr-1 text-base">
-                    <i class="fa-solid fa-arrow-left"></i>
-                </button>
-                <div class="w-10 h-10 rounded-full bg-slate-700 flex items-center justify-center font-bold text-white text-sm" id="chat-header-avatar">CC</div>
-                <div>
-                    <h2 class="font-semibold text-sm text-gray-100" id="chat-header-title">Comunidade Dev</h2>
-                    <span class="text-[10px] text-emerald-400 flex items-center" id="chat-header-status"><i class="fa-solid fa-circle text-[6px] mr-1"></i> online</span>
-                </div>
-            </div>
-            <div class="flex items-center space-x-4 text-mutedText text-lg">
-                <button class="hover:text-white transition"><i class="fa-solid fa-ellipsis-vertical"></i></button>
-            </div>
-        </header>
-
-        <!-- Histórico de Mensagens (Injetado Dinamicamente) -->
-        <div id="messages-container" class="flex-1 p-4 overflow-y-auto space-y-3 flex flex-col bg-[#070a12]">
-            <!-- As mensagens aparecem aqui com seus respectivos estados de setinha -->
-        </div>
-
-        <!-- Rodapé / Input de Envio -->
-        <footer class="p-2 bg-surface border-t border-slate-800 flex items-center space-x-2 shrink-0">
-            <button class="text-mutedText hover:text-white p-2 text-lg"><i class="fa-regular fa-face-smile"></i></button>
-            <button class="text-mutedText hover:text-white p-2 text-lg"><i class="fa-solid fa-paperclip"></i></button>
-            <input type="text" id="message-input" placeholder="Digite uma mensagem..." 
-                   class="flex-1 bg-surfaceLight border border-transparent rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-accent"
-                   onkeypress="if(event.key === 'Enter') enviarMensagem()">
-            <button onclick="enviarMensagem()" class="bg-accent text-white w-10 h-10 rounded-xl flex items-center justify-center font-bold transition hover:bg-accentHover">
-                <i class="fa-solid fa-paper-plane text-xs"></i>
-            </button>
-        </footer>
-    </div>
-
-
-    <!-- ================= MENU FLUTUANTE DE AÇÕES ================= -->
-    <div id="action-menu" class="fixed inset-0 bg-black/70 backdrop-blur-xs z-50 hidden flex items-end justify-center pb-6 transition-opacity" onclick="fecharMenuAcoes(event)">
-        <div class="bg-surface border border-slate-700 w-11/12 max-w-sm rounded-2xl p-2 shadow-2xl space-y-1" onclick="event.stopPropagation()">
-            <div class="text-center py-1.5 border-b border-slate-800 mb-1">
-                <span class="text-[11px] text-mutedText font-medium">Ações da Mensagem</span>
-            </div>
-            <button onclick="acaoCopiar()" class="w-full text-left px-4 py-2.5 text-sm text-gray-200 hover:bg-surfaceLight rounded-xl flex items-center space-x-3 transition"><i class="fa-solid fa-copy text-mutedText w-5"></i><span>Copiar</span></button>
-            <button id="btn-editar" onclick="acaoEditar()" class="w-full text-left px-4 py-2.5 text-sm text-gray-200 hover:bg-surfaceLight rounded-xl flex items-center space-x-3 transition"><i class="fa-solid fa-pen text-mutedText w-5"></i><span>Editar mensagem</span></button>
-            <button id="btn-apagar-todos" onclick="acaoApagarParaTodos()" class="w-full text-left px-4 py-2.5 text-sm text-red-400 hover:bg-surfaceLight rounded-xl flex items-center space-x-3 transition"><i class="fa-solid fa-trash-can w-5"></i><span>Apagar para todos</span></button>
-            <button onclick="acaoApagarParaMim()" class="w-full text-left px-4 py-2.5 text-sm text-gray-200 hover:bg-surfaceLight rounded-xl flex items-center space-x-3 transition"><i class="fa-solid fa-eye-slash text-mutedText w-5"></i><span>Apagar para mim</span></button>
-        </div>
-    </div>
-
-
-    <!-- ================= NAVEGAÇÃO INFERIOR ================= -->
-    <nav class="bg-surface border-t border-slate-800 h-16 flex justify-around items-center shrink-0 z-20">
-        <button onclick="mudarAba('conversas', this)" class="nav-btn flex flex-col items-center justify-center flex-1 text-accent transition py-1">
-            <i class="fa-solid fa-comment-dots text-lg mb-0.5"></i>
-            <span class="text-[10px] font-medium">Conversas</span>
-        </button>
-        <button onclick="mudarAba('status', this)" class="nav-btn flex flex-col items-center justify-center flex-1 text-mutedText hover:text-gray-300 transition py-1">
-            <i class="fa-solid fa-circle-notch text-lg mb-0.5"></i>
-            <span class="text-[10px] font-medium">Status</span>
-        </button>
-        <button onclick="mudarAba('comunidades', this)" class="nav-btn flex flex-col items-center justify-center flex-1 text-mutedText hover:text-gray-300 transition py-1">
-            <i class="fa-solid fa-users-rectangle text-lg mb-0.5"></i>
-            <span class="text-[10px] font-medium">Comunidades</span>
-        </button>
-        <button onclick="mudarAba('ligacoes', this)" class="nav-btn flex flex-col items-center justify-center flex-1 text-mutedText hover:text-gray-300 transition py-1">
-            <i class="fa-solid fa-microphone text-lg mb-0.5"></i>
-            <span class="text-[10px] font-medium">Áudios</span>
-        </button>
-        <button onclick="mudarAba('perfil', this)" class="nav-btn flex flex-col items-center justify-center flex-1 text-mutedText hover:text-gray-300 transition py-1">
-            <i class="fa-solid fa-user-gear text-lg mb-0.5"></i>
-            <span class="text-[10px] font-medium">Perfil</span>
-        </button>
-    </nav>
-
-
-    <!-- ================= JAVASCRIPT & ESTADOS DE MENSAGEM ================= -->
     <script>
-        // Lista de mensagens simuladas para demonstrar os 3 estados
-        let mensagensExemplo = [
-            { id: '1', texto: 'Estrutura principal concluída com sucesso!', ehMinha: true, status: 'lido', horario: '22:30', createdAt: '2026-11-08T22:30:00Z' },
-            { id: '2', texto: 'Perfeito, visual ficou incrível e super limpo!', ehMinha: false, remetente: 'Mila', horario: '22:31', createdAt: '2026-11-08T22:31:00Z' },
-            { id: '3', texto: 'Testando envio pendente...', ehMinha: true, status: 'enviando', horario: '22:35', createdAt: '2026-11-08T22:35:00Z' }
-        ];
+        (() => {
+            "use strict";
 
-        function mudarAba(nomeAba, elementoBtn) {
-            document.querySelectorAll('.tab-pane').forEach(el => el.classList.add('hidden'));
-            document.getElementById('tab-' + nomeAba).classList.remove('hidden');
+            const status = document.getElementById("status");
+            const retry = document.getElementById("retry");
 
-            document.querySelectorAll('.nav-btn').forEach(btn => {
-                btn.classList.remove('text-accent');
-                btn.classList.add('text-mutedText');
-            });
-            elementoBtn.classList.remove('text-mutedText');
-            elementoBtn.classList.add('text-accent');
-        }
+            let checking = false;
 
-        function abrirTelaChat(nomeContato, status) {
-            document.getElementById('chat-header-title').innerText = nomeContato;
-            document.getElementById('chat-header-avatar').innerText = nomeContato.substring(0, 2).toUpperCase();
-            document.getElementById('chat-header-status').innerHTML = `<i class="fa-solid fa-circle text-[6px] mr-1"></i> ${status}`;
-            document.getElementById('screen-chat').classList.remove('hidden');
-            renderizarMensagens();
-        }
+            function fail(message) {
+                document.body.classList.add("failed");
+                document.getElementById("error").textContent = message;
+            }
 
-        function fecharTelaChat() {
-            document.getElementById('screen-chat').classList.add('hidden');
-        }
+            async function verifyAccess() {
+                if (checking) return;
 
-        // Renderiza as mensagens aplicando os 3 estados (Relógio, Uma Seta, Duas Setas)
-        function renderizarMensagens() {
-            const container = document.getElementById('messages-container');
-            container.innerHTML = '';
+                checking = true;
+                document.body.classList.remove("failed");
+                status.textContent = "Verificando autenticação...";
 
-            mensagensExemplo.forEach(msg => {
-                const div = document.createElement('div');
-                div.className = `flex flex-col max-w-[80%] ${msg.ehMinha ? 'ml-auto items-end' : 'mr-auto items-start'}`;
+                try {
+                    const supabase = window.nexusSupabase;
 
-                // Define o ícone de status (3 estados) para mensagens enviadas por mim
-                let iconeStatus = '';
-                if (msg.ehMinha) {
-                    if (msg.status === 'enviando') {
-                        iconeStatus = `<i class="fa-regular fa-clock text-[10px] text-mutedText" title="Enviando..."></i>`;
-                    } else if (msg.status === 'enviado') {
-                        iconeStatus = `<i class="fa-solid fa-check text-[10px] text-mutedText" title="Enviado"></i>`;
-                    } else if (msg.status === 'entregue' || msg.status === 'lido') {
-                        // Duas setas (azul se lido, cinza se apenas entregue)
-                        const corSeta = msg.status === 'lido' ? 'text-accent' : 'text-mutedText';
-                        iconeStatus = `<i class="fa-solid fa-check-double text-[10px] ${corSeta}" title="Lido"></i>`;
+                    if (!supabase) {
+                        throw new Error("Conexão com o sistema indisponível.");
                     }
-                }
 
-                div.innerHTML = `
-                    <div class="${msg.ehMinha ? 'bg-msgOut text-white rounded-br-none' : 'bg-msgIn text-gray-100 rounded-bl-none'} px-3 py-2 rounded-xl text-sm shadow cursor-pointer"
-                         ontouchstart="iniciarToqueLongo(event, '${msg.id}', '${msg.texto}', ${msg.ehMinha}, '${msg.createdAt}')"
-                         onmousedown="iniciarToqueLongo(event, '${msg.id}', '${msg.texto}', ${msg.ehMinha}, '${msg.createdAt}')"
-                         ontouchend="cancelarToqueLongo()" onmouseup="cancelarToqueLongo()">
-                        ${!msg.ehMinha ? `<span class="block text-[10px] font-bold text-accent mb-0.5">${msg.remetente}</span>` : ''}
-                        <span>${msg.texto}</span>
-                        <div class="flex items-center justify-end space-x-1.5 mt-1">
-                            <span class="text-[9px] text-gray-300/70">${msg.horario}</span>
-                            ${iconeStatus}
-                        </div>
-                    </div>
-                `;
-                container.appendChild(div);
-            });
-            container.scrollTop = container.scrollHeight;
-        }
+                    const { data, error } =
+                        await supabase.auth.getSession();
 
-        // Enviar nova mensagem (Nasce com o relógio ⏳ e evolui para uma seta ✓ e duas setas ✓✓)
-        function enviarMensagem() {
-            const input = document.getElementById('message-input');
-            const texto = input.value.trim();
-            if (!texto) return;
+                    if (error) throw error;
 
-            const agora = new Date();
-            const horarioFormatado = agora.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-            const novaId = 'msg-' + Date.now();
+                    if (!data.session) {
+                        status.textContent = "Redirecionando para acesso...";
+                        window.location.replace("./login.html");
+                        return;
+                    }
 
-            const novaMensagem = {
-                id: novaId,
-                texto: texto,
-                ehMinha: true,
-                status: 'enviando', // Estado 1: Relógio
-                horario: horarioFormatado,
-                createdAt: agora.toISOString()
-            };
+                    status.textContent = "Sessão identificada. Entrando...";
 
-            mensagensExemplo.push(novaMensagem);
-            input.value = '';
-            renderizarMensagens();
+                    window.location.replace("./interface.html");
 
-            // Simula a evolução automática para "Enviado" (1 seta) após 1 segundo
-            setTimeout(() => {
-                const m = mensagensExemplo.find(item => item.id === novaId);
-                if (m) m.status = 'enviado';
-                renderizarMensagens();
-            }, 1000);
+                } catch (error) {
+                    console.error("NexusChat Gate:", error);
 
-            // Simula a evolução para "Entregue/Lido" (2 setas) após 2.5 segundos
-            setTimeout(() => {
-                const m = mensagensExemplo.find(item => item.id === novaId);
-                if (m) m.status = 'lido';
-                renderizarMensagens();
-            }, 2500);
-        }
+                    fail(
+                        "Não foi possível verificar sua sessão. " +
+                        "Verifique sua conexão e tente novamente."
+                    );
 
-        // Lógica de Toque Longo e Menu de Ações
-        let timerToqueLongo = null;
-        let mensagemSelecionada = { id: null, texto: '', ehMinha: false, createdAt: null };
-
-        function iniciarToqueLongo(event, id, texto, ehMinha, createdAt) {
-            timerToqueLongo = setTimeout(() => {
-                abrirMenuAcoes(id, texto, ehMinha, createdAt);
-            }, 500);
-        }
-
-        function cancelarToqueLongo() {
-            if (timerToqueLongo) {
-                clearTimeout(timerToqueLongo);
-                timerToqueLongo = null;
-            }
-        }
-
-        function abrirMenuAcoes(id, texto, ehMinha, createdAt) {
-            mensagemSelecionada = { id, texto, ehMinha, createdAt };
-            
-            const btnEditar = document.getElementById('btn-editar');
-            const btnApagarTodos = document.getElementById('btn-apagar-todos');
-
-            const agora = new Date();
-            const dataMsg = new Date(createdAt);
-            const diferencaMinutos = (agora - dataMsg) / 1000 / 60;
-
-            if (ehMinha && diferencaMinutos <= 2) {
-                btnEditar.style.display = 'flex';
-                btnApagarTodos.style.display = 'flex';
-            } else {
-                btnEditar.style.display = 'none';
-                if (!ehMinha) {
-                    btnApagarTodos.style.display = 'none';
-                } else {
-                    btnApagarTodos.style.display = 'flex';
+                } finally {
+                    checking = false;
                 }
             }
 
-            document.getElementById('action-menu').classList.remove('hidden');
-        }
+            retry.addEventListener("click", verifyAccess);
 
-        function fecharMenuAcoes(event) {
-            if (event.target.id === 'action-menu') {
-                document.getElementById('action-menu').classList.add('hidden');
-            }
-        }
+            verifyAccess();
 
-        function acaoCopiar() {
-            navigator.clipboard.writeText(mensagemSelecionada.texto);
-            document.getElementById('action-menu').classList.add('hidden');
-        }
-
-        function acaoEditar() {
-            document.getElementById('action-menu').classList.add('hidden');
-            const novoTexto = prompt('Editar mensagem:', mensagemSelecionada.texto);
-            if (novoTexto && novoTexto.trim() !== '') {
-                const m = mensagensExemplo.find(item => item.id === mensagemSelecionada.id);
-                if (m) m.texto = novoTexto;
-                renderizarMensagens();
-            }
-        }
-
-        function acaoApagarParaTodos() {
-            document.getElementById('action-menu').classList.add('hidden');
-            if (confirm('Apagar mensagem para todos?')) {
-                mensagensExemplo = mensagensExemplo.filter(item => item.id !== mensagemSelecionada.id);
-                renderizarMensagens();
-            }
-        }
-
-        function acaoApagarParaMim() {
-            document.getElementById('action-menu').classList.add('hidden');
-            mensagensExemplo = mensagensExemplo.filter(item => item.id !== mensagemSelecionada.id);
-            renderizarMensagens();
-        }
+        })();
     </script>
+
 </body>
 </html>
