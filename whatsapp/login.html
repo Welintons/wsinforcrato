@@ -1,0 +1,298 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0b0f19">
+    <title>Entrar — NexusChat</title>
+
+    <style>
+        :root {
+            --bg: #0b0f19;
+            --surface: #131c2e;
+            --surface-light: #1e293b;
+            --blue: #3b82f6;
+            --blue-hover: #2563eb;
+            --text: #f8fafc;
+            --muted: #94a3b8;
+            --border: #273449;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            padding: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background:
+                radial-gradient(circle at 50% 0%, rgba(59,130,246,.13), transparent 45%),
+                var(--bg);
+            color: var(--text);
+            font-family: Inter, system-ui, sans-serif;
+        }
+
+        .container { width: 100%; max-width: 400px; }
+
+        .brand { text-align: center; margin-bottom: 28px; }
+
+        .logo {
+            width: 58px;
+            height: 58px;
+            margin: 0 auto 14px;
+            display: grid;
+            place-items: center;
+            border-radius: 18px;
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            box-shadow: 0 8px 30px rgba(37,99,235,.25);
+            font-size: 28px;
+            font-weight: 800;
+        }
+
+        .brand h1 { margin: 0; font-size: 26px; letter-spacing: -1px; }
+        .brand p { margin: 7px 0 0; color: var(--muted); font-size: 13px; }
+
+        .card {
+            padding: 28px;
+            background: rgba(19,28,46,.96);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,.25);
+        }
+
+        h2 { margin: 0 0 7px; font-size: 21px; }
+        .description { margin: 0 0 25px; color: var(--muted); font-size: 13px; }
+
+        .field { margin-bottom: 18px; }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #cbd5e1;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        input {
+            width: 100%;
+            height: 48px;
+            padding: 0 14px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            outline: none;
+            background: #0b1220;
+            color: white;
+            font-size: 14px;
+        }
+
+        input:focus {
+            border-color: var(--blue);
+            box-shadow: 0 0 0 3px rgba(59,130,246,.12);
+        }
+
+        input::placeholder { color: #64748b; }
+
+        .button {
+            width: 100%;
+            height: 49px;
+            margin-top: 5px;
+            border: 0;
+            border-radius: 10px;
+            background: var(--blue);
+            color: white;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .button:hover { background: var(--blue-hover); }
+        .button:disabled { opacity: .6; cursor: wait; }
+
+        .message {
+            display: none;
+            margin-bottom: 17px;
+            padding: 12px;
+            border-radius: 10px;
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        .message.error {
+            display: block;
+            color: #fca5a5;
+            background: rgba(220,38,38,.12);
+            border: 1px solid rgba(220,38,38,.25);
+        }
+
+        .message.success {
+            display: block;
+            color: #6ee7b7;
+            background: rgba(16,185,129,.10);
+            border: 1px solid rgba(16,185,129,.25);
+        }
+
+        .links {
+            margin-top: 22px;
+            text-align: center;
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .links a {
+            color: #60a5fa;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .links a:hover { text-decoration: underline; }
+
+        footer {
+            margin-top: 25px;
+            text-align: center;
+            color: #64748b;
+            font-size: 11px;
+        }
+
+        @media(max-width: 450px) {
+            body { padding: 18px; }
+            .card { padding: 23px 19px; }
+        }
+    </style>
+</head>
+
+<body>
+    <main class="container">
+
+        <header class="brand">
+            <div class="logo">N</div>
+            <h1>NexusChat</h1>
+            <p>Sua comunicação em um só lugar.</p>
+        </header>
+
+        <section class="card">
+            <h2>Bem-vindo de volta</h2>
+            <p class="description">Entre na sua conta para continuar.</p>
+
+            <div id="feedback" class="message" role="alert" aria-live="polite"></div>
+
+            <form id="loginForm">
+                <div class="field">
+                    <label for="email">E-mail</label>
+                    <input
+                        id="email"
+                        type="email"
+                        placeholder="voce@email.com"
+                        autocomplete="email"
+                        required
+                    >
+                </div>
+
+                <div class="field">
+                    <label for="password">Senha</label>
+                    <input
+                        id="password"
+                        type="password"
+                        placeholder="Sua senha"
+                        autocomplete="current-password"
+                        required
+                    >
+                </div>
+
+                <button class="button" id="submitButton" type="submit">
+                    Entrar na conta
+                </button>
+            </form>
+
+            <div class="links">
+                Ainda não tem conta?
+                <a href="./cadastro.html">Criar cadastro</a>
+            </div>
+        </section>
+
+        <footer>NEXUSCHAT · COMUNICAÇÃO SIMPLES E SEGURA</footer>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="./supabase.js"></script>
+
+    <script>
+    (() => {
+        "use strict";
+
+        const supabase = window.nexusSupabase;
+        const form = document.getElementById("loginForm");
+        const button = document.getElementById("submitButton");
+        const feedback = document.getElementById("feedback");
+
+        function showMessage(message, type = "error") {
+            feedback.textContent = message;
+            feedback.className = "message " + type;
+        }
+
+        function clearMessage() {
+            feedback.textContent = "";
+            feedback.className = "message";
+        }
+
+        if (!supabase) {
+            showMessage("Não foi possível conectar ao sistema. Atualize a página.");
+            button.disabled = true;
+            return;
+        }
+
+        async function checkSession() {
+            try {
+                const { data, error } = await supabase.auth.getSession();
+                if (error) throw error;
+
+                if (data.session) {
+                    window.location.replace("./interface.html");
+                }
+            } catch (error) {
+                console.error("Verificação de sessão:", error);
+                showMessage("Falha ao verificar sua sessão.");
+            }
+        }
+
+        form.addEventListener("submit", async event => {
+            event.preventDefault();
+            clearMessage();
+
+            const email = document.getElementById("email").value.trim();
+            const password = document.getElementById("password").value;
+
+            button.disabled = true;
+            button.textContent = "Entrando...";
+
+            try {
+                const { data, error } = await supabase.auth.signInWithPassword({
+                    email,
+                    password
+                });
+
+                if (error) throw error;
+
+                if (!data.session) {
+                    throw new Error("Não foi possível iniciar sua sessão.");
+                }
+
+                showMessage("Login realizado. Abrindo NexusChat...", "success");
+                window.location.replace("./interface.html");
+
+            } catch (error) {
+                console.error("Erro no login:", error);
+                showMessage(error.message || "Não foi possível entrar na conta.");
+
+            } finally {
+                button.disabled = false;
+                button.textContent = "Entrar na conta";
+            }
+        });
+
+        checkSession();
+    })();
+    </script>
+</body>
+</html>
