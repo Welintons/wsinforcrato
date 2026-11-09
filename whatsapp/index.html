@@ -3,123 +3,301 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Chat App - Tela de Conversa</title>
+    <title>NexusChat - Mensageria Instantânea</title>
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- FontAwesome Ícones -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
-                        appBg: '#0b141a',
-                        surface: '#111b21',
-                        surfaceLight: '#202c33',
-                        accent: '#00a884',
-                        mutedText: '#8696a0',
-                        msgOut: '#005c4b',
-                        msgIn: '#202c33'
+                        darkBg: '#0b0f19',
+                        surface: '#131c2e',
+                        surfaceLight: '#1e293b',
+                        accent: '#3b82f6',       /* Azul Elétrico Principal */
+                        accentHover: '#2563eb',
+                        mutedText: '#94a3b8',
+                        msgOut: '#1d4ed8',       /* Bolha enviada (Azul) */
+                        msgIn: '#1e293b'         /* Bolha recebida (Grafite) */
                     }
                 }
             }
         }
     </script>
 </head>
-<body class="bg-appBg text-gray-100 h-full flex flex-col select-none overflow-hidden font-sans">
+<body class="bg-darkBg text-gray-100 h-full flex flex-col select-none overflow-hidden font-sans">
 
-    <!-- HEADER DO CHAT -->
-    <header class="bg-surface px-4 py-3 flex items-center justify-between border-b border-gray-800 shrink-0 z-10">
-        <div class="flex items-center space-x-3">
-            <button onclick="voltarParaConversas()" class="text-mutedText hover:text-white mr-1">
-                <i class="fa-solid fa-arrow-left text-lg"></i>
-            </button>
-            <div class="w-10 h-10 rounded-full bg-slate-700 flex items-center justify-center font-bold text-white text-sm">
-                CG
-            </div>
-            <div>
-                <h2 class="font-semibold text-sm text-gray-100">Comunidade Geral</h2>
-                <span class="text-[10px] text-accent flex items-center"><i class="fa-solid fa-circle text-[6px] mr-1"></i> online</span>
-            </div>
-        </div>
-        <div class="flex items-center space-x-5 text-mutedText text-lg">
-            <button class="hover:text-accent transition"><i class="fa-solid fa-ellipsis-vertical"></i></button>
-        </div>
-    </header>
+    <!-- ================= CONTEÚDO PRINCIPAL (ABAS) ================= -->
+    <main id="app-container" class="flex-1 overflow-y-auto relative flex flex-col">
 
-    <!-- ÁREA DE MENSAGENS -->
-    <main id="messages-container" class="flex-1 p-4 overflow-y-auto space-y-3 flex flex-col bg-[#080c10]">
-        <!-- Exemplo de mensagem enviada por mim (com ID e timestamp simulado) -->
-        <div class="flex flex-col max-w-[80%] ml-auto items-end group" 
-             ontouchstart="iniciarToqueLongo(event, 'msg-1', 'Olá, tudo bem com o sistema?', true, '2026-11-08T22:30:00Z')"
-             onmousedown="iniciarToqueLongo(event, 'msg-1', 'Olá, tudo bem com o sistema?', true, '2026-11-08T22:30:00Z')"
-             ontouchend="cancelarToqueLongo()" onmouseup="cancelarToqueLongo()">
-            <div class="bg-msgOut text-white px-3 py-2 rounded-lg rounded-br-none text-sm shadow relative cursor-pointer">
-                <span>Olá, tudo bem com o sistema?</span>
-                <div class="flex items-center justify-end space-x-1 mt-1">
-                    <span class="text-[9px] text-emerald-200/70">22:30</span>
-                    <i class="fa-solid fa-check-double text-[10px] text-accent"></i>
+        <!-- 1. ABA CONVERSAS (TELA INICIAL) -->
+        <section id="tab-conversas" class="tab-pane flex flex-col h-full">
+            <!-- Cabeçalho Conversas -->
+            <header class="bg-surface px-4 py-3 flex items-center justify-between border-b border-slate-800 shrink-0">
+                <div class="flex items-center space-x-2">
+                    <h1 class="text-xl font-bold tracking-wider text-white">Nexus<span class="text-accent">Chat</span></h1>
+                </div>
+                <div class="flex items-center space-x-4 text-mutedText text-base">
+                    <button onclick="alert('Busca global')" class="hover:text-accent transition"><i class="fa-solid fa-magnifying-glass"></i></button>
+                    <button onclick="alert('Nova conversa')" class="hover:text-accent transition"><i class="fa-solid fa-pen-to-square"></i></button>
+                </div>
+            </header>
+
+            <!-- Filtros Rápidos -->
+            <div class="px-4 py-2 bg-surface/50 flex space-x-2 overflow-x-auto shrink-0 border-b border-slate-800/60 scrollbar-none">
+                <button class="bg-accent text-white text-xs px-3 py-1 rounded-full font-medium shrink-0">Todas</button>
+                <button class="bg-surfaceLight text-mutedText text-xs px-3 py-1 rounded-full font-medium shrink-0 hover:text-white">Não lidas</button>
+                <button class="bg-surfaceLight text-mutedText text-xs px-3 py-1 rounded-full font-medium shrink-0 hover:text-white">Favoritas</button>
+                <button class="bg-surfaceLight text-mutedText text-xs px-3 py-1 rounded-full font-medium shrink-0 hover:text-white">Grupos</button>
+            </div>
+
+            <!-- Lista de Conversas -->
+            <div class="flex-1 overflow-y-auto divide-y divide-slate-800/40">
+                <!-- Item de Conversa (Clica para abrir o chat) -->
+                <div onclick="abrirTelaChat('Comunidade Dev Crato', 'online')" class="flex items-center px-4 py-3 hover:bg-surfaceLight/40 active:bg-surfaceLight cursor-pointer transition">
+                    <div class="relative mr-3 shrink-0">
+                        <div class="w-12 h-12 rounded-full bg-slate-700 flex items-center text-white justify-center font-bold text-lg">
+                            <i class="fa-solid fa-code text-accent"></i>
+                        </div>
+                        <span class="absolute bottom-0 right-0 w-3.5 h-3.5 bg-emerald-500 border-2 border-darkBg rounded-full"></span>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <div class="flex justify-between items-baseline mb-1">
+                            <h2 class="font-semibold text-sm text-gray-100 truncate">Comunidade Dev Crato</h2>
+                            <span class="text-[11px] text-mutedText shrink-0">11:15</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <p class="text-xs text-mutedText truncate pr-2">Wellington: O app está rodando liso!</p>
+                            <span class="bg-accent text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full shrink-0">3</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div onclick="abrirTelaChat('Mila', 'online')" class="flex items-center px-4 py-3 hover:bg-surfaceLight/40 active:bg-surfaceLight cursor-pointer transition">
+                    <div class="relative mr-3 shrink-0">
+                        <div class="w-12 h-12 rounded-full bg-indigo-900 flex items-center text-white justify-center font-bold text-base">
+                            M
+                        </div>
+                        <span class="absolute bottom-0 right-0 w-3.5 h-3.5 bg-emerald-500 border-2 border-darkBg rounded-full"></span>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <div class="flex justify-between items-baseline mb-1">
+                            <h2 class="font-semibold text-sm text-gray-100 truncate">Mila</h2>
+                            <span class="text-[11px] text-mutedText shrink-0">Ontem</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <p class="text-xs text-mutedText truncate pr-2">Combinado, amor!</p>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
+        </section>
 
-        <!-- Exemplo de mensagem recebida -->
-        <div class="flex flex-col max-w-[80%] mr-auto items-start">
-            <div class="bg-msgIn text-gray-100 px-3 py-2 rounded-lg rounded-bl-none text-sm shadow">
-                <span class="block text-[10px] font-bold text-accent mb-0.5">Wellington</span>
-                <span>Tudo ótimo! Estrutura rodando liso.</span>
-                <div class="flex items-center justify-end space-x-1 mt-1">
-                    <span class="text-[9px] text-mutedText">22:31</span>
+        <!-- 2. ABA STATUS -->
+        <section id="tab-status" class="tab-pane hidden flex flex-col h-full p-4">
+            <h2 class="text-lg font-bold mb-4 text-white">Status (24h)</h2>
+            <div class="flex items-center space-x-3 mb-6 bg-surface p-3 rounded-xl border border-slate-800">
+                <div class="relative">
+                    <div class="w-14 h-14 rounded-full bg-slate-700 flex items-center justify-center text-xl font-bold text-accent">W</div>
+                    <button class="absolute bottom-0 right-0 w-5 h-5 bg-accent rounded-full text-white text-xs flex items-center justify-center border-2 border-darkBg">+</button>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-sm text-gray-100">Meu Status</h3>
+                    <p class="text-xs text-mutedText">Toque para adicionar uma publicação</p>
                 </div>
             </div>
-        </div>
+            <h4 class="text-xs font-semibold text-mutedText uppercase tracking-wider mb-3">Atualizações Recentes</h4>
+            <div class="flex-1 text-center py-10 text-mutedText text-xs">Nenhum status recente dos contatos</div>
+        </section>
+
+        <!-- 3. ABA COMUNIDADES -->
+        <section id="tab-comunidades" class="tab-pane hidden flex flex-col h-full p-4">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-lg font-bold text-white">Comunidades e Grupos</h2>
+                <button onclick="alert('Criar grupo')" class="bg-accent text-white text-xs px-3 py-1.5 rounded-lg font-medium hover:bg-accentHover"><i class="fa-solid fa-plus mr-1"></i> Novo Grupo</button>
+            </div>
+            <div class="space-y-3">
+                <div onclick="abrirTelaChat('Equipe Técnica WS', 'grupo')" class="bg-surface p-3 rounded-xl border border-slate-800 flex items-center space-x-3 cursor-pointer hover:bg-surfaceLight transition">
+                    <div class="w-12 h-12 rounded-xl bg-blue-900/40 text-accent flex items-center justify-center text-lg font-bold"><i class="fa-solid fa-users"></i></div>
+                    <div class="flex-1 min-w-0">
+                        <h3 class="font-semibold text-sm text-gray-100 truncate">Equipe Técnica WS</h3>
+                        <p class="text-xs text-mutedText truncate">5 participantes • Última mensagem às 09:40</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. ABA LIGAÇÕES / ÁUDIOS -->
+        <section id="tab-ligacoes" class="tab-pane hidden flex flex-col h-full p-4">
+            <h2 class="text-lg font-bold mb-4 text-white">Mensagens de Voz & Áudios</h2>
+            <div class="flex-1 text-center py-10 text-mutedText text-xs">Nenhum histórico de áudio recente</div>
+        </section>
+
+        <!-- 5. ABA PERFIL -->
+        <section id="tab-perfil" class="tab-pane hidden flex flex-col h-full p-4 space-y-4 overflow-y-auto">
+            <h2 class="text-lg font-bold text-white mb-2">Meu Perfil</h2>
+            <div class="flex items-center space-x-4 bg-surface p-4 rounded-xl border border-slate-800">
+                <div class="w-16 h-16 rounded-full bg-accent flex items-center justify-center text-white text-2xl font-bold">W</div>
+                <div>
+                    <h3 class="font-bold text-base text-gray-100">Wellington Silva</h3>
+                    <p class="text-xs text-accent">@wellington</p>
+                    <p class="text-xs text-mutedText mt-1">Disponível para projetos</p>
+                </div>
+            </div>
+            <div class="bg-surface rounded-xl border border-slate-800 divide-y divide-slate-800 overflow-hidden text-sm">
+                <button class="w-full px-4 py-3 text-left flex items-center space-x-3 hover:bg-surfaceLight transition"><i class="fa-solid fa-lock text-mutedText w-5"></i><span>Privacidade e Segurança</span></button>
+                <button class="w-full px-4 py-3 text-left flex items-center space-x-3 hover:bg-surfaceLight transition"><i class="fa-solid fa-bell text-mutedText w-5"></i><span>Notificações Nativas</span></button>
+                <button class="w-full px-4 py-3 text-left flex items-center space-x-3 hover:bg-surfaceLight transition"><i class="fa-solid fa-database text-mutedText w-5"></i><span>Armazenamento e Dados</span></button>
+                <button class="w-full px-4 py-3 text-left flex items-center space-x-3 hover:bg-surfaceLight transition text-red-400"><i class="fa-solid fa-right-from-bracket w-5"></i><span>Sair da conta</span></button>
+            </div>
+        </section>
+
     </main>
 
-    <!-- INPUT DE ENVIO -->
-    <footer class="p-2 bg-surface border-t border-gray-800 flex items-center space-x-2 shrink-0">
-        <button class="text-mutedText hover:text-white p-2 text-lg"><i class="fa-regular fa-face-smile"></i></button>
-        <button class="text-mutedText hover:text-white p-2 text-lg"><i class="fa-solid fa-paperclip"></i></button>
-        <input type="text" id="message-input" placeholder="Mensagem" 
-               class="flex-1 bg-surfaceLight border border-transparent rounded-lg px-4 py-2 text-sm text-white focus:outline-none focus:border-accent">
-        <button onclick="enviarMensagem()" class="bg-accent text-appBg w-10 h-10 rounded-full flex items-center justify-center font-bold transition hover:bg-emerald-400">
-            <i class="fa-solid fa-paper-plane text-sm"></i>
-        </button>
-    </footer>
 
-    <!-- MODAL / MENU DE AÇÕES DA MENSAGEM (Ao manter pressionado) -->
-    <div id="action-menu" class="fixed inset-0 bg-black/60 backdrop-blur-xs z-50 hidden flex items-end justify-center pb-8 transition-opacity" onclick="fecharMenuAcoes(event)">
-        <div class="bg-surface border border-gray-700 w-11/12 max-w-sm rounded-2xl p-2 shadow-2xl space-y-1" onclick="event.stopPropagation()">
-            <div class="text-center py-2 border-b border-gray-800 mb-1">
-                <span class="text-xs text-mutedText font-medium">Ações da Mensagem</span>
+    <!-- ================= TELA DE CHAT INTERNO (Oculta por padrão, abre ao clicar) ================= -->
+    <div id="screen-chat" class="absolute inset-0 bg-darkBg z-30 hidden flex flex-col">
+        <!-- Header do Chat -->
+        <header class="bg-surface px-4 py-3 flex items-center justify-between border-b border-slate-800 shrink-0">
+            <div class="flex items-center space-x-3">
+                <button onclick="fecharTelaChat()" class="text-mutedText hover:text-white mr-1 text-base">
+                    <i class="fa-solid fa-arrow-left"></i>
+                </button>
+                <div class="w-10 h-10 rounded-full bg-slate-700 flex items-center justify-center font-bold text-white text-sm" id="chat-header-avatar">
+                    CC
+                </div>
+                <div>
+                    <h2 class="font-semibold text-sm text-gray-100" id="chat-header-title">Comunidade Dev</h2>
+                    <span class="text-[10px] text-emerald-400 flex items-center" id="chat-header-status"><i class="fa-solid fa-circle text-[6px] mr-1"></i> online</span>
+                </div>
             </div>
-            <button onclick="acaoCopiar()" class="w-full text-left px-4 py-3 text-sm text-gray-200 hover:bg-surfaceLight rounded-xl flex items-center space-x-3 transition">
-                <i class="fa-solid fa-copy text-mutedText w-5"></i><span>Copiar texto</span>
+            <div class="flex items-center space-x-4 text-mutedText text-lg">
+                <button class="hover:text-white transition"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+            </div>
+        </header>
+
+        <!-- Histórico de Mensagens -->
+        <div id="messages-container" class="flex-1 p-4 overflow-y-auto space-y-3 flex flex-col bg-[#070a12]">
+            <!-- Mensagem Enviada -->
+            <div class="flex flex-col max-w-[80%] ml-auto items-end group cursor-pointer"
+                 ontouchstart="iniciarToqueLongo(event, 'msg-1', 'Estrutura principal concluída com sucesso!', true, '2026-11-08T22:30:00Z')"
+                 onmousedown="iniciarToqueLongo(event, 'msg-1', 'Estrutura principal concluída com sucesso!', true, '2026-11-08T22:30:00Z')"
+                 ontouchend="cancelarToqueLongo()" onmouseup="cancelarToqueLongo()">
+                <div class="bg-msgOut text-white px-3 py-2 rounded-xl rounded-br-none text-sm shadow">
+                    <span>Estrutura principal concluída com sucesso!</span>
+                    <div class="flex items-center justify-end space-x-1 mt-1">
+                        <span class="text-[9px] text-blue-200/70">22:30</span>
+                        <i class="fa-solid fa-check-double text-[10px] text-blue-300"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mensagem Recebida -->
+            <div class="flex flex-col max-w-[80%] mr-auto items-start">
+                <div class="bg-msgIn text-gray-100 px-3 py-2 rounded-xl rounded-bl-none text-sm shadow">
+                    <span class="block text-[10px] font-bold text-accent mb-0.5">Mila</span>
+                    <span>Perfeito, visual ficou incrível e super limpo!</span>
+                    <div class="flex items-center justify-end space-x-1 mt-1">
+                        <span class="text-[9px] text-mutedText">22:31</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Rodapé / Input de Envio -->
+        <footer class="p-2 bg-surface border-t border-slate-800 flex items-center space-x-2 shrink-0">
+            <button class="text-mutedText hover:text-white p-2 text-lg"><i class="fa-regular fa-face-smile"></i></button>
+            <button class="text-mutedText hover:text-white p-2 text-lg"><i class="fa-solid fa-paperclip"></i></button>
+            <input type="text" id="message-input" placeholder="Digite uma mensagem..." 
+                   class="flex-1 bg-surfaceLight border border-transparent rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-accent">
+            <button onclick="enviarMensagem()" class="bg-accent text-white w-10 h-10 rounded-xl flex items-center justify-center font-bold transition hover:bg-accentHover">
+                <i class="fa-solid fa-paper-plane text-xs"></i>
             </button>
-            <button id="btn-editar" onclick="acaoEditar()" class="w-full text-left px-4 py-3 text-sm text-gray-200 hover:bg-surfaceLight rounded-xl flex items-center space-x-3 transition">
-                <i class="fa-solid fa-pen text-mutedText w-5"></i><span>Editar mensagem</span>
-            </button>
-            <button id="btn-apagar-todos" onclick="acaoApagarParaTodos()" class="w-full text-left px-4 py-3 text-sm text-red-400 hover:bg-surfaceLight rounded-xl flex items-center space-x-3 transition">
-                <i class="fa-solid fa-trash-can w-5"></i><span>Apagar para todos</span>
-            </button>
-            <button onclick="acaoApagarParaMim()" class="w-full text-left px-4 py-3 text-sm text-gray-200 hover:bg-surfaceLight rounded-xl flex items-center space-x-3 transition">
-                <i class="fa-solid fa-eye-slash text-mutedText w-5"></i><span>Apagar para mim</span>
-            </button>
+        </footer>
+    </div>
+
+
+    <!-- ================= MENU FLUTUANTE DE AÇÕES DA MENSAGEM (Toque Longo) ================= -->
+    <div id="action-menu" class="fixed inset-0 bg-black/70 backdrop-blur-xs z-50 hidden flex items-end justify-center pb-6 transition-opacity" onclick="fecharMenuAcoes(event)">
+        <div class="bg-surface border border-slate-700 w-11/12 max-w-sm rounded-2xl p-2 shadow-2xl space-y-1" onclick="event.stopPropagation()">
+            <div class="text-center py-1.5 border-b border-slate-800 mb-1">
+                <span class="text-[11px] text-mutedText font-medium">Ações da Mensagem</span>
+            </div>
+            <button onclick="acaoResponder()" class="w-full text-left px-4 py-2.5 text-sm text-gray-200 hover:bg-surfaceLight rounded-xl flex items-center space-x-3 transition"><i class="fa-solid fa-reply text-mutedText w-5"></i><span>Responder</span></button>
+            <button onclick="acaoCopiar()" class="w-full text-left px-4 py-2.5 text-sm text-gray-200 hover:bg-surfaceLight rounded-xl flex items-center space-x-3 transition"><i class="fa-solid fa-copy text-mutedText w-5"></i><span>Copiar</span></button>
+            <button onclick="acaoEncaminhar()" class="w-full text-left px-4 py-2.5 text-sm text-gray-200 hover:bg-surfaceLight rounded-xl flex items-center space-x-3 transition"><i class="fa-solid fa-share text-mutedText w-5"></i><span>Encaminhar</span></button>
+            <button id="btn-editar" onclick="acaoEditar()" class="w-full text-left px-4 py-2.5 text-sm text-gray-200 hover:bg-surfaceLight rounded-xl flex items-center space-x-3 transition"><i class="fa-solid fa-pen text-mutedText w-5"></i><span>Editar mensagem</span></button>
+            <button id="btn-apagar-todos" onclick="acaoApagarParaTodos()" class="w-full text-left px-4 py-2.5 text-sm text-red-400 hover:bg-surfaceLight rounded-xl flex items-center space-x-3 transition"><i class="fa-solid fa-trash-can w-5"></i><span>Apagar para todos</span></button>
+            <button onclick="acaoApagarParaMim()" class="w-full text-left px-4 py-2.5 text-sm text-gray-200 hover:bg-surfaceLight rounded-xl flex items-center space-x-3 transition"><i class="fa-solid fa-eye-slash text-mutedText w-5"></i><span>Apagar para mim</span></button>
         </div>
     </div>
 
-    <!-- LÓGICA DO TOQUE LONGO E REGRA DE 2 MINUTOS -->
+
+    <!-- ================= NAVEGAÇÃO INFERIOR FIXA (5 ABAS) ================= -->
+    <nav class="bg-surface border-t border-slate-800 h-16 flex justify-around items-center shrink-0 z-20">
+        <button onclick="mudarAba('conversas', this)" class="nav-btn flex flex-col items-center justify-center flex-1 text-accent transition py-1">
+            <i class="fa-solid fa-comment-dots text-lg mb-0.5"></i>
+            <span class="text-[10px] font-medium">Conversas</span>
+        </button>
+        <button onclick="mudarAba('status', this)" class="nav-btn flex flex-col items-center justify-center flex-1 text-mutedText hover:text-gray-300 transition py-1">
+            <i class="fa-solid fa-circle-notch text-lg mb-0.5"></i>
+            <span class="text-[10px] font-medium">Status</span>
+        </button>
+        <button onclick="mudarAba('comunidades', this)" class="nav-btn flex flex-col items-center justify-center flex-1 text-mutedText hover:text-gray-300 transition py-1">
+            <i class="fa-solid fa-users-rectangle text-lg mb-0.5"></i>
+            <span class="text-[10px] font-medium">Comunidades</span>
+        </button>
+        <button onclick="mudarAba('ligacoes', this)" class="nav-btn flex flex-col items-center justify-center flex-1 text-mutedText hover:text-gray-300 transition py-1">
+            <i class="fa-solid fa-microphone text-lg mb-0.5"></i>
+            <span class="text-[10px] font-medium">Áudios</span>
+        </button>
+        <button onclick="mudarAba('perfil', this)" class="nav-btn flex flex-col items-center justify-center flex-1 text-mutedText hover:text-gray-300 transition py-1">
+            <i class="fa-solid fa-user-gear text-lg mb-0.5"></i>
+            <span class="text-[10px] font-medium">Perfil</span>
+        </button>
+    </nav>
+
+
+    <!-- ================= CONTROLADORES DE INTERFACE (JAVASCRIPT) ================= -->
     <script>
+        // Alternância entre as 5 abas da tela inicial
+        function mudarAba(nomeAba, elementoBtn) {
+            document.querySelectorAll('.tab-pane').forEach(el => el.classList.add('hidden'));
+            document.getElementById('tab-' + nomeAba).classList.remove('hidden');
+
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('text-accent');
+                btn.classList.add('text-mutedText');
+            });
+            elementoBtn.classList.remove('text-mutedText');
+            elementoBtn.classList.add('text-accent');
+        }
+
+        // Abrir tela de chat individual (Oculta a home e exibe o chat)
+        function abrirTelaChat(nomeContato, status) {
+            document.getElementById('chat-header-title').innerText = nomeContato;
+            document.getElementById('chat-header-avatar').innerText = nomeContato.substring(0, 2).toUpperCase();
+            document.getElementById('chat-header-status').innerHTML = `<i class="fa-solid fa-circle text-[6px] mr-1"></i> ${status}`;
+            document.getElementById('screen-chat').classList.remove('hidden');
+        }
+
+        // Fechar tela de chat e voltar para a lista de conversas
+        function fecharTelaChat() {
+            document.getElementById('screen-chat').classList.add('hidden');
+        }
+
+        // Lógica de Toque Longo e Regra de 2 Minutos
         let timerToqueLongo = null;
         let mensagemSelecionada = { id: null, texto: '', ehMinha: false, createdAt: null };
 
-        // Inicia a contagem ao pressionar a mensagem (Segurar por 500ms)
         function iniciarToqueLongo(event, id, texto, ehMinha, createdAt) {
-            // Apenas para mensagens próprias ou conforme regra desejada
             timerToqueLongo = setTimeout(() => {
                 abrirMenuAcoes(id, texto, ehMinha, createdAt);
             }, 500);
         }
 
-        // Cancela se o usuário soltar o dedo antes dos 500ms (foi só um toque normal)
         function cancelarToqueLongo() {
             if (timerToqueLongo) {
                 clearTimeout(timerToqueLongo);
@@ -133,7 +311,6 @@
             const btnEditar = document.getElementById('btn-editar');
             const btnApagarTodos = document.getElementById('btn-apagar-todos');
 
-            // Verifica se a mensagem é do usuário e se está dentro do limite de 2 minutos
             const agora = new Date();
             const dataMsg = new Date(createdAt);
             const diferencaMinutos = (agora - dataMsg) / 1000 / 60;
@@ -142,12 +319,11 @@
                 btnEditar.style.display = 'flex';
                 btnApagarTodos.style.display = 'flex';
             } else {
-                // Se passou de 2 minutos ou não é do usuário, esconde edição/apagar para todos
                 btnEditar.style.display = 'none';
                 if (!ehMinha) {
                     btnApagarTodos.style.display = 'none';
                 } else {
-                    btnApagarTodos.style.display = 'flex'; // Apagar para mim sempre pode
+                    btnApagarTodos.style.display = 'flex';
                 }
             }
 
@@ -166,20 +342,28 @@
             document.getElementById('action-menu').classList.add('hidden');
         }
 
+        function acaoResponder() {
+            document.getElementById('action-menu').classList.add('hidden');
+            alert('Respondendo mensagem...');
+        }
+
+        function acaoEncaminhar() {
+            document.getElementById('action-menu').classList.add('hidden');
+            alert('Encaminhando mensagem...');
+        }
+
         function acaoEditar() {
             document.getElementById('action-menu').classList.add('hidden');
             const novoTexto = prompt('Editar mensagem:', mensagemSelecionada.texto);
             if (novoTexto && novoTexto.trim() !== '') {
-                alert(`Mensagem ${mensagemSelecionada.id} atualizada para: ${novoTexto}`);
-                // Aqui entrará a chamada de update no Supabase
+                alert('Mensagem editada com sucesso.');
             }
         }
 
         function acaoApagarParaTodos() {
             document.getElementById('action-menu').classList.add('hidden');
-            if (confirm('Deseja apagar esta mensagem para todos?')) {
+            if (confirm('Apagar mensagem para todos?')) {
                 alert('Mensagem apagada para todos.');
-                // Aqui entrará a exclusão/atualização no Supabase
             }
         }
 
@@ -188,14 +372,10 @@
             alert('Mensagem apagada para você.');
         }
 
-        function voltarParaConversas() {
-            alert('Voltando para a lista de conversas...');
-        }
-
         function enviarMensagem() {
             const input = document.getElementById('message-input');
             if (!input.value.trim()) return;
-            alert('Enviando: ' + input.value);
+            alert('Mensagem enviada: ' + input.value);
             input.value = '';
         }
     </script>
