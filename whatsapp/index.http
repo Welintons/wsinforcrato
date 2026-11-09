@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Moderno</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Supabase JS SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- FontAwesome para Ícones -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        darkBg: '#0f172a',
+                        sidebarBg: '#1e293b',
+                        chatBg: '#0b0f19',
+                        accentGreen: '#10b981'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-darkBg text-gray-100 h-screen flex overflow-hidden">
+
+    <!-- SIDEBAR: Lista de Contatos / Conversas -->
+    <div class="w-full md:w-80 bg-sidebarBg border-r border-slate-700 flex flex-col">
+        <!-- Header da Sidebar -->
+        <div class="p-4 bg-slate-800 flex items-center justify-between border-b border-slate-700">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-full bg-accentGreen flex items-center justify-center font-bold text-slate-900" id="user-avatar">W</div>
+                <div>
+                    <h2 class="font-semibold text-sm" id="current-username">Carregando...</h2>
+                    <span class="text-xs text-emerald-400 flex items-center"><i class="fa-solid fa-circle text-[8px] mr-1"></i> Online</span>
+                </div>
+            </div>
+            <button onclick="mudarUsuario()" class="text-slate-400 hover:text-white text-xs bg-slate-700 px-2 py-1 rounded">Trocar Nome</button>
+        </div>
+
+        <!-- Barra de Busca -->
+        <div class="p-3">
+            <div class="bg-slate-900 rounded-lg flex items-center px-3 py-2 text-sm text-slate-400">
+                <i class="fa-solid fa-search mr-2"></i>
+                <input type="text" placeholder="Pesquisar ou começar nova conversa" class="bg-transparent border-none outline-none w-text-white text-xs w-full text-white">
+            </div>
+        </div>
+
+        <!-- Lista de Chats -->
+        <div class="flex-1 overflow-y-auto divide-y divide-slate-800/50">
+            <div onclick="abrirChat('Geral')" class="p-3 hover:bg-slate-800/60 cursor-pointer flex items-center space-x-3 transition">
+                <div class="w-12 h-12 rounded-full bg-indigo-600 flex items-center justify-center text-lg font-bold"><i class="fa-solid fa-comments"></i></div>
+                <div class="flex-1">
+                    <div class="flex justify-between items-center">
+                        <h3 class="font-medium text-sm">Chat Geral</h3>
+                        <span class="text-[10px] text-slate-500">Agora</span>
+                    </div>
+                    <p class="text-xs text-slate-400 truncate">Clique para entrar na sala pública...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ÁREA PRINCIPAL DO CHAT -->
+    <div class="flex-1 flex flex-col bg-chatBg hidden md:flex" id="chat-area">
+        <!-- Header do Chat -->
+        <div class="p-4 bg-slate-800 border-b border-slate-700 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-full bg-indigo-600 flex items-center justify-center font-bold"><i class="fa-solid fa-comments"></i></div>
+                <div>
+                    <h2 class="font-semibold text-sm" id="chat-title">Chat Geral</h2>
+                    <span class="text-xs text-slate-400">Mensagens em tempo real</span>
+                </div>
+            </div>
+            <div class="flex space-x-4 text-slate-400">
+                <i class="fa-solid fa-magnifying-glass cursor-pointer hover:text-white"></i>
+                <i class="fa-solid fa-ellipsis-vertical cursor-pointer hover:text-white"></i>
+            </div>
+        </div>
+
+        <!-- Histórico de Mensagens -->
+        <div id="messages-container" class="flex-1 p-4 overflow-y-auto space-y-3 flex flex-col">
+            <!-- As mensagens entram aqui via JS -->
+        </div>
+
+        <!-- Caixa de Entrada / Envio -->
+        <div class="p-3 bg-slate-800 border-t border-slate-700 flex items-center space-x-2">
+            <button class="text-slate-400 hover:text-white p-2"><i class="fa-solid fa-face-smile text-lg"></i></button>
+            <button class="text-slate-400 hover:text-white p-2"><i class="fa-solid fa-paperclip text-lg"></i></button>
+            <input type="text" id="message-input" placeholder="Digite uma mensagem..." 
+                   class="flex-1 bg-slate-900 border border-slate-700 rounded-lg px-4 py-2.5 text-sm text-white focus:outline-none focus:border-emerald-500"
+                   onkeypress="if(event.key === 'Enter') enviarMensagem()">
+            <button onclick="enviarMensagem()" class="bg-emerald-600 hover:bg-emerald-500 text-white w-10 h-10 rounded-lg flex items-center justify-center transition">
+                <i class="fa-solid fa-paper-plane"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Configuração do Supabase & Lógica -->
+    <script>
+        // Substitua pelas suas credenciais do projeto Supabase
+        const SUPABASE_URL = 'SUA_SUPABASE_URL_AQUI';
+        const SUPABASE_ANON_KEY = 'SUA_SUPABASE_ANON_KEY_AQUI';
+        
+        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        // Identificação do Usuário Local
+        let meuUsuario = localStorage.getItem('chat_usuario') || '';
+        if (!meuUsuario) {
+            meuUsuario = prompt('Digite seu nome para entrar no chat:') || 'Usuário ' + Math.floor(Math.random() * 1000);
+            localStorage.setItem('chat_usuario', meuUsuario);
+        }
+        document.getElementById('current-username').innerText = meuUsuario;
+        document.getElementById('user-avatar').innerText = meuUsuario.charAt(0).toUpperCase();
+
+        function mudarUsuario() {
+            const novoNome = prompt('Novo nome de usuário:', meuUsuario);
+            if (novoNome) {
+                meuUsuario = novoNome;
+                localStorage.setItem('chat_usuario', meuUsuario);
+                document.getElementById('current-username').innerText = meuUsuario;
+                document.getElementById('user-avatar').innerText = meuUsuario.charAt(0).toUpperCase();
+            }
+        }
+
+        // Carregar mensagens iniciais
+        async function carregarMensagens() {
+            const { data, error } = await supabase
+                .from('mensagens')
+                .select('*')
+                .order('created_at', { ascending: true })
+                .limit(50);
+
+            if (error) {
+                console.error('Erro ao carregar:', error);
+                return;
+            }
+
+            const container = document.getElementById('messages-container');
+            container.innerHTML = '';
+            data.forEach(msg => renderizarMensagem(msg));
+            container.scrollTop = container.scrollHeight;
+        }
+
+        // Renderizar mensagem individual na tela
+        function renderizarMensagem(msg) {
+            const container = document.getElementById('messages-container');
+            const ehMinha = msg.usuario === meuUsuario;
+
+            const div = document.createElement('div');
+            div.className = `flex flex-col max-w-[70%] ${ehMinha ? 'ml-auto items-end' : 'mr-auto items-start'}`;
+
+            div.innerHTML = `
+                <div class="px-4 py-2 rounded-lg text-sm shadow ${ehMinha ? 'bg-emerald-700 text-white rounded-br-none' : 'bg-slate-800 text-slate-100 rounded-bl-none'}">
+                    ${!ehMinha ? `<span class="block text-[10px] font-bold text-emerald-400 mb-0.5">${msg.usuario}</span>` : ''}
+                    <span>${msg.texto}</span>
+                </div>
+                <span class="text-[9px] text-slate-500 mt-1">${new Date(msg.created_at).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
+            `;
+            container.appendChild(div);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        // Enviar mensagem para o Supabase
+        async function enviarMensagem() {
+            const input = document.getElementById('message-input');
+            const texto = input.value.trim();
+            if (!texto) return;
+
+            input.value = '';
+
+            const { error } = await supabase
+                .from('mensagens')
+                .insert([{ usuario: meuUsuario, texto: texto }]);
+
+            if (error) {
+                alert('Erro ao enviar mensagem: ' + error.message);
+            }
+        }
+
+        // Ouvir novas mensagens em tempo real (Realtime)
+        supabase
+            .channel('public:mensagens')
+            .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'mensagens' }, payload => {
+                renderizarMensagem(payload.new);
+            })
+            .subscribe();
+
+        // Inicializar
+        carregarMensagens();
+    </script>
+</body>
+</html>
