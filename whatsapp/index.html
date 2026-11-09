@@ -16,11 +16,11 @@
                         darkBg: '#0b0f19',
                         surface: '#131c2e',
                         surfaceLight: '#1e293b',
-                        accent: '#3b82f6',       /* Azul Elétrico Principal */
+                        accent: '#3b82f6',
                         accentHover: '#2563eb',
                         mutedText: '#94a3b8',
-                        msgOut: '#1d4ed8',       /* Bolha enviada (Azul) */
-                        msgIn: '#1e293b'         /* Bolha recebida (Grafite) */
+                        msgOut: '#1d4ed8',
+                        msgIn: '#1e293b'
                     }
                 }
             }
@@ -32,20 +32,18 @@
     <!-- ================= CONTEÚDO PRINCIPAL (ABAS) ================= -->
     <main id="app-container" class="flex-1 overflow-y-auto relative flex flex-col">
 
-        <!-- 1. ABA CONVERSAS (TELA INICIAL) -->
+        <!-- 1. ABA CONVERSAS -->
         <section id="tab-conversas" class="tab-pane flex flex-col h-full">
-            <!-- Cabeçalho Conversas -->
             <header class="bg-surface px-4 py-3 flex items-center justify-between border-b border-slate-800 shrink-0">
                 <div class="flex items-center space-x-2">
                     <h1 class="text-xl font-bold tracking-wider text-white">Nexus<span class="text-accent">Chat</span></h1>
                 </div>
                 <div class="flex items-center space-x-4 text-mutedText text-base">
-                    <button onclick="alert('Busca global')" class="hover:text-accent transition"><i class="fa-solid fa-magnifying-glass"></i></button>
-                    <button onclick="alert('Nova conversa')" class="hover:text-accent transition"><i class="fa-solid fa-pen-to-square"></i></button>
+                    <button class="hover:text-accent transition"><i class="fa-solid fa-magnifying-glass"></i></button>
+                    <button class="hover:text-accent transition"><i class="fa-solid fa-pen-to-square"></i></button>
                 </div>
             </header>
 
-            <!-- Filtros Rápidos -->
             <div class="px-4 py-2 bg-surface/50 flex space-x-2 overflow-x-auto shrink-0 border-b border-slate-800/60 scrollbar-none">
                 <button class="bg-accent text-white text-xs px-3 py-1 rounded-full font-medium shrink-0">Todas</button>
                 <button class="bg-surfaceLight text-mutedText text-xs px-3 py-1 rounded-full font-medium shrink-0 hover:text-white">Não lidas</button>
@@ -53,9 +51,7 @@
                 <button class="bg-surfaceLight text-mutedText text-xs px-3 py-1 rounded-full font-medium shrink-0 hover:text-white">Grupos</button>
             </div>
 
-            <!-- Lista de Conversas -->
             <div class="flex-1 overflow-y-auto divide-y divide-slate-800/40">
-                <!-- Item de Conversa (Clica para abrir o chat) -->
                 <div onclick="abrirTelaChat('Comunidade Dev Crato', 'online')" class="flex items-center px-4 py-3 hover:bg-surfaceLight/40 active:bg-surfaceLight cursor-pointer transition">
                     <div class="relative mr-3 shrink-0">
                         <div class="w-12 h-12 rounded-full bg-slate-700 flex items-center text-white justify-center font-bold text-lg">
@@ -77,9 +73,7 @@
 
                 <div onclick="abrirTelaChat('Mila', 'online')" class="flex items-center px-4 py-3 hover:bg-surfaceLight/40 active:bg-surfaceLight cursor-pointer transition">
                     <div class="relative mr-3 shrink-0">
-                        <div class="w-12 h-12 rounded-full bg-indigo-900 flex items-center text-white justify-center font-bold text-base">
-                            M
-                        </div>
+                        <div class="w-12 h-12 rounded-full bg-indigo-900 flex items-center text-white justify-center font-bold text-base">M</div>
                         <span class="absolute bottom-0 right-0 w-3.5 h-3.5 bg-emerald-500 border-2 border-darkBg rounded-full"></span>
                     </div>
                     <div class="flex-1 min-w-0">
@@ -116,7 +110,7 @@
         <section id="tab-comunidades" class="tab-pane hidden flex flex-col h-full p-4">
             <div class="flex justify-between items-center mb-4">
                 <h2 class="text-lg font-bold text-white">Comunidades e Grupos</h2>
-                <button onclick="alert('Criar grupo')" class="bg-accent text-white text-xs px-3 py-1.5 rounded-lg font-medium hover:bg-accentHover"><i class="fa-solid fa-plus mr-1"></i> Novo Grupo</button>
+                <button class="bg-accent text-white text-xs px-3 py-1.5 rounded-lg font-medium hover:bg-accentHover"><i class="fa-solid fa-plus mr-1"></i> Novo Grupo</button>
             </div>
             <div class="space-y-3">
                 <div onclick="abrirTelaChat('Equipe Técnica WS', 'grupo')" class="bg-surface p-3 rounded-xl border border-slate-800 flex items-center space-x-3 cursor-pointer hover:bg-surfaceLight transition">
@@ -129,7 +123,7 @@
             </div>
         </section>
 
-        <!-- 4. ABA LIGAÇÕES / ÁUDIOS -->
+        <!-- 4. ABA ÁUDIOS -->
         <section id="tab-ligacoes" class="tab-pane hidden flex flex-col h-full p-4">
             <h2 class="text-lg font-bold mb-4 text-white">Mensagens de Voz & Áudios</h2>
             <div class="flex-1 text-center py-10 text-mutedText text-xs">Nenhum histórico de áudio recente</div>
@@ -157,17 +151,14 @@
     </main>
 
 
-    <!-- ================= TELA DE CHAT INTERNO (Oculta por padrão, abre ao clicar) ================= -->
+    <!-- ================= TELA DE CHAT INTERNO ================= -->
     <div id="screen-chat" class="absolute inset-0 bg-darkBg z-30 hidden flex flex-col">
-        <!-- Header do Chat -->
         <header class="bg-surface px-4 py-3 flex items-center justify-between border-b border-slate-800 shrink-0">
             <div class="flex items-center space-x-3">
                 <button onclick="fecharTelaChat()" class="text-mutedText hover:text-white mr-1 text-base">
                     <i class="fa-solid fa-arrow-left"></i>
                 </button>
-                <div class="w-10 h-10 rounded-full bg-slate-700 flex items-center justify-center font-bold text-white text-sm" id="chat-header-avatar">
-                    CC
-                </div>
+                <div class="w-10 h-10 rounded-full bg-slate-700 flex items-center justify-center font-bold text-white text-sm" id="chat-header-avatar">CC</div>
                 <div>
                     <h2 class="font-semibold text-sm text-gray-100" id="chat-header-title">Comunidade Dev</h2>
                     <span class="text-[10px] text-emerald-400 flex items-center" id="chat-header-status"><i class="fa-solid fa-circle text-[6px] mr-1"></i> online</span>
@@ -178,32 +169,9 @@
             </div>
         </header>
 
-        <!-- Histórico de Mensagens -->
+        <!-- Histórico de Mensagens (Injetado Dinamicamente) -->
         <div id="messages-container" class="flex-1 p-4 overflow-y-auto space-y-3 flex flex-col bg-[#070a12]">
-            <!-- Mensagem Enviada -->
-            <div class="flex flex-col max-w-[80%] ml-auto items-end group cursor-pointer"
-                 ontouchstart="iniciarToqueLongo(event, 'msg-1', 'Estrutura principal concluída com sucesso!', true, '2026-11-08T22:30:00Z')"
-                 onmousedown="iniciarToqueLongo(event, 'msg-1', 'Estrutura principal concluída com sucesso!', true, '2026-11-08T22:30:00Z')"
-                 ontouchend="cancelarToqueLongo()" onmouseup="cancelarToqueLongo()">
-                <div class="bg-msgOut text-white px-3 py-2 rounded-xl rounded-br-none text-sm shadow">
-                    <span>Estrutura principal concluída com sucesso!</span>
-                    <div class="flex items-center justify-end space-x-1 mt-1">
-                        <span class="text-[9px] text-blue-200/70">22:30</span>
-                        <i class="fa-solid fa-check-double text-[10px] text-blue-300"></i>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Mensagem Recebida -->
-            <div class="flex flex-col max-w-[80%] mr-auto items-start">
-                <div class="bg-msgIn text-gray-100 px-3 py-2 rounded-xl rounded-bl-none text-sm shadow">
-                    <span class="block text-[10px] font-bold text-accent mb-0.5">Mila</span>
-                    <span>Perfeito, visual ficou incrível e super limpo!</span>
-                    <div class="flex items-center justify-end space-x-1 mt-1">
-                        <span class="text-[9px] text-mutedText">22:31</span>
-                    </div>
-                </div>
-            </div>
+            <!-- As mensagens aparecem aqui com seus respectivos estados de setinha -->
         </div>
 
         <!-- Rodapé / Input de Envio -->
@@ -211,7 +179,8 @@
             <button class="text-mutedText hover:text-white p-2 text-lg"><i class="fa-regular fa-face-smile"></i></button>
             <button class="text-mutedText hover:text-white p-2 text-lg"><i class="fa-solid fa-paperclip"></i></button>
             <input type="text" id="message-input" placeholder="Digite uma mensagem..." 
-                   class="flex-1 bg-surfaceLight border border-transparent rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-accent">
+                   class="flex-1 bg-surfaceLight border border-transparent rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-accent"
+                   onkeypress="if(event.key === 'Enter') enviarMensagem()">
             <button onclick="enviarMensagem()" class="bg-accent text-white w-10 h-10 rounded-xl flex items-center justify-center font-bold transition hover:bg-accentHover">
                 <i class="fa-solid fa-paper-plane text-xs"></i>
             </button>
@@ -219,15 +188,13 @@
     </div>
 
 
-    <!-- ================= MENU FLUTUANTE DE AÇÕES DA MENSAGEM (Toque Longo) ================= -->
+    <!-- ================= MENU FLUTUANTE DE AÇÕES ================= -->
     <div id="action-menu" class="fixed inset-0 bg-black/70 backdrop-blur-xs z-50 hidden flex items-end justify-center pb-6 transition-opacity" onclick="fecharMenuAcoes(event)">
         <div class="bg-surface border border-slate-700 w-11/12 max-w-sm rounded-2xl p-2 shadow-2xl space-y-1" onclick="event.stopPropagation()">
             <div class="text-center py-1.5 border-b border-slate-800 mb-1">
                 <span class="text-[11px] text-mutedText font-medium">Ações da Mensagem</span>
             </div>
-            <button onclick="acaoResponder()" class="w-full text-left px-4 py-2.5 text-sm text-gray-200 hover:bg-surfaceLight rounded-xl flex items-center space-x-3 transition"><i class="fa-solid fa-reply text-mutedText w-5"></i><span>Responder</span></button>
             <button onclick="acaoCopiar()" class="w-full text-left px-4 py-2.5 text-sm text-gray-200 hover:bg-surfaceLight rounded-xl flex items-center space-x-3 transition"><i class="fa-solid fa-copy text-mutedText w-5"></i><span>Copiar</span></button>
-            <button onclick="acaoEncaminhar()" class="w-full text-left px-4 py-2.5 text-sm text-gray-200 hover:bg-surfaceLight rounded-xl flex items-center space-x-3 transition"><i class="fa-solid fa-share text-mutedText w-5"></i><span>Encaminhar</span></button>
             <button id="btn-editar" onclick="acaoEditar()" class="w-full text-left px-4 py-2.5 text-sm text-gray-200 hover:bg-surfaceLight rounded-xl flex items-center space-x-3 transition"><i class="fa-solid fa-pen text-mutedText w-5"></i><span>Editar mensagem</span></button>
             <button id="btn-apagar-todos" onclick="acaoApagarParaTodos()" class="w-full text-left px-4 py-2.5 text-sm text-red-400 hover:bg-surfaceLight rounded-xl flex items-center space-x-3 transition"><i class="fa-solid fa-trash-can w-5"></i><span>Apagar para todos</span></button>
             <button onclick="acaoApagarParaMim()" class="w-full text-left px-4 py-2.5 text-sm text-gray-200 hover:bg-surfaceLight rounded-xl flex items-center space-x-3 transition"><i class="fa-solid fa-eye-slash text-mutedText w-5"></i><span>Apagar para mim</span></button>
@@ -235,7 +202,7 @@
     </div>
 
 
-    <!-- ================= NAVEGAÇÃO INFERIOR FIXA (5 ABAS) ================= -->
+    <!-- ================= NAVEGAÇÃO INFERIOR ================= -->
     <nav class="bg-surface border-t border-slate-800 h-16 flex justify-around items-center shrink-0 z-20">
         <button onclick="mudarAba('conversas', this)" class="nav-btn flex flex-col items-center justify-center flex-1 text-accent transition py-1">
             <i class="fa-solid fa-comment-dots text-lg mb-0.5"></i>
@@ -260,9 +227,15 @@
     </nav>
 
 
-    <!-- ================= CONTROLADORES DE INTERFACE (JAVASCRIPT) ================= -->
+    <!-- ================= JAVASCRIPT & ESTADOS DE MENSAGEM ================= -->
     <script>
-        // Alternância entre as 5 abas da tela inicial
+        // Lista de mensagens simuladas para demonstrar os 3 estados
+        let mensagensExemplo = [
+            { id: '1', texto: 'Estrutura principal concluída com sucesso!', ehMinha: true, status: 'lido', horario: '22:30', createdAt: '2026-11-08T22:30:00Z' },
+            { id: '2', texto: 'Perfeito, visual ficou incrível e super limpo!', ehMinha: false, remetente: 'Mila', horario: '22:31', createdAt: '2026-11-08T22:31:00Z' },
+            { id: '3', texto: 'Testando envio pendente...', ehMinha: true, status: 'enviando', horario: '22:35', createdAt: '2026-11-08T22:35:00Z' }
+        ];
+
         function mudarAba(nomeAba, elementoBtn) {
             document.querySelectorAll('.tab-pane').forEach(el => el.classList.add('hidden'));
             document.getElementById('tab-' + nomeAba).classList.remove('hidden');
@@ -275,20 +248,98 @@
             elementoBtn.classList.add('text-accent');
         }
 
-        // Abrir tela de chat individual (Oculta a home e exibe o chat)
         function abrirTelaChat(nomeContato, status) {
             document.getElementById('chat-header-title').innerText = nomeContato;
             document.getElementById('chat-header-avatar').innerText = nomeContato.substring(0, 2).toUpperCase();
             document.getElementById('chat-header-status').innerHTML = `<i class="fa-solid fa-circle text-[6px] mr-1"></i> ${status}`;
             document.getElementById('screen-chat').classList.remove('hidden');
+            renderizarMensagens();
         }
 
-        // Fechar tela de chat e voltar para a lista de conversas
         function fecharTelaChat() {
             document.getElementById('screen-chat').classList.add('hidden');
         }
 
-        // Lógica de Toque Longo e Regra de 2 Minutos
+        // Renderiza as mensagens aplicando os 3 estados (Relógio, Uma Seta, Duas Setas)
+        function renderizarMensagens() {
+            const container = document.getElementById('messages-container');
+            container.innerHTML = '';
+
+            mensagensExemplo.forEach(msg => {
+                const div = document.createElement('div');
+                div.className = `flex flex-col max-w-[80%] ${msg.ehMinha ? 'ml-auto items-end' : 'mr-auto items-start'}`;
+
+                // Define o ícone de status (3 estados) para mensagens enviadas por mim
+                let iconeStatus = '';
+                if (msg.ehMinha) {
+                    if (msg.status === 'enviando') {
+                        iconeStatus = `<i class="fa-regular fa-clock text-[10px] text-mutedText" title="Enviando..."></i>`;
+                    } else if (msg.status === 'enviado') {
+                        iconeStatus = `<i class="fa-solid fa-check text-[10px] text-mutedText" title="Enviado"></i>`;
+                    } else if (msg.status === 'entregue' || msg.status === 'lido') {
+                        // Duas setas (azul se lido, cinza se apenas entregue)
+                        const corSeta = msg.status === 'lido' ? 'text-accent' : 'text-mutedText';
+                        iconeStatus = `<i class="fa-solid fa-check-double text-[10px] ${corSeta}" title="Lido"></i>`;
+                    }
+                }
+
+                div.innerHTML = `
+                    <div class="${msg.ehMinha ? 'bg-msgOut text-white rounded-br-none' : 'bg-msgIn text-gray-100 rounded-bl-none'} px-3 py-2 rounded-xl text-sm shadow cursor-pointer"
+                         ontouchstart="iniciarToqueLongo(event, '${msg.id}', '${msg.texto}', ${msg.ehMinha}, '${msg.createdAt}')"
+                         onmousedown="iniciarToqueLongo(event, '${msg.id}', '${msg.texto}', ${msg.ehMinha}, '${msg.createdAt}')"
+                         ontouchend="cancelarToqueLongo()" onmouseup="cancelarToqueLongo()">
+                        ${!msg.ehMinha ? `<span class="block text-[10px] font-bold text-accent mb-0.5">${msg.remetente}</span>` : ''}
+                        <span>${msg.texto}</span>
+                        <div class="flex items-center justify-end space-x-1.5 mt-1">
+                            <span class="text-[9px] text-gray-300/70">${msg.horario}</span>
+                            ${iconeStatus}
+                        </div>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+            container.scrollTop = container.scrollHeight;
+        }
+
+        // Enviar nova mensagem (Nasce com o relógio ⏳ e evolui para uma seta ✓ e duas setas ✓✓)
+        function enviarMensagem() {
+            const input = document.getElementById('message-input');
+            const texto = input.value.trim();
+            if (!texto) return;
+
+            const agora = new Date();
+            const horarioFormatado = agora.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            const novaId = 'msg-' + Date.now();
+
+            const novaMensagem = {
+                id: novaId,
+                texto: texto,
+                ehMinha: true,
+                status: 'enviando', // Estado 1: Relógio
+                horario: horarioFormatado,
+                createdAt: agora.toISOString()
+            };
+
+            mensagensExemplo.push(novaMensagem);
+            input.value = '';
+            renderizarMensagens();
+
+            // Simula a evolução automática para "Enviado" (1 seta) após 1 segundo
+            setTimeout(() => {
+                const m = mensagensExemplo.find(item => item.id === novaId);
+                if (m) m.status = 'enviado';
+                renderizarMensagens();
+            }, 1000);
+
+            // Simula a evolução para "Entregue/Lido" (2 setas) após 2.5 segundos
+            setTimeout(() => {
+                const m = mensagensExemplo.find(item => item.id === novaId);
+                if (m) m.status = 'lido';
+                renderizarMensagens();
+            }, 2500);
+        }
+
+        // Lógica de Toque Longo e Menu de Ações
         let timerToqueLongo = null;
         let mensagemSelecionada = { id: null, texto: '', ehMinha: false, createdAt: null };
 
@@ -338,45 +389,31 @@
 
         function acaoCopiar() {
             navigator.clipboard.writeText(mensagemSelecionada.texto);
-            alert('Texto copiado!');
             document.getElementById('action-menu').classList.add('hidden');
-        }
-
-        function acaoResponder() {
-            document.getElementById('action-menu').classList.add('hidden');
-            alert('Respondendo mensagem...');
-        }
-
-        function acaoEncaminhar() {
-            document.getElementById('action-menu').classList.add('hidden');
-            alert('Encaminhando mensagem...');
         }
 
         function acaoEditar() {
             document.getElementById('action-menu').classList.add('hidden');
             const novoTexto = prompt('Editar mensagem:', mensagemSelecionada.texto);
             if (novoTexto && novoTexto.trim() !== '') {
-                alert('Mensagem editada com sucesso.');
+                const m = mensagensExemplo.find(item => item.id === mensagemSelecionada.id);
+                if (m) m.texto = novoTexto;
+                renderizarMensagens();
             }
         }
 
         function acaoApagarParaTodos() {
             document.getElementById('action-menu').classList.add('hidden');
             if (confirm('Apagar mensagem para todos?')) {
-                alert('Mensagem apagada para todos.');
+                mensagensExemplo = mensagensExemplo.filter(item => item.id !== mensagemSelecionada.id);
+                renderizarMensagens();
             }
         }
 
         function acaoApagarParaMim() {
             document.getElementById('action-menu').classList.add('hidden');
-            alert('Mensagem apagada para você.');
-        }
-
-        function enviarMensagem() {
-            const input = document.getElementById('message-input');
-            if (!input.value.trim()) return;
-            alert('Mensagem enviada: ' + input.value);
-            input.value = '';
+            mensagensExemplo = mensagensExemplo.filter(item => item.id !== mensagemSelecionada.id);
+            renderizarMensagens();
         }
     </script>
 </body>
