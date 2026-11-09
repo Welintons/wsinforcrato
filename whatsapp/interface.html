@@ -1,0 +1,1041 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>NexusChat - Mensageria Instantânea</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        darkBg: '#0b0f19',
+                        surface: '#131c2e',
+                        surfaceLight: '#1e293b',
+                        accent: '#3b82f6',
+                        accentHover: '#2563eb',
+                        mutedText: '#94a3b8',
+                        msgOut: '#1d4ed8',
+                        msgIn: '#1e293b'
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        * {
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            -webkit-user-select: none;
+            user-select: none;
+            overscroll-behavior: none;
+        }
+
+        input, textarea {
+            -webkit-user-select: text;
+            user-select: text;
+        }
+
+        .message-bubble,
+        .conversation-item {
+            touch-action: pan-y;
+        }
+
+        .profile-avatar {
+            cursor: pointer;
+        }
+
+        .modal-enter {
+            animation: modalEnter .2s ease-out;
+        }
+
+        @keyframes modalEnter {
+            from {
+                opacity: 0;
+                transform: scale(.88);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .reaction {
+            font-size: 14px;
+            padding: 2px 5px;
+            border-radius: 20px;
+            background: #26364f;
+            border: 1px solid #475569;
+        }
+    </style>
+</head>
+
+<body class="bg-darkBg text-gray-100 h-full flex flex-col overflow-hidden font-sans">
+
+<main id="app-container" class="flex-1 overflow-y-auto relative flex flex-col">
+
+    <!-- CONVERSAS -->
+    <section id="tab-conversas" class="tab-pane flex flex-col h-full">
+
+        <header class="bg-surface px-4 py-3 flex items-center justify-between border-b border-slate-800 shrink-0">
+            <h1 class="text-xl font-bold tracking-wider text-white">
+                Nexus<span class="text-accent">Chat</span>
+            </h1>
+
+            <div class="flex items-center space-x-4 text-mutedText text-base">
+                <button><i class="fa-solid fa-magnifying-glass"></i></button>
+                <button><i class="fa-solid fa-pen-to-square"></i></button>
+            </div>
+        </header>
+
+        <div class="px-4 py-2 bg-surface/50 flex space-x-2 overflow-x-auto shrink-0 border-b border-slate-800/60">
+            <button class="bg-accent text-white text-xs px-3 py-1 rounded-full">Todas</button>
+            <button class="bg-surfaceLight text-mutedText text-xs px-3 py-1 rounded-full">Não lidas</button>
+            <button class="bg-surfaceLight text-mutedText text-xs px-3 py-1 rounded-full">Favoritas</button>
+            <button class="bg-surfaceLight text-mutedText text-xs px-3 py-1 rounded-full">Grupos</button>
+        </div>
+
+        <div id="conversation-list" class="flex-1 overflow-y-auto divide-y divide-slate-800/40">
+
+            <div class="conversation-item flex items-center px-4 py-3 hover:bg-surfaceLight/40 cursor-pointer transition"
+                 data-name="Comunidade Dev Crato"
+                 data-status="online">
+
+                <div class="relative mr-3 shrink-0">
+                    <div class="profile-avatar w-12 h-12 rounded-full bg-slate-700 flex items-center justify-center text-white font-bold text-lg">
+                        <i class="fa-solid fa-code text-accent"></i>
+                    </div>
+                    <span class="absolute bottom-0 right-0 w-3.5 h-3.5 bg-emerald-500 border-2 border-darkBg rounded-full pointer-events-none"></span>
+                </div>
+
+                <div class="flex-1 min-w-0">
+                    <div class="flex justify-between items-baseline mb-1">
+                        <h2 class="font-semibold text-sm truncate">Comunidade Dev Crato</h2>
+                        <span class="text-[11px] text-mutedText">11:15</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <p class="text-xs text-mutedText truncate pr-2">Wellington: O app está rodando liso!</p>
+                        <span class="unread-badge bg-accent text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">3</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="conversation-item flex items-center px-4 py-3 hover:bg-surfaceLight/40 cursor-pointer transition"
+                 data-name="Mila"
+                 data-status="online">
+
+                <div class="relative mr-3 shrink-0">
+                    <div class="profile-avatar w-12 h-12 rounded-full bg-indigo-900 flex items-center justify-center text-white font-bold text-base">
+                        M
+                    </div>
+                    <span class="absolute bottom-0 right-0 w-3.5 h-3.5 bg-emerald-500 border-2 border-darkBg rounded-full pointer-events-none"></span>
+                </div>
+
+                <div class="flex-1 min-w-0">
+                    <div class="flex justify-between items-baseline mb-1">
+                        <h2 class="font-semibold text-sm truncate">Mila</h2>
+                        <span class="text-[11px] text-mutedText">Ontem</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <p class="text-xs text-mutedText truncate">Combinado, amor!</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- STATUS -->
+    <section id="tab-status" class="tab-pane hidden flex flex-col h-full p-4">
+        <h2 class="text-lg font-bold mb-4">Status (24h)</h2>
+
+        <div class="flex items-center space-x-3 mb-6 bg-surface p-3 rounded-xl border border-slate-800">
+            <div class="relative">
+                <div class="profile-avatar w-14 h-14 rounded-full bg-slate-700 flex items-center justify-center text-xl font-bold text-accent">W</div>
+                <button class="absolute bottom-0 right-0 w-5 h-5 bg-accent rounded-full text-white text-xs border-2 border-darkBg">+</button>
+            </div>
+            <div>
+                <h3 class="font-semibold text-sm">Meu Status</h3>
+                <p class="text-xs text-mutedText">Toque para adicionar uma publicação</p>
+            </div>
+        </div>
+
+        <h4 class="text-xs font-semibold text-mutedText uppercase mb-3">Atualizações Recentes</h4>
+        <div class="flex-1 text-center py-10 text-mutedText text-xs">
+            Nenhum status recente dos contatos
+        </div>
+    </section>
+
+    <!-- COMUNIDADES -->
+    <section id="tab-comunidades" class="tab-pane hidden flex flex-col h-full p-4">
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="text-lg font-bold">Comunidades e Grupos</h2>
+            <button class="bg-accent text-white text-xs px-3 py-1.5 rounded-lg">
+                <i class="fa-solid fa-plus mr-1"></i> Novo Grupo
+            </button>
+        </div>
+
+        <div class="space-y-3">
+            <div class="conversation-item bg-surface p-3 rounded-xl border border-slate-800 flex items-center space-x-3 cursor-pointer"
+                 data-name="Equipe Técnica WS"
+                 data-status="grupo">
+
+                <div class="profile-avatar w-12 h-12 rounded-xl bg-blue-900/40 text-accent flex items-center justify-center text-lg">
+                    <i class="fa-solid fa-users"></i>
+                </div>
+
+                <div class="flex-1 min-w-0">
+                    <h3 class="font-semibold text-sm">Equipe Técnica WS</h3>
+                    <p class="text-xs text-mutedText">5 participantes • Última mensagem às 09:40</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ÁUDIOS -->
+    <section id="tab-ligacoes" class="tab-pane hidden flex flex-col h-full p-4">
+        <h2 class="text-lg font-bold mb-4">Mensagens de Voz & Áudios</h2>
+        <div class="flex-1 text-center py-10 text-mutedText text-xs">
+            Nenhum histórico de áudio recente
+        </div>
+    </section>
+
+    <!-- PERFIL -->
+    <section id="tab-perfil" class="tab-pane hidden flex flex-col h-full p-4 space-y-4 overflow-y-auto">
+        <h2 class="text-lg font-bold mb-2">Meu Perfil</h2>
+
+        <div class="flex items-center space-x-4 bg-surface p-4 rounded-xl border border-slate-800">
+            <div class="profile-avatar w-16 h-16 rounded-full bg-accent flex items-center justify-center text-white text-2xl font-bold">
+                W
+            </div>
+            <div>
+                <h3 class="font-bold text-base">Wellington Silva</h3>
+                <p class="text-xs text-accent">@wellington</p>
+                <p class="text-xs text-mutedText mt-1">Disponível para projetos</p>
+            </div>
+        </div>
+
+        <div class="bg-surface rounded-xl border border-slate-800 divide-y divide-slate-800 overflow-hidden text-sm">
+            <button class="w-full px-4 py-3 text-left flex items-center space-x-3">
+                <i class="fa-solid fa-lock text-mutedText w-5"></i>
+                <span>Privacidade e Segurança</span>
+            </button>
+            <button class="w-full px-4 py-3 text-left flex items-center space-x-3">
+                <i class="fa-solid fa-bell text-mutedText w-5"></i>
+                <span>Notificações Nativas</span>
+            </button>
+            <button class="w-full px-4 py-3 text-left flex items-center space-x-3">
+                <i class="fa-solid fa-database text-mutedText w-5"></i>
+                <span>Armazenamento e Dados</span>
+            </button>
+            <button class="w-full px-4 py-3 text-left flex items-center space-x-3 text-red-400">
+                <i class="fa-solid fa-right-from-bracket w-5"></i>
+                <span>Sair da conta</span>
+            </button>
+        </div>
+    </section>
+
+</main>
+
+<!-- TELA DE CHAT -->
+<div id="screen-chat" class="absolute inset-0 bg-darkBg z-30 hidden flex flex-col">
+
+    <header class="bg-surface px-4 py-3 flex items-center justify-between border-b border-slate-800 shrink-0">
+
+        <div class="flex items-center space-x-3 min-w-0">
+            <button onclick="fecharTelaChat()" class="text-mutedText mr-1">
+                <i class="fa-solid fa-arrow-left"></i>
+            </button>
+
+            <div id="chat-header-avatar"
+                 class="profile-avatar w-10 h-10 rounded-full bg-slate-700 flex items-center justify-center font-bold text-white text-sm">
+                CC
+            </div>
+
+            <div class="min-w-0">
+                <h2 class="font-semibold text-sm truncate" id="chat-header-title">Comunidade Dev</h2>
+                <span class="text-[10px] text-emerald-400" id="chat-header-status">online</span>
+            </div>
+        </div>
+
+        <button class="text-mutedText text-lg">
+            <i class="fa-solid fa-ellipsis-vertical"></i>
+        </button>
+    </header>
+
+    <div id="messages-container"
+         class="flex-1 p-4 overflow-y-auto space-y-3 flex flex-col bg-[#070a12]">
+    </div>
+
+    <div id="reply-preview" class="hidden bg-surface px-3 py-2 border-t border-slate-700">
+        <div class="flex justify-between items-center">
+            <div class="min-w-0">
+                <p class="text-xs text-accent font-semibold">Respondendo</p>
+                <p id="reply-preview-text" class="text-xs text-mutedText truncate"></p>
+            </div>
+            <button onclick="cancelarResposta()" class="text-mutedText px-2">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+    </div>
+
+    <footer class="p-2 bg-surface border-t border-slate-800 flex items-center space-x-2 shrink-0">
+        <button class="text-mutedText p-2 text-lg">
+            <i class="fa-regular fa-face-smile"></i>
+        </button>
+
+        <button class="text-mutedText p-2 text-lg">
+            <i class="fa-solid fa-paperclip"></i>
+        </button>
+
+        <input type="text" id="message-input"
+               placeholder="Digite uma mensagem..."
+               class="flex-1 bg-surfaceLight rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-accent"
+               onkeydown="if(event.key === 'Enter') enviarMensagem()">
+
+        <button onclick="enviarMensagem()"
+                class="bg-accent text-white w-10 h-10 rounded-xl flex items-center justify-center">
+            <i class="fa-solid fa-paper-plane text-xs"></i>
+        </button>
+    </footer>
+</div>
+
+<!-- MENU DE MENSAGEM -->
+<div id="action-menu"
+     class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden flex items-end justify-center pb-6"
+     onclick="fecharMenuAcoes(event)">
+
+    <div class="bg-surface border border-slate-700 w-11/12 max-w-sm rounded-2xl p-2 shadow-2xl space-y-1"
+         onclick="event.stopPropagation()">
+
+        <div class="text-center py-2 border-b border-slate-800 mb-1">
+            <span class="text-xs text-mutedText">Ações da mensagem</span>
+        </div>
+
+        <button onclick="acaoResponder()" class="menu-action">
+            <i class="fa-solid fa-reply"></i> Responder
+        </button>
+
+        <button onclick="acaoEncaminhar()" class="menu-action">
+            <i class="fa-solid fa-share"></i> Encaminhar
+        </button>
+
+        <button onclick="acaoReagir()" class="menu-action">
+            <i class="fa-regular fa-face-smile"></i> Reagir
+        </button>
+
+        <button onclick="acaoCopiar()" class="menu-action">
+            <i class="fa-solid fa-copy"></i> Copiar
+        </button>
+
+        <button id="btn-editar" onclick="acaoEditar()" class="menu-action">
+            <i class="fa-solid fa-pen"></i> Editar mensagem
+        </button>
+
+        <button id="btn-apagar-todos" onclick="acaoApagarParaTodos()" class="menu-action text-red-400">
+            <i class="fa-solid fa-trash-can"></i> Apagar para todos
+        </button>
+
+        <button onclick="acaoApagarParaMim()" class="menu-action">
+            <i class="fa-solid fa-eye-slash"></i> Apagar para mim
+        </button>
+    </div>
+</div>
+
+<!-- MENU DE CONVERSA -->
+<div id="conversation-menu"
+     class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden flex items-end justify-center pb-6"
+     onclick="fecharMenuConversa(event)">
+
+    <div class="bg-surface border border-slate-700 w-11/12 max-w-sm rounded-2xl p-2 shadow-2xl space-y-1"
+         onclick="event.stopPropagation()">
+
+        <div class="text-center py-2 border-b border-slate-800 mb-1">
+            <span id="conversation-menu-title" class="text-xs text-mutedText">Conversa</span>
+        </div>
+
+        <button onclick="alternarFixarConversa()" class="menu-action">
+            <i class="fa-solid fa-thumbtack"></i>
+            <span id="fixar-label">Fixar conversa</span>
+        </button>
+
+        <button onclick="alternarSilenciarConversa()" class="menu-action">
+            <i class="fa-solid fa-bell-slash"></i>
+            <span id="silenciar-label">Silenciar notificações</span>
+        </button>
+
+        <button onclick="marcarComoNaoLida()" class="menu-action">
+            <i class="fa-solid fa-envelope"></i> Marcar como não lida
+        </button>
+
+        <button onclick="arquivarConversa()" class="menu-action">
+            <i class="fa-solid fa-box-archive"></i> Arquivar conversa
+        </button>
+
+        <button onclick="excluirConversa()" class="menu-action text-red-400">
+            <i class="fa-solid fa-trash"></i> Excluir conversa
+        </button>
+    </div>
+</div>
+
+<!-- VISUALIZAÇÃO DA FOTO -->
+<div id="profile-modal"
+     class="fixed inset-0 z-[70] hidden bg-black/90 flex items-center justify-center p-6"
+     onclick="fecharFotoPerfil()">
+
+    <button class="absolute top-6 right-6 text-white text-2xl">
+        <i class="fa-solid fa-xmark"></i>
+    </button>
+
+    <div id="profile-modal-content"
+         class="modal-enter w-64 h-64 max-w-[80vw] max-h-[80vw] rounded-full overflow-hidden flex items-center justify-center text-7xl font-bold text-white shadow-2xl"
+         onclick="event.stopPropagation()">
+    </div>
+</div>
+
+<!-- NAVEGAÇÃO -->
+<nav class="bg-surface border-t border-slate-800 h-16 flex justify-around items-center shrink-0 z-20">
+
+    <button onclick="mudarAba('conversas', this)" class="nav-btn flex flex-col items-center justify-center flex-1 text-accent py-1">
+        <i class="fa-solid fa-comment-dots text-lg"></i>
+        <span class="text-[10px]">Conversas</span>
+    </button>
+
+    <button onclick="mudarAba('status', this)" class="nav-btn flex flex-col items-center justify-center flex-1 text-mutedText py-1">
+        <i class="fa-solid fa-circle-notch text-lg"></i>
+        <span class="text-[10px]">Status</span>
+    </button>
+
+    <button onclick="mudarAba('comunidades', this)" class="nav-btn flex flex-col items-center justify-center flex-1 text-mutedText py-1">
+        <i class="fa-solid fa-users-rectangle text-lg"></i>
+        <span class="text-[10px]">Comunidades</span>
+    </button>
+
+    <button onclick="mudarAba('ligacoes', this)" class="nav-btn flex flex-col items-center justify-center flex-1 text-mutedText py-1">
+        <i class="fa-solid fa-microphone text-lg"></i>
+        <span class="text-[10px]">Áudios</span>
+    </button>
+
+    <button onclick="mudarAba('perfil', this)" class="nav-btn flex flex-col items-center justify-center flex-1 text-mutedText py-1">
+        <i class="fa-solid fa-user-gear text-lg"></i>
+        <span class="text-[10px]">Perfil</span>
+    </button>
+</nav>
+
+<style>
+    .menu-action {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        gap: 13px;
+        text-align: left;
+        padding: 12px 14px;
+        font-size: 13px;
+        color: #e2e8f0;
+        border-radius: 12px;
+    }
+
+    .menu-action i {
+        width: 20px;
+        color: #94a3b8;
+    }
+
+    .menu-action:active {
+        background: #1e293b;
+    }
+</style>
+
+<script>
+    // DADOS DEMONSTRATIVOS
+    let mensagensExemplo = [
+        {
+            id: '1',
+            texto: 'Estrutura principal concluída com sucesso!',
+            ehMinha: true,
+            status: 'lido',
+            horario: '22:30',
+            createdAt: new Date(Date.now() - 600000).toISOString(),
+            reacao: null
+        },
+        {
+            id: '2',
+            texto: 'Perfeito, visual ficou incrível e super limpo!',
+            ehMinha: false,
+            remetente: 'Mila',
+            horario: '22:31',
+            createdAt: new Date(Date.now() - 500000).toISOString(),
+            reacao: null
+        },
+        {
+            id: '3',
+            texto: 'Testando envio pendente...',
+            ehMinha: true,
+            status: 'enviando',
+            horario: '22:35',
+            createdAt: new Date(Date.now() - 300000).toISOString(),
+            reacao: null
+        }
+    ];
+
+    let timerToqueLongo = null;
+    let toqueLongoAtivado = false;
+
+    let mensagemSelecionada = null;
+    let conversaSelecionada = null;
+    let respostaSelecionada = null;
+    let abaAtual = 'conversas';
+
+    const estadoConversas = new WeakMap();
+
+    // NAVEGAÇÃO
+    function mudarAba(nomeAba, elementoBtn) {
+        abaAtual = nomeAba;
+
+        document.querySelectorAll('.tab-pane').forEach(el => {
+            el.classList.add('hidden');
+        });
+
+        document.getElementById('tab-' + nomeAba).classList.remove('hidden');
+
+        document.querySelectorAll('.nav-btn').forEach(btn => {
+            btn.classList.remove('text-accent');
+            btn.classList.add('text-mutedText');
+        });
+
+        elementoBtn.classList.remove('text-mutedText');
+        elementoBtn.classList.add('text-accent');
+    }
+
+    // ABRIR CONVERSA
+    function abrirTelaChat(nomeContato, status) {
+        document.getElementById('chat-header-title').textContent = nomeContato;
+        document.getElementById('chat-header-avatar').textContent =
+            nomeContato.substring(0, 2).toUpperCase();
+
+        document.getElementById('chat-header-status').textContent = status;
+
+        document.getElementById('screen-chat').classList.remove('hidden');
+
+        renderizarMensagens();
+    }
+
+    function fecharTelaChat() {
+        document.getElementById('screen-chat').classList.add('hidden');
+    }
+
+    // MENSAGENS
+    function renderizarMensagens() {
+        const container = document.getElementById('messages-container');
+        container.innerHTML = '';
+
+        mensagensExemplo.forEach(msg => {
+            const div = document.createElement('div');
+
+            div.className = `flex flex-col max-w-[80%] ${
+                msg.ehMinha ? 'ml-auto items-end' : 'mr-auto items-start'
+            }`;
+
+            const bubble = document.createElement('div');
+
+            bubble.className = `message-bubble ${
+                msg.ehMinha
+                    ? 'bg-msgOut text-white rounded-br-none'
+                    : 'bg-msgIn text-gray-100 rounded-bl-none'
+            } px-3 py-2 rounded-xl text-sm shadow cursor-pointer`;
+
+            if (!msg.ehMinha && msg.remetente) {
+                const remetente = document.createElement('span');
+                remetente.className = 'block text-[10px] font-bold text-accent mb-1';
+                remetente.textContent = msg.remetente;
+                bubble.appendChild(remetente);
+            }
+
+            if (msg.encaminhada) {
+                const encaminhada = document.createElement('span');
+                encaminhada.className = 'block text-[10px] text-blue-200 mb-1';
+                encaminhada.textContent = '↗ Encaminhada';
+                bubble.appendChild(encaminhada);
+            }
+
+            if (msg.respostaTexto) {
+                const resposta = document.createElement('div');
+                resposta.className = 'bg-black/20 border-l-2 border-blue-300 rounded p-2 mb-2 text-xs text-blue-100';
+                resposta.textContent = msg.respostaTexto;
+                bubble.appendChild(resposta);
+            }
+
+            const texto = document.createElement('span');
+            texto.className = 'whitespace-pre-wrap break-words';
+            texto.textContent = msg.texto;
+            bubble.appendChild(texto);
+
+            const rodape = document.createElement('div');
+            rodape.className = 'flex items-center justify-end space-x-1.5 mt-1';
+
+            const horario = document.createElement('span');
+            horario.className = 'text-[9px] text-gray-300/70';
+            horario.textContent = msg.horario;
+            rodape.appendChild(horario);
+
+            if (msg.ehMinha) {
+                const icone = document.createElement('i');
+
+                if (msg.status === 'enviando') {
+                    icone.className = 'fa-regular fa-clock text-[10px] text-mutedText';
+                } else if (msg.status === 'enviado') {
+                    icone.className = 'fa-solid fa-check text-[10px] text-mutedText';
+                } else {
+                    icone.className = 'fa-solid fa-check-double text-[10px] ' +
+                        (msg.status === 'lido' ? 'text-blue-300' : 'text-mutedText');
+                }
+
+                rodape.appendChild(icone);
+            }
+
+            bubble.appendChild(rodape);
+
+            if (msg.reacao) {
+                const reacao = document.createElement('span');
+                reacao.className = 'reaction mt-1';
+                reacao.textContent = msg.reacao;
+                div.appendChild(bubble);
+                div.appendChild(reacao);
+            } else {
+                div.appendChild(bubble);
+            }
+
+            // Toque prolongado na mensagem
+            configurarToqueLongo(bubble, () => {
+                abrirMenuAcoes(msg.id);
+            });
+
+            container.appendChild(div);
+        });
+
+        container.scrollTop = container.scrollHeight;
+    }
+
+    // ENVIO LOCAL DE MENSAGEM
+    function enviarMensagem() {
+        const input = document.getElementById('message-input');
+        const texto = input.value.trim();
+
+        if (!texto) return;
+
+        const agora = new Date();
+
+        const novaMensagem = {
+            id: 'msg-' + Date.now(),
+            texto,
+            ehMinha: true,
+            status: 'enviando',
+            horario: agora.toLocaleTimeString([], {
+                hour: '2-digit',
+                minute: '2-digit'
+            }),
+            createdAt: agora.toISOString(),
+            respostaTexto: respostaSelecionada
+                ? respostaSelecionada.texto
+                : null,
+            reacao: null
+        };
+
+        mensagensExemplo.push(novaMensagem);
+
+        input.value = '';
+        cancelarResposta();
+        renderizarMensagens();
+
+        const id = novaMensagem.id;
+
+        setTimeout(() => {
+            const m = mensagensExemplo.find(item => item.id === id);
+            if (m) {
+                m.status = 'enviado';
+                renderizarMensagens();
+            }
+        }, 1000);
+
+        setTimeout(() => {
+            const m = mensagensExemplo.find(item => item.id === id);
+            if (m) {
+                m.status = 'lido';
+                renderizarMensagens();
+            }
+        }, 2500);
+    }
+
+    // SISTEMA DE TOQUE PROLONGADO
+    function configurarToqueLongo(elemento, callback) {
+        elemento.addEventListener('pointerdown', () => {
+            toqueLongoAtivado = false;
+
+            clearTimeout(timerToqueLongo);
+
+            timerToqueLongo = setTimeout(() => {
+                toqueLongoAtivado = true;
+                callback();
+            }, 500);
+        });
+
+        ['pointerup', 'pointerleave', 'pointercancel'].forEach(evento => {
+            elemento.addEventListener(evento, () => {
+                clearTimeout(timerToqueLongo);
+            });
+        });
+
+        elemento.addEventListener('contextmenu', event => {
+            event.preventDefault();
+            clearTimeout(timerToqueLongo);
+            toqueLongoAtivado = true;
+            callback();
+        });
+    }
+
+    // MENU DE MENSAGEM
+    function abrirMenuAcoes(id) {
+        mensagemSelecionada = mensagensExemplo.find(m => m.id === id);
+
+        if (!mensagemSelecionada) return;
+
+        const diferencaMinutos =
+            (Date.now() - new Date(mensagemSelecionada.createdAt)) / 60000;
+
+        document.getElementById('btn-editar').style.display =
+            mensagemSelecionada.ehMinha && diferencaMinutos <= 2
+                ? 'flex'
+                : 'none';
+
+        document.getElementById('btn-apagar-todos').style.display =
+            mensagemSelecionada.ehMinha
+                ? 'flex'
+                : 'none';
+
+        document.getElementById('action-menu').classList.remove('hidden');
+    }
+
+    function fecharMenuAcoes(event) {
+        if (event.target.id === 'action-menu') {
+            document.getElementById('action-menu').classList.add('hidden');
+        }
+    }
+
+    function esconderMenuMensagem() {
+        document.getElementById('action-menu').classList.add('hidden');
+    }
+
+    function acaoResponder() {
+        if (!mensagemSelecionada) return;
+
+        respostaSelecionada = mensagemSelecionada;
+
+        document.getElementById('reply-preview-text').textContent =
+            mensagemSelecionada.texto;
+
+        document.getElementById('reply-preview').classList.remove('hidden');
+
+        esconderMenuMensagem();
+        document.getElementById('message-input').focus();
+    }
+
+    function cancelarResposta() {
+        respostaSelecionada = null;
+        document.getElementById('reply-preview').classList.add('hidden');
+    }
+
+    function acaoEncaminhar() {
+        if (!mensagemSelecionada) return;
+
+        const texto = mensagemSelecionada.texto;
+
+        esconderMenuMensagem();
+
+        if (confirm('Encaminhar esta mensagem para a conversa atual?')) {
+            const agora = new Date();
+
+            mensagensExemplo.push({
+                id: 'msg-' + Date.now(),
+                texto,
+                ehMinha: true,
+                status: 'enviando',
+                encaminhada: true,
+                horario: agora.toLocaleTimeString([], {
+                    hour: '2-digit',
+                    minute: '2-digit'
+                }),
+                createdAt: agora.toISOString()
+            });
+
+            renderizarMensagens();
+        }
+    }
+
+    function acaoReagir() {
+        if (!mensagemSelecionada) return;
+
+        const emojis = ['❤️', '😂', '👍', '😮', '😢', '🔥', '👏'];
+
+        const escolha = prompt(
+            'Digite uma reação:\n' + emojis.join('  ')
+        );
+
+        if (escolha) {
+            mensagemSelecionada.reacao = escolha.trim();
+            renderizarMensagens();
+        }
+
+        esconderMenuMensagem();
+    }
+
+    function acaoCopiar() {
+        if (!mensagemSelecionada) return;
+
+        const texto = mensagemSelecionada.texto;
+
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(texto).catch(() => {
+                alert('Não foi possível copiar a mensagem.');
+            });
+        } else {
+            const campo = document.createElement('textarea');
+            campo.value = texto;
+            document.body.appendChild(campo);
+            campo.select();
+            document.execCommand('copy');
+            campo.remove();
+        }
+
+        esconderMenuMensagem();
+    }
+
+    function acaoEditar() {
+        if (!mensagemSelecionada) return;
+
+        const msg = mensagemSelecionada;
+        esconderMenuMensagem();
+
+        const novoTexto = prompt('Editar mensagem:', msg.texto);
+
+        if (novoTexto !== null && novoTexto.trim()) {
+            const diferencaMinutos =
+                (Date.now() - new Date(msg.createdAt)) / 60000;
+
+            if (!msg.ehMinha || diferencaMinutos > 2) {
+                alert('O prazo de edição expirou.');
+                return;
+            }
+
+            msg.texto = novoTexto.trim();
+            renderizarMensagens();
+        }
+    }
+
+    function acaoApagarParaTodos() {
+        if (!mensagemSelecionada) return;
+
+        esconderMenuMensagem();
+
+        if (!mensagemSelecionada.ehMinha) return;
+
+        if (confirm('Apagar mensagem para todos?')) {
+            mensagensExemplo = mensagensExemplo.filter(
+                item => item.id !== mensagemSelecionada.id
+            );
+
+            renderizarMensagens();
+        }
+    }
+
+    function acaoApagarParaMim() {
+        if (!mensagemSelecionada) return;
+
+        mensagensExemplo = mensagensExemplo.filter(
+            item => item.id !== mensagemSelecionada.id
+        );
+
+        esconderMenuMensagem();
+        renderizarMensagens();
+    }
+
+    // MENU DE CONVERSA
+    function abrirMenuConversa(elemento) {
+        conversaSelecionada = elemento;
+
+        const estado = estadoConversas.get(elemento) || {
+            fixada: false,
+            silenciada: false
+        };
+
+        document.getElementById('conversation-menu-title').textContent =
+            elemento.dataset.name;
+
+        document.getElementById('fixar-label').textContent =
+            estado.fixada ? 'Desafixar conversa' : 'Fixar conversa';
+
+        document.getElementById('silenciar-label').textContent =
+            estado.silenciada ? 'Ativar notificações' : 'Silenciar notificações';
+
+        document.getElementById('conversation-menu').classList.remove('hidden');
+    }
+
+    function fecharMenuConversa(event) {
+        if (event.target.id === 'conversation-menu') {
+            document.getElementById('conversation-menu').classList.add('hidden');
+        }
+    }
+
+    function esconderMenuConversa() {
+        document.getElementById('conversation-menu').classList.add('hidden');
+    }
+
+    function obterEstadoConversa() {
+        return estadoConversas.get(conversaSelecionada) || {
+            fixada: false,
+            silenciada: false
+        };
+    }
+
+    function alternarFixarConversa() {
+        if (!conversaSelecionada) return;
+
+        const estado = obterEstadoConversa();
+        estado.fixada = !estado.fixada;
+
+        estadoConversas.set(conversaSelecionada, estado);
+
+        conversaSelecionada.classList.toggle('border-l-4', estado.fixada);
+        conversaSelecionada.classList.toggle('border-accent', estado.fixada);
+
+        esconderMenuConversa();
+    }
+
+    function alternarSilenciarConversa() {
+        if (!conversaSelecionada) return;
+
+        const estado = obterEstadoConversa();
+        estado.silenciada = !estado.silenciada;
+
+        estadoConversas.set(conversaSelecionada, estado);
+
+        esconderMenuConversa();
+    }
+
+    function marcarComoNaoLida() {
+        if (!conversaSelecionada) return;
+
+        let badge = conversaSelecionada.querySelector('.unread-badge');
+
+        if (!badge) {
+            badge = document.createElement('span');
+            badge.className = 'unread-badge bg-accent text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full';
+            badge.textContent = '1';
+
+            const area = conversaSelecionada.querySelector('.flex-1.min-w-0 .flex.justify-between.items-center');
+
+            if (area) area.appendChild(badge);
+        }
+
+        esconderMenuConversa();
+    }
+
+    function arquivarConversa() {
+        if (!conversaSelecionada) return;
+
+        if (confirm('Arquivar esta conversa?')) {
+            conversaSelecionada.remove();
+        }
+
+        esconderMenuConversa();
+    }
+
+    function excluirConversa() {
+        if (!conversaSelecionada) return;
+
+        if (confirm('Excluir esta conversa da lista?')) {
+            conversaSelecionada.remove();
+        }
+
+        esconderMenuConversa();
+    }
+
+    // FOTO DE PERFIL AMPLIADA
+    function abrirFotoPerfil(elemento) {
+        const modal = document.getElementById('profile-modal');
+        const conteudo = document.getElementById('profile-modal-content');
+
+        conteudo.innerHTML = '';
+
+        const copia = elemento.cloneNode(true);
+
+        copia.className =
+            'w-full h-full flex items-center justify-center text-white text-7xl font-bold';
+
+        copia.style.width = '100%';
+        copia.style.height = '100%';
+
+        conteudo.appendChild(copia);
+        conteudo.className =
+            'modal-enter w-64 h-64 max-w-[80vw] max-h-[80vw] rounded-full overflow-hidden flex items-center justify-center shadow-2xl';
+
+        modal.classList.remove('hidden');
+    }
+
+    function fecharFotoPerfil() {
+        document.getElementById('profile-modal').classList.add('hidden');
+    }
+
+    // EVENTOS DAS CONVERSAS
+    document.querySelectorAll('.conversation-item').forEach(elemento => {
+        configurarToqueLongo(elemento, () => {
+            abrirMenuConversa(elemento);
+        });
+
+        elemento.addEventListener('click', event => {
+            if (toqueLongoAtivado) {
+                event.preventDefault();
+                toqueLongoAtivado = false;
+                return;
+            }
+
+            if (event.target.closest('.profile-avatar')) return;
+
+            abrirTelaChat(
+                elemento.dataset.name,
+                elemento.dataset.status
+            );
+        });
+    });
+
+    // EVENTOS DAS FOTOS
+    document.querySelectorAll('.profile-avatar').forEach(elemento => {
+        elemento.addEventListener('click', event => {
+            event.stopPropagation();
+            abrirFotoPerfil(elemento);
+        });
+    });
+
+    // FOTO NO CABEÇALHO DO CHAT
+    document.getElementById('chat-header-avatar').addEventListener('click', event => {
+        abrirFotoPerfil(event.currentTarget);
+    });
+
+    // FECHAR MODAIS COM ESC
+    document.addEventListener('keydown', event => {
+        if (event.key === 'Escape') {
+            fecharFotoPerfil();
+            esconderMenuMensagem();
+            esconderMenuConversa();
+        }
+    });
+
+</script>
+
+</body>
+</html>
