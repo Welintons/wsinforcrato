@@ -1,1152 +1,970 @@
 <!DOCTYPE html>
 <html lang="pt-BR" class="h-full">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NexusChat - Mensageria Instantânea</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>NexusChat</title>
 
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        darkBg: '#0b0f19',
-                        surface: '#131c2e',
-                        surfaceLight: '#1e293b',
-                        accent: '#3b82f6',
-                        accentHover: '#2563eb',
-                        mutedText: '#94a3b8',
-                        msgOut: '#1d4ed8',
-                        msgIn: '#1e293b'
-                    }
-                }
-            }
-        }
-    </script>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <style>
-        * {
-            -webkit-tap-highlight-color: transparent;
-        }
+<script>
+tailwind.config = {
+ theme:{
+  extend:{
+   colors:{
+    darkBg:'#0b0f19',
+    surface:'#131c2e',
+    surfaceLight:'#1e293b',
+    accent:'#3b82f6',
+    accentHover:'#2563eb',
+    mutedText:'#94a3b8',
+    msgOut:'#1d4ed8',
+    msgIn:'#1e293b'
+   }
+  }
+ }
+}
+</script>
 
-        body {
-            -webkit-user-select: none;
-            user-select: none;
-            overscroll-behavior: none;
-        }
-
-        input, textarea {
-            -webkit-user-select: text;
-            user-select: text;
-        }
-
-        .message-bubble,
-        .conversation-item {
-            touch-action: pan-y;
-        }
-
-        .profile-avatar {
-            cursor: pointer;
-        }
-
-        .modal-enter {
-            animation: modalEnter .2s ease-out;
-        }
-
-        @keyframes modalEnter {
-            from {
-                opacity: 0;
-                transform: scale(.88);
-            }
-            to {
-                opacity: 1;
-                transform: scale(1);
-            }
-        }
-
-        .reaction {
-            font-size: 14px;
-            padding: 2px 5px;
-            border-radius: 20px;
-            background: #26364f;
-            border: 1px solid #475569;
-        }
-    </style>
+<style>
+*{-webkit-tap-highlight-color:transparent}
+body{user-select:none;-webkit-user-select:none;overscroll-behavior:none}
+input,textarea{user-select:text;-webkit-user-select:text}
+.message-bubble,.conversation-item{touch-action:pan-y}
+.profile-avatar{cursor:pointer}
+.modal-enter{animation:modalEnter .2s ease-out}
+@keyframes modalEnter{
+ from{opacity:0;transform:scale(.88)}
+ to{opacity:1;transform:scale(1)}
+}
+.reaction{
+ font-size:14px;padding:2px 5px;border-radius:20px;
+ background:#26364f;border:1px solid #475569
+}
+.menu-action{
+ width:100%;display:flex;align-items:center;gap:13px;
+ text-align:left;padding:12px 14px;font-size:13px;
+ color:#e2e8f0;border-radius:12px
+}
+.menu-action i{width:20px;color:#94a3b8}
+.menu-action:active{background:#1e293b}
+.nav-btn{transition:.2s}
+.fab{
+ position:absolute;right:20px;bottom:82px;
+ width:56px;height:56px;border-radius:50%;
+ display:flex;align-items:center;justify-content:center;
+ background:#3b82f6;color:white;font-size:20px;
+ box-shadow:0 5px 20px #0008;z-index:25
+}
+.fab:active{transform:scale(.94)}
+.modal-overlay{
+ position:fixed;inset:0;background:#000b;backdrop-filter:blur(5px);
+ z-index:70;display:flex;align-items:center;justify-content:center;padding:16px
+}
+.modal-card{
+ width:100%;max-width:380px;background:#131c2e;
+ border:1px solid #334155;border-radius:20px;padding:18px;
+ animation:modalEnter .2s ease-out
+}
+.profile-row{
+ display:flex;align-items:center;gap:12px;padding:14px;
+ border-bottom:1px solid #253147;width:100%;text-align:left
+}
+.profile-row:last-child{border:0}
+.profile-row i{width:22px;color:#94a3b8}
+.hidden{display:none!important}
+</style>
 </head>
 
 <body class="bg-darkBg text-gray-100 h-full flex flex-col overflow-hidden font-sans">
 
 <main id="app-container" class="flex-1 overflow-y-auto relative flex flex-col">
 
-    <!-- CONVERSAS -->
-    <section id="tab-conversas" class="tab-pane flex flex-col h-full">
+<!-- CONVERSAS -->
+<section id="tab-conversas" class="tab-pane flex flex-col h-full">
 
-        <header class="bg-surface px-4 py-3 flex items-center justify-between border-b border-slate-800 shrink-0">
-            <h1 class="text-xl font-bold tracking-wider text-white">
-                Nexus<span class="text-accent">Chat</span>
-            </h1>
+<header class="bg-surface px-4 py-3 flex items-center justify-between border-b border-slate-800 shrink-0">
+<h1 class="text-xl font-bold tracking-wider">Nexus<span class="text-accent">Chat</span></h1>
+<div class="flex items-center gap-5 text-mutedText">
+<button onclick="abrirBuscaGlobal()"><i class="fa-solid fa-magnifying-glass"></i></button>
+</div>
+</header>
 
-            <div class="flex items-center space-x-4 text-mutedText text-base">
-                <button onclick="mostrarToast('Busca global em desenvolvimento')"><i class="fa-solid fa-magnifying-glass"></i></button>
-                <button onclick="mostrarToast('Criar nova conversa')"><i class="fa-solid fa-pen-to-square"></i></button>
-            </div>
-        </header>
+<div class="px-4 py-2 bg-surface/50 flex gap-2 overflow-x-auto shrink-0 border-b border-slate-800/60">
+<button class="filtro bg-accent text-white text-xs px-3 py-1 rounded-full" data-filtro="todas" onclick="filtrarConversas('todas',this)">Todas</button>
+<button class="filtro bg-surfaceLight text-mutedText text-xs px-3 py-1 rounded-full" data-filtro="nao-lidas" onclick="filtrarConversas('nao-lidas',this)">Não lidas</button>
+<button class="filtro bg-surfaceLight text-mutedText text-xs px-3 py-1 rounded-full" data-filtro="favoritas" onclick="filtrarConversas('favoritas',this)">Favoritas</button>
+<button class="filtro bg-surfaceLight text-mutedText text-xs px-3 py-1 rounded-full" data-filtro="grupos" onclick="filtrarConversas('grupos',this)">Grupos</button>
+</div>
 
-        <div class="px-4 py-2 bg-surface/50 flex space-x-2 overflow-x-auto shrink-0 border-b border-slate-800/60">
-            <button class="bg-accent text-white text-xs px-3 py-1 rounded-full">Todas</button>
-            <button class="bg-surfaceLight text-mutedText text-xs px-3 py-1 rounded-full">Não lidas</button>
-            <button class="bg-surfaceLight text-mutedText text-xs px-3 py-1 rounded-full">Favoritas</button>
-            <button class="bg-surfaceLight text-mutedText text-xs px-3 py-1 rounded-full">Grupos</button>
-        </div>
+<div id="conversation-list" class="flex-1 overflow-y-auto divide-y divide-slate-800/40">
 
-        <div id="conversation-list" class="flex-1 overflow-y-auto divide-y divide-slate-800/40">
+<div class="conversation-item flex items-center px-4 py-3 hover:bg-surfaceLight/40 cursor-pointer transition"
+ data-name="Comunidade Dev Crato" data-status="online" data-type="grupo">
+<div class="relative mr-3 shrink-0">
+<div class="profile-avatar w-12 h-12 rounded-full bg-slate-700 flex items-center justify-center text-white text-lg">
+<i class="fa-solid fa-code text-accent"></i>
+</div>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-baseline mb-1">
+<h2 class="font-semibold text-sm truncate">Comunidade Dev Crato</h2>
+<span class="text-[11px] text-mutedText">11:15</span>
+</div>
+<div class="flex justify-between items-center">
+<p class="text-xs text-mutedText truncate pr-2">Wellington: O app está rodando liso!</p>
+<span class="unread-badge bg-accent text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">3</span>
+</div>
+</div>
+</div>
 
-            <div class="conversation-item flex items-center px-4 py-3 hover:bg-surfaceLight/40 cursor-pointer transition"
-                 data-name="Comunidade Dev Crato"
-                 data-status="online">
+<div class="conversation-item flex items-center px-4 py-3 hover:bg-surfaceLight/40 cursor-pointer transition"
+ data-name="Mila" data-status="online" data-type="pessoal">
+<div class="relative mr-3 shrink-0">
+<div class="profile-avatar w-12 h-12 rounded-full bg-indigo-900 flex items-center justify-center text-white font-bold text-base">M</div>
+<span class="absolute bottom-0 right-0 w-3.5 h-3.5 bg-emerald-500 border-2 border-darkBg rounded-full"></span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-baseline mb-1">
+<h2 class="font-semibold text-sm truncate">Mila</h2>
+<span class="text-[11px] text-mutedText">Ontem</span>
+</div>
+<div class="flex justify-between items-center">
+<p class="text-xs text-mutedText truncate">Combinado, amor!</p>
+</div>
+</div>
+</div>
 
-                <div class="relative mr-3 shrink-0">
-                    <div class="profile-avatar w-12 h-12 rounded-full bg-slate-700 flex items-center justify-center text-white font-bold text-lg">
-                        <i class="fa-solid fa-code text-accent"></i>
-                    </div>
-                    <span class="absolute bottom-0 right-0 w-3.5 h-3.5 bg-emerald-500 border-2 border-darkBg rounded-full pointer-events-none"></span>
-                </div>
+</div>
 
-                <div class="flex-1 min-w-0">
-                    <div class="flex justify-between items-baseline mb-1">
-                        <h2 class="font-semibold text-sm truncate">Comunidade Dev Crato</h2>
-                        <span class="text-[11px] text-mutedText">11:15</span>
-                    </div>
-                    <div class="flex justify-between items-center">
-                        <p class="text-xs text-mutedText truncate pr-2">Wellington: O app está rodando liso!</p>
-                        <span class="unread-badge bg-accent text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">3</span>
-                    </div>
-                </div>
-            </div>
+<button class="fab" onclick="abrirNovaConversa()" title="Nova conversa">
+<i class="fa-solid fa-pen-to-square"></i>
+</button>
+</section>
 
-            <div class="conversation-item flex items-center px-4 py-3 hover:bg-surfaceLight/40 cursor-pointer transition"
-                 data-name="Mila"
-                 data-status="online">
+<!-- STATUS -->
+<section id="tab-status" class="tab-pane hidden flex flex-col h-full p-4">
+<h2 class="text-lg font-bold mb-4">Status (24h)</h2>
 
-                <div class="relative mr-3 shrink-0">
-                    <div class="profile-avatar w-12 h-12 rounded-full bg-indigo-900 flex items-center justify-center text-white font-bold text-base">
-                        M
-                    </div>
-                    <span class="absolute bottom-0 right-0 w-3.5 h-3.5 bg-emerald-500 border-2 border-darkBg rounded-full pointer-events-none"></span>
-                </div>
+<div onclick="mostrarToast('Selecionar foto ou vídeo para publicar')" class="flex items-center gap-3 mb-6 bg-surface p-3 rounded-xl border border-slate-800 cursor-pointer">
+<div class="relative">
+<div class="profile-avatar w-14 h-14 rounded-full bg-slate-700 flex items-center justify-center text-xl font-bold text-accent">W</div>
+<span class="absolute bottom-0 right-0 w-5 h-5 bg-accent rounded-full text-white text-xs border-2 border-darkBg flex items-center justify-center">+</span>
+</div>
+<div>
+<h3 class="font-semibold text-sm">Meu Status</h3>
+<p class="text-xs text-mutedText">Adicionar uma publicação</p>
+</div>
+</div>
 
-                <div class="flex-1 min-w-0">
-                    <div class="flex justify-between items-baseline mb-1">
-                        <h2 class="font-semibold text-sm truncate">Mila</h2>
-                        <span class="text-[11px] text-mutedText">Ontem</span>
-                    </div>
-                    <div class="flex justify-between items-center">
-                        <p class="text-xs text-mutedText truncate">Combinado, amor!</p>
-                    </div>
-                </div>
-            </div>
+<h4 class="text-xs font-semibold text-mutedText uppercase mb-3">Atualizações recentes</h4>
+<div class="flex-1 text-center py-10 text-mutedText text-xs">Nenhum status recente dos contatos</div>
+</section>
 
-        </div>
-    </section>
+<!-- COMUNIDADES -->
+<section id="tab-comunidades" class="tab-pane hidden flex flex-col h-full p-4">
+<div class="flex justify-between items-center mb-4">
+<h2 class="text-lg font-bold">Comunidades e Grupos</h2>
+<button onclick="mostrarToast('Criar novo grupo')" class="bg-accent text-white text-xs px-3 py-1.5 rounded-lg">
+<i class="fa-solid fa-plus mr-1"></i> Novo Grupo
+</button>
+</div>
 
-    <!-- STATUS -->
-    <section id="tab-status" class="tab-pane hidden flex flex-col h-full p-4">
-        <h2 class="text-lg font-bold mb-4">Status (24h)</h2>
+<div class="space-y-3">
+<div class="conversation-item bg-surface p-3 rounded-xl border border-slate-800 flex items-center gap-3 cursor-pointer"
+ data-name="Equipe Técnica WS" data-status="grupo" data-type="grupo">
+<div class="profile-avatar w-12 h-12 rounded-xl bg-blue-900/40 text-accent flex items-center justify-center text-lg">
+<i class="fa-solid fa-users"></i>
+</div>
+<div class="flex-1 min-w-0">
+<h3 class="font-semibold text-sm">Equipe Técnica WS</h3>
+<p class="text-xs text-mutedText">5 participantes • Última mensagem às 09:40</p>
+</div>
+</div>
+</div>
+</section>
 
-        <div class="flex items-center space-x-3 mb-6 bg-surface p-3 rounded-xl border border-slate-800">
-            <div class="relative">
-                <div class="profile-avatar w-14 h-14 rounded-full bg-slate-700 flex items-center justify-center text-xl font-bold text-accent">W</div>
-                <button class="absolute bottom-0 right-0 w-5 h-5 bg-accent rounded-full text-white text-xs border-2 border-darkBg">+</button>
-            </div>
-            <div>
-                <h3 class="font-semibold text-sm">Meu Status</h3>
-                <p class="text-xs text-mutedText">Toque para adicionar uma publicação</p>
-            </div>
-        </div>
+<!-- PERFIL -->
+<section id="tab-perfil" class="tab-pane hidden flex flex-col h-full p-4 space-y-4 overflow-y-auto">
 
-        <h4 class="text-xs font-semibold text-mutedText uppercase mb-3">Atualizações Recentes</h4>
-        <div class="flex-1 text-center py-10 text-mutedText text-xs">
-            Nenhum status recente dos contatos
-        </div>
-    </section>
+<h2 class="text-lg font-bold">Meu Perfil</h2>
 
-    <!-- COMUNIDADES -->
-    <section id="tab-comunidades" class="tab-pane hidden flex flex-col h-full p-4">
-        <div class="flex justify-between items-center mb-4">
-            <h2 class="text-lg font-bold">Comunidades e Grupos</h2>
-            <button onclick="mostrarToast('Criar novo grupo')" class="bg-accent text-white text-xs px-3 py-1.5 rounded-lg">
-                <i class="fa-solid fa-plus mr-1"></i> Novo Grupo
-            </button>
-        </div>
+<div class="flex items-center gap-4 bg-surface p-4 rounded-xl border border-slate-800">
+<div class="profile-avatar w-16 h-16 rounded-full bg-accent flex items-center justify-center text-white text-2xl font-bold">W</div>
+<div class="flex-1">
+<h3 class="font-bold text-base">Wellington Silva</h3>
+<p class="text-xs text-accent">@wellington</p>
+<p class="text-xs text-mutedText mt-1">Disponível para projetos</p>
+</div>
+<button onclick="abrirMeuPerfil()" class="text-mutedText"><i class="fa-solid fa-pen"></i></button>
+</div>
 
-        <div class="space-y-3">
-            <div class="conversation-item bg-surface p-3 rounded-xl border border-slate-800 flex items-center space-x-3 cursor-pointer"
-                 data-name="Equipe Técnica WS"
-                 data-status="grupo">
+<div class="bg-surface rounded-xl border border-slate-800 overflow-hidden text-sm">
 
-                <div class="profile-avatar w-12 h-12 rounded-xl bg-blue-900/40 text-accent flex items-center justify-center text-lg">
-                    <i class="fa-solid fa-users"></i>
-                </div>
+<button class="profile-row" onclick="abrirMeuPerfil()">
+<i class="fa-solid fa-user"></i><span>Editar meu perfil</span>
+</button>
 
-                <div class="flex-1 min-w-0">
-                    <h3 class="font-semibold text-sm">Equipe Técnica WS</h3>
-                    <p class="text-xs text-mutedText">5 participantes • Última mensagem às 09:40</p>
-                </div>
-            </div>
-        </div>
-    </section>
+<button class="profile-row" onclick="abrirQR()">
+<i class="fa-solid fa-qrcode"></i><span>Meu QR Code</span>
+</button>
 
-    <!-- ÁUDIOS -->
-    <section id="tab-ligacoes" class="tab-pane hidden flex flex-col h-full p-4">
-        <h2 class="text-lg font-bold mb-4">Mensagens de Voz & Áudios</h2>
-        <div class="flex-1 text-center py-10 text-mutedText text-xs">
-            Nenhum histórico de áudio recente
-        </div>
-    </section>
+<button class="profile-row" onclick="mostrarToast('Leitor de QR Code será integrado')">
+<i class="fa-solid fa-camera"></i><span>Ler QR Code</span>
+</button>
 
-    <!-- PERFIL -->
-    <section id="tab-perfil" class="tab-pane hidden flex flex-col h-full p-4 space-y-4 overflow-y-auto">
-        <h2 class="text-lg font-bold mb-2">Meu Perfil</h2>
+<button class="profile-row" onclick="abrirConfiguracao('Privacidade e segurança')">
+<i class="fa-solid fa-shield-halved"></i><span>Privacidade e Segurança</span>
+</button>
 
-        <div class="flex items-center space-x-4 bg-surface p-4 rounded-xl border border-slate-800">
-            <div class="profile-avatar w-16 h-16 rounded-full bg-accent flex items-center justify-center text-white text-2xl font-bold">
-                W
-            </div>
-            <div>
-                <h3 class="font-bold text-base">Wellington Silva</h3>
-                <p class="text-xs text-accent">@wellington</p>
-                <p class="text-xs text-mutedText mt-1">Disponível para projetos</p>
-            </div>
-        </div>
+<button class="profile-row" onclick="abrirConfiguracao('Notificações')">
+<i class="fa-solid fa-bell"></i><span>Notificações e Sons</span>
+</button>
 
-        <div class="bg-surface rounded-xl border border-slate-800 divide-y divide-slate-800 overflow-hidden text-sm">
-            <button onclick="mostrarToast('Configurações de privacidade')" class="w-full px-4 py-3 text-left flex items-center space-x-3">
-                <i class="fa-solid fa-lock text-mutedText w-5"></i>
-                <span>Privacidade e Segurança</span>
-            </button>
-            <button onclick="mostrarToast('Configurações de notificações')" class="w-full px-4 py-3 text-left flex items-center space-x-3">
-                <i class="fa-solid fa-bell text-mutedText w-5"></i>
-                <span>Notificações Nativas</span>
-            </button>
-            <button onclick="mostrarToast('Armazenamento e dados')" class="w-full px-4 py-3 text-left flex items-center space-x-3">
-                <i class="fa-solid fa-database text-mutedText w-5"></i>
-                <span>Armazenamento e Dados</span>
-            </button>
-            <button onclick="mostrarToast('Saindo da conta...')" class="w-full px-4 py-3 text-left flex items-center space-x-3 text-red-400">
-                <i class="fa-solid fa-right-from-bracket w-5"></i>
-                <span>Sair da conta</span>
-            </button>
-        </div>
-    </section>
+<button class="profile-row" onclick="abrirConfiguracao('Armazenamento e dados')">
+<i class="fa-solid fa-database"></i><span>Armazenamento e Dados</span>
+</button>
+
+<button class="profile-row" onclick="abrirConfiguracao('Dispositivos conectados')">
+<i class="fa-solid fa-mobile-screen"></i><span>Dispositivos Conectados</span>
+</button>
+
+<button class="profile-row" onclick="abrirConfiguracao('Contatos bloqueados')">
+<i class="fa-solid fa-ban"></i><span>Contatos Bloqueados</span>
+</button>
+
+<button class="profile-row" onclick="alternarBiometria()">
+<i class="fa-solid fa-fingerprint"></i>
+<span class="flex-1">Bloqueio por biometria</span>
+<span id="biometria-status" class="text-xs text-mutedText">Desativado</span>
+</button>
+
+<button class="profile-row" onclick="mostrarToast('Ajuda e suporte em breve')">
+<i class="fa-solid fa-circle-question"></i><span>Ajuda e Suporte</span>
+</button>
+
+<button class="profile-row text-red-400" onclick="sairDaConta()">
+<i class="fa-solid fa-right-from-bracket"></i><span>Sair da conta</span>
+</button>
+
+</div>
+
+<p class="text-center text-[10px] text-mutedText">NexusChat • Versão demonstrativa</p>
+</section>
 
 </main>
 
-<!-- TELA DE CHAT -->
+<!-- CHAT -->
 <div id="screen-chat" class="absolute inset-0 bg-darkBg z-30 hidden flex flex-col">
 
-    <header class="bg-surface px-4 py-3 flex items-center justify-between border-b border-slate-800 shrink-0">
+<header class="bg-surface px-4 py-3 flex items-center justify-between border-b border-slate-800 shrink-0">
+<div class="flex items-center gap-3 min-w-0">
+<button onclick="fecharTelaChat()" class="text-mutedText mr-1"><i class="fa-solid fa-arrow-left"></i></button>
+<div id="chat-header-avatar" class="profile-avatar w-10 h-10 rounded-full bg-slate-700 flex items-center justify-center font-bold text-white text-sm">CC</div>
+<div class="min-w-0">
+<h2 class="font-semibold text-sm truncate" id="chat-header-title">Comunidade Dev</h2>
+<span class="text-[10px] text-emerald-400" id="chat-header-status">online</span>
+</div>
+</div>
+<button onclick="abrirMenuChat()" class="text-mutedText text-lg px-2">
+<i class="fa-solid fa-ellipsis-vertical"></i>
+</button>
+</header>
 
-        <div class="flex items-center space-x-3 min-w-0">
-            <button onclick="fecharTelaChat()" class="text-mutedText mr-1">
-                <i class="fa-solid fa-arrow-left"></i>
-            </button>
+<div id="messages-container" class="flex-1 p-4 overflow-y-auto space-y-3 flex flex-col bg-[#070a12]"></div>
 
-            <div id="chat-header-avatar"
-                 class="profile-avatar w-10 h-10 rounded-full bg-slate-700 flex items-center justify-center font-bold text-white text-sm">
-                CC
-            </div>
+<div id="reply-preview" class="hidden bg-surface px-3 py-2 border-t border-slate-700">
+<div class="flex justify-between items-center">
+<div class="min-w-0">
+<p class="text-xs text-accent font-semibold">Respondendo</p>
+<p id="reply-preview-text" class="text-xs text-mutedText truncate"></p>
+</div>
+<button onclick="cancelarResposta()" class="text-mutedText px-2"><i class="fa-solid fa-xmark"></i></button>
+</div>
+</div>
 
-            <div class="min-w-0">
-                <h2 class="font-semibold text-sm truncate" id="chat-header-title">Comunidade Dev</h2>
-                <span class="text-[10px] text-emerald-400" id="chat-header-status">online</span>
-            </div>
-        </div>
+<div id="draft-indicator" class="hidden px-3 py-1 bg-surface text-[10px] text-mutedText">
+<i class="fa-regular fa-floppy-disk mr-1"></i> Rascunho salvo
+</div>
 
-        <button onclick="mostrarToast('Opções da conversa')" class="text-mutedText text-lg">
-            <i class="fa-solid fa-ellipsis-vertical"></i>
-        </button>
-    </header>
-
-    <div id="messages-container"
-         class="flex-1 p-4 overflow-y-auto space-y-3 flex flex-col bg-[#070a12]">
-    </div>
-
-    <div id="reply-preview" class="hidden bg-surface px-3 py-2 border-t border-slate-700">
-        <div class="flex justify-between items-center">
-            <div class="min-w-0">
-                <p class="text-xs text-accent font-semibold">Respondendo</p>
-                <p id="reply-preview-text" class="text-xs text-mutedText truncate"></p>
-            </div>
-            <button onclick="cancelarResposta()" class="text-mutedText px-2">
-                <i class="fa-solid fa-xmark"></i>
-            </button>
-        </div>
-    </div>
-
-    <footer class="p-2 bg-surface border-t border-slate-800 flex items-center space-x-2 shrink-0">
-        <button onclick="mostrarToast('Emojis em breve')" class="text-mutedText p-2 text-lg">
-            <i class="fa-regular fa-face-smile"></i>
-        </button>
-
-        <button onclick="mostrarToast('Anexar mídias')" class="text-mutedText p-2 text-lg">
-            <i class="fa-solid fa-paperclip"></i>
-        </button>
-
-        <input type="text" id="message-input"
-               placeholder="Digite uma mensagem..."
-               class="flex-1 bg-surfaceLight rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-accent"
-               onkeydown="if(event.key === 'Enter') enviarMensagem()">
-
-        <button onclick="enviarMensagem()"
-                class="bg-accent text-white w-10 h-10 rounded-xl flex items-center justify-center">
-            <i class="fa-solid fa-paper-plane text-xs"></i>
-        </button>
-    </footer>
+<footer class="p-2 bg-surface border-t border-slate-800 flex items-center gap-2 shrink-0">
+<button onclick="mostrarToast('Seletor de emojis em breve')" class="text-mutedText p-2 text-lg">
+<i class="fa-regular fa-face-smile"></i>
+</button>
+<button onclick="abrirAnexos()" class="text-mutedText p-2 text-lg">
+<i class="fa-solid fa-paperclip"></i>
+</button>
+<input type="text" id="message-input" placeholder="Digite uma mensagem..."
+ class="flex-1 bg-surfaceLight rounded-xl px-4 py-2 text-sm text-white focus:outline-none"
+ oninput="salvarRascunho()" onkeydown="if(event.key==='Enter')enviarMensagem()">
+<button onclick="enviarMensagem()" class="bg-accent text-white w-10 h-10 rounded-xl flex items-center justify-center">
+<i class="fa-solid fa-paper-plane text-xs"></i>
+</button>
+</footer>
 </div>
 
 <!-- MENU DE MENSAGEM -->
-<div id="action-menu"
-     class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden flex items-end justify-center pb-6"
-     onclick="fecharMenuAcoes(event)">
-
-    <div class="bg-surface border border-slate-700 w-11/12 max-w-sm rounded-2xl p-2 shadow-2xl space-y-1"
-         onclick="event.stopPropagation()">
-
-        <div class="text-center py-2 border-b border-slate-800 mb-1">
-            <span class="text-xs text-mutedText">Ações da mensagem</span>
-        </div>
-
-        <button onclick="acaoResponder()" class="menu-action">
-            <i class="fa-solid fa-reply"></i> Responder
-        </button>
-
-        <button onclick="acaoEncaminhar()" class="menu-action">
-            <i class="fa-solid fa-share"></i> Encaminhar
-        </button>
-
-        <button onclick="acaoReagir()" class="menu-action">
-            <i class="fa-regular fa-face-smile"></i> Reagir
-        </button>
-
-        <button onclick="acaoCopiar()" class="menu-action">
-            <i class="fa-solid fa-copy"></i> Copiar
-        </button>
-
-        <button id="btn-editar" onclick="acaoEditar()" class="menu-action">
-            <i class="fa-solid fa-pen"></i> Editar mensagem
-        </button>
-
-        <button id="btn-apagar-todos" onclick="acaoApagarParaTodos()" class="menu-action text-red-400">
-            <i class="fa-solid fa-trash-can"></i> Apagar para todos
-        </button>
-
-        <button onclick="acaoApagarParaMim()" class="menu-action">
-            <i class="fa-solid fa-eye-slash"></i> Apagar para mim
-        </button>
-    </div>
+<div id="action-menu" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden flex items-end justify-center pb-6" onclick="fecharMenuAcoes(event)">
+<div class="bg-surface border border-slate-700 w-11/12 max-w-sm rounded-2xl p-2 shadow-2xl space-y-1" onclick="event.stopPropagation()">
+<div class="text-center py-2 border-b border-slate-800 mb-1"><span class="text-xs text-mutedText">Ações da mensagem</span></div>
+<button onclick="acaoResponder()" class="menu-action"><i class="fa-solid fa-reply"></i> Responder</button>
+<button onclick="acaoEncaminhar()" class="menu-action"><i class="fa-solid fa-share"></i> Encaminhar</button>
+<button onclick="acaoReagir()" class="menu-action"><i class="fa-regular fa-face-smile"></i> Reagir</button>
+<button onclick="acaoCopiar()" class="menu-action"><i class="fa-solid fa-copy"></i> Copiar</button>
+<button id="btn-editar" onclick="acaoEditar()" class="menu-action"><i class="fa-solid fa-pen"></i> Editar mensagem</button>
+<button id="btn-apagar-todos" onclick="acaoApagarParaTodos()" class="menu-action text-red-400"><i class="fa-solid fa-trash-can"></i> Apagar para todos</button>
+<button onclick="acaoApagarParaMim()" class="menu-action"><i class="fa-solid fa-eye-slash"></i> Apagar para mim</button>
+</div>
 </div>
 
 <!-- MENU DE CONVERSA -->
-<div id="conversation-menu"
-     class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden flex items-end justify-center pb-6"
-     onclick="fecharMenuConversa(event)">
-
-    <div class="bg-surface border border-slate-700 w-11/12 max-w-sm rounded-2xl p-2 shadow-2xl space-y-1"
-         onclick="event.stopPropagation()">
-
-        <div class="text-center py-2 border-b border-slate-800 mb-1">
-            <span id="conversation-menu-title" class="text-xs text-mutedText">Conversa</span>
-        </div>
-
-        <button onclick="alternarFixarConversa()" class="menu-action">
-            <i class="fa-solid fa-thumbtack"></i>
-            <span id="fixar-label">Fixar conversa</span>
-        </button>
-
-        <button onclick="alternarSilenciarConversa()" class="menu-action">
-            <i class="fa-solid fa-bell-slash"></i>
-            <span id="silenciar-label">Silenciar notificações</span>
-        </button>
-
-        <button onclick="marcarComoNaoLida()" class="menu-action">
-            <i class="fa-solid fa-envelope"></i> Marcar como não lida
-        </button>
-
-        <button onclick="arquivarConversa()" class="menu-action">
-            <i class="fa-solid fa-box-archive"></i> Arquivar conversa
-        </button>
-
-        <button onclick="excluirConversa()" class="menu-action text-red-400">
-            <i class="fa-solid fa-trash"></i> Excluir conversa
-        </button>
-    </div>
+<div id="conversation-menu" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden flex items-end justify-center pb-6" onclick="fecharMenuConversa(event)">
+<div class="bg-surface border border-slate-700 w-11/12 max-w-sm rounded-2xl p-2 shadow-2xl space-y-1" onclick="event.stopPropagation()">
+<div class="text-center py-2 border-b border-slate-800 mb-1">
+<span id="conversation-menu-title" class="text-xs text-mutedText">Conversa</span>
+</div>
+<button onclick="alternarFixarConversa()" class="menu-action"><i class="fa-solid fa-thumbtack"></i><span id="fixar-label">Fixar conversa</span></button>
+<button onclick="alternarSilenciarConversa()" class="menu-action"><i class="fa-solid fa-bell-slash"></i><span id="silenciar-label">Silenciar notificações</span></button>
+<button onclick="marcarComoNaoLida()" class="menu-action"><i class="fa-solid fa-envelope"></i> Marcar como não lida</button>
+<button onclick="arquivarConversa()" class="menu-action"><i class="fa-solid fa-box-archive"></i> Arquivar conversa</button>
+<button onclick="excluirConversa()" class="menu-action text-red-400"><i class="fa-solid fa-trash"></i> Excluir conversa</button>
+</div>
 </div>
 
-<!-- MODAL CUSTOMIZADO DE CONFIRMAÇÃO (Substitui o confirm()) -->
+<!-- MENU DO CABEÇALHO DO CHAT -->
+<div id="chat-options-menu" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden flex items-end justify-center pb-6" onclick="fecharMenuChat(event)">
+<div class="bg-surface border border-slate-700 w-11/12 max-w-sm rounded-2xl p-2" onclick="event.stopPropagation()">
+<div class="text-center py-2 border-b border-slate-800 mb-1">
+<span class="text-xs text-mutedText">Opções da conversa</span>
+</div>
+<button class="menu-action" onclick="verPerfilContato()"><i class="fa-solid fa-user"></i> Ver perfil</button>
+<button class="menu-action" onclick="pesquisarNaConversa()"><i class="fa-solid fa-magnifying-glass"></i> Pesquisar mensagens</button>
+<button class="menu-action" onclick="mostrarMidias()"><i class="fa-solid fa-images"></i> Mídias, links e arquivos</button>
+<button class="menu-action" onclick="silenciarChat()"><i class="fa-solid fa-bell-slash"></i> Silenciar notificações</button>
+<button class="menu-action" onclick="mostrarToast('Opção de limpar conversa')"><i class="fa-solid fa-broom"></i> Limpar conversa</button>
+<button class="menu-action" onclick="mostrarToast('Bloqueio será integrado ao servidor')"><i class="fa-solid fa-ban"></i> Bloquear contato</button>
+<button class="menu-action text-red-400" onclick="mostrarToast('Área de denúncia')"><i class="fa-solid fa-flag"></i> Denunciar usuário</button>
+</div>
+</div>
+
+<!-- MODAL GENÉRICO -->
+<div id="generic-modal" class="modal-overlay hidden" onclick="fecharModalGenerico(event)">
+<div class="modal-card" onclick="event.stopPropagation()">
+<div class="flex items-center justify-between mb-4">
+<h3 id="generic-title" class="font-bold text-sm"></h3>
+<button onclick="fecharModalGenerico()" class="text-mutedText"><i class="fa-solid fa-xmark"></i></button>
+</div>
+<div id="generic-content" class="text-sm text-gray-300"></div>
+</div>
+</div>
+
+<!-- CONFIRMAÇÃO -->
 <div id="custom-confirm-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-[80] hidden flex items-center justify-center p-4">
-    <div class="bg-surface border border-slate-700 w-full max-w-xs rounded-2xl p-5 shadow-2xl modal-enter space-y-4">
-        <h3 id="confirm-title" class="font-bold text-sm text-white">Confirmação</h3>
-        <p id="confirm-text" class="text-xs text-mutedText leading-relaxed"></p>
-        <div class="flex space-x-2 pt-2">
-            <button id="confirm-btn-cancel" class="flex-1 bg-surfaceLight hover:bg-slate-700 text-xs text-gray-300 font-medium py-2.5 rounded-xl transition">Cancelar</button>
-            <button id="confirm-btn-ok" class="flex-1 bg-accent hover:bg-accentHover text-xs text-white font-medium py-2.5 rounded-xl transition">Confirmar</button>
-        </div>
-    </div>
+<div class="bg-surface border border-slate-700 w-full max-w-xs rounded-2xl p-5 shadow-2xl modal-enter space-y-4">
+<h3 id="confirm-title" class="font-bold text-sm text-white">Confirmação</h3>
+<p id="confirm-text" class="text-xs text-mutedText leading-relaxed"></p>
+<div class="flex gap-2 pt-2">
+<button id="confirm-btn-cancel" class="flex-1 bg-surfaceLight text-xs text-gray-300 py-2.5 rounded-xl">Cancelar</button>
+<button id="confirm-btn-ok" class="flex-1 bg-accent text-xs text-white py-2.5 rounded-xl">Confirmar</button>
+</div>
+</div>
 </div>
 
-<!-- MODAL CUSTOMIZADO DE INPUT/EDIÇÃO (Substitui o prompt()) -->
+<!-- PROMPT -->
 <div id="custom-prompt-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-[80] hidden flex items-center justify-center p-4">
-    <div class="bg-surface border border-slate-700 w-full max-w-xs rounded-2xl p-5 shadow-2xl modal-enter space-y-4">
-        <h3 id="prompt-title" class="font-bold text-sm text-white">Editar</h3>
-        <input type="text" id="prompt-input" class="w-full bg-surfaceLight border border-slate-600 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-accent">
-        <div class="flex space-x-2 pt-2">
-            <button id="prompt-btn-cancel" class="flex-1 bg-surfaceLight hover:bg-slate-700 text-xs text-gray-300 font-medium py-2.5 rounded-xl transition">Cancelar</button>
-            <button id="prompt-btn-ok" class="flex-1 bg-accent hover:bg-accentHover text-xs text-white font-medium py-2.5 rounded-xl transition">Salvar</button>
-        </div>
-    </div>
+<div class="bg-surface border border-slate-700 w-full max-w-xs rounded-2xl p-5 shadow-2xl modal-enter space-y-4">
+<h3 id="prompt-title" class="font-bold text-sm text-white">Editar</h3>
+<input type="text" id="prompt-input" class="w-full bg-surfaceLight border border-slate-600 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-accent">
+<div class="flex gap-2 pt-2">
+<button id="prompt-btn-cancel" class="flex-1 bg-surfaceLight text-xs text-gray-300 py-2.5 rounded-xl">Cancelar</button>
+<button id="prompt-btn-ok" class="flex-1 bg-accent text-xs text-white py-2.5 rounded-xl">Salvar</button>
+</div>
+</div>
 </div>
 
-<!-- TOAST FLUTUANTE (Substitui alertas simples) -->
-<div id="toast-container" class="fixed bottom-20 left-1/2 -translate-x-1/2 z-[90] pointer-events-none transition-all duration-300 opacity-0 transform translate-y-2">
-    <div class="bg-surfaceLight border border-slate-600 text-white text-xs px-4 py-2.5 rounded-xl shadow-xl flex items-center space-x-2">
-        <i class="fa-solid fa-circle-info text-accent"></i>
-        <span id="toast-message">Mensagem</span>
-    </div>
+<!-- FOTO -->
+<div id="profile-modal" class="fixed inset-0 z-[70] hidden bg-black/90 flex items-center justify-center p-6" onclick="fecharFotoPerfil()">
+<button class="absolute top-6 right-6 text-white text-2xl"><i class="fa-solid fa-xmark"></i></button>
+<div id="profile-modal-content" class="modal-enter w-64 h-64 max-w-[80vw] max-h-[80vw] rounded-full overflow-hidden flex items-center justify-center text-7xl font-bold text-white shadow-2xl" onclick="event.stopPropagation()"></div>
 </div>
 
-<!-- VISUALIZAÇÃO DA FOTO -->
-<div id="profile-modal"
-     class="fixed inset-0 z-[70] hidden bg-black/90 flex items-center justify-center p-6"
-     onclick="fecharFotoPerfil()">
-
-    <button class="absolute top-6 right-6 text-white text-2xl">
-        <i class="fa-solid fa-xmark"></i>
-    </button>
-
-    <div id="profile-modal-content"
-         class="modal-enter w-64 h-64 max-w-[80vw] max-h-[80vw] rounded-full overflow-hidden flex items-center justify-center text-7xl font-bold text-white shadow-2xl"
-         onclick="event.stopPropagation()">
-    </div>
+<!-- TOAST -->
+<div id="toast-container" class="fixed bottom-20 left-1/2 -translate-x-1/2 z-[90] pointer-events-none transition-all duration-300 opacity-0 translate-y-2">
+<div class="bg-surfaceLight border border-slate-600 text-white text-xs px-4 py-2.5 rounded-xl shadow-xl flex items-center gap-2">
+<i class="fa-solid fa-circle-info text-accent"></i>
+<span id="toast-message">Mensagem</span>
+</div>
 </div>
 
 <!-- NAVEGAÇÃO -->
 <nav class="bg-surface border-t border-slate-800 h-16 flex justify-around items-center shrink-0 z-20">
-
-    <button onclick="mudarAba('conversas', this)" class="nav-btn flex flex-col items-center justify-center flex-1 text-accent py-1">
-        <i class="fa-solid fa-comment-dots text-lg"></i>
-        <span class="text-[10px]">Conversas</span>
-    </button>
-
-    <button onclick="mudarAba('status', this)" class="nav-btn flex flex-col items-center justify-center flex-1 text-mutedText py-1">
-        <i class="fa-solid fa-circle-notch text-lg"></i>
-        <span class="text-[10px]">Status</span>
-    </button>
-
-    <button onclick="mudarAba('comunidades', this)" class="nav-btn flex flex-col items-center justify-center flex-1 text-mutedText py-1">
-        <i class="fa-solid fa-users-rectangle text-lg"></i>
-        <span class="text-[10px]">Comunidades</span>
-    </button>
-
-    <button onclick="mudarAba('ligacoes', this)" class="nav-btn flex flex-col items-center justify-center flex-1 text-mutedText py-1">
-        <i class="fa-solid fa-microphone text-lg"></i>
-        <span class="text-[10px]">Áudios</span>
-    </button>
-
-    <button onclick="mudarAba('perfil', this)" class="nav-btn flex flex-col items-center justify-center flex-1 text-mutedText py-1">
-        <i class="fa-solid fa-user-gear text-lg"></i>
-        <span class="text-[10px]">Perfil</span>
-    </button>
+<button onclick="mudarAba('conversas',this)" class="nav-btn flex flex-col items-center justify-center flex-1 text-accent py-1">
+<i class="fa-solid fa-comment-dots text-lg"></i><span class="text-[10px]">Conversas</span>
+</button>
+<button onclick="mudarAba('status',this)" class="nav-btn flex flex-col items-center justify-center flex-1 text-mutedText py-1">
+<i class="fa-solid fa-circle-notch text-lg"></i><span class="text-[10px]">Status</span>
+</button>
+<button onclick="mudarAba('comunidades',this)" class="nav-btn flex flex-col items-center justify-center flex-1 text-mutedText py-1">
+<i class="fa-solid fa-users-rectangle text-lg"></i><span class="text-[10px]">Comunidades</span>
+</button>
+<button onclick="mudarAba('perfil',this)" class="nav-btn flex flex-col items-center justify-center flex-1 text-mutedText py-1">
+<i class="fa-solid fa-user-gear text-lg"></i><span class="text-[10px]">Perfil</span>
+</button>
 </nav>
 
-<style>
-    .menu-action {
-        width: 100%;
-        display: flex;
-        align-items: center;
-        gap: 13px;
-        text-align: left;
-        padding: 12px 14px;
-        font-size: 13px;
-        color: #e2e8f0;
-        border-radius: 12px;
-    }
-
-    .menu-action i {
-        width: 20px;
-        color: #94a3b8;
-    }
-
-    .menu-action:active {
-        background: #1e293b;
-    }
-</style>
-
 <script>
-    // DADOS DEMONSTRATIVOS
-    let mensagensExemplo = [
-        {
-            id: '1',
-            texto: 'Estrutura principal concluída com sucesso!',
-            ehMinha: true,
-            status: 'lido',
-            horario: '22:30',
-            createdAt: new Date(Date.now() - 600000).toISOString(),
-            reacao: null
-        },
-        {
-            id: '2',
-            texto: 'Perfeito, visual ficou incrível e super limpo!',
-            ehMinha: false,
-            remetente: 'Mila',
-            horario: '22:31',
-            createdAt: new Date(Date.now() - 500000).toISOString(),
-            reacao: null
-        },
-        {
-            id: '3',
-            texto: 'Testando envio pendente...',
-            ehMinha: true,
-            status: 'enviando',
-            horario: '22:35',
-            createdAt: new Date(Date.now() - 300000).toISOString(),
-            reacao: null
-        }
-    ];
-
-    let timerToqueLongo = null;
-    let toqueLongoAtivado = false;
-
-    let mensagemSelecionada = null;
-    let conversaSelecionada = null;
-    let respostaSelecionada = null;
-    let abaAtual = 'conversas';
-
-    const estadoConversas = new WeakMap();
-
-    // SISTEMA DE TOAST CUSTOMIZADO
-    function mostrarToast(mensagem) {
-        const toast = document.getElementById('toast-container');
-        document.getElementById('toast-message').textContent = mensagem;
-        toast.classList.remove('opacity-0', 'translate-y-2');
-        toast.classList.add('opacity-100', 'translate-y-0');
-
-        setTimeout(() => {
-            toast.classList.remove('opacity-100', 'translate-y-0');
-            toast.classList.add('opacity-0', 'translate-y-2');
-        }, 2500);
-    }
-
-    // SISTEMA DE CONFIRM CUSTOMIZADO
-    function abrirConfirmCustomizado(titulo, texto, aoConfirmar) {
-        const modal = document.getElementById('custom-confirm-modal');
-        document.getElementById('confirm-title').textContent = titulo;
-        document.getElementById('confirm-text').textContent = texto;
-
-        modal.classList.remove('hidden');
-
-        const btnOk = document.getElementById('confirm-btn-ok');
-        const btnCancel = document.getElementById('confirm-btn-cancel');
-
-        const limparEventos = () => {
-            btnOk.replaceWith(btnOk.cloneNode(true));
-            btnCancel.replaceWith(btnCancel.cloneNode(true));
-            modal.classList.add('hidden');
-        };
-
-        document.getElementById('confirm-btn-ok').onclick = () => {
-            limparEventos();
-            aoConfirmar();
-        };
-
-        document.getElementById('confirm-btn-cancel').onclick = () => {
-            limparEventos();
-        };
-    }
-
-    // SISTEMA DE PROMPT CUSTOMIZADO
-    function abrirPromptCustomizado(titulo, valorInicial, aoSalvar) {
-        const modal = document.getElementById('custom-prompt-modal');
-        document.getElementById('prompt-title').textContent = titulo;
-        const input = document.getElementById('prompt-input');
-        input.value = valorInicial;
-
-        modal.classList.remove('hidden');
-        input.focus();
-
-        const btnOk = document.getElementById('prompt-btn-ok');
-        const btnCancel = document.getElementById('prompt-btn-cancel');
-
-        const limparEventos = () => {
-            btnOk.replaceWith(btnOk.cloneNode(true));
-            btnCancel.replaceWith(btnCancel.cloneNode(true));
-            modal.classList.add('hidden');
-        };
-
-        document.getElementById('prompt-btn-ok').onclick = () => {
-            const val = input.value;
-            limparEventos();
-            aoSalvar(val);
-        };
-
-        document.getElementById('prompt-btn-cancel').onclick = () => {
-            limparEventos();
-        };
-    }
-
-    // NAVEGAÇÃO
-    function mudarAba(nomeAba, elementoBtn) {
-        abaAtual = nomeAba;
-
-        document.querySelectorAll('.tab-pane').forEach(el => {
-            el.classList.add('hidden');
-        });
-
-        document.getElementById('tab-' + nomeAba).classList.remove('hidden');
-
-        document.querySelectorAll('.nav-btn').forEach(btn => {
-            btn.classList.remove('text-accent');
-            btn.classList.add('text-mutedText');
-        });
-
-        elementoBtn.classList.remove('text-mutedText');
-        elementoBtn.classList.add('text-accent');
-    }
-
-    // ABRIR CONVERSA
-    function abrirTelaChat(nomeContato, status) {
-        document.getElementById('chat-header-title').textContent = nomeContato;
-        document.getElementById('chat-header-avatar').textContent =
-            nomeContato.substring(0, 2).toUpperCase();
-
-        document.getElementById('chat-header-status').textContent = status;
-
-        document.getElementById('screen-chat').classList.remove('hidden');
-
-        renderizarMensagens();
-    }
-
-    function fecharTelaChat() {
-        document.getElementById('screen-chat').classList.add('hidden');
-    }
-
-    // MENSAGENS
-    function renderizarMensagens() {
-        const container = document.getElementById('messages-container');
-        container.innerHTML = '';
-
-        mensagensExemplo.forEach(msg => {
-            const div = document.createElement('div');
-
-            div.className = `flex flex-col max-w-[80%] ${
-                msg.ehMinha ? 'ml-auto items-end' : 'mr-auto items-start'
-            }`;
-
-            const bubble = document.createElement('div');
-
-            bubble.className = `message-bubble ${
-                msg.ehMinha
-                    ? 'bg-msgOut text-white rounded-br-none'
-                    : 'bg-msgIn text-gray-100 rounded-bl-none'
-            } px-3 py-2 rounded-xl text-sm shadow cursor-pointer`;
-
-            if (!msg.ehMinha && msg.remetente) {
-                const remetente = document.createElement('span');
-                remetente.className = 'block text-[10px] font-bold text-accent mb-1';
-                remetente.textContent = msg.remetente;
-                bubble.appendChild(remetente);
-            }
-
-            if (msg.encaminhada) {
-                const encaminhada = document.createElement('span');
-                encaminhada.className = 'block text-[10px] text-blue-200 mb-1';
-                encaminhada.textContent = '↗ Encaminhada';
-                bubble.appendChild(encaminhada);
-            }
-
-            if (msg.respostaTexto) {
-                const resposta = document.createElement('div');
-                resposta.className = 'bg-black/20 border-l-2 border-blue-300 rounded p-2 mb-2 text-xs text-blue-100';
-                resposta.textContent = msg.respostaTexto;
-                bubble.appendChild(resposta);
-            }
-
-            const texto = document.createElement('span');
-            texto.className = 'whitespace-pre-wrap break-words';
-            texto.textContent = msg.texto;
-            bubble.appendChild(texto);
-
-            const rodape = document.createElement('div');
-            rodape.className = 'flex items-center justify-end space-x-1.5 mt-1';
-
-            const horario = document.createElement('span');
-            horario.className = 'text-[9px] text-gray-300/70';
-            horario.textContent = msg.horario;
-            rodape.appendChild(horario);
-
-            if (msg.ehMinha) {
-                const icone = document.createElement('i');
-
-                if (msg.status === 'enviando') {
-                    icone.className = 'fa-regular fa-clock text-[10px] text-mutedText';
-                } else if (msg.status === 'enviado') {
-                    icone.className = 'fa-solid fa-check text-[10px] text-mutedText';
-                } else {
-                    icone.className = 'fa-solid fa-check-double text-[10px] ' +
-                        (msg.status === 'lido' ? 'text-blue-300' : 'text-mutedText');
-                }
-
-                rodape.appendChild(icone);
-            }
-
-            bubble.appendChild(rodape);
-
-            if (msg.reacao) {
-                const reacao = document.createElement('span');
-                reacao.className = 'reaction mt-1';
-                reacao.textContent = msg.reacao;
-                div.appendChild(bubble);
-                div.appendChild(reacao);
-            } else {
-                div.appendChild(bubble);
-            }
-
-            configurarToqueLongo(bubble, () => {
-                abrirMenuAcoes(msg.id);
-            });
-
-            container.appendChild(div);
-        });
-
-        container.scrollTop = container.scrollHeight;
-    }
-
-    // ENVIO LOCAL DE MENSAGEM
-    function enviarMensagem() {
-        const input = document.getElementById('message-input');
-        const texto = input.value.trim();
-
-        if (!texto) return;
-
-        const agora = new Date();
-
-        const novaMensagem = {
-            id: 'msg-' + Date.now(),
-            texto,
-            ehMinha: true,
-            status: 'enviando',
-            horario: agora.toLocaleTimeString([], {
-                hour: '2-digit',
-                minute: '2-digit'
-            }),
-            createdAt: agora.toISOString(),
-            respostaTexto: respostaSelecionada
-                ? respostaSelecionada.texto
-                : null,
-            reacao: null
-        };
-
-        mensagensExemplo.push(novaMensagem);
-
-        input.value = '';
-        cancelarResposta();
-        renderizarMensagens();
-
-        const id = novaMensagem.id;
-
-        setTimeout(() => {
-            const m = mensagensExemplo.find(item => item.id === id);
-            if (m) {
-                m.status = 'enviado';
-                renderizarMensagens();
-            }
-        }, 1000);
-
-        setTimeout(() => {
-            const m = mensagensExemplo.find(item => item.id === id);
-            if (m) {
-                m.status = 'lido';
-                renderizarMensagens();
-            }
-        }, 2500);
-    }
-
-    // SISTEMA DE TOQUE PROLONGADO
-    function configurarToqueLongo(elemento, callback) {
-        elemento.addEventListener('pointerdown', () => {
-            toqueLongoAtivado = false;
-
-            clearTimeout(timerToqueLongo);
-
-            timerToqueLongo = setTimeout(() => {
-                toqueLongoAtivado = true;
-                callback();
-            }, 500);
-        });
-
-        ['pointerup', 'pointerleave', 'pointercancel'].forEach(evento => {
-            elemento.addEventListener(evento, () => {
-                clearTimeout(timerToqueLongo);
-            });
-        });
-
-        elemento.addEventListener('contextmenu', event => {
-            event.preventDefault();
-            clearTimeout(timerToqueLongo);
-            toqueLongoAtivado = true;
-            callback();
-        });
-    }
-
-    // MENU DE MENSAGEM
-    function abrirMenuAcoes(id) {
-        mensagemSelecionada = mensagensExemplo.find(m => m.id === id);
-
-        if (!mensagemSelecionada) return;
-
-        const diferencaMinutos =
-            (Date.now() - new Date(mensagemSelecionada.createdAt)) / 60000;
-
-        document.getElementById('btn-editar').style.display =
-            mensagemSelecionada.ehMinha && diferencaMinutos <= 2
-                ? 'flex'
-                : 'none';
-
-        document.getElementById('btn-apagar-todos').style.display =
-            mensagemSelecionada.ehMinha
-                ? 'flex'
-                : 'none';
-
-        document.getElementById('action-menu').classList.remove('hidden');
-    }
-
-    function fecharMenuAcoes(event) {
-        if (event.target.id === 'action-menu') {
-            document.getElementById('action-menu').classList.add('hidden');
-        }
-    }
-
-    function esconderMenuMensagem() {
-        document.getElementById('action-menu').classList.add('hidden');
-    }
-
-    function acaoResponder() {
-        if (!mensagemSelecionada) return;
-
-        respostaSelecionada = mensagemSelecionada;
-
-        document.getElementById('reply-preview-text').textContent =
-            mensagemSelecionada.texto;
-
-        document.getElementById('reply-preview').classList.remove('hidden');
-
-        esconderMenuMensagem();
-        document.getElementById('message-input').focus();
-    }
-
-    function cancelarResposta() {
-        respostaSelecionada = null;
-        document.getElementById('reply-preview').classList.add('hidden');
-    }
-
-    function acaoEncaminhar() {
-        if (!mensagemSelecionada) return;
-
-        const texto = mensagemSelecionada.texto;
-
-        esconderMenuMensagem();
-
-        abrirConfirmCustomizado('Encaminhar', 'Deseja encaminhar esta mensagem para a conversa atual?', () => {
-            const agora = new Date();
-
-            mensagensExemplo.push({
-                id: 'msg-' + Date.now(),
-                texto,
-                ehMinha: true,
-                status: 'enviando',
-                encaminhada: true,
-                horario: agora.toLocaleTimeString([], {
-                    hour: '2-digit',
-                    minute: '2-digit'
-                }),
-                createdAt: agora.toISOString()
-            });
-
-            renderizarMensagens();
-            mostrarToast('Mensagem encaminhada');
-        });
-    }
-
-    function acaoReagir() {
-        if (!mensagemSelecionada) return;
-        const emojis = ['❤️', '😂', '👍', '😮', '😢', '🔥', '👏'];
-        
-        abrirPromptCustomizado('Digite uma reação (' + emojis.join(' ') + ')', '❤️', (escolha) => {
-            if (escolha && escolha.trim()) {
-                mensagemSelecionada.reacao = escolha.trim();
-                renderizarMensagens();
-                mostrarToast('Reação adicionada');
-            }
-        });
-
-        esconderMenuMensagem();
-    }
-
-    function acaoCopiar() {
-        if (!mensagemSelecionada) return;
-
-        const texto = mensagemSelecionada.texto;
-
-        if (navigator.clipboard && navigator.clipboard.writeText) {
-            navigator.clipboard.writeText(texto).then(() => {
-                mostrarToast('Texto copiado');
-            }).catch(() => {
-                mostrarToast('Erro ao copiar');
-            });
-        } else {
-            const campo = document.createElement('textarea');
-            campo.value = texto;
-            document.body.appendChild(campo);
-            campo.select();
-            document.execCommand('copy');
-            campo.remove();
-            mostrarToast('Texto copiado');
-        }
-
-        esconderMenuMensagem();
-    }
-
-    function acaoEditar() {
-        if (!mensagemSelecionada) return;
-
-        const msg = mensagemSelecionada;
-        esconderMenuMensagem();
-
-        abrirPromptCustomizado('Editar mensagem', msg.texto, (novoTexto) => {
-            if (novoTexto !== null && novoTexto.trim()) {
-                const diferencaMinutos =
-                    (Date.now() - new Date(msg.createdAt)) / 60000;
-
-                if (!msg.ehMinha || diferencaMinutos > 2) {
-                    mostrarToast('O prazo de edição expirou.');
-                    return;
-                }
-
-                msg.texto = novoTexto.trim();
-                renderizarMensagens();
-                mostrarToast('Mensagem editada');
-            }
-        });
-    }
-
-    function acaoApagarParaTodos() {
-        if (!mensagemSelecionada) return;
-
-        esconderMenuMensagem();
-
-        if (!mensagemSelecionada.ehMinha) return;
-
-        abrirConfirmCustomizado('Apagar mensagem', 'Deseja apagar esta mensagem para todos?', () => {
-            mensagensExemplo = mensagensExemplo.filter(
-                item => item.id !== mensagemSelecionada.id
-            );
-
-            renderizarMensagens();
-            mostrarToast('Apagada para todos');
-        });
-    }
-
-    function acaoApagarParaMim() {
-        if (!mensagemSelecionada) return;
-
-        mensagensExemplo = mensagensExemplo.filter(
-            item => item.id !== mensagemSelecionada.id
-        );
-
-        esconderMenuMensagem();
-        renderizarMensagens();
-        mostrarToast('Apagada para você');
-    }
-
-    // MENU DE CONVERSA
-    function abrirMenuConversa(elemento) {
-        conversaSelecionada = elemento;
-
-        const estado = estadoConversas.get(elemento) || {
-            fixada: false,
-            silenciada: false
-        };
-
-        document.getElementById('conversation-menu-title').textContent =
-            elemento.dataset.name;
-
-        document.getElementById('fixar-label').textContent =
-            estado.fixada ? 'Desafixar conversa' : 'Fixar conversa';
-
-        document.getElementById('silenciar-label').textContent =
-            estado.silenciada ? 'Ativar notificações' : 'Silenciar notificações';
-
-        document.getElementById('conversation-menu').classList.remove('hidden');
-    }
-
-    function fecharMenuConversa(event) {
-        if (event.target.id === 'conversation-menu') {
-            document.getElementById('conversation-menu').classList.add('hidden');
-        }
-    }
-
-    function esconderMenuConversa() {
-        document.getElementById('conversation-menu').classList.add('hidden');
-    }
-
-    function obterEstadoConversa() {
-        return estadoConversas.get(conversaSelecionada) || {
-            fixada: false,
-            silenciada: false
-        };
-    }
-
-    function alternarFixarConversa() {
-        if (!conversaSelecionada) return;
-
-        const estado = obterEstadoConversa();
-        estado.fixada = !estado.fixada;
-
-        estadoConversas.set(conversaSelecionada, estado);
-
-        conversaSelecionada.classList.toggle('border-l-4', estado.fixada);
-        conversaSelecionada.classList.toggle('border-accent', estado.fixada);
-
-        esconderMenuConversa();
-        mostrarToast(estado.fixada ? 'Conversa fixada' : 'Conversa desafixada');
-    }
-
-    function alternarSilenciarConversa() {
-        if (!conversaSelecionada) return;
-
-        const estado = obterEstadoConversa();
-        estado.silenciada = !estado.silenciada;
-
-        estadoConversas.set(conversaSelecionada, estado);
-
-        esconderMenuConversa();
-        mostrarToast(estado.silenciada ? 'Notificações silenciadas' : 'Notificações ativadas');
-    }
-
-    function marcarComoNaoLida() {
-        if (!conversaSelecionada) return;
-
-        let badge = conversaSelecionada.querySelector('.unread-badge');
-
-        if (!badge) {
-            badge = document.createElement('span');
-            badge.className = 'unread-badge bg-accent text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full';
-            badge.textContent = '1';
-
-            const area = conversaSelecionada.querySelector('.flex-1.min-w-0 .flex.justify-between.items-center');
-
-            if (area) area.appendChild(badge);
-        }
-
-        esconderMenuConversa();
-        mostrarToast('Marcada como não lida');
-    }
-
-    function arquivarConversa() {
-        if (!conversaSelecionada) return;
-
-        abrirConfirmCustomizado('Arquivar', 'Deseja arquivar esta conversa?', () => {
-            conversaSelecionada.remove();
-            mostrarToast('Conversa arquivada');
-        });
-
-        esconderMenuConversa();
-    }
-
-    function excluirConversa() {
-        if (!conversaSelecionada) return;
-
-        abrirConfirmCustomizado('Excluir', 'Deseja excluir esta conversa da lista?', () => {
-            conversaSelecionada.remove();
-            mostrarToast('Conversa excluída');
-        });
-
-        esconderMenuConversa();
-    }
-
-    // FOTO DE PERFIL AMPLIADA
-    function abrirFotoPerfil(elemento) {
-        const modal = document.getElementById('profile-modal');
-        const conteudo = document.getElementById('profile-modal-content');
-
-        conteudo.innerHTML = '';
-
-        const copia = elemento.cloneNode(true);
-
-        copia.className =
-            'w-full h-full flex items-center justify-center text-white text-7xl font-bold';
-
-        copia.style.width = '100%';
-        copia.style.height = '100%';
-
-        conteudo.appendChild(copia);
-        conteudo.className =
-            'modal-enter w-64 h-64 max-w-[80vw] max-h-[80vw] rounded-full overflow-hidden flex items-center justify-center shadow-2xl';
-
-        modal.classList.remove('hidden');
-    }
-
-    function fecharFotoPerfil() {
-        document.getElementById('profile-modal').classList.add('hidden');
-    }
-
-    // EVENTOS DAS CONVERSAS
-    document.querySelectorAll('.conversation-item').forEach(elemento => {
-        configurarToqueLongo(elemento, () => {
-            abrirMenuConversa(elemento);
-        });
-
-        elemento.addEventListener('click', event => {
-            if (toqueLongoAtivado) {
-                event.preventDefault();
-                toqueLongoAtivado = false;
-                return;
-            }
-
-            if (event.target.closest('.profile-avatar')) return;
-
-            abrirTelaChat(
-                elemento.dataset.name,
-                elemento.dataset.status
-            );
-        });
-    });
-
-    // EVENTOS DAS FOTOS
-    document.querySelectorAll('.profile-avatar').forEach(elemento => {
-        elemento.addEventListener('click', event => {
-            event.stopPropagation();
-            abrirFotoPerfil(elemento);
-        });
-    });
-
-    // FOTO NO CABEÇALHO DO CHAT
-    document.getElementById('chat-header-avatar').addEventListener('click', event => {
-        abrirFotoPerfil(event.currentTarget);
-    });
-
-    // FECHAR MODAIS COM ESC
-    document.addEventListener('keydown', event => {
-        if (event.key === 'Escape') {
-            fecharFotoPerfil();
-            esconderMenuMensagem();
-            esconderMenuConversa();
-            document.getElementById('custom-confirm-modal').classList.add('hidden');
-            document.getElementById('custom-prompt-modal').classList.add('hidden');
-        }
-    });
-
+// DADOS DEMONSTRATIVOS
+let mensagensExemplo=[
+{id:'1',texto:'Estrutura principal concluída com sucesso!',ehMinha:true,status:'lido',horario:'22:30',createdAt:new Date(Date.now()-600000).toISOString(),reacao:null},
+{id:'2',texto:'Perfeito, visual ficou incrível e super limpo!',ehMinha:false,remetente:'Mila',horario:'22:31',createdAt:new Date(Date.now()-500000).toISOString(),reacao:null},
+{id:'3',texto:'Testando envio pendente...',ehMinha:true,status:'enviando',horario:'22:35',createdAt:new Date(Date.now()-300000).toISOString(),reacao:null}
+];
+
+let timerToqueLongo=null;
+let toqueLongoAtivado=false;
+let mensagemSelecionada=null;
+let conversaSelecionada=null;
+let respostaSelecionada=null;
+let contatoAtual=null;
+let abaAtual='conversas';
+let rascunhos={};
+let biometriaAtiva=false;
+let toastTimer=null;
+
+const estadoConversas=new WeakMap();
+
+function mostrarToast(mensagem){
+const toast=document.getElementById('toast-container');
+document.getElementById('toast-message').textContent=mensagem;
+toast.classList.remove('opacity-0','translate-y-2');
+toast.classList.add('opacity-100','translate-y-0');
+clearTimeout(toastTimer);
+toastTimer=setTimeout(()=>{
+toast.classList.remove('opacity-100','translate-y-0');
+toast.classList.add('opacity-0','translate-y-2');
+},2500);
+}
+
+function abrirConfirmCustomizado(titulo,texto,aoConfirmar){
+const modal=document.getElementById('custom-confirm-modal');
+document.getElementById('confirm-title').textContent=titulo;
+document.getElementById('confirm-text').textContent=texto;
+modal.classList.remove('hidden');
+const ok=document.getElementById('confirm-btn-ok');
+const cancelar=document.getElementById('confirm-btn-cancel');
+const fechar=()=>{
+ok.replaceWith(ok.cloneNode(true));
+cancelar.replaceWith(cancelar.cloneNode(true));
+modal.classList.add('hidden');
+};
+document.getElementById('confirm-btn-ok').onclick=()=>{
+fechar();aoConfirmar();
+};
+document.getElementById('confirm-btn-cancel').onclick=fechar;
+}
+
+function abrirPromptCustomizado(titulo,valor,aoSalvar){
+const modal=document.getElementById('custom-prompt-modal');
+const input=document.getElementById('prompt-input');
+document.getElementById('prompt-title').textContent=titulo;
+input.value=valor||'';
+modal.classList.remove('hidden');
+input.focus();
+const fechar=()=>{
+document.getElementById('prompt-btn-ok').replaceWith(document.getElementById('prompt-btn-ok').cloneNode(true));
+document.getElementById('prompt-btn-cancel').replaceWith(document.getElementById('prompt-btn-cancel').cloneNode(true));
+modal.classList.add('hidden');
+};
+document.getElementById('prompt-btn-ok').onclick=()=>{
+const valor=input.value;fechar();aoSalvar(valor);
+};
+document.getElementById('prompt-btn-cancel').onclick=fechar;
+}
+
+function mudarAba(nome,botao){
+abaAtual=nome;
+document.querySelectorAll('.tab-pane').forEach(el=>el.classList.add('hidden'));
+document.getElementById('tab-'+nome).classList.remove('hidden');
+document.querySelectorAll('.nav-btn').forEach(el=>{
+el.classList.remove('text-accent');el.classList.add('text-mutedText');
+});
+botao.classList.remove('text-mutedText');botao.classList.add('text-accent');
+}
+
+function abrirTelaChat(nome,status){
+contatoAtual=nome;
+document.getElementById('chat-header-title').textContent=nome;
+document.getElementById('chat-header-avatar').textContent=nome.substring(0,2).toUpperCase();
+document.getElementById('chat-header-status').textContent=status;
+document.getElementById('screen-chat').classList.remove('hidden');
+document.getElementById('message-input').value=rascunhos[nome]||'';
+document.getElementById('draft-indicator').classList.toggle('hidden',!rascunhos[nome]);
+renderizarMensagens();
+}
+
+function fecharTelaChat(){
+salvarRascunho();
+document.getElementById('screen-chat').classList.add('hidden');
+}
+
+function renderizarMensagens(){
+const container=document.getElementById('messages-container');
+container.replaceChildren();
+mensagensExemplo.forEach(msg=>{
+const div=document.createElement('div');
+div.className='flex flex-col max-w-[80%] '+(msg.ehMinha?'ml-auto items-end':'mr-auto items-start');
+const bubble=document.createElement('div');
+bubble.className='message-bubble '+(msg.ehMinha?'bg-msgOut text-white rounded-br-none':'bg-msgIn text-gray-100 rounded-bl-none')+' px-3 py-2 rounded-xl text-sm shadow cursor-pointer';
+
+if(!msg.ehMinha&&msg.remetente){
+const remetente=document.createElement('span');
+remetente.className='block text-[10px] font-bold text-accent mb-1';
+remetente.textContent=msg.remetente;
+bubble.appendChild(remetente);
+}
+if(msg.encaminhada){
+const label=document.createElement('span');
+label.className='block text-[10px] text-blue-200 mb-1';
+label.textContent='↗ Encaminhada';
+bubble.appendChild(label);
+}
+if(msg.respostaTexto){
+const resposta=document.createElement('div');
+resposta.className='bg-black/20 border-l-2 border-blue-300 rounded p-2 mb-2 text-xs text-blue-100';
+resposta.textContent=msg.respostaTexto;
+bubble.appendChild(resposta);
+}
+const texto=document.createElement('span');
+texto.className='whitespace-pre-wrap break-words';
+texto.textContent=msg.texto;
+bubble.appendChild(texto);
+
+const rodape=document.createElement('div');
+rodape.className='flex items-center justify-end gap-1.5 mt-1';
+const horario=document.createElement('span');
+horario.className='text-[9px] text-gray-300/70';
+horario.textContent=msg.horario;
+rodape.appendChild(horario);
+if(msg.ehMinha){
+const icone=document.createElement('i');
+icone.className=msg.status==='enviando'?'fa-regular fa-clock text-[10px] text-mutedText':msg.status==='enviado'?'fa-solid fa-check text-[10px] text-mutedText':'fa-solid fa-check-double text-[10px] '+(msg.status==='lido'?'text-blue-300':'text-mutedText');
+rodape.appendChild(icone);
+}
+bubble.appendChild(rodape);
+div.appendChild(bubble);
+if(msg.reacao){
+const reacao=document.createElement('span');
+reacao.className='reaction mt-1';
+reacao.textContent=msg.reacao;
+div.appendChild(reacao);
+}
+configurarToqueLongo(bubble,()=>abrirMenuAcoes(msg.id));
+container.appendChild(div);
+});
+container.scrollTop=container.scrollHeight;
+}
+
+function enviarMensagem(){
+const input=document.getElementById('message-input');
+const texto=input.value.trim();
+if(!texto)return;
+const agora=new Date();
+const msg={
+id:'msg-'+Date.now(),texto,ehMinha:true,status:'enviando',
+horario:agora.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}),
+createdAt:agora.toISOString(),
+respostaTexto:respostaSelecionada?respostaSelecionada.texto:null,reacao:null
+};
+mensagensExemplo.push(msg);
+input.value='';
+if(contatoAtual)delete rascunhos[contatoAtual];
+document.getElementById('draft-indicator').classList.add('hidden');
+cancelarResposta();
+renderizarMensagens();
+setTimeout(()=>{const m=mensagensExemplo.find(x=>x.id===msg.id);if(m){m.status='enviado';renderizarMensagens();}},1000);
+setTimeout(()=>{const m=mensagensExemplo.find(x=>x.id===msg.id);if(m){m.status='lido';renderizarMensagens();}},2500);
+}
+
+function salvarRascunho(){
+if(!contatoAtual)return;
+const valor=document.getElementById('message-input').value;
+if(valor.trim()){
+rascunhos[contatoAtual]=valor;
+document.getElementById('draft-indicator').classList.remove('hidden');
+}else{
+delete rascunhos[contatoAtual];
+document.getElementById('draft-indicator').classList.add('hidden');
+}
+}
+
+function configurarToqueLongo(elemento,callback){
+elemento.addEventListener('pointerdown',()=>{
+toqueLongoAtivado=false;clearTimeout(timerToqueLongo);
+timerToqueLongo=setTimeout(()=>{toqueLongoAtivado=true;callback();},500);
+});
+['pointerup','pointerleave','pointercancel'].forEach(evento=>{
+elemento.addEventListener(evento,()=>clearTimeout(timerToqueLongo));
+});
+elemento.addEventListener('contextmenu',event=>{
+event.preventDefault();clearTimeout(timerToqueLongo);
+toqueLongoAtivado=true;callback();
+});
+}
+
+function abrirMenuAcoes(id){
+mensagemSelecionada=mensagensExemplo.find(m=>m.id===id);
+if(!mensagemSelecionada)return;
+const minutos=(Date.now()-new Date(mensagemSelecionada.createdAt))/60000;
+document.getElementById('btn-editar').style.display=mensagemSelecionada.ehMinha&&minutos<=2?'flex':'none';
+document.getElementById('btn-apagar-todos').style.display=mensagemSelecionada.ehMinha?'flex':'none';
+document.getElementById('action-menu').classList.remove('hidden');
+}
+function fecharMenuAcoes(e){
+if(e.target.id==='action-menu')esconderMenuMensagem();
+}
+function esconderMenuMensagem(){document.getElementById('action-menu').classList.add('hidden');}
+
+function acaoResponder(){
+if(!mensagemSelecionada)return;
+respostaSelecionada=mensagemSelecionada;
+document.getElementById('reply-preview-text').textContent=mensagemSelecionada.texto;
+document.getElementById('reply-preview').classList.remove('hidden');
+esconderMenuMensagem();document.getElementById('message-input').focus();
+}
+function cancelarResposta(){
+respostaSelecionada=null;
+document.getElementById('reply-preview').classList.add('hidden');
+}
+function acaoEncaminhar(){
+if(!mensagemSelecionada)return;
+const texto=mensagemSelecionada.texto;esconderMenuMensagem();
+abrirConfirmCustomizado('Encaminhar','Deseja encaminhar esta mensagem para a conversa atual?',()=>{
+const agora=new Date();
+mensagensExemplo.push({
+id:'msg-'+Date.now(),texto,ehMinha:true,status:'enviando',encaminhada:true,
+horario:agora.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}),
+createdAt:agora.toISOString()
+});
+renderizarMensagens();mostrarToast('Mensagem encaminhada');
+});
+}
+function acaoReagir(){
+if(!mensagemSelecionada)return;
+const msg=mensagemSelecionada;esconderMenuMensagem();
+abrirPromptCustomizado('Digite uma reação','❤️',valor=>{
+if(valor.trim()){msg.reacao=valor.trim();renderizarMensagens();mostrarToast('Reação adicionada');}
+});
+}
+async function acaoCopiar(){
+if(!mensagemSelecionada)return;
+const texto=mensagemSelecionada.texto;esconderMenuMensagem();
+try{await navigator.clipboard.writeText(texto);mostrarToast('Texto copiado');}
+catch(e){
+const campo=document.createElement('textarea');campo.value=texto;
+document.body.appendChild(campo);campo.select();
+const ok=document.execCommand('copy');campo.remove();
+mostrarToast(ok?'Texto copiado':'Não foi possível copiar');
+}
+}
+function acaoEditar(){
+if(!mensagemSelecionada)return;
+const msg=mensagemSelecionada;esconderMenuMensagem();
+abrirPromptCustomizado('Editar mensagem',msg.texto,novo=>{
+if(!novo.trim())return;
+if(!msg.ehMinha||(Date.now()-new Date(msg.createdAt))/60000>2){mostrarToast('Prazo de edição expirado');return;}
+msg.texto=novo.trim();renderizarMensagens();mostrarToast('Mensagem editada');
+});
+}
+function acaoApagarParaTodos(){
+if(!mensagemSelecionada||!mensagemSelecionada.ehMinha)return;
+const id=mensagemSelecionada.id;esconderMenuMensagem();
+abrirConfirmCustomizado('Apagar mensagem','Deseja apagar esta mensagem para todos?',()=>{
+mensagensExemplo=mensagensExemplo.filter(m=>m.id!==id);
+renderizarMensagens();mostrarToast('Mensagem apagada');
+});
+}
+function acaoApagarParaMim(){
+if(!mensagemSelecionada)return;
+const id=mensagemSelecionada.id;
+mensagensExemplo=mensagensExemplo.filter(m=>m.id!==id);
+esconderMenuMensagem();renderizarMensagens();mostrarToast('Apagada para você');
+}
+
+// MENU DA LISTA DE CONVERSAS
+function abrirMenuConversa(elemento){
+conversaSelecionada=elemento;
+const estado=estadoConversas.get(elemento)||{fixada:false,silenciada:false};
+document.getElementById('conversation-menu-title').textContent=elemento.dataset.name;
+document.getElementById('fixar-label').textContent=estado.fixada?'Desafixar conversa':'Fixar conversa';
+document.getElementById('silenciar-label').textContent=estado.silenciada?'Ativar notificações':'Silenciar notificações';
+document.getElementById('conversation-menu').classList.remove('hidden');
+}
+function fecharMenuConversa(e){if(e.target.id==='conversation-menu')esconderMenuConversa();}
+function esconderMenuConversa(){document.getElementById('conversation-menu').classList.add('hidden');}
+function obterEstadoConversa(){return estadoConversas.get(conversaSelecionada)||{fixada:false,silenciada:false};}
+
+function alternarFixarConversa(){
+if(!conversaSelecionada)return;
+const estado=obterEstadoConversa();estado.fixada=!estado.fixada;
+estadoConversas.set(conversaSelecionada,estado);
+conversaSelecionada.classList.toggle('border-l-4',estado.fixada);
+conversaSelecionada.classList.toggle('border-accent',estado.fixada);
+esconderMenuConversa();mostrarToast(estado.fixada?'Conversa fixada':'Conversa desafixada');
+}
+function alternarSilenciarConversa(){
+if(!conversaSelecionada)return;
+const estado=obterEstadoConversa();estado.silenciada=!estado.silenciada;
+estadoConversas.set(conversaSelecionada,estado);
+esconderMenuConversa();mostrarToast(estado.silenciada?'Notificações silenciadas':'Notificações ativadas');
+}
+function marcarComoNaoLida(){
+if(!conversaSelecionada)return;
+let badge=conversaSelecionada.querySelector('.unread-badge');
+if(!badge){
+badge=document.createElement('span');
+badge.className='unread-badge bg-accent text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full';
+badge.textContent='1';
+const area=conversaSelecionada.querySelector('.flex-1.min-w-0 .flex.justify-between.items-center');
+if(area)area.appendChild(badge);
+}
+esconderMenuConversa();mostrarToast('Marcada como não lida');
+}
+function arquivarConversa(){
+if(!conversaSelecionada)return;
+const el=conversaSelecionada;esconderMenuConversa();
+abrirConfirmCustomizado('Arquivar','Deseja arquivar esta conversa?',()=>{el.remove();mostrarToast('Conversa arquivada');});
+}
+function excluirConversa(){
+if(!conversaSelecionada)return;
+const el=conversaSelecionada;esconderMenuConversa();
+abrirConfirmCustomizado('Excluir','Deseja excluir esta conversa da lista?',()=>{el.remove();mostrarToast('Conversa excluída');});
+}
+
+// MENU DO CHAT
+function abrirMenuChat(){document.getElementById('chat-options-menu').classList.remove('hidden');}
+function fecharMenuChat(e){if(e.target.id==='chat-options-menu')document.getElementById('chat-options-menu').classList.add('hidden');}
+function esconderMenuChat(){document.getElementById('chat-options-menu').classList.add('hidden');}
+
+function verPerfilContato(){
+esconderMenuChat();
+const nome=contatoAtual||document.getElementById('chat-header-title').textContent;
+abrirModal('Perfil de '+nome,`
+<div class="flex flex-col items-center py-4">
+<div class="w-24 h-24 rounded-full bg-indigo-900 flex items-center justify-center text-4xl font-bold mb-3">${escaparHTML(nome.substring(0,1).toUpperCase())}</div>
+<h3 class="font-bold text-lg">${escaparHTML(nome)}</h3>
+<p class="text-xs text-accent mt-1">@${escaparHTML(nome.toLowerCase().replace(/\\s+/g,''))}</p>
+<p class="text-xs text-mutedText mt-3">Disponível no NexusChat</p>
+</div>
+<div class="border-t border-slate-700 pt-3 text-xs text-mutedText">Informações do contato e número de telefone serão carregados pelo perfil da conta.</div>
+<div class="flex gap-2 mt-4">
+<button onclick="mostrarToast('Adicionar contato será integrado')" class="flex-1 bg-accent rounded-xl py-2 text-xs text-white">Adicionar</button>
+<button onclick="mostrarToast('Bloqueio será integrado')" class="flex-1 bg-surfaceLight rounded-xl py-2 text-xs">Bloquear</button>
+</div>`);
+}
+
+function pesquisarNaConversa(){
+esconderMenuChat();
+abrirModal('Pesquisar mensagens',`
+<input id="chat-search" class="w-full bg-surfaceLight rounded-xl px-3 py-3 text-sm outline-none" placeholder="Digite para pesquisar..." oninput="buscarMensagem(this.value)">
+<div id="chat-search-results" class="mt-3 text-xs text-mutedText">Pesquise mensagens desta conversa.</div>`);
+}
+function buscarMensagem(valor){
+const area=document.getElementById('chat-search-results');
+if(!area)return;
+area.replaceChildren();
+const termo=valor.trim().toLowerCase();
+if(!termo){area.textContent='Digite para pesquisar.';return;}
+const resultados=mensagensExemplo.filter(m=>m.texto.toLowerCase().includes(termo));
+if(!resultados.length){area.textContent='Nenhuma mensagem encontrada.';return;}
+resultados.forEach(m=>{
+const item=document.createElement('button');
+item.className='block w-full text-left p-3 rounded-lg bg-surfaceLight mb-2';
+item.textContent=m.texto;
+area.appendChild(item);
+});
+}
+function mostrarMidias(){
+esconderMenuChat();
+abrirModal('Mídias, links e arquivos',`
+<div class="grid grid-cols-3 gap-2 text-center text-xs">
+<button onclick="mostrarToast('Fotos da conversa')" class="bg-surfaceLight p-4 rounded-xl"><i class="fa-solid fa-image text-xl block mb-2 text-accent"></i>Fotos</button>
+<button onclick="mostrarToast('Vídeos da conversa')" class="bg-surfaceLight p-4 rounded-xl"><i class="fa-solid fa-video text-xl block mb-2 text-accent"></i>Vídeos</button>
+<button onclick="mostrarToast('Arquivos da conversa')" class="bg-surfaceLight p-4 rounded-xl"><i class="fa-solid fa-file text-xl block mb-2 text-accent"></i>Arquivos</button>
+<button onclick="mostrarToast('Links compartilhados')" class="bg-surfaceLight p-4 rounded-xl"><i class="fa-solid fa-link text-xl block mb-2 text-accent"></i>Links</button>
+<button onclick="mostrarToast('Áudios da conversa')" class="bg-surfaceLight p-4 rounded-xl"><i class="fa-solid fa-microphone text-xl block mb-2 text-accent"></i>Áudios</button>
+</div>`);
+}
+function silenciarChat(){esconderMenuChat();mostrarToast('Configuração de silêncio será integrada');}
+
+// NOVA CONVERSA
+function abrirNovaConversa(){
+abrirModal('Nova conversa',`
+<div class="relative mb-3">
+<i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-mutedText"></i>
+<input id="contact-search" oninput="filtrarContatos(this.value)" placeholder="Buscar contato ou número" class="w-full bg-surfaceLight rounded-xl pl-9 pr-3 py-3 text-sm outline-none">
+</div>
+<div id="contact-results">
+<button class="profile-row" onclick="iniciarConversa('Mila')">
+<div class="w-10 h-10 rounded-full bg-indigo-900 flex items-center justify-center font-bold">M</div>
+<span>Mila</span>
+</button>
+<button class="profile-row" onclick="iniciarConversa('Comunidade Dev Crato')">
+<div class="w-10 h-10 rounded-full bg-slate-700 flex items-center justify-center"><i class="fa-solid fa-code text-accent"></i></div>
+<span>Comunidade Dev Crato</span>
+</button>
+</div>`);
+}
+function filtrarContatos(valor){
+const lista=document.getElementById('contact-results');
+if(!lista)return;
+const termo=valor.toLowerCase();
+lista.querySelectorAll('button').forEach(b=>b.classList.toggle('hidden',!b.textContent.toLowerCase().includes(termo)));
+}
+function iniciarConversa(nome){
+fecharModalGenerico();
+const item=[...document.querySelectorAll('.conversation-item')].find(el=>el.dataset.name===nome);
+if(item){abrirTelaChat(nome,item.dataset.status);return;}
+abrirTelaChat(nome,'disponível');
+}
+
+// PERFIL E CONFIGURAÇÕES
+function abrirMeuPerfil(){
+abrirModal('Editar perfil',`
+<div class="space-y-3">
+<label class="block text-xs text-mutedText">Nome</label>
+<input class="w-full bg-surfaceLight rounded-xl p-3 text-sm" value="Wellington Silva">
+<label class="block text-xs text-mutedText">Nome de usuário</label>
+<input class="w-full bg-surfaceLight rounded-xl p-3 text-sm" value="@wellington">
+<label class="block text-xs text-mutedText">Recado</label>
+<textarea class="w-full bg-surfaceLight rounded-xl p-3 text-sm">Disponível para projetos</textarea>
+<button onclick="fecharModalGenerico();mostrarToast('Edição será salva após integração')" class="w-full bg-accent rounded-xl p-3 text-sm">Salvar alterações</button>
+</div>`);
+}
+function abrirQR(){
+abrirModal('Meu QR Code',`
+<div class="flex flex-col items-center py-4">
+<div class="bg-white rounded-xl p-4 text-black text-7xl"><i class="fa-solid fa-qrcode"></i></div>
+<p class="font-semibold mt-4">@wellington</p>
+<p class="text-xs text-mutedText mt-2 text-center">Compartilhe seu QR Code para que outras pessoas encontrem seu perfil.</p>
+<button onclick="mostrarToast('Compartilhamento será integrado')" class="bg-accent rounded-xl px-5 py-2 mt-4 text-xs">Compartilhar</button>
+</div>`);
+}
+function abrirConfiguracao(titulo){
+abrirModal(titulo,`
+<div class="space-y-2">
+<p class="text-xs text-mutedText">As configurações desta área serão conectadas à sua conta NexusChat.</p>
+<button onclick="mostrarToast('Configuração de privacidade')" class="profile-row"><i class="fa-solid fa-user-shield"></i>Quem pode ver meus dados</button>
+<button onclick="mostrarToast('Configuração salva após integração')" class="profile-row"><i class="fa-solid fa-sliders"></i>Preferências da conta</button>
+</div>`);
+}
+function alternarBiometria(){
+biometriaAtiva=!biometriaAtiva;
+document.getElementById('biometria-status').textContent=biometriaAtiva?'Ativado':'Desativado';
+mostrarToast(biometriaAtiva?'Opção demonstrativa ativada':'Opção demonstrativa desativada');
+}
+function sairDaConta(){
+abrirConfirmCustomizado('Sair da conta','Deseja sair da sua conta NexusChat?',()=>{
+mostrarToast('O encerramento de sessão será conectado ao Supabase');
+});
+}
+
+// STATUS, FILTROS E ANEXOS
+function abrirAnexos(){
+abrirModal('Anexar arquivo',`
+<div class="grid grid-cols-2 gap-2">
+<button class="bg-surfaceLight p-4 rounded-xl" onclick="selecionarArquivo('image/*')"><i class="fa-solid fa-image text-accent text-xl block mb-2"></i>Fotos</button>
+<button class="bg-surfaceLight p-4 rounded-xl" onclick="selecionarArquivo('video/*')"><i class="fa-solid fa-video text-accent text-xl block mb-2"></i>Vídeos</button>
+<button class="bg-surfaceLight p-4 rounded-xl" onclick="selecionarArquivo('*/*')"><i class="fa-solid fa-file text-accent text-xl block mb-2"></i>Documento</button>
+<button class="bg-surfaceLight p-4 rounded-xl" onclick="mostrarToast('Compartilhamento de localização será integrado')"><i class="fa-solid fa-location-dot text-accent text-xl block mb-2"></i>Localização</button>
+<button class="bg-surfaceLight p-4 rounded-xl" onclick="mostrarToast('Gravação de voz será integrada')"><i class="fa-solid fa-microphone text-accent text-xl block mb-2"></i>Mensagem de voz</button>
+<button class="bg-surfaceLight p-4 rounded-xl" onclick="mostrarToast('Compartilhar contato será integrado')"><i class="fa-solid fa-address-book text-accent text-xl block mb-2"></i>Contato</button>
+</div>`);
+}
+function selecionarArquivo(tipo){
+const input=document.createElement('input');
+input.type='file';input.accept=tipo;
+input.onchange=()=>{if(input.files.length)mostrarToast('Arquivo selecionado: '+input.files[0].name);};
+input.click();
+fecharModalGenerico();
+}
+function filtrarConversas(filtro,botao){
+document.querySelectorAll('.filtro').forEach(b=>{
+b.classList.remove('bg-accent','text-white');
+b.classList.add('bg-surfaceLight','text-mutedText');
+});
+botao.classList.remove('bg-surfaceLight','text-mutedText');
+botao.classList.add('bg-accent','text-white');
+document.querySelectorAll('#conversation-list .conversation-item').forEach(item=>{
+const temNaoLida=!!item.querySelector('.unread-badge');
+const tipo=item.dataset.type;
+item.classList.toggle('hidden',
+(filtro==='nao-lidas'&&!temNaoLida)||
+(filtro==='grupos'&&tipo!=='grupo')||
+(filtro==='favoritas'&&!item.classList.contains('border-accent')));
+});
+}
+function abrirBuscaGlobal(){
+abrirModal('Buscar no NexusChat',`
+<input class="w-full bg-surfaceLight rounded-xl p-3 text-sm outline-none" placeholder="Buscar mensagens, contatos e grupos">
+<p class="text-xs text-mutedText mt-3">A pesquisa global será integrada ao banco de dados.</p>`);
+}
+
+// MODAL E FOTO
+function abrirModal(titulo,html){
+document.getElementById('generic-title').textContent=titulo;
+document.getElementById('generic-content').innerHTML=html;
+document.getElementById('generic-modal').classList.remove('hidden');
+}
+function fecharModalGenerico(e){
+if(!e||e.target.id==='generic-modal')document.getElementById('generic-modal').classList.add('hidden');
+}
+function escaparHTML(texto){
+return String(texto).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function abrirFotoPerfil(elemento){
+const modal=document.getElementById('profile-modal');
+const conteudo=document.getElementById('profile-modal-content');
+conteudo.replaceChildren();
+const copia=elemento.cloneNode(true);
+copia.className='w-full h-full flex items-center justify-center text-white text-7xl font-bold';
+copia.style.width='100%';copia.style.height='100%';
+conteudo.appendChild(copia);
+modal.classList.remove('hidden');
+}
+function fecharFotoPerfil(){document.getElementById('profile-modal').classList.add('hidden');}
+
+// EVENTOS
+document.querySelectorAll('.conversation-item').forEach(elemento=>{
+configurarToqueLongo(elemento,()=>abrirMenuConversa(elemento));
+elemento.addEventListener('click',event=>{
+if(toqueLongoAtivado){event.preventDefault();toqueLongoAtivado=false;return;}
+if(event.target.closest('.profile-avatar'))return;
+abrirTelaChat(elemento.dataset.name,elemento.dataset.status);
+});
+});
+
+document.querySelectorAll('.profile-avatar').forEach(elemento=>{
+elemento.addEventListener('click',event=>{
+event.stopPropagation();abrirFotoPerfil(elemento);
+});
+});
+
+document.getElementById('chat-header-avatar').addEventListener('click',event=>{
+abrirFotoPerfil(event.currentTarget);
+});
+
+document.addEventListener('keydown',event=>{
+if(event.key==='Escape'){
+fecharFotoPerfil();
+esconderMenuMensagem();
+esconderMenuConversa();
+esconderMenuChat();
+fecharModalGenerico();
+document.getElementById('custom-confirm-modal').classList.add('hidden');
+document.getElementById('custom-prompt-modal').classList.add('hidden');
+}
+});
 </script>
 
 </body>
