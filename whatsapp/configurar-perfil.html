@@ -1,0 +1,558 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0b0f19">
+    <meta name="robots" content="noindex,nofollow">
+
+    <title>Configurar perfil — NexusChat</title>
+
+    <style>
+        :root {
+            --bg: #0b0f19;
+            --surface: #131c2e;
+            --blue: #3b82f6;
+            --blue-hover: #2563eb;
+            --text: #f8fafc;
+            --muted: #94a3b8;
+            --border: #273449;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            padding: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background:
+                radial-gradient(
+                    circle at 50% 0%,
+                    rgba(59,130,246,.13),
+                    transparent 45%
+                ),
+                var(--bg);
+            color: var(--text);
+            font-family: Inter, system-ui, sans-serif;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 430px;
+        }
+
+        .brand {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .logo {
+            width: 55px;
+            height: 55px;
+            margin: 0 auto 12px;
+            display: grid;
+            place-items: center;
+            border-radius: 17px;
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            font-size: 27px;
+            font-weight: 800;
+            box-shadow: 0 8px 30px rgba(37,99,235,.25);
+        }
+
+        .brand h1 {
+            margin: 0;
+            font-size: 25px;
+            letter-spacing: -1px;
+        }
+
+        .brand p {
+            margin: 7px 0 0;
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .card {
+            padding: 27px;
+            background: rgba(19,28,46,.96);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,.25);
+        }
+
+        h2 {
+            margin: 0 0 7px;
+            font-size: 21px;
+        }
+
+        .description {
+            margin: 0 0 23px;
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .field {
+            margin-bottom: 17px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #cbd5e1;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .optional {
+            color: #64748b;
+            font-weight: 400;
+        }
+
+        input {
+            width: 100%;
+            height: 47px;
+            padding: 0 13px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            outline: none;
+            background: #0b1220;
+            color: white;
+            font-size: 14px;
+        }
+
+        input:focus {
+            border-color: var(--blue);
+            box-shadow: 0 0 0 3px rgba(59,130,246,.12);
+        }
+
+        input::placeholder {
+            color: #64748b;
+        }
+
+        .username-info {
+            margin-top: 6px;
+            color: #64748b;
+            font-size: 11px;
+        }
+
+        .message {
+            display: none;
+            margin-bottom: 17px;
+            padding: 12px;
+            border-radius: 10px;
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        .message.error {
+            display: block;
+            color: #fca5a5;
+            background: rgba(220,38,38,.12);
+            border: 1px solid rgba(220,38,38,.25);
+        }
+
+        .message.success {
+            display: block;
+            color: #6ee7b7;
+            background: rgba(16,185,129,.10);
+            border: 1px solid rgba(16,185,129,.25);
+        }
+
+        .button {
+            width: 100%;
+            height: 49px;
+            margin-top: 5px;
+            border: 0;
+            border-radius: 10px;
+            background: var(--blue);
+            color: white;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .button:hover {
+            background: var(--blue-hover);
+        }
+
+        .button:disabled {
+            opacity: .6;
+            cursor: wait;
+        }
+
+        .avatar-area {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 21px;
+        }
+
+        .avatar-preview {
+            width: 62px;
+            height: 62px;
+            flex-shrink: 0;
+            display: grid;
+            place-items: center;
+            overflow: hidden;
+            border-radius: 50%;
+            background: #1e293b;
+            color: #94a3b8;
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .avatar-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .avatar-text {
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        .avatar-text strong {
+            display: block;
+            color: #cbd5e1;
+            margin-bottom: 3px;
+        }
+
+        footer {
+            margin-top: 24px;
+            text-align: center;
+            color: #64748b;
+            font-size: 10px;
+        }
+
+        @media(max-width: 450px) {
+            body {
+                padding: 18px;
+            }
+
+            .card {
+                padding: 23px 19px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<main class="container">
+
+    <header class="brand">
+        <div class="logo">N</div>
+        <h1>NexusChat</h1>
+        <p>Vamos configurar seu perfil.</p>
+    </header>
+
+    <section class="card">
+
+        <h2>Complete seu perfil</h2>
+
+        <p class="description">
+            Precisamos de algumas informações para concluir
+            sua configuração inicial.
+        </p>
+
+        <div id="feedback" class="message" role="alert"></div>
+
+        <div class="avatar-area">
+            <div class="avatar-preview" id="avatarPreview">N</div>
+
+            <div class="avatar-text">
+                <strong>Foto de perfil</strong>
+                Opcional. Você poderá adicionar depois.
+            </div>
+        </div>
+
+        <form id="profileForm">
+
+            <div class="field">
+                <label for="fullName">Nome completo</label>
+                <input
+                    id="fullName"
+                    type="text"
+                    placeholder="Seu nome completo"
+                    maxlength="100"
+                    autocomplete="name"
+                    required
+                >
+            </div>
+
+            <div class="field">
+                <label for="username">Nome de usuário</label>
+                <input
+                    id="username"
+                    type="text"
+                    placeholder="exemplo123"
+                    maxlength="30"
+                    autocomplete="username"
+                    required
+                >
+                <div class="username-info">
+                    Use letras minúsculas, números e underline.
+                </div>
+            </div>
+
+            <div class="field">
+                <label for="phone">Telefone</label>
+                <input
+                    id="phone"
+                    type="tel"
+                    placeholder="(88) 99999-9999"
+                    maxlength="20"
+                    autocomplete="tel"
+                    required
+                >
+            </div>
+
+            <button class="button" id="saveButton" type="submit">
+                Concluir configuração
+            </button>
+
+        </form>
+
+    </section>
+
+    <footer>
+        NEXUSCHAT · COMUNICAÇÃO SIMPLES E SEGURA
+    </footer>
+
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="./supabase.js"></script>
+
+<script>
+(() => {
+    "use strict";
+
+    const supabase = window.nexusSupabase;
+
+    const form = document.getElementById("profileForm");
+    const button = document.getElementById("saveButton");
+    const feedback = document.getElementById("feedback");
+
+    const fullNameInput = document.getElementById("fullName");
+    const usernameInput = document.getElementById("username");
+    const phoneInput = document.getElementById("phone");
+
+    let currentUser = null;
+    let originalUsername = null;
+
+    function showMessage(message, type = "error") {
+        feedback.textContent = message;
+        feedback.className = "message " + type;
+    }
+
+    function clearMessage() {
+        feedback.textContent = "";
+        feedback.className = "message";
+    }
+
+    function normalizeUsername(value) {
+        return value.trim().toLowerCase();
+    }
+
+    function normalizePhone(value) {
+        return value.replace(/\D/g, "");
+    }
+
+    async function initialize() {
+        try {
+            if (!supabase) {
+                throw new Error("Conexão com Supabase indisponível.");
+            }
+
+            const { data, error } =
+                await supabase.auth.getSession();
+
+            if (error) throw error;
+
+            if (!data.session) {
+                window.location.replace("./login.html");
+                return;
+            }
+
+            currentUser = data.session.user;
+
+            const { data: profile, error: profileError } =
+                await supabase
+                    .from("profiles")
+                    .select("id, full_name, username, phone")
+                    .eq("id", currentUser.id)
+                    .maybeSingle();
+
+            if (profileError) throw profileError;
+
+            if (!profile) {
+                throw new Error(
+                    "Seu perfil ainda não foi criado. Entre em contato com o suporte."
+                );
+            }
+
+            // Preencher dados já existentes
+            fullNameInput.value =
+                profile.full_name === "Usuário"
+                    ? ""
+                    : profile.full_name || "";
+
+            usernameInput.value = profile.username || "";
+            phoneInput.value = profile.phone || "";
+
+            originalUsername = profile.username || null;
+
+            if (
+                profile.full_name?.trim() &&
+                profile.full_name !== "Usuário" &&
+                profile.username?.trim() &&
+                profile.phone?.trim()
+            ) {
+                window.location.replace("./interface.html");
+                return;
+            }
+
+        } catch (error) {
+            console.error("Inicialização do perfil:", error);
+
+            showMessage(
+                error.message || "Não foi possível carregar seu perfil."
+            );
+
+            button.disabled = true;
+        }
+    }
+
+    form.addEventListener("submit", async event => {
+        event.preventDefault();
+        clearMessage();
+
+        if (!currentUser) {
+            showMessage("Sua sessão não foi identificada.");
+            return;
+        }
+
+        const fullName = fullNameInput.value.trim();
+        const username = normalizeUsername(usernameInput.value);
+        const phone = phoneInput.value.trim();
+        const normalizedPhone = normalizePhone(phone);
+
+        if (fullName.length < 3) {
+            showMessage("Informe seu nome completo.");
+            return;
+        }
+
+        if (!/^[a-z0-9_]{3,30}$/.test(username)) {
+            showMessage(
+                "O username deve ter entre 3 e 30 caracteres, usando letras minúsculas, números ou underline."
+            );
+            return;
+        }
+
+        if (normalizedPhone.length < 10 ||
+            normalizedPhone.length > 13) {
+            showMessage("Informe um telefone válido com DDD.");
+            return;
+        }
+
+        button.disabled = true;
+        button.textContent = "Salvando...";
+
+        try {
+            // Verifica se o username já pertence a outra conta
+            if (username !== originalUsername) {
+                const { data: existingUsername, error: usernameError } =
+                    await supabase
+                        .from("profiles")
+                        .select("id")
+                        .eq("username", username)
+                        .neq("id", currentUser.id)
+                        .maybeSingle();
+
+                if (usernameError) throw usernameError;
+
+                if (existingUsername) {
+                    throw new Error(
+                        "Esse nome de usuário já está sendo utilizado."
+                    );
+                }
+            }
+
+            // Verifica se o telefone já pertence a outra conta
+            const { data: existingPhone, error: phoneError } =
+                await supabase
+                    .from("profiles")
+                    .select("id")
+                    .eq("phone", phone)
+                    .neq("id", currentUser.id)
+                    .maybeSingle();
+
+            if (phoneError) throw phoneError;
+
+            if (existingPhone) {
+                throw new Error(
+                    "Esse telefone já está cadastrado em outra conta."
+                );
+            }
+
+            // Atualiza somente o próprio perfil
+            const { error: updateError } =
+                await supabase
+                    .from("profiles")
+                    .update({
+                        full_name: fullName,
+                        username: username,
+                        phone: phone,
+                        updated_at: new Date().toISOString()
+                    })
+                    .eq("id", currentUser.id);
+
+            if (updateError) throw updateError;
+
+            showMessage(
+                "Perfil configurado! Abrindo NexusChat...",
+                "success"
+            );
+
+            setTimeout(() => {
+                window.location.replace("./interface.html");
+            }, 800);
+
+        } catch (error) {
+            console.error("Erro ao salvar perfil:", error);
+
+            if (error.code === "23505") {
+                showMessage(
+                    "Username ou telefone já está sendo utilizado."
+                );
+            } else if (error.code === "42501") {
+                showMessage(
+                    "O banco não autorizou a atualização do perfil. Verifique as políticas RLS."
+                );
+            } else {
+                showMessage(
+                    error.message || "Não foi possível salvar seu perfil."
+                );
+            }
+
+        } finally {
+            button.disabled = false;
+            button.textContent = "Concluir configuração";
+        }
+    });
+
+    initialize();
+
+})();
+</script>
+
+</body>
+</html>
