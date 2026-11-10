@@ -20,115 +20,104 @@
 <header class="topbar">
   <div class="brand">Nexus<span>Chat</span></div>
   <div>
-    <button class="icon-btn" onclick="abrirBuscaGlobal()" title="Buscar"><i class="fa-solid fa-magnifying-glass"></i></button>
-    <button class="icon-btn" onclick="abrirMenuPrincipal()" title="Opções"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+    <button class="icon-btn" onclick="abrirBuscaGlobal()" title="Buscar">
+      <i class="fa-solid fa-magnifying-glass"></i>
+    </button>
+    <button class="icon-btn" onclick="abrirMenuPrincipal()" title="Opções">
+      <i class="fa-solid fa-ellipsis-vertical"></i>
+    </button>
   </div>
 </header>
 
+<!-- CONVERSAS -->
 <section class="page active" id="tab-conversas">
   <div class="page-heading">
     <h1>Conversas</h1>
     <span class="badge" id="contadorConversas">0 conversas</span>
   </div>
+
   <div class="searchbox">
     <i class="fa-solid fa-magnifying-glass"></i>
     <input id="buscaConversas" placeholder="Pesquisar conversas..." oninput="renderConversas()">
   </div>
+
   <div class="filters">
     <button class="filter active" onclick="filtroConversa('todas',this)">Todas</button>
     <button class="filter" onclick="filtroConversa('nao-lidas',this)">Não lidas</button>
     <button class="filter" onclick="filtroConversa('favoritas',this)">Favoritas</button>
     <button class="filter" onclick="filtroConversa('grupos',this)">Grupos</button>
   </div>
-  <div id="listaConversas"><div class="loading">Carregando conversas...</div></div>
-  <button class="fab" onclick="abrirNovaConversa()"><i class="fa-solid fa-pen-to-square"></i></button>
+
+  <div id="listaConversas">
+    <div class="loading">Carregando conversas...</div>
+  </div>
+
+  <button class="fab" onclick="abrirNovaConversa()">
+    <i class="fa-solid fa-pen-to-square"></i>
+  </button>
 </section>
 
+<!-- AMIGOS -->
 <section class="page" id="tab-amigos">
   <div class="page-heading">
     <h1>Amigos</h1>
-    <button class="icon-btn" onclick="abrirAdicionarContato()"><i class="fa-solid fa-user-plus"></i></button>
+    <button class="icon-btn" onclick="abrirAdicionarContato()">
+      <i class="fa-solid fa-user-plus"></i>
+    </button>
   </div>
+
   <div class="searchbox">
     <i class="fa-solid fa-magnifying-glass"></i>
     <input id="buscaAmigos" placeholder="Buscar pessoas..." oninput="renderAmigos()">
   </div>
+
   <div class="section-label">Disponíveis agora</div>
   <div id="listaAmigos"></div>
+
   <div class="section-label">Seus contatos</div>
   <div id="listaContatos"></div>
-  <button class="fab" onclick="abrirAdicionarContato()"><i class="fa-solid fa-user-plus"></i></button>
+
+  <button class="fab" onclick="abrirAdicionarContato()">
+    <i class="fa-solid fa-user-plus"></i>
+  </button>
 </section>
 
+<!-- STATUS -->
 <section class="page" id="tab-status">
   <div class="page-heading">
     <h1>Status</h1>
-    <button class="icon-btn" onclick="novoStatus()"><i class="fa-solid fa-plus"></i></button>
+    <button class="icon-btn" onclick="novoStatus()">
+      <i class="fa-solid fa-plus"></i>
+    </button>
   </div>
+
   <div class="status-row" id="meusStatus"></div>
+
   <div class="section-label">Atualizações recentes</div>
   <div id="listaStatus"></div>
 </section>
 
+<!-- PERFIL -->
 <section class="page" id="tab-perfil">
-
-  <!-- Progresso do perfil -->
-  <div class="mx-4 mt-4 mb-2 rounded-2xl border border-slate-700 bg-slate-800/70 p-4">
-
-    <div class="flex items-center justify-between gap-3 mb-3">
-      <div>
-        <h3 class="font-semibold text-white">Seu perfil</h3>
-        <p class="text-xs text-slate-400 mt-1" id="perfilProgressoStatus">
-          Complete suas informações para melhorar seu perfil.
-        </p>
-      </div>
-
-      <div class="text-right shrink-0">
-        <span class="text-xl font-bold text-blue-400" id="perfilProgressoTexto">0%</span>
-        <p class="text-xs text-slate-400">completo</p>
-      </div>
-    </div>
-
-    <div
-      class="w-full h-2.5 rounded-full bg-slate-700 overflow-hidden"
-      role="progressbar"
-      aria-label="Conclusão do perfil"
-      aria-valuemin="0"
-      aria-valuemax="100"
-      aria-valuenow="0"
-      id="perfilProgressoContainer"
-    >
-      <div
-        id="perfilProgressoBarra"
-        class="h-full rounded-full bg-blue-500 transition-all duration-500"
-        style="width:0%"
-      ></div>
-    </div>
-
-    <button
-      class="text-sm text-blue-400 font-medium mt-3"
-      onclick="editarPerfil()"
-    >
-      <i class="fa-solid fa-pen-to-square mr-1"></i>
-      Completar meu perfil
-    </button>
-
-  </div>
 
   <div class="profile-cover"></div>
 
   <div class="profile-info">
     <div class="avatar" id="avatarPerfil">?</div>
+
     <div class="profile-name" id="nomePerfil">Carregando...</div>
+
     <div class="profile-bio" id="bioPerfil"></div>
 
     <div class="flex gap-2 mt-4">
       <button class="btn" onclick="editarPerfil()">
-        <i class="fa-solid fa-pen mr-2"></i>Editar perfil
+        <i class="fa-solid fa-pen mr-2"></i>
+        Editar perfil
       </button>
 
       <button class="btn secondary" onclick="mostrarQR()">
-        <i class="fa-solid fa-qrcode mr-2"></i>Meu QR
+        <i class="fa-solid fa-qrcode mr-2"></i>
+        Meu QR
       </button>
     </div>
   </div>
@@ -166,81 +155,198 @@
 
 </section>
 
+<!-- NAVEGAÇÃO -->
 <nav class="bottom-nav">
-  <button class="nav-btn active" onclick="mudarAba('conversas',this)"><i class="fa-regular fa-comments"></i>Conversas</button>
-  <button class="nav-btn" onclick="mudarAba('amigos',this)"><i class="fa-solid fa-user-group"></i>Amigos</button>
-  <button class="nav-btn" onclick="mudarAba('status',this)"><i class="fa-regular fa-circle-dot"></i>Status</button>
-  <button class="nav-btn" onclick="mudarAba('perfil',this)"><i class="fa-regular fa-user"></i>Perfil</button>
+  <button class="nav-btn active" onclick="mudarAba('conversas',this)">
+    <i class="fa-regular fa-comments"></i>
+    Conversas
+  </button>
+
+  <button class="nav-btn" onclick="mudarAba('amigos',this)">
+    <i class="fa-solid fa-user-group"></i>
+    Amigos
+  </button>
+
+  <button class="nav-btn" onclick="mudarAba('status',this)">
+    <i class="fa-regular fa-circle-dot"></i>
+    Status
+  </button>
+
+  <button class="nav-btn" onclick="mudarAba('perfil',this)">
+    <i class="fa-regular fa-user"></i>
+    Perfil
+  </button>
 </nav>
 
+<!-- TELA DE CHAT -->
 <div id="screen-chat">
+
   <header class="chat-header">
-    <button class="icon-btn" onclick="fecharChat()"><i class="fa-solid fa-arrow-left"></i></button>
+    <button class="icon-btn" onclick="fecharChat()">
+      <i class="fa-solid fa-arrow-left"></i>
+    </button>
+
     <div class="avatar" id="chatAvatar">?</div>
+
     <div class="chat-person">
       <strong id="chatNome">Contato</strong>
       <small id="chatStatus">Carregando...</small>
     </div>
-    <button class="icon-btn" onclick="abrirPerfilConversa()"><i class="fa-regular fa-user"></i></button>
-    <button class="icon-btn" onclick="abrirMenuChat()"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+
+    <button class="icon-btn" onclick="abrirPerfilConversa()">
+      <i class="fa-regular fa-user"></i>
+    </button>
+
+    <button class="icon-btn" onclick="abrirMenuChat()">
+      <i class="fa-solid fa-ellipsis-vertical"></i>
+    </button>
   </header>
 
   <div class="menu" id="menuChat">
-    <button onclick="abrirPerfilConversa()"><i class="fa-regular fa-user"></i>Ver perfil</button>
-    <button onclick="pesquisarNaConversa()"><i class="fa-solid fa-magnifying-glass"></i>Pesquisar mensagens</button>
-    <button onclick="mostrarMidias()"><i class="fa-regular fa-images"></i>Mídia e arquivos</button>
-    <button onclick="fixarConversa()"><i class="fa-solid fa-thumbtack"></i>Fixar conversa</button>
-    <button onclick="alternarSilenciar()"><i class="fa-regular fa-bell-slash"></i>Silenciar</button>
-    <button onclick="bloquearContato()"><i class="fa-solid fa-ban"></i>Bloquear contato</button>
-    <button onclick="denunciarContato()"><i class="fa-solid fa-flag"></i>Denunciar</button>
-    <button onclick="sairDaConversa()"><i class="fa-solid fa-right-from-bracket"></i>Sair da conversa</button>
+    <button onclick="abrirPerfilConversa()">
+      <i class="fa-regular fa-user"></i>
+      Ver perfil
+    </button>
+
+    <button onclick="pesquisarNaConversa()">
+      <i class="fa-solid fa-magnifying-glass"></i>
+      Pesquisar mensagens
+    </button>
+
+    <button onclick="mostrarMidias()">
+      <i class="fa-regular fa-images"></i>
+      Mídia e arquivos
+    </button>
+
+    <button onclick="fixarConversa()">
+      <i class="fa-solid fa-thumbtack"></i>
+      Fixar conversa
+    </button>
+
+    <button onclick="alternarSilenciar()">
+      <i class="fa-regular fa-bell-slash"></i>
+      Silenciar
+    </button>
+
+    <button onclick="bloquearContato()">
+      <i class="fa-solid fa-ban"></i>
+      Bloquear contato
+    </button>
+
+    <button onclick="denunciarContato()">
+      <i class="fa-solid fa-flag"></i>
+      Denunciar
+    </button>
+
+    <button onclick="sairDaConversa()">
+      <i class="fa-solid fa-right-from-bracket"></i>
+      Sair da conversa
+    </button>
   </div>
 
   <div class="messages" id="mensagens"></div>
 
   <div class="reply-preview" id="replyPreview">
     <span id="replyText"></span>
-    <button class="icon-btn" onclick="cancelarResposta()"><i class="fa-solid fa-xmark"></i></button>
+    <button class="icon-btn" onclick="cancelarResposta()">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
   </div>
 
   <div class="chat-footer">
+
     <div class="recording-preview" id="audioPreview">
       <audio id="audioPlayer" controls></audio>
-      <button class="icon-btn" onclick="descartarAudio()"><i class="fa-solid fa-trash"></i></button>
-      <button class="send-btn" onclick="enviarAudio()"><i class="fa-solid fa-paper-plane"></i></button>
+
+      <button class="icon-btn" onclick="descartarAudio()">
+        <i class="fa-solid fa-trash"></i>
+      </button>
+
+      <button class="send-btn" onclick="enviarAudio()">
+        <i class="fa-solid fa-paper-plane"></i>
+      </button>
     </div>
 
     <div class="composer">
-      <button class="icon-btn" onclick="abrirMenuEmoji()"><i class="fa-regular fa-face-smile"></i></button>
-      <button class="icon-btn" onclick="abrirAnexos()"><i class="fa-solid fa-paperclip"></i></button>
-      <textarea id="campoMensagem" rows="1" placeholder="Mensagem..." onkeydown="teclaEnviar(event)"></textarea>
-      <button class="icon-btn hold-btn" id="botaoAudio" onpointerdown="iniciarGravacao(event)" onpointerup="pararGravacao()" onpointercancel="pararGravacao()" title="Segure para gravar"><i class="fa-solid fa-microphone"></i></button>
-      <button class="send-btn" onclick="enviarMensagem()"><i class="fa-solid fa-paper-plane"></i></button>
+      <button class="icon-btn" onclick="abrirMenuEmoji()">
+        <i class="fa-regular fa-face-smile"></i>
+      </button>
+
+      <button class="icon-btn" onclick="abrirAnexos()">
+        <i class="fa-solid fa-paperclip"></i>
+      </button>
+
+      <textarea
+        id="campoMensagem"
+        rows="1"
+        placeholder="Mensagem..."
+        onkeydown="teclaEnviar(event)"
+      ></textarea>
+
+      <button
+        class="icon-btn hold-btn"
+        id="botaoAudio"
+        onpointerdown="iniciarGravacao(event)"
+        onpointerup="pararGravacao()"
+        onpointercancel="pararGravacao()"
+        title="Segure para gravar"
+      >
+        <i class="fa-solid fa-microphone"></i>
+      </button>
+
+      <button class="send-btn" onclick="enviarMensagem()">
+        <i class="fa-solid fa-paper-plane"></i>
+      </button>
     </div>
 
     <div class="text-center text-xs mt-2" style="color:var(--muted)">
       Segure o microfone para gravar áudio
     </div>
+
   </div>
 </div>
 
+<!-- MENU PRINCIPAL -->
 <div class="menu" id="menuPrincipal" style="top:55px">
-  <button onclick="abrirAdicionarContato()"><i class="fa-solid fa-user-plus"></i>Adicionar contato</button>
-  <button onclick="abrirNovaConversa()"><i class="fa-regular fa-message"></i>Nova conversa</button>
-  <button onclick="abrirNovoGrupo()"><i class="fa-solid fa-users"></i>Novo grupo</button>
-  <button onclick="abrirNotificacoes()"><i class="fa-regular fa-bell"></i>Notificações</button>
-  <button onclick="mostrarSobre()"><i class="fa-solid fa-circle-info"></i>Sobre</button>
+
+  <button onclick="abrirAdicionarContato()">
+    <i class="fa-solid fa-user-plus"></i>
+    Adicionar contato
+  </button>
+
+  <button onclick="abrirNovaConversa()">
+    <i class="fa-regular fa-message"></i>
+    Nova conversa
+  </button>
+
+  <button onclick="abrirNovoGrupo()">
+    <i class="fa-solid fa-users"></i>
+    Novo grupo
+  </button>
+
+  <button onclick="abrirNotificacoes()">
+    <i class="fa-regular fa-bell"></i>
+    Notificações
+  </button>
+
+  <button onclick="mostrarSobre()">
+    <i class="fa-solid fa-circle-info"></i>
+    Sobre
+  </button>
+
 </div>
 
+<!-- MODAIS -->
 <div class="modal-backdrop" id="modalBackdrop" onclick="fecharModalFora(event)">
   <div class="modal" id="modal"></div>
 </div>
 
+<!-- TOAST -->
 <div class="toast" id="toast"></div>
 
 </div>
 
-<!-- Scripts Modularizados -->
+<!-- SCRIPTS -->
 <script src="./conversas.js"></script>
 <script src="./contatos.js"></script>
 <script src="./status.js"></script>
