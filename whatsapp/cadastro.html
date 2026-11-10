@@ -4,8 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#0b0f19">
-
+    <meta name="theme-color" content="#0b0b0f">
     <title>Criar conta - NexusChat</title>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -13,126 +12,102 @@
 
     <style>
         * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
         }
 
         body {
             min-height: 100vh;
-            background: #0b0f19;
-            color: #f8fafc;
-            font-family: Arial, sans-serif;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 20px;
+            background: #0b0b0f;
+            color: #fff;
+            font-family: Arial, sans-serif;
         }
 
         .container {
             width: 100%;
-            max-width: 420px;
+            max-width: 390px;
+            padding: 32px 25px;
+            background: #15151d;
+            border: 1px solid #292936;
+            border-radius: 18px;
         }
 
         .logo {
-            width: 58px;
-            height: 58px;
-            margin: 0 auto 18px;
-            border-radius: 18px;
-            background: #3b82f6;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 30px;
-            font-weight: bold;
-        }
-
-        .header {
             text-align: center;
-            margin-bottom: 28px;
+            margin-bottom: 30px;
         }
 
-        .header h1 {
-            font-size: 25px;
+        .logo h1 {
+            font-size: 29px;
+            letter-spacing: -1px;
+        }
+
+        .logo span {
+            color: #8b5cf6;
+        }
+
+        .logo p {
+            color: #9292a3;
+            font-size: 13px;
+            margin-top: 8px;
+        }
+
+        h2 {
+            font-size: 21px;
             margin-bottom: 8px;
         }
 
-        .header p {
-            color: #94a3b8;
-            font-size: 14px;
-        }
-
-        .card {
-            background: #131c2e;
-            border: 1px solid #263449;
-            border-radius: 16px;
-            padding: 26px 22px;
+        .description {
+            color: #9292a3;
+            font-size: 13px;
+            margin-bottom: 25px;
         }
 
         .field {
-            margin-bottom: 18px;
+            margin-bottom: 17px;
         }
 
         label {
             display: block;
             font-size: 13px;
-            font-weight: bold;
             margin-bottom: 8px;
+            color: #d5d5df;
         }
 
         input {
             width: 100%;
-            height: 48px;
-            background: #0b0f19;
-            border: 1px solid #334155;
-            border-radius: 9px;
-            padding: 0 14px;
+            padding: 14px;
+            border: 1px solid #343442;
+            border-radius: 10px;
+            outline: none;
+            background: #20202a;
             color: #fff;
             font-size: 15px;
-            outline: none;
-            transition: border .2s;
         }
 
         input:focus {
-            border-color: #3b82f6;
+            border-color: #8b5cf6;
         }
 
-        input::placeholder {
-            color: #64748b;
-        }
-
-        .hint {
-            display: block;
-            color: #94a3b8;
-            font-size: 11px;
-            margin-top: 7px;
-        }
-
-        .phone-error {
-            color: #f87171;
-            font-size: 11px;
-            margin-top: 7px;
-            display: none;
-        }
-
-        .button {
+        button {
             width: 100%;
-            height: 49px;
+            padding: 14px;
+            margin-top: 8px;
             border: none;
-            border-radius: 9px;
-            background: #3b82f6;
+            border-radius: 10px;
+            background: #7c3aed;
             color: white;
             font-size: 15px;
             font-weight: bold;
             cursor: pointer;
-            transition: background .2s;
         }
 
-        .button:hover {
-            background: #2563eb;
-        }
-
-        .button:disabled {
+        button:disabled {
             opacity: .6;
             cursor: not-allowed;
         }
@@ -140,48 +115,44 @@
         .message {
             display: none;
             padding: 12px;
-            border-radius: 8px;
+            margin-top: 17px;
+            border-radius: 9px;
             font-size: 13px;
-            margin-bottom: 17px;
             line-height: 1.5;
-        }
-
-        .message.error {
-            display: block;
-            color: #fecaca;
-            background: #7f1d1d33;
-            border: 1px solid #991b1b;
         }
 
         .message.success {
             display: block;
-            color: #bbf7d0;
-            background: #14532d33;
+            background: #123b2a;
+            color: #86efac;
             border: 1px solid #166534;
         }
 
-        .footer {
+        .message.error {
+            display: block;
+            background: #401b24;
+            color: #fca5a5;
+            border: 1px solid #7f1d1d;
+        }
+
+        .login {
+            margin-top: 25px;
             text-align: center;
-            margin-top: 22px;
-            color: #94a3b8;
+            color: #9292a3;
             font-size: 13px;
         }
 
-        .footer a {
-            color: #60a5fa;
+        .login a {
+            color: #a78bfa;
             text-decoration: none;
             font-weight: bold;
         }
 
-        .footer a:hover {
-            text-decoration: underline;
-        }
-
         .terms {
-            text-align: center;
+            margin-top: 20px;
+            color: #777786;
             font-size: 11px;
-            color: #64748b;
-            margin-top: 18px;
+            text-align: center;
             line-height: 1.5;
         }
     </style>
@@ -191,318 +162,175 @@
 
     <main class="container">
 
-        <div class="logo">N</div>
-
-        <header class="header">
-            <h1>Criar conta</h1>
-            <p>Entre para o NexusChat</p>
+        <header class="logo">
+            <h1>Nexus<span>Chat</span></h1>
+            <p>Conecte-se com pessoas.</p>
         </header>
 
-        <section class="card">
+        <h2>Criar sua conta</h2>
 
-            <div id="message" class="message"></div>
+        <p class="description">
+            Informe seus dados para começar.
+        </p>
 
-            <form id="registerForm">
+        <form id="registerForm">
 
-                <div class="field">
-                    <label for="username">Nome de usuário</label>
-                    <input
-                        type="text"
-                        id="username"
-                        placeholder="Ex: welington123"
-                        minlength="3"
-                        maxlength="30"
-                        pattern="[a-zA-Z0-9_]{3,30}"
-                        autocomplete="username"
-                        required
-                    >
-                    <small class="hint">
-                        De 3 a 30 caracteres. Letras, números e _.
-                    </small>
-                </div>
+            <div class="field">
+                <label for="email">E-mail</label>
+                <input
+                    type="email"
+                    id="email"
+                    placeholder="seu@email.com"
+                    autocomplete="email"
+                    required
+                >
+            </div>
 
-                <div class="field">
-                    <label for="phone">Número de celular</label>
-                    <input
-                        type="tel"
-                        id="phone"
-                        placeholder="(88) 98765-4321"
-                        inputmode="numeric"
-                        maxlength="15"
-                        autocomplete="tel-national"
-                        required
-                    >
-                    <small class="hint">
-                        DDD + número com 9 dígitos iniciais.
-                    </small>
-                    <small id="phoneError" class="phone-error">
-                        Informe um celular com DDD e exatamente 11 dígitos.
-                    </small>
-                </div>
+            <div class="field">
+                <label for="password">Senha</label>
+                <input
+                    type="password"
+                    id="password"
+                    placeholder="Crie uma senha"
+                    autocomplete="new-password"
+                    minlength="6"
+                    required
+                >
+            </div>
 
-                <div class="field">
-                    <label for="email">E-mail</label>
-                    <input
-                        type="email"
-                        id="email"
-                        placeholder="seuemail@exemplo.com"
-                        autocomplete="email"
-                        required
-                    >
-                </div>
+            <button type="submit" id="submitButton">
+                Criar conta
+            </button>
 
-                <div class="field">
-                    <label for="password">Senha</label>
-                    <input
-                        type="password"
-                        id="password"
-                        placeholder="Mínimo de 8 caracteres"
-                        minlength="8"
-                        autocomplete="new-password"
-                        required
-                    >
-                </div>
+        </form>
 
-                <button type="submit" class="button" id="submitButton">
-                    Criar minha conta
-                </button>
+        <div id="message" class="message" role="status"></div>
 
-            </form>
-
-            <p class="terms">
-                Ao criar sua conta, você concorda em utilizar o NexusChat
-                de maneira responsável.
-            </p>
-
-        </section>
-
-        <footer class="footer">
+        <div class="login">
             Já possui uma conta?
             <a href="./login.html">Entrar</a>
-        </footer>
+        </div>
+
+        <p class="terms">
+            Ao criar sua conta, você concorda com os termos
+            de uso e a política de privacidade do NexusChat.
+        </p>
 
     </main>
 
     <script>
-        "use strict";
+        (() => {
+            "use strict";
 
-        const supabase = window.nexusSupabase;
+            const supabase = window.nexusSupabase;
 
-        const form = document.getElementById("registerForm");
-        const usernameInput = document.getElementById("username");
-        const phoneInput = document.getElementById("phone");
-        const emailInput = document.getElementById("email");
-        const passwordInput = document.getElementById("password");
-        const submitButton = document.getElementById("submitButton");
-        const message = document.getElementById("message");
-        const phoneError = document.getElementById("phoneError");
+            const form = document.getElementById("registerForm");
+            const emailInput = document.getElementById("email");
+            const passwordInput = document.getElementById("password");
+            const submitButton = document.getElementById("submitButton");
+            const message = document.getElementById("message");
 
-        if (!supabase) {
-            showMessage(
-                "Não foi possível conectar ao sistema. Verifique o supabase.js.",
-                "error"
-            );
-
-            submitButton.disabled = true;
-        }
-
-        function showMessage(text, type) {
-            message.textContent = text;
-            message.className = "message " + type;
-        }
-
-        function clearMessage() {
-            message.textContent = "";
-            message.className = "message";
-        }
-
-        function getPhoneDigits(value) {
-            return value.replace(/\D/g, "");
-        }
-
-        phoneInput.addEventListener("input", () => {
-            const digits = getPhoneDigits(phoneInput.value).slice(0, 11);
-
-            let formatted = digits;
-
-            if (digits.length > 2) {
-                formatted =
-                    "(" + digits.slice(0, 2) + ") " + digits.slice(2);
+            function showMessage(text, type) {
+                message.textContent = text;
+                message.className = "message " + type;
             }
-
-            if (digits.length > 7) {
-                formatted =
-                    "(" +
-                    digits.slice(0, 2) +
-                    ") " +
-                    digits.slice(2, 7) +
-                    "-" +
-                    digits.slice(7, 11);
-            }
-
-            phoneInput.value = formatted;
-
-            phoneError.style.display = "none";
-            phoneInput.setCustomValidity("");
-        });
-
-        function validatePhone(value) {
-            const digits = getPhoneDigits(value);
-
-            return /^[1-9]{2}9[0-9]{8}$/.test(digits);
-        }
-
-        phoneInput.addEventListener("blur", () => {
-            if (!phoneInput.value) return;
-
-            if (!validatePhone(phoneInput.value)) {
-                phoneError.style.display = "block";
-
-                phoneInput.setCustomValidity(
-                    "Informe um celular brasileiro válido com 11 dígitos."
-                );
-            } else {
-                phoneError.style.display = "none";
-                phoneInput.setCustomValidity("");
-            }
-        });
-
-        async function checkSession() {
-            if (!supabase) return;
-
-            try {
-                const { data, error } = await supabase.auth.getSession();
-
-                if (error) throw error;
-
-                if (data.session) {
-                    window.location.replace("./interface.html");
-                }
-            } catch (error) {
-                console.error("Erro ao verificar sessão:", error);
-            }
-        }
-
-        checkSession();
-
-        form.addEventListener("submit", async (event) => {
-            event.preventDefault();
-            clearMessage();
 
             if (!supabase) {
                 showMessage(
-                    "Conexão com o Supabase indisponível.",
-                    "error"
-                );
-                return;
-            }
-
-            const username = usernameInput.value.trim();
-            const phone = getPhoneDigits(phoneInput.value);
-            const email = emailInput.value.trim();
-            const password = passwordInput.value;
-
-            if (!/^[a-zA-Z0-9_]{3,30}$/.test(username)) {
-                showMessage(
-                    "Nome de usuário inválido. Use de 3 a 30 caracteres.",
+                    "Não foi possível conectar ao sistema. Verifique o arquivo supabase.js.",
                     "error"
                 );
 
-                usernameInput.focus();
+                submitButton.disabled = true;
                 return;
             }
 
-            if (!validatePhone(phone)) {
-                phoneError.style.display = "block";
+            async function checkSession() {
+                try {
+                    const { data, error } = await supabase.auth.getSession();
 
-                phoneInput.setCustomValidity(
-                    "Informe um celular brasileiro válido com 11 dígitos."
-                );
+                    if (error) throw error;
 
-                phoneInput.reportValidity();
-                phoneInput.focus();
-                return;
-            }
-
-            if (password.length < 8) {
-                showMessage(
-                    "A senha precisa ter pelo menos 8 caracteres.",
-                    "error"
-                );
-
-                passwordInput.focus();
-                return;
-            }
-
-            submitButton.disabled = true;
-            submitButton.textContent = "Criando conta...";
-
-            try {
-                const { data, error } = await supabase.auth.signUp({
-                    email: email,
-                    password: password,
-
-                    options: {
-                        data: {
-                            username: username,
-                            full_name: username,
-                            phone: phone
-                        }
+                    if (data.session) {
+                        window.location.replace("./index.html");
                     }
-                });
+                } catch (error) {
+                    console.error("Erro ao verificar sessão:", error);
+                }
+            }
 
-                if (error) throw error;
+            checkSession();
 
-                if (data.session) {
+            form.addEventListener("submit", async (event) => {
+                event.preventDefault();
+
+                const email = emailInput.value.trim();
+                const password = passwordInput.value;
+
+                if (!email || !password) {
                     showMessage(
-                        "Conta criada com sucesso! Entrando...",
+                        "Preencha todos os campos.",
+                        "error"
+                    );
+                    return;
+                }
+
+                if (password.length < 6) {
+                    showMessage(
+                        "A senha precisa ter pelo menos 6 caracteres.",
+                        "error"
+                    );
+                    return;
+                }
+
+                submitButton.disabled = true;
+                submitButton.textContent = "Criando conta...";
+                message.className = "message";
+                message.textContent = "";
+
+                try {
+                    const { data, error } = await supabase.auth.signUp({
+                        email,
+                        password
+                    });
+
+                    if (error) throw error;
+
+                    if (!data.user) {
+                        throw new Error(
+                            "Não foi possível confirmar a criação da conta."
+                        );
+                    }
+
+                    form.reset();
+
+                    showMessage(
+                        "Conta criada com sucesso! " +
+                        "Se o sistema solicitar confirmação, verifique seu e-mail. " +
+                        "Você será encaminhado para o login.",
                         "success"
                     );
+
+                    submitButton.textContent = "Cadastro concluído";
 
                     setTimeout(() => {
-                        window.location.replace("./interface.html");
-                    }, 1000);
+                        window.location.replace("./login.html");
+                    }, 2500);
 
-                } else {
+                } catch (error) {
+                    console.error("Erro no cadastro:", error);
+
                     showMessage(
-                        "Cadastro recebido! Verifique seu e-mail para confirmar a conta.",
-                        "success"
+                        error.message || "Não foi possível criar sua conta.",
+                        "error"
                     );
 
-                    submitButton.textContent = "Cadastro realizado";
+                    submitButton.disabled = false;
+                    submitButton.textContent = "Criar conta";
                 }
+            });
 
-            } catch (error) {
-                console.error("Erro no cadastro:", error);
-
-                let errorMessage = "Não foi possível criar sua conta.";
-
-                if (
-                    error.message?.toLowerCase().includes("already registered") ||
-                    error.message?.toLowerCase().includes("already exists")
-                ) {
-                    errorMessage = "Este e-mail já está cadastrado.";
-
-                } else if (
-                    error.message?.toLowerCase().includes("password")
-                ) {
-                    errorMessage = "A senha não atende aos requisitos.";
-
-                } else if (
-                    error.message?.toLowerCase().includes("email")
-                ) {
-                    errorMessage = "Verifique o endereço de e-mail informado.";
-
-                } else if (error.message) {
-                    errorMessage = error.message;
-                }
-
-                showMessage(errorMessage, "error");
-
-                submitButton.disabled = false;
-                submitButton.textContent = "Criar minha conta";
-            }
-        });
+        })();
     </script>
 
 </body>
