@@ -297,7 +297,6 @@
         const message = document.getElementById("message");
         const phoneError = document.getElementById("phoneError");
 
-        // Verifica se o Supabase foi carregado.
         if (!supabase) {
             showMessage(
                 "Não foi possível conectar ao sistema. Verifique o supabase.js.",
@@ -317,14 +316,12 @@
             message.className = "message";
         }
 
-        // Remove caracteres que não sejam números.
         function getPhoneDigits(value) {
             return value.replace(/\D/g, "");
         }
 
-        // Máscara: (88) 98765-4321
         phoneInput.addEventListener("input", () => {
-            let digits = getPhoneDigits(phoneInput.value).slice(0, 11);
+            const digits = getPhoneDigits(phoneInput.value).slice(0, 11);
 
             let formatted = digits;
 
@@ -349,19 +346,18 @@
             phoneInput.setCustomValidity("");
         });
 
-        // Exige DDD e celular começando com 9.
         function validatePhone(value) {
             const digits = getPhoneDigits(value);
 
             return /^[1-9]{2}9[0-9]{8}$/.test(digits);
         }
 
-        // Validação visual ao sair do campo.
         phoneInput.addEventListener("blur", () => {
             if (!phoneInput.value) return;
 
             if (!validatePhone(phoneInput.value)) {
                 phoneError.style.display = "block";
+
                 phoneInput.setCustomValidity(
                     "Informe um celular brasileiro válido com 11 dígitos."
                 );
@@ -371,7 +367,6 @@
             }
         });
 
-        // Verifica se já existe sessão ativa.
         async function checkSession() {
             if (!supabase) return;
 
@@ -390,13 +385,15 @@
 
         checkSession();
 
-        // Cadastro.
         form.addEventListener("submit", async (event) => {
             event.preventDefault();
             clearMessage();
 
             if (!supabase) {
-                showMessage("Conexão com o Supabase indisponível.", "error");
+                showMessage(
+                    "Conexão com o Supabase indisponível.",
+                    "error"
+                );
                 return;
             }
 
@@ -405,22 +402,23 @@
             const email = emailInput.value.trim();
             const password = passwordInput.value;
 
-            // Validação do nome de usuário.
             if (!/^[a-zA-Z0-9_]{3,30}$/.test(username)) {
                 showMessage(
                     "Nome de usuário inválido. Use de 3 a 30 caracteres.",
                     "error"
                 );
+
                 usernameInput.focus();
                 return;
             }
 
-            // Validação rigorosa do telefone.
             if (!validatePhone(phone)) {
                 phoneError.style.display = "block";
+
                 phoneInput.setCustomValidity(
                     "Informe um celular brasileiro válido com 11 dígitos."
                 );
+
                 phoneInput.reportValidity();
                 phoneInput.focus();
                 return;
@@ -431,6 +429,7 @@
                     "A senha precisa ter pelo menos 8 caracteres.",
                     "error"
                 );
+
                 passwordInput.focus();
                 return;
             }
@@ -442,9 +441,11 @@
                 const { data, error } = await supabase.auth.signUp({
                     email: email,
                     password: password,
+
                     options: {
                         data: {
                             username: username,
+                            full_name: username,
                             phone: phone
                         }
                     }
@@ -481,14 +482,17 @@
                     error.message?.toLowerCase().includes("already exists")
                 ) {
                     errorMessage = "Este e-mail já está cadastrado.";
+
                 } else if (
                     error.message?.toLowerCase().includes("password")
                 ) {
                     errorMessage = "A senha não atende aos requisitos.";
+
                 } else if (
                     error.message?.toLowerCase().includes("email")
                 ) {
                     errorMessage = "Verifique o endereço de e-mail informado.";
+
                 } else if (error.message) {
                     errorMessage = error.message;
                 }
