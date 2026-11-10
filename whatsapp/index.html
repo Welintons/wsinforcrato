@@ -34,11 +34,9 @@
                 var(--bg);
             color: #f8fafc;
             font-family: Inter, system-ui, sans-serif;
-
             display: flex;
             align-items: center;
             justify-content: center;
-
             padding: 20px;
         }
 
@@ -52,21 +50,13 @@
             width: 68px;
             height: 68px;
             margin: 0 auto 20px;
-
             display: flex;
             align-items: center;
             justify-content: center;
-
             border-radius: 21px;
-            background: linear-gradient(
-                135deg,
-                #3b82f6,
-                #1d4ed8
-            );
-
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
             font-size: 32px;
             font-weight: 800;
-
             box-shadow: 0 10px 35px rgba(37,99,235,.25);
         }
 
@@ -132,7 +122,7 @@
 
         .retry {
             display: none;
-            margin-top: 12px;
+            margin: 12px auto 0;
             padding: 10px 18px;
             background: var(--blue);
             color: white;
@@ -186,7 +176,7 @@
             Verifique sua conexão e tente novamente.
         </div>
 
-        <button class="retry" id="retry">
+        <button class="retry" id="retry" type="button">
             Tentar novamente
         </button>
 
@@ -218,27 +208,71 @@
 
                 checking = true;
                 document.body.classList.remove("failed");
+
                 status.textContent = "Verificando autenticação...";
 
                 try {
                     const supabase = window.nexusSupabase;
 
                     if (!supabase) {
-                        throw new Error("Conexão com o sistema indisponível.");
+                        throw new Error(
+                            "Conexão com o sistema indisponível."
+                        );
                     }
 
-                    const { data, error } =
+                    // 1. Verificar autenticação
+                    const { data: sessionData, error: sessionError } =
                         await supabase.auth.getSession();
 
-                    if (error) throw error;
+                    if (sessionError) throw sessionError;
 
-                    if (!data.session) {
-                        status.textContent = "Redirecionando para acesso...";
+                    const session = sessionData.session;
+
+                    if (!session) {
+                        status.textContent =
+                            "Redirecionando para acesso...";
+
                         window.location.replace("./login.html");
                         return;
                     }
 
-                    status.textContent = "Sessão identificada. Entrando...";
+                    // 2. Consultar perfil do usuário autenticado
+                    status.textContent = "Verificando seu perfil...";
+
+                    const userId = session.user.id;
+
+                    const { data: profile, error: profileError } =
+                        await supabase
+                            .from("profiles")
+                            .select("id, full_name, username, phone")
+                            .eq("id", userId)
+                            .maybeSingle();
+
+                    if (profileError) {
+                        throw profileError;
+                    }
+
+                    // 3. Verificar se o perfil existe e está completo
+                    const perfilCompleto =
+                        profile &&
+                        profile.full_name?.trim() &&
+                        profile.username?.trim() &&
+                        profile.phone?.trim();
+
+                    if (!perfilCompleto) {
+                        status.textContent =
+                            "Redirecionando para configuração do perfil...";
+
+                        window.location.replace(
+                            "./configurar-perfil.html"
+                        );
+
+                        return;
+                    }
+
+                    // 4. Tudo certo: abrir o NexusChat
+                    status.textContent =
+                        "Tudo pronto. Entrando no NexusChat...";
 
                     window.location.replace("./interface.html");
 
@@ -246,8 +280,9 @@
                     console.error("NexusChat Gate:", error);
 
                     fail(
-                        "Não foi possível verificar sua sessão. " +
-                        "Verifique sua conexão e tente novamente."
+                        "Não foi possível verificar seu acesso. " +
+                        "Verifique sua conexão ou tente novamente. " +
+                        (error.message || "")
                     );
 
                 } finally {
