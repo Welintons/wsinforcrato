@@ -2,58 +2,6 @@
 "use strict";
 
 /* =========================================
-   PROGRESSO DO PERFIL
-========================================= */
-
-function atualizarProgressoPerfil() {
-  if (!perfil) return;
-
-  const campos = [
-    perfil.full_name,
-    perfil.username,
-    perfil.phone,
-    perfil.avatar_url,
-    perfil.cover_url,
-    perfil.bio,
-    perfil.city,
-    perfil.state
-  ];
-
-  const preenchidos = campos.filter(valor =>
-    String(valor || "").trim().length > 0
-  ).length;
-
-  const porcentagem = Math.round((preenchidos / campos.length) * 100);
-
-  const texto = $("perfilProgressoTexto");
-  const barra = $("perfilProgressoBarra");
-  const container = $("perfilProgressoContainer");
-  const status = $("perfilProgressoStatus");
-
-  if (texto) texto.textContent = porcentagem + "%";
-
-  if (barra) barra.style.width = porcentagem + "%";
-
-  if (container) {
-    container.setAttribute("aria-valuenow", porcentagem);
-  }
-
-  if (status) {
-    if (porcentagem === 100) {
-      status.textContent = "Seu perfil está completo!";
-    } else {
-      status.textContent =
-        `${preenchidos} de 8 informações preenchidas. Complete seu perfil.`;
-    }
-  }
-
-  if (barra) {
-    barra.classList.toggle("bg-green-500", porcentagem === 100);
-    barra.classList.toggle("bg-blue-500", porcentagem < 100);
-  }
-}
-
-/* =========================================
    EXIBIÇÃO DO PERFIL
 ========================================= */
 
@@ -84,8 +32,6 @@ function renderPerfil() {
   if (bio) {
     bio.textContent = perfil.bio || "Sem descrição.";
   }
-
-  atualizarProgressoPerfil();
 }
 
 /* =========================================
