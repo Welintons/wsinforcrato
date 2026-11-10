@@ -5,6 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#0b0f19">
+    <meta name="robots" content="noindex,nofollow">
+
     <title>Entrar — NexusChat</title>
 
     <style>
@@ -237,61 +239,97 @@
         }
 
         if (!supabase) {
-            showMessage("Não foi possível conectar ao sistema. Atualize a página.");
+            showMessage(
+                "Não foi possível conectar ao sistema. Atualize a página."
+            );
             button.disabled = true;
             return;
         }
 
+        // Verifica se já existe uma sessão ativa
         async function checkSession() {
+            button.disabled = true;
+
             try {
-                const { data, error } = await supabase.auth.getSession();
+                const { data, error } =
+                    await supabase.auth.getSession();
+
                 if (error) throw error;
 
                 if (data.session) {
-                    window.location.replace("./interface.html");
+                    showMessage(
+                        "Sessão identificada. Verificando acesso...",
+                        "success"
+                    );
+
+                    window.location.replace("./index.html");
+                    return;
                 }
+
             } catch (error) {
                 console.error("Verificação de sessão:", error);
-                showMessage("Falha ao verificar sua sessão.");
+
+                showMessage(
+                    "Falha ao verificar sua sessão. Tente novamente."
+                );
+
+            } finally {
+                if (!window.location.href.includes("index.html")) {
+                    button.disabled = false;
+                }
             }
         }
 
+        // Login com e-mail e senha
         form.addEventListener("submit", async event => {
             event.preventDefault();
             clearMessage();
 
-            const email = document.getElementById("email").value.trim();
-            const password = document.getElementById("password").value;
+            const email =
+                document.getElementById("email").value.trim();
+
+            const password =
+                document.getElementById("password").value;
 
             button.disabled = true;
             button.textContent = "Entrando...";
 
             try {
-                const { data, error } = await supabase.auth.signInWithPassword({
-                    email,
-                    password
-                });
+                const { data, error } =
+                    await supabase.auth.signInWithPassword({
+                        email,
+                        password
+                    });
 
                 if (error) throw error;
 
                 if (!data.session) {
-                    throw new Error("Não foi possível iniciar sua sessão.");
+                    throw new Error(
+                        "Não foi possível iniciar sua sessão."
+                    );
                 }
 
-                showMessage("Login realizado. Abrindo NexusChat...", "success");
-                window.location.replace("./interface.html");
+                showMessage(
+                    "Login realizado. Verificando seu perfil...",
+                    "success"
+                );
+
+                window.location.replace("./index.html");
 
             } catch (error) {
                 console.error("Erro no login:", error);
-                showMessage(error.message || "Não foi possível entrar na conta.");
 
-            } finally {
+                showMessage(
+                    error.message || "Não foi possível entrar na conta."
+                );
+
                 button.disabled = false;
                 button.textContent = "Entrar na conta";
             }
         });
 
         checkSession();
+
     })();
     </script>
 </body>
