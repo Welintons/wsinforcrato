@@ -1,4 +1,3 @@
-
 "use strict";
 
 let conversas = [];
@@ -436,7 +435,10 @@ function renderMensagens() {
     el.append(box);
   });
 
-  el.scrollTop = el.scrollHeight;
+  // Rolagem garantida ao final do render
+  setTimeout(() => {
+    el.scrollTop = el.scrollHeight;
+  }, 50);
 }
 
 async function renderAnexoMensagem(m,box) {
@@ -826,14 +828,13 @@ async function enviarDenuncia() {
     return toast("Informe o motivo.");
   }
 
-  const {error} = await db.from("reports")
-    .insert({
-      reporter_id:usuario.id,
-      reported_user_id:conversaAtual?.outroPerfil?.id || null,
-      conversation_id:conversaAtual?.id || null,
-      reason:motivo,
-      description:descricao || null
-    });
+  const {error} = await db.reports.insert({
+    reporter_id:usuario.id,
+    reported_user_id:conversaAtual?.outroPerfil?.id || null,
+    conversation_id:conversaAtual?.id || null,
+    reason:motivo,
+    description:descricao || null
+  });
 
   if (error) {
     return erroSupabase(error,"Enviar denúncia");
