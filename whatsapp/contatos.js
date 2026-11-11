@@ -138,9 +138,14 @@ async function abrirPerfilContato(id) {
   }
   if (!p) return;
 
+  // Renderiza usando avatarHTML padronizado
+  const tempDiv = document.createElement("div");
+  tempDiv.innerHTML = avatarHTML(p);
+  const avatarElementHTML = tempDiv.firstElementChild.outerHTML;
+
   abrirModal(`
     <div class="text-center">
-      <div class="avatar mx-auto mb-3">${escapeHTML(iniciais(p.full_name))}</div>
+      <div class="mx-auto mb-3 flex justify-center">${avatarElementHTML}</div>
       <h2>${escapeHTML(p.full_name)}</h2>
       <p class="text-sm text-slate-400">${p.username ? "@"+escapeHTML(p.username) : ""}</p>
       <p class="text-sm mt-3">${escapeHTML(p.bio || "Sem descrição.")}</p>
