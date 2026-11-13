@@ -153,7 +153,7 @@ body{background:#020617;color:#e2e8f0;font-family:Inter,system-ui,sans-serif}
  </div>
 </section>
 
-<!-- ================= PAINEL DO CLIENTE (TURBINADO E RICO EM INFORMAÇÕES) ================= -->
+<!-- ================= PAINEL DO CLIENTE ================= -->
 <section id="view-app" class="hidden-view min-h-screen flex flex-col">
  <header class="h-16 border-b border-slate-800/80 bg-slate-950/90 backdrop-blur-md px-4 md:px-8 flex items-center justify-between sticky top-0 z-40">
   <div class="flex items-center gap-3">
@@ -192,10 +192,10 @@ body{background:#020617;color:#e2e8f0;font-family:Inter,system-ui,sans-serif}
       <i data-lucide="calendar-days" class="w-4 h-4 text-emerald-400"></i> Agendamentos
      </button>
      <button onclick="navigate('rewards'); toggleMenu()" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs text-cyan-400 bg-cyan-500/10 hover:bg-cyan-500/20 font-semibold transition-colors">
-      <i data-lucide="gift" class="w-4 h-4"></i> Pontos & Indicação (Indique e Ganhe)
+      <i data-lucide="gift" class="w-4 h-4"></i> Cashback & Indicação
      </button>
      <button onclick="navigate('guarantee'); toggleMenu()" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs text-slate-300 hover:bg-slate-800 hover:text-cyan-400 transition-colors">
-      <i data-lucide="shield-check" class="w-4 h-4 text-purple-400"></i> Garantia & Dicas Úteis
+      <i data-lucide="shield-check" class="w-4 h-4 text-purple-400"></i> Garantia & Equipamentos
      </button>
      <button onclick="navigate('profile'); toggleMenu()" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs text-slate-300 hover:bg-slate-800 hover:text-cyan-400 transition-colors">
       <i data-lucide="user" class="w-4 h-4"></i> Meu Cadastro & Token
@@ -227,16 +227,30 @@ body{background:#020617;color:#e2e8f0;font-family:Inter,system-ui,sans-serif}
  <div class="flex justify-between items-center mb-6">
   <div>
    <h1 class="text-xl font-bold text-cyan-400">PAINEL ADMINISTRATIVO (TESTE)</h1>
-   <p class="text-xs text-slate-400">Gerenciamento local simplificado</p>
+   <p class="text-xs text-slate-400">Gerenciamento de saldos, chamados e garantias</p>
   </div>
   <button onclick="showHome()" class="btn btn-secondary text-xs">Sair do ADM</button>
  </div>
- <div class="card p-5 mb-5">
-  <p class="text-xs text-slate-400 mb-1">TOKEN DE TESTE PRÉ-PROGRAMADO:</p>
-  <p class="text-2xl font-black text-cyan-400 tracking-widest">AA52</p>
+
+ <div class="grid sm:grid-cols-2 gap-4 mb-6">
+  <div class="card p-5">
+   <p class="text-xs text-slate-400 mb-1">TOKEN DE TESTE ATIVO:</p>
+   <p class="text-2xl font-black text-cyan-400 tracking-widest">AA52</p>
+  </div>
+  <div class="card p-5 flex flex-col justify-between">
+   <p class="text-xs text-slate-400 mb-1">STATUS DE SALDO DO CLIENTE TESTE:</p>
+   <div id="admin-debt-control" class="flex items-center justify-between mt-2">
+    <!-- Renderizado dinamicamente -->
+   </div>
+  </div>
  </div>
- <div id="admin-appointments-list" class="space-y-3">
-  <h3 class="font-bold text-sm mb-3">Agendamentos Solicitados:</h3>
+
+ <div class="space-y-4">
+  <h3 class="font-bold text-sm text-cyan-300">Chamados e Solicitações de Orçamento</h3>
+  <div id="admin-requests-list" class="space-y-3"></div>
+
+  <h3 class="font-bold text-sm text-emerald-300 mt-6">Agendamentos Pendentes</h3>
+  <div id="admin-appointments-list" class="space-y-3"></div>
  </div>
 </section>
 
@@ -244,17 +258,17 @@ body{background:#020617;color:#e2e8f0;font-family:Inter,system-ui,sans-serif}
 
 <script>
 /* =========================================
-   LÓGICA E BANCO DE DADOS LOCAL
+   LÓGICA E BANCO DE DADOS LOCAL COM SALDO PENDENTE
 ========================================= */
-const DB_KEY = 'ws_solucoes_db_v3';
-const SESSION_KEY = 'ws_client_session_v3';
+const DB_KEY = 'ws_solucoes_db_v4';
+const SESSION_KEY = 'ws_client_session_v4';
 
 const $ = id => document.getElementById(id);
 
 function seedDB() {
  return {
   clients: [
-   { id: 'cli-vip', name: 'Wellington (Cliente Teste)', phone: '88999999999', address: 'Centro, Crato - CE', status: 'approved', token: 'AA52', points: 40, indicacao: '' }
+   { id: 'cli-vip', name: 'Wellington (Cliente Teste)', phone: '88999999999', address: 'Centro, Crato - CE', status: 'approved', token: 'AA52', points: 40, pendingBalance: 120.00, debtServiceRef: 'Manutenção de Eletrodomésticos e Fiação', indicacao: '' }
   ],
   services: [
    { id: 's1', name: 'Instalação de Câmeras (CFTV)', desc: 'Configuração completa de DVR, NVR, câmeras Intelbras e acesso remoto no celular.' },
@@ -263,10 +277,13 @@ function seedDB() {
    { id: 's4', name: 'Instalação de Forro PVC', desc: 'Estrutura metálica reforçada, alinhamento perfeito e acabamento impecável.' }
   ],
   requests: [
-   { id: 101, clientId: 'cli-vip', service: 'Instalação de Câmeras (CFTV)', desc: 'Orçamento para 3 câmeras na frente da residência.', status: 'Em andamento' }
+   { id: 101, clientId: 'cli-vip', service: 'Instalação de Câmeras (CFTV)', desc: 'Orçamento para 3 câmeras na frente da residência.', status: 'Em andamento', photo: '' }
   ],
   appointments: [
    { id: 201, clientId: 'cli-vip', service: 'Serviços Elétricos Residenciais', date: '2026-11-15', time: '14:00', status: 'Aprovado' }
+  ],
+  guarantees: [
+   { id: 301, clientId: 'cli-vip', service: 'Instalação de Forro PVC (Sala e Cozinha)', date: '2026-08-10', validUntil: '2027-08-10', details: 'Estrutura metálica em metalon, acabamento completo com molduras.' }
   ]
  };
 }
@@ -288,6 +305,7 @@ function showView(id) {
  $(id).classList.remove('hidden-view');
  window.scrollTo(0,0);
  if(window.lucide) lucide.createIcons();
+ if(id === 'view-admin') renderAdminPanel();
 }
 
 function showHome() { showView('view-home'); }
@@ -323,6 +341,8 @@ $('registration-form').addEventListener('submit', e => {
   status: 'pending',
   token: 'WS' + Math.floor(10 + Math.random() * 90),
   points: 10,
+  pendingBalance: 0,
+  debtServiceRef: '',
   indicacao
  });
  saveDB();
@@ -373,9 +393,38 @@ function renderClientPage() {
  const content = $('page-content');
  const requests = db.requests.filter(r => r.clientId === client.id);
  const appointments = db.appointments.filter(a => a.clientId === client.id);
+ const guarantees = db.guarantees.filter(g => g.clientId === client.id);
+
+ // ALERTA DE SALDO PENDENTE
+ let debtAlertHTML = '';
+ if(client.pendingBalance && client.pendingBalance > 0) {
+  const pixKey = '88999999999'; // Chave pix de exemplo da WS Soluções
+  debtAlertHTML = `
+   <div class="bg-amber-500/10 border border-amber-500/30 rounded-2xl p-4 mb-6 text-xs space-y-3">
+    <div class="flex items-start gap-3">
+     <div class="w-9 h-9 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center shrink-0">
+      <i data-lucide="alert-circle" class="w-5 h-5"></i>
+     </div>
+     <div class="flex-1">
+      <h3 class="font-bold text-amber-300 text-sm">Saldo Pendente em Aberto</h3>
+      <p class="text-slate-300 mt-0.5">Você possui o valor de <b class="text-amber-300">R$ ${client.pendingBalance.toFixed(2)}</b> referente a: <em>${client.debtServiceRef || 'Serviço prestado'}</em>.</p>
+     </div>
+    </div>
+    <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-3">
+     <div>
+      <span class="text-slate-400 block text-[10px]">Chave Pix (Celular):</span>
+      <span class="font-bold text-cyan-400">${pixKey}</span>
+     </div>
+     <button onclick="openPaymentModal(${client.pendingBalance})" class="btn btn-primary text-xs w-full sm:w-auto">
+      <i data-lucide="upload" class="w-3.5 h-3.5"></i> Enviar Comprovante de Pagamento
+     </button>
+    </div>
+   </div>`;
+ }
 
  if(currentPage === 'dashboard') {
   content.innerHTML = `
+   ${debtAlertHTML}
    <div class="mb-6">
     <h2 class="text-xl font-black">Olá, ${client.name.split(' ')[0]}! 👋</h2>
     <p class="text-slate-400 text-xs mt-0.5">Bem-vindo à sua central de serviços técnicos no Crato e região.</p>
@@ -384,9 +433,9 @@ function renderClientPage() {
    <!-- CARDS DE RESUMO -->
    <div class="grid grid-cols-3 gap-3 mb-6">
     <div class="card p-3.5 text-center">
-     <span class="text-[11px] text-slate-400 block mb-1">Pontos</span>
-     <p class="text-xl font-black text-cyan-400">${client.points || 0}</p>
-     <span class="text-[9px] text-slate-500">Carteira WS</span>
+     <span class="text-[11px] text-slate-400 block mb-1">Cashback</span>
+     <p class="text-xl font-black text-cyan-400">${client.points || 0} pts</p>
+     <span class="text-[9px] text-slate-500">Saldo WS</span>
     </div>
     <div class="card p-3.5 text-center">
      <span class="text-[11px] text-slate-400 block mb-1">Chamados</span>
@@ -394,9 +443,9 @@ function renderClientPage() {
      <span class="text-[9px] text-slate-500">Ativos</span>
     </div>
     <div class="card p-3.5 text-center">
-     <span class="text-[11px] text-slate-400 block mb-1">Agenda</span>
-     <p class="text-xl font-black text-emerald-400">${appointments.length}</p>
-     <span class="text-[9px] text-slate-500">Visitas</span>
+     <span class="text-[11px] text-slate-400 block mb-1">Garantias</span>
+     <p class="text-xl font-black text-purple-400">${guarantees.length}</p>
+     <span class="text-[9px] text-slate-500">Ativas</span>
     </div>
    </div>
 
@@ -404,28 +453,12 @@ function renderClientPage() {
    <div class="card p-5 mb-6 space-y-4">
     <h3 class="font-bold text-sm text-cyan-300 flex items-center gap-2"><i data-lucide="sparkles" class="w-4 h-4"></i> Ações Rápidas</h3>
     <div class="grid sm:grid-cols-2 gap-3">
-     <button onclick="navigate('services')" class="btn btn-primary text-xs w-full justify-start py-3">
+     <button onclick="${client.pendingBalance > 0 ? "toast('Regularize seu saldo pendente para abrir novos chamados.','error')" : "navigate('services')"}" class="btn btn-primary text-xs w-full justify-start py-3 ${client.pendingBalance > 0 ? 'opacity-60' : ''}">
       <i data-lucide="wrench" class="w-4 h-4"></i> Solicitar Novo Serviço / Orçamento
      </button>
      <button onclick="openAppointmentModal()" class="btn btn-secondary text-xs w-full justify-start py-3">
       <i data-lucide="calendar-plus" class="w-4 h-4 text-emerald-400"></i> Agendar Visita Técnica
      </button>
-    </div>
-   </div>
-
-   <!-- INFORMAÇÕES ÚTEIS / AVISOS -->
-   <div class="grid sm:grid-cols-2 gap-4 mb-6">
-    <div class="panel p-4 rounded-2xl border border-slate-800 space-y-2">
-     <div class="flex items-center gap-2 text-cyan-400 font-bold text-xs">
-      <i data-lucide="info" class="w-4 h-4"></i> Como funciona o atendimento?
-     </div>
-     <p class="text-[11px] text-slate-400 leading-relaxed">Você agenda pelo app, nossa equipe valida o horário e te avisa diretamente no WhatsApp. Sem filas e sem burocracia.</p>
-    </div>
-    <div class="panel p-4 rounded-2xl border border-slate-800 space-y-2">
-     <div class="flex items-center gap-2 text-emerald-400 font-bold text-xs">
-      <i data-lucide="shield-check" class="w-4 h-4"></i> Garantia WS Soluções
-     </div>
-     <p class="text-[11px] text-slate-400 leading-relaxed">Todos os serviços de elétrica, CFTV, forro e eletrodomésticos contam com garantia de execução e suporte rápido.</p>
     </div>
    </div>
 
@@ -446,25 +479,37 @@ function renderClientPage() {
     `).join('') : '<p class="text-slate-500 text-xs italic">Nenhum chamado aberto no momento.</p>'}
    </div>`;
  } else if(currentPage === 'services') {
-  content.innerHTML = `
-   <div class="mb-5">
-    <h2 class="text-lg font-bold">Catálogo de Serviços WS</h2>
-    <p class="text-xs text-slate-400 mt-0.5">Escolha abaixo o que você precisa para sua casa ou comércio.</p>
-   </div>
-   <div class="grid sm:grid-cols-2 gap-4">
-    ${db.services.map(s => `
-     <div class="card p-5 flex flex-col justify-between space-y-4">
-      <div>
-       <div class="w-10 h-10 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400 mb-3">
-        <i data-lucide="wrench" class="w-5 h-5"></i>
-       </div>
-       <h3 class="font-bold text-cyan-300 text-sm">${s.name}</h3>
-       <p class="text-xs text-slate-400 mt-2 leading-relaxed">${s.desc}</p>
-      </div>
-      <button onclick="requestServiceModal('${s.name}')" class="btn btn-primary w-full text-xs">Solicitar Orçamento / Atendimento</button>
+  if(client.pendingBalance > 0) {
+   content.innerHTML = `
+    <div class="card p-8 text-center space-y-4">
+     <div class="w-12 h-12 rounded-2xl bg-amber-500/20 text-amber-400 mx-auto flex items-center justify-center">
+      <i data-lucide="lock" class="w-6 h-6"></i>
      </div>
-    `).join('')}
-   </div>`;
+     <h2 class="text-lg font-bold">Solicitações Temporariamente Bloqueadas</h2>
+     <p class="text-xs text-slate-400 max-w-sm mx-auto">Você possui um saldo pendente de R$ ${client.pendingBalance.toFixed(2)}. Regularize o pagamento para liberar novos orçamentos e chamados.</p>
+     <button onclick="navigate('dashboard')" class="btn btn-primary text-xs">Ver Meus Pagamentos</button>
+    </div>`;
+  } else {
+   content.innerHTML = `
+    <div class="mb-5">
+     <h2 class="text-lg font-bold">Catálogo de Serviços WS</h2>
+     <p class="text-xs text-slate-400 mt-0.5">Escolha abaixo o que você precisa para sua casa ou comércio.</p>
+    </div>
+    <div class="grid sm:grid-cols-2 gap-4">
+     ${db.services.map(s => `
+      <div class="card p-5 flex flex-col justify-between space-y-4">
+       <div>
+        <div class="w-10 h-10 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400 mb-3">
+         <i data-lucide="wrench" class="w-5 h-5"></i>
+        </div>
+        <h3 class="font-bold text-cyan-300 text-sm">${s.name}</h3>
+        <p class="text-xs text-slate-400 mt-2 leading-relaxed">${s.desc}</p>
+       </div>
+       <button onclick="requestServiceModal('${s.name}')" class="btn btn-primary w-full text-xs">Solicitar Orçamento / Atendimento</button>
+      </div>
+     `).join('')}
+    </div>`;
+  }
  } else if(currentPage === 'requests') {
   content.innerHTML = `
    <div class="flex justify-between items-center mb-4">
@@ -472,7 +517,7 @@ function renderClientPage() {
      <h2 class="text-lg font-bold">Meus Chamados</h2>
      <p class="text-xs text-slate-400">Acompanhe o andamento dos seus pedidos.</p>
     </div>
-    <button onclick="navigate('services')" class="btn btn-primary text-xs">+ Novo Chamado</button>
+    <button onclick="${client.pendingBalance > 0 ? "toast('Regularize seu saldo pendente para abrir novos chamados.','error')" : "navigate('services')"}" class="btn btn-primary text-xs">+ Novo Chamado</button>
    </div>
    ${requests.length ? requests.map(r => `
     <div class="panel p-4 rounded-2xl mb-3 text-xs space-y-2">
@@ -481,6 +526,7 @@ function renderClientPage() {
       <span class="badge bg-amber-500/20 text-amber-300">${r.status}</span>
      </div>
      <p class="text-slate-300"><b>Detalhes:</b> ${r.desc}</p>
+     ${r.photo ? `<div class="mt-2"><span class="text-[10px] text-slate-400 block mb-1">Foto enviada:</span><img src="${r.photo}" class="w-24 h-24 object-cover rounded-xl border border-slate-800"></div>` : ''}
      <p class="text-[10px] text-slate-500 pt-1 border-t border-slate-800">Identificação do Chamado: #${r.id}</p>
     </div>
    `).join('') : '<p class="text-slate-500 text-xs italic">Nenhum chamado registrado ainda.</p>'}`;
@@ -503,24 +549,23 @@ function renderClientPage() {
     </div>
    `).join('') : '<p class="text-slate-500 text-xs italic">Nenhum agendamento na sua agenda.</p>'}`;
  } else if(currentPage === 'rewards') {
-  const whatsappUrl = `https://wa.me/?text=${encodeURIComponent('Olá! Estou indicando a WS Soluções para serviços de elétrica, CFTV e forro de PVC. Quando chamar eles, informe meu WhatsApp (' + client.phone + ') para ganharmos pontos de desconto!')}`;
+  const whatsappUrl = `https://wa.me/?text=${encodeURIComponent('Olá! Estou indicando a WS Soluções para serviços de elétrica, CFTV e forro de PVC. Quando chamar eles, informe meu WhatsApp (' + client.phone + ') para ganharmos cashback de desconto!')}`;
   content.innerHTML = `
    <div class="card p-6 mb-5 text-center space-y-2">
-    <span class="text-[10px] text-cyan-400 font-bold tracking-widest uppercase">PROGRAMA DE FIDELIDADE WS</span>
+    <span class="text-[10px] text-cyan-400 font-bold tracking-widest uppercase">CASHBACK & FIDELIDADE WS</span>
     <p class="text-4xl font-black text-cyan-400 mt-2">${client.points || 0} pts</p>
-    <p class="text-xs text-slate-400">Saldo atual em carteira de benefícios</p>
+    <p class="text-xs text-slate-400">Créditos acumulados para descontos</p>
    </div>
 
    <div class="card p-5 space-y-4 mb-5">
-    <h3 class="font-bold text-sm text-cyan-300 flex items-center gap-2"><i data-lucide="share-2" class="w-4 h-4"></i> Indique Amigos e Ganhe Descontos</h3>
+    <h3 class="font-bold text-sm text-cyan-300 flex items-center gap-2"><i data-lucide="share-2" class="w-4 h-4"></i> Indique Amigos e Ganhe</h3>
     <p class="text-xs text-slate-300 leading-relaxed">O seu código de indicação pessoal é o seu próprio número de WhatsApp cadastrado:</p>
     <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800 text-center">
      <span class="font-black text-cyan-400 text-base tracking-wider">${client.phone}</span>
     </div>
     <ul class="text-xs text-slate-400 space-y-2 pl-4 list-disc">
-     <li>Compartilhe com vizinhos, amigos ou familiares.</li>
-     <li>Quando o indicado fechar serviço e formos concluir, o ponto cai para você.</li>
-     <li>Troque seus pontos acumulados por descontos na próxima manutenção!</li>
+     <li>Compartilhe com vizinhos e amigos.</li>
+     <li>Quando o indicado fechar serviço e formos concluir, você ganha cashback.</li>
     </ul>
     <a href="${whatsappUrl}" target="_blank" class="btn btn-primary w-full text-xs justify-center py-3">
      <i data-lucide="message-circle" class="w-4 h-4"></i> Convidar Amigos via WhatsApp
@@ -530,21 +575,22 @@ function renderClientPage() {
   content.innerHTML = `
    <div class="space-y-4">
     <div class="mb-3">
-     <h2 class="text-lg font-bold">Garantia & Dicas Úteis</h2>
-     <p class="text-xs text-slate-400">Informações importantes para os clientes WS Soluções.</p>
+     <h2 class="text-lg font-bold">Garantia & Equipamentos</h2>
+     <p class="text-xs text-slate-400">Histórico de instalações e prazos de garantia vigentes.</p>
     </div>
-    <div class="card p-5 space-y-3">
-     <h3 class="font-bold text-sm text-cyan-300 flex items-center gap-2"><i data-lucide="shield" class="w-4 h-4"></i> Política de Garantia</h3>
-     <p class="text-xs text-slate-300 leading-relaxed">Nossos serviços de instalação de forro PVC, montagem de câmeras de segurança e manutenções elétricas possuem garantia técnica registrada. Caso ocorra qualquer ajuste necessário no período de garantia, basta nos acionar direto pelo app ou WhatsApp.</p>
-    </div>
-    <div class="card p-5 space-y-3">
-     <h3 class="font-bold text-sm text-emerald-300 flex items-center gap-2"><i data-lucide="help-circle" class="w-4 h-4"></i> Dicas de Manutenção Preventiva</h3>
-     <ul class="text-xs text-slate-300 space-y-2 pl-4 list-disc leading-relaxed">
-      <li><b>Eletrodomésticos:</b> Evite ligar ventiladores e tanquinhos em extensões sobrecarregadas.</li>
-      <li><b>CFTV:</b> Mantenha o roteador de internet próximo ao DVR sempre ligado e limpo de poeira para não perder o acesso remoto das câmeras no celular.</li>
-      <li><b>Elétrica:</b> Ao notar disjuntores desarmando sozinhos, evite religar insistindo; solicite uma avaliação técnica imediata.</li>
-     </ul>
-    </div>
+    ${guarantees.length ? guarantees.map(g => `
+     <div class="card p-5 space-y-3">
+      <div class="flex justify-between items-start">
+       <h3 class="font-bold text-sm text-cyan-300">${g.service}</h3>
+       <span class="badge bg-purple-500/20 text-purple-300">Garantia Ativa</span>
+      </div>
+      <p class="text-xs text-slate-300">${g.details}</p>
+      <div class="flex justify-between text-[11px] text-slate-400 pt-2 border-t border-slate-800">
+       <span>Instalação: ${g.date}</span>
+       <span class="text-emerald-400 font-semibold">Válido até: ${g.validUntil}</span>
+      </div>
+     </div>
+    `).join('') : '<p class="text-slate-500 text-xs italic">Nenhum equipamento com garantia registrada no momento.</p>'}
    </div>`;
  } else if(currentPage === 'profile') {
   content.innerHTML = `
@@ -587,24 +633,43 @@ function requestServiceModal(serviceName) {
   <h3 class="text-base font-bold mb-3">Solicitar: ${serviceName}</h3>
   <form id="req-form" class="space-y-3 text-xs">
    <textarea id="req-desc" class="field text-xs" rows="3" placeholder="Descreva o que precisa com detalhes..." required></textarea>
-   <button class="btn btn-primary w-full text-xs">Enviar Chamado para a WS</button>
+   <div>
+    <label class="text-slate-400 block mb-1">Anexar Foto do Local / Problema (Opcional):</label>
+    <input type="file" id="req-photo" accept="image/*" class="field text-xs file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-cyan-500/20 file:text-cyan-300 hover:file:bg-cyan-500/30">
+   </div>
+   <button class="btn btn-primary w-full text-xs">Enviar Chamado com Foto</button>
   </form>
  `);
  $('req-form').onsubmit = e => {
   e.preventDefault();
   const client = activeClient();
-  db.requests.push({
-   id: Date.now(),
-   clientId: client.id,
-   service: serviceName,
-   desc: $('req-desc').value,
-   status: 'Em análise'
-  });
-  saveDB();
-  closeModal();
-  navigate('requests');
-  toast('Chamado enviado com sucesso!','success');
+  const fileInput = $('req-photo');
+  
+  if(fileInput.files && fileInput.files[0]) {
+   const reader = new FileReader();
+   reader.onload = function(evt) {
+    saveNewRequest(client.id, serviceName, $('req-desc').value, evt.target.result);
+   };
+   reader.readAsDataURL(fileInput.files[0]);
+  } else {
+   saveNewRequest(client.id, serviceName, $('req-desc').value, '');
+  }
  };
+}
+
+function saveNewRequest(clientId, service, desc, photo) {
+ db.requests.push({
+  id: Date.now(),
+  clientId,
+  service,
+  desc,
+  status: 'Em análise',
+  photo
+ });
+ saveDB();
+ closeModal();
+ navigate('requests');
+ toast('Chamado enviado com sucesso!','success');
 }
 
 function openAppointmentModal() {
@@ -644,7 +709,131 @@ function openAppointmentModal() {
  };
 }
 
+function openPaymentModal(amount) {
+ openModal(`
+  <h3 class="text-base font-bold mb-2">Enviar Comprovante de Pagamento</h3>
+  <p class="text-xs text-slate-400 mb-4">Realize o Pix no valor de <b class="text-cyan-400">R$ ${amount.toFixed(2)}</b> para a chave <b class="text-white">88999999999</b> (Wellington S. Ribeiro) e envie o comprovante abaixo.</p>
+  <form id="pay-form" class="space-y-3 text-xs">
+   <div>
+    <label class="text-slate-400 block mb-1">Anexar Comprovante (Imagem/Print):</label>
+    <input type="file" id="pay-proof" accept="image/*" class="field text-xs file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-cyan-500/20 file:text-cyan-300 hover:file:bg-cyan-500/30" required>
+   </div>
+   <button class="btn btn-primary w-full text-xs mt-2">Enviar para Validação ADM</button>
+  </form>
+ `);
+ $('pay-form').onsubmit = e => {
+  e.preventDefault();
+  const fileInput = $('pay-proof');
+  if(fileInput.files && fileInput.files[0]) {
+   const reader = new FileReader();
+   reader.onload = function(evt) {
+    const client = activeClient();
+    // Marca como em análise de pagamento
+    client.paymentProof = evt.target.result;
+    saveDB();
+    closeModal();
+    toast('Comprovante enviado! Aguardando confirmação do administrador.','success');
+    renderClientPage();
+   };
+   reader.readAsDataURL(fileInput.files[0]);
+  }
+ };
+}
+
 function enterAdmin() { showView('view-admin'); }
+
+function renderAdminPanel() {
+ const client = db.clients.find(c => c.token === 'AA52');
+ const debtBox = $('admin-debt-control');
+ if(client) {
+  if(client.pendingBalance > 0) {
+   debtBox.innerHTML = `
+    <div>
+     <p class="text-amber-400 font-bold text-sm">Pendente: R$ ${client.pendingBalance.toFixed(2)}</p>
+     <p class="text-[10px] text-slate-400">${client.debtServiceRef}</p>
+     ${client.paymentProof ? '<span class="badge bg-cyan-500/20 text-cyan-300 mt-1 inline-block">Comprovante enviado pelo cliente!</span>' : ''}
+    </div>
+    <button onclick="adminClearDebt('${client.id}')" class="btn btn-primary text-xs bg-emerald-600 hover:bg-emerald-500">Confirmar Pagamento / Quitar</button>
+   `;
+  } else {
+   debtBox.innerHTML = `
+    <span class="text-emerald-400 font-bold text-xs flex items-center gap-1.5"><i data-lucide="check-circle" class="w-4 h-4"></i> Sem saldo pendente (Quitado)</span>
+    <button onclick="adminAddDebt('${client.id}')" class="btn btn-secondary text-xs">+ Adicionar Cobrança</button>
+   `;
+  }
+ }
+
+ const reqList = $('admin-requests-list');
+ reqList.innerHTML = db.requests.length ? db.requests.map(r => `
+  <div class="panel p-4 rounded-2xl text-xs space-y-2">
+   <div class="flex justify-between font-bold text-sm">
+    <span class="text-cyan-300">${r.service}</span>
+    <span class="badge bg-amber-500/20 text-amber-300">${r.status}</span>
+   </div>
+   <p class="text-slate-300"><b>Detalhes:</b> ${r.desc}</p>
+   ${r.photo ? `<div class="mt-2"><span class="text-[10px] text-slate-400 block mb-1">Foto anexada:</span><img src="${r.photo}" class="w-20 h-20 object-cover rounded-xl border border-slate-800"></div>` : ''}
+   <div class="pt-2 flex gap-2">
+    <button onclick="adminApproveRequest(${r.id})" class="btn btn-primary text-xs py-1.5 px-3">Aprovar Chamado</button>
+   </div>
+  </div>
+ `).join('') : '<p class="text-slate-500 text-xs italic">Nenhum chamado pendente.</p>';
+
+ const appList = $('admin-appointments-list');
+ appList.innerHTML = db.appointments.length ? db.appointments.map(a => `
+  <div class="panel p-4 rounded-2xl text-xs flex justify-between items-center">
+   <div>
+    <p class="font-bold text-sm text-emerald-300">${a.service}</p>
+    <p class="text-slate-300">${a.date} às ${a.time} - Status: ${a.status}</p>
+   </div>
+   <button onclick="adminApproveAppointment(${a.id})" class="btn btn-primary text-xs py-1.5 px-3">Aprovar Visita</button>
+  </div>
+ `).join('') : '<p class="text-slate-500 text-xs italic">Nenhum agendamento pendente.</p>';
+
+ if(window.lucide) lucide.createIcons();
+}
+
+function adminClearDebt(clientId) {
+ const client = db.clients.find(c => c.id === clientId);
+ if(client) {
+  client.pendingBalance = 0;
+  client.debtServiceRef = '';
+  client.paymentProof = '';
+  saveDB();
+  renderAdminPanel();
+  toast('Pagamento confirmado e saldo quitado com sucesso!','success');
+ }
+}
+
+function adminAddDebt(clientId) {
+ const client = db.clients.find(c => c.id === clientId);
+ if(client) {
+  client.pendingBalance = 150.00;
+  client.debtServiceRef = 'Instalação de Disjuntor e Fiação Elétrica';
+  saveDB();
+  renderAdminPanel();
+  toast('Cobrança adicionada para o cliente de teste.','info');
+ }
+}
+
+function adminApproveRequest(id) {
+ const req = db.requests.find(r => r.id === id);
+ if(req) {
+  req.status = 'Em Andamento / Aprovado';
+  saveDB();
+  renderAdminPanel();
+  toast('Chamado aprovado com sucesso!','success');
+ }
+}
+
+function adminApproveAppointment(id) {
+ const app = db.appointments.find(a => a.id === id);
+ if(app) {
+  app.status = 'Aprovado';
+  saveDB();
+  renderAdminPanel();
+  toast('Agendamento aprovado com sucesso!','success');
+ }
+}
 
 if(activeClient()) {
  openClientApp();
