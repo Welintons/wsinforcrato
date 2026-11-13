@@ -6,7 +6,9 @@
 <meta name="theme-color" content="#020617">
 <title>WS SOLUÇÕES | Central do Cliente</title>
 
+<!-- Tailwind CSS -->
 <script src="https://cdn.tailwindcss.com"></script>
+<!-- Ícones Lucide -->
 <script src="https://unpkg.com/lucide@latest"></script>
 
 <script>
@@ -60,7 +62,7 @@ body{background:#020617;color:#e2e8f0;font-family:Inter,system-ui,sans-serif}
 
 <div id="toast-container" class="fixed top-4 right-4 z-[200] space-y-2"></div>
 
-<!-- TELA INICIAL -->
+<!-- TELA INICIAL (LOGIN POR TOKEN) -->
 <section id="view-home" class="min-h-screen flex items-center justify-center p-4">
  <div class="w-full max-w-md">
   <div class="text-center mb-8">
@@ -68,20 +70,21 @@ body{background:#020617;color:#e2e8f0;font-family:Inter,system-ui,sans-serif}
     <i data-lucide="zap" class="w-10 h-10 text-cyan-400"></i>
    </div>
    <h1 class="text-3xl font-black tracking-widest text-cyan-400">WS SOLUÇÕES</h1>
-   <p class="text-slate-400 text-sm mt-2">Sua central de serviços e benefícios</p>
+   <p class="text-slate-400 text-sm mt-2">Central do Cliente • Atendimento Direto</p>
   </div>
 
   <div class="glass rounded-3xl p-6 shadow-2xl space-y-5">
    <div>
-    <h2 class="text-xl font-bold">Bem-vindo!</h2>
-    <p class="text-sm text-slate-400 mt-1">Acesse sua área de cliente com seu token.</p>
+    <h2 class="text-xl font-bold">Acesso Rápido</h2>
+    <p class="text-sm text-slate-400 mt-1">Digite seu token de 4 dígitos para entrar.</p>
    </div>
 
    <div class="space-y-2">
-    <label class="text-sm text-slate-300">Seu token de acesso</label>
+    <label class="text-sm text-slate-300">Token de acesso</label>
     <input id="login-token" maxlength="4" autocomplete="off"
      class="field text-center text-2xl font-black tracking-[.5em] uppercase"
-     placeholder="AB12">
+     placeholder="AA52">
+    <p class="text-xs text-slate-500 text-center">Dica de teste: digite <b>AA52</b></p>
     <p id="login-lock" class="text-xs text-red-400 hidden-view"></p>
    </div>
 
@@ -92,28 +95,28 @@ body{background:#020617;color:#e2e8f0;font-family:Inter,system-ui,sans-serif}
 
    <div class="relative flex items-center gap-3">
     <div class="h-px bg-slate-700 flex-1"></div>
-    <span class="text-xs text-slate-500">AINDA NÃO É CLIENTE?</span>
+    <span class="text-xs text-slate-500">NÃO TEM CADASTRO?</span>
     <div class="h-px bg-slate-700 flex-1"></div>
    </div>
 
    <button onclick="showRegistration()" class="btn btn-secondary w-full">
     <i data-lucide="user-plus" class="w-4 h-4"></i>
-    Solicitar acesso sem senha
+    Solicitar acesso (com WhatsApp)
    </button>
 
    <div class="border-t border-slate-800 pt-4">
     <button onclick="enterAdmin()" class="w-full text-sm text-slate-400 hover:text-cyan-400 flex items-center justify-center gap-2">
      <i data-lucide="shield-check" class="w-4 h-4"></i>
-     Painel Administrativo (WS)
+     Painel Administrativo WS
     </button>
    </div>
   </div>
 
-  <p class="text-center text-xs text-slate-600 mt-6">WS SOLUÇÕES • Atendimento e serviços</p>
+  <p class="text-center text-xs text-slate-600 mt-6">WS SOLUÇÕES • Crato - CE e Região</p>
  </div>
 </section>
 
-<!-- CADASTRO -->
+<!-- TELA DE CADASTRO (EXIGE WHATSAPP) -->
 <section id="view-registration" class="hidden-view min-h-screen flex items-center justify-center p-4">
  <div class="glass w-full max-w-md rounded-3xl p-6">
   <button onclick="showHome()" class="text-slate-400 text-sm mb-6 flex items-center gap-2">
@@ -123,54 +126,48 @@ body{background:#020617;color:#e2e8f0;font-family:Inter,system-ui,sans-serif}
   <div class="mb-6">
    <span class="text-cyan-400 text-xs font-bold tracking-widest">NOVO CLIENTE</span>
    <h2 class="text-2xl font-bold mt-2">Solicitar acesso</h2>
-   <p class="text-sm text-slate-400 mt-1">Preencha seus dados para liberar seu atendimento.</p>
+   <p class="text-sm text-slate-400 mt-1">Informe seu WhatsApp para receber seu token de liberação.</p>
   </div>
 
   <form id="registration-form" class="space-y-4">
    <div>
     <label class="text-sm text-slate-300 block mb-2">Nome completo *</label>
-    <input id="reg-name" class="field" required maxlength="100" placeholder="Seu nome completo">
+    <input id="reg-name" class="field" required maxlength="100" placeholder="Seu nome ou apelido">
    </div>
    <div>
-    <label class="text-sm text-slate-300 block mb-2">WhatsApp *</label>
+    <label class="text-sm text-slate-300 block mb-2">WhatsApp (Obrigatório) *</label>
     <input id="reg-phone" class="field" required maxlength="20" placeholder="(88) 99999-9999">
    </div>
    <div>
-    <label class="text-sm text-slate-300 block mb-2">Endereço completo *</label>
-    <textarea id="reg-address" class="field" required maxlength="250" rows="3" placeholder="Rua, número e bairro"></textarea>
+    <label class="text-sm text-slate-300 block mb-2">Endereço / Bairro *</label>
+    <textarea id="reg-address" class="field" required maxlength="250" rows="3" placeholder="Ex: Centro, Crato - CE"></textarea>
    </div>
 
    <button class="btn btn-primary w-full" type="submit">
-    Enviar cadastro
+    Enviar solicitação
     <i data-lucide="arrow-right" class="w-4 h-4"></i>
    </button>
   </form>
-
-  <p class="text-xs text-slate-500 mt-4 text-center">Seu cadastro ficará aguardando liberação da WS SOLUÇÕES.</p>
  </div>
 </section>
 
-<!-- AGUARDANDO -->
+<!-- AGUARDANDO APROVAÇÃO -->
 <section id="view-pending" class="hidden-view min-h-screen flex items-center justify-center p-4">
  <div class="glass rounded-3xl p-8 max-w-md w-full text-center">
   <div class="w-16 h-16 rounded-full bg-amber-500/10 mx-auto flex items-center justify-center mb-5">
    <i data-lucide="clock" class="w-8 h-8 text-amber-400"></i>
   </div>
-  <h2 class="text-2xl font-bold">Cadastro recebido!</h2>
-  <p class="text-slate-400 mt-3 text-sm">Sua solicitação está aguardando aprovação da WS SOLUÇÕES.</p>
-  <div class="bg-slate-950 rounded-xl p-4 mt-6 text-left">
-   <p class="text-xs text-slate-500">STATUS</p>
-   <p class="text-amber-400 font-bold mt-1">Em análise</p>
-  </div>
-  <button onclick="showHome()" class="btn btn-secondary w-full mt-5">Voltar ao início</button>
+  <h2 class="text-2xl font-bold">Solicitação enviada!</h2>
+  <p class="text-slate-400 mt-3 text-sm">Seu pedido foi registrado. Assim que aprovado por nossa equipe, você receberá o token pelo WhatsApp.</p>
+  <button onclick="showHome()" class="btn btn-secondary w-full mt-6">Voltar ao início</button>
  </div>
 </section>
 
-<!-- APLICAÇÃO -->
+<!-- PAINEL PRINCIPAL DO CLIENTE -->
 <section id="view-app" class="hidden-view min-h-screen">
  <div class="app-layout grid min-h-screen">
 
-  <!-- SIDEBAR -->
+  <!-- SIDEBAR DESKTOP -->
   <aside class="hidden md:flex flex-col bg-slate-950 border-r border-slate-800 p-4">
    <div class="flex items-center gap-3 p-3 mb-7">
     <div class="w-10 h-10 rounded-xl bg-cyan-500/10 flex items-center justify-center">
@@ -178,25 +175,25 @@ body{background:#020617;color:#e2e8f0;font-family:Inter,system-ui,sans-serif}
     </div>
     <div>
      <p class="font-black tracking-wider text-cyan-400">WS SOLUÇÕES</p>
-     <p class="text-[10px] text-slate-500">ÁREA DO CLIENTE</p>
+     <p class="text-[10px] text-slate-500">CENTRAL DO CLIENTE</p>
     </div>
    </div>
 
-   <nav id="desktop-nav" class="space-y-1 flex-1">
+   <nav class="space-y-1 flex-1">
     <button class="navbtn active" data-page="dashboard"><i data-lucide="layout-dashboard"></i> Início</button>
     <button class="navbtn" data-page="services"><i data-lucide="wrench"></i> Serviços</button>
     <button class="navbtn" data-page="requests"><i data-lucide="clipboard-list"></i> Solicitações</button>
     <button class="navbtn" data-page="appointments"><i data-lucide="calendar-days"></i> Agendamentos</button>
-    <button class="navbtn" data-page="rewards"><i data-lucide="gift"></i> Recompensas</button>
-    <button class="navbtn" data-page="profile"><i data-lucide="user"></i> Meu cadastro</button>
+    <button class="navbtn" data-page="rewards"><i data-lucide="gift"></i> Meus Pontos</button>
+    <button class="navbtn" data-page="profile"><i data-lucide="user"></i> Meu Cadastro</button>
    </nav>
 
-   <button onclick="logout()" class="navbtn mt-5 text-red-400">
+   <button onclick="logout()" class="navbtn mt-5 text-red-400 hover:bg-red-950/30">
     <i data-lucide="log-out"></i> Sair da conta
    </button>
   </aside>
 
-  <!-- CONTEÚDO -->
+  <!-- CONTEÚDO PRINCIPAL -->
   <main class="min-w-0 flex flex-col">
    <header class="h-16 border-b border-slate-800 flex items-center justify-between px-4 md:px-8 bg-slate-950/80 sticky top-0 z-30">
     <div class="flex items-center gap-3">
@@ -205,25 +202,25 @@ body{background:#020617;color:#e2e8f0;font-family:Inter,system-ui,sans-serif}
      </div>
      <div>
       <p class="font-bold" id="header-title">Início</p>
-      <p class="text-[10px] text-slate-500" id="header-subtitle">Central do cliente</p>
+      <p class="text-[10px] text-slate-500" id="header-subtitle">Área do cliente</p>
      </div>
     </div>
     <div class="flex items-center gap-3">
      <div class="text-right">
       <p class="text-xs font-bold" id="header-name">Cliente</p>
-      <p class="text-[10px] text-emerald-400">Conta ativa</p>
+      <p class="text-[10px] text-emerald-400">Token Ativo</p>
      </div>
      <div class="w-9 h-9 rounded-full bg-cyan-900 flex items-center justify-center text-cyan-300 font-bold" id="avatar">C</div>
     </div>
    </header>
 
+   <!-- MENU MOBILE -->
    <div class="md:hidden flex overflow-x-auto gap-2 p-3 border-b border-slate-800 bg-slate-950">
     <button class="btn btn-secondary text-xs whitespace-nowrap" onclick="navigate('dashboard')">Início</button>
     <button class="btn btn-secondary text-xs whitespace-nowrap" onclick="navigate('services')">Serviços</button>
-    <button class="btn btn-secondary text-xs whitespace-nowrap" onclick="navigate('requests')">Solicitações</button>
+    <button class="btn btn-secondary text-xs whitespace-nowrap" onclick="navigate('requests')">Chamados</button>
     <button class="btn btn-secondary text-xs whitespace-nowrap" onclick="navigate('appointments')">Agenda</button>
-    <button class="btn btn-secondary text-xs whitespace-nowrap" onclick="navigate('rewards')">Recompensas</button>
-    <button class="btn btn-secondary text-xs whitespace-nowrap" onclick="navigate('profile')">Perfil</button>
+    <button class="btn btn-secondary text-xs whitespace-nowrap" onclick="navigate('rewards')">Pontos</button>
     <button class="btn btn-danger text-xs whitespace-nowrap" onclick="logout()">Sair</button>
    </div>
 
@@ -232,1232 +229,324 @@ body{background:#020617;color:#e2e8f0;font-family:Inter,system-ui,sans-serif}
    </div>
 
    <footer class="border-t border-slate-800 p-4 text-center text-xs text-slate-600">
-    WS SOLUÇÕES • Sua confiança, nossa responsabilidade.
+    WS SOLUÇÕES • Qualidade e Confiança em Serviços Técnicos.
    </footer>
   </main>
  </div>
 </section>
 
-<!-- PAINEL ADM -->
-<section id="view-admin" class="hidden-view min-h-screen">
- <header class="bg-slate-950 border-b border-slate-800 p-4 sticky top-0 z-40">
-  <div class="max-w-7xl mx-auto flex items-center justify-between gap-3">
-   <div class="flex items-center gap-3">
-    <div class="w-10 h-10 rounded-xl bg-cyan-500/10 flex items-center justify-center">
-     <i data-lucide="shield-check" class="text-cyan-400"></i>
-    </div>
-    <div>
-     <h1 class="font-black text-cyan-400 tracking-wider">WS ADMIN</h1>
-     <p class="text-xs text-slate-500">Painel de gerenciamento local</p>
-    </div>
-   </div>
-   <button onclick="showHome()" class="btn btn-secondary text-xs">Sair do ADM</button>
+<!-- PAINEL ADM SIMPLIFICADO DE TESTE -->
+<section id="view-admin" class="hidden-view min-h-screen p-4 md:p-8 max-w-5xl mx-auto">
+ <div class="flex justify-between items-center mb-6">
+  <div>
+   <h1 class="text-2xl font-black text-cyan-400">PAINEL ADMINISTRATIVO (WS)</h1>
+   <p class="text-xs text-slate-400">Gerencie clientes e agendamentos de teste</p>
   </div>
- </header>
-
- <div class="max-w-7xl mx-auto p-4 md:p-8">
-  <div class="bg-amber-500/10 border border-amber-500/20 p-4 rounded-xl mb-6 text-sm text-amber-200">
-   <b>Modo de operação local:</b> Os dados de clientes, tokens e solicitações são salvos com segurança no armazenamento do seu navegador.
-  </div>
-
-  <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-7" id="admin-stats"></div>
-
-  <div class="flex gap-2 overflow-x-auto pb-3 mb-5" id="admin-tabs">
-   <button class="btn btn-primary text-xs" data-admin-tab="clients">Clientes</button>
-   <button class="btn btn-secondary text-xs" data-admin-tab="requests">Solicitações</button>
-   <button class="btn btn-secondary text-xs" data-admin-tab="appointments">Agenda</button>
-   <button class="btn btn-secondary text-xs" data-admin-tab="services">Serviços</button>
-   <button class="btn btn-secondary text-xs" data-admin-tab="rewards">Recompensas</button>
-   <button class="btn btn-secondary text-xs" data-admin-tab="settings">Dados</button>
-  </div>
-
-  <div id="admin-content"></div>
+  <button onclick="showHome()" class="btn btn-secondary text-xs">Sair do ADM</button>
+ </div>
+ <div class="panel p-6 rounded-2xl mb-6">
+  <h3 class="font-bold mb-2">Token de Teste Ativo: <span class="text-cyan-400 text-lg">AA52</span></h3>
+  <p class="text-sm text-slate-400">Você pode usar o token <b>AA52</b> na tela inicial para entrar instantaneamente como o cliente de demonstração "Wellington (Cliente VIP)".</p>
+ </div>
+ <div id="admin-requests-list" class="space-y-3">
+  <h3 class="font-bold mb-2">Agendamentos recebidos dos clientes:</h3>
+  <!-- Lista dinâmica de agendamentos com botões WhatsApp -->
  </div>
 </section>
 
-<!-- MODAL -->
 <div id="modal-root"></div>
 
 <script>
 /* =========================================
-   WS SOLUÇÕES - SISTEMA LOCAL
+   LÓGICA DO CLIENTE & BANCO LOCAL
 ========================================= */
-
-const DB_KEY = 'ws_solucoes_local_v1';
-const SESSION_KEY = 'ws_client_session_v1';
-const LOCK_KEY = 'ws_login_lock_v1';
+const DB_KEY = 'ws_solucoes_db_v2';
+const SESSION_KEY = 'ws_client_session_v2';
 
 const $ = id => document.getElementById(id);
 
-const uid = () => crypto.randomUUID
- ? crypto.randomUUID()
- : 'ws-'+Date.now()+'-'+Math.random().toString(36).slice(2);
-
-const now = () => new Date().toISOString();
-
-function escapeHTML(value){
- return String(value ?? '').replace(/[&<>"']/g,c=>({
-  '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'
- }[c]));
-}
-
-function money(value){
- return Number(value||0).toLocaleString('pt-BR',{
-  style:'currency',currency:'BRL'
- });
-}
-
-function dateBR(value){
- if(!value)return '—';
- return new Date(value).toLocaleString('pt-BR');
-}
-
-function toast(message,type='info'){
- const el=document.createElement('div');
- const colors={
-  success:'border-emerald-500 text-emerald-300',
-  error:'border-red-500 text-red-300',
-  info:'border-cyan-500 text-cyan-300'
- };
- el.className=`bg-slate-900 border-l-4 ${colors[type]} rounded-xl shadow-xl px-4 py-3 text-sm max-w-sm`;
- el.textContent=message;
- $('toast-container').appendChild(el);
- setTimeout(()=>el.remove(),3500);
-}
-
-function seedDB(){
+function seedDB() {
  return {
-  clients:[],
-  services:[
-   {id:uid(),name:'Instalação de câmeras (CFTV)',description:'Instalação e configuração de câmeras Intelbras e sistemas de segurança.',active:true},
-   {id:uid(),name:'Serviços elétricos',description:'Instalações, manutenção e reparos elétricos residenciais.',active:true},
-   {id:uid(),name:'Manutenção de eletrodomésticos',description:'Conserto de ventiladores, micro-ondas, caixas de som e tanquinhos.',active:true},
-   {id:uid(),name:'Informática e redes',description:'Manutenção de computadores, formatação e redes Wi-Fi.',active:true},
-   {id:uid(),name:'Instalação de forro PVC',description:'Instalação de forros com alinhamento profissional e acabamento perfeito.',active:true},
-   {id:uid(),name:'Instalação de interfones',description:'Configuração e montagem de sistemas de interfonia.',active:true}
+  clients: [
+   { id: 'cli-vip', name: 'Wellington (Cliente Teste)', phone: '88999999999', address: 'Crato - CE', status: 'approved', token: 'AA52', points: 40 }
   ],
-  requests:[],
-  appointments:[],
-  rewards:[],
-  transactions:[],
-  settings:{
-   pointsPerService:10,
-   referralBonus:20,
-   redemptionPoints:100,
-   redemptionValue:10
-  }
+  services: [
+   { id: 's1', name: 'Instalação de Câmeras (CFTV)', description: 'Instalação, configuração de DVR/NVR e câmeras de segurança.' },
+   { id: 's2', name: 'Serviços Elétricos', description: 'Manutenção, tomadas, disjuntores e instalações residenciais.' },
+   { id: 's3', name: 'Manutenção de Eletrodomésticos', description: 'Conserto de ventiladores, micro-ondas, caixas de som e tanquinhos.' },
+   { id: 's4', name: 'Instalação de Forro PVC', description: 'Estrutura metálica e forro com acabamento profissional.' }
+  ],
+  requests: [],
+  appointments: []
  };
 }
 
-function loadDB(){
- try{
-  const data=JSON.parse(localStorage.getItem(DB_KEY));
-  if(data && Array.isArray(data.clients))return data;
- }catch(e){}
- const data=seedDB();
- saveDB(data);
- return data;
+let db = JSON.parse(localStorage.getItem(DB_KEY)) || seedDB();
+function saveDB() { localStorage.setItem(DB_KEY, JSON.stringify(db)); }
+
+function toast(msg, type='info') {
+ const el = document.createElement('div');
+ const colors = { success: 'border-emerald-500 text-emerald-300', error: 'border-red-500 text-red-300', info: 'border-cyan-500 text-cyan-300' };
+ el.className = `bg-slate-900 border-l-4 ${colors[type]} rounded-xl shadow-xl px-4 py-3 text-sm max-w-sm`;
+ el.textContent = msg;
+ $('toast-container').appendChild(el);
+ setTimeout(() => el.remove(), 3500);
 }
 
-let db=loadDB();
-
-function saveDB(){
- localStorage.setItem(DB_KEY,JSON.stringify(db));
-}
-
-function showView(id){
- document.querySelectorAll('body > section').forEach(el=>el.classList.add('hidden-view'));
+function showView(id) {
+ document.querySelectorAll('body > section').forEach(el => el.classList.add('hidden-view'));
  $(id).classList.remove('hidden-view');
  window.scrollTo(0,0);
- if(window.lucide)lucide.createIcons();
+ if(window.lucide) lucide.createIcons();
 }
 
-function showHome(){
- showView('view-home');
-}
+function showHome() { showView('view-home'); }
+function showRegistration() { $('registration-form').reset(); showView('view-registration'); }
 
-function showRegistration(){
- $('registration-form').reset();
- showView('view-registration');
-}
-
-function findClient(id){
- return db.clients.find(c=>c.id===id);
-}
-
-function activeClient(){
- const id=localStorage.getItem(SESSION_KEY);
- return id ? findClient(id) : null;
-}
-
-/* =========================================
-   CADASTRO
-========================================= */
-
-$('registration-form').addEventListener('submit',e=>{
+// Cadastro exigindo WhatsApp
+$('registration-form').addEventListener('submit', e => {
  e.preventDefault();
+ const name = $('reg-name').value.trim();
+ const phone = $('reg-phone').value.trim();
+ const address = $('reg-address').value.trim();
 
- const name=$('reg-name').value.trim();
- const phone=$('reg-phone').value.trim();
- const address=$('reg-address').value.trim();
-
- if(!name||!phone||!address){
-  toast('Preencha todos os campos.','error');
-  return;
- }
-
- const normalized=phone.replace(/\D/g,'');
-
- const exists=db.clients.find(c=>c.phone.replace(/\D/g, '') === normalized);
- if(exists){
-  toast('Já existe um cadastro com esse WhatsApp.','error');
+ if(!phone.replace(/\D/g,'')) {
+  toast('Por favor, informe um WhatsApp válido.','error');
   return;
  }
 
  db.clients.push({
-  id:uid(),
-  name,phone,address,
-  status:'pending',
-  token:null,
-  points:0,
-  createdAt:now(),
-  approvedAt:null
+  id: 'cli-' + Date.now(),
+  name, phone, address,
+  status: 'pending',
+  token: 'WS' + Math.floor(10 + Math.random() * 90),
+  points: 10
  });
-
  saveDB();
  showView('view-pending');
- toast('Cadastro enviado com sucesso!','success');
+ toast('Solicitação enviada com sucesso!','success');
 });
 
-/* =========================================
-   TOKEN E LOGIN
-========================================= */
+// Login por Token
+function login() {
+ const token = $('login-token').value.trim().toUpperCase();
+ const client = db.clients.find(c => c.token === token && c.status === 'approved');
 
-function generateToken(){
- const chars='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
- let token='';
- for(let i=0;i<4;i++){
-  token+=chars[crypto.getRandomValues(new Uint32Array(1))[0]%chars.length];
- }
- return token;
-}
-
-function createUniqueToken(){
- let token;
- let attempts=0;
- do{
-  token=generateToken();
-  attempts++;
-  if(attempts>10000)throw new Error('Não foi possível gerar token.');
- }while(db.clients.some(c=>c.token===token));
- return token;
-}
-
-function getLock(){
- try{
-  return JSON.parse(localStorage.getItem(LOCK_KEY)||'{}');
- }catch(e){return {}}
-}
-
-function setLock(data){
- localStorage.setItem(LOCK_KEY,JSON.stringify(data));
-}
-
-function login(){
- const token=$('login-token').value.trim().toUpperCase();
- const lock=getLock();
- const time=Date.now();
-
- if(lock.until && time<lock.until){
-  const remaining=Math.ceil((lock.until-time)/1000);
-  $('login-lock').textContent=`Acesso bloqueado temporariamente. Tente em ${Math.ceil(remaining/60)} min.`;
-  $('login-lock').classList.remove('hidden-view');
-  toast('Aguarde o fim do bloqueio.','error');
+ if(!client) {
+  toast('Token inválido ou aguardando aprovação.','error');
   return;
  }
 
- if(lock.until && time>=lock.until){
-  setLock({});
- }
-
- if(!/^[A-Z0-9]{4}$/.test(token)){
-  toast('Digite um token válido de 4 caracteres.','error');
-  return;
- }
-
- const client=db.clients.find(c=>c.token===token && c.status==='approved');
-
- if(!client){
-  lock.attempts=(lock.attempts||0)+1;
-
-  if(lock.attempts>=5){
-   lock.until=Date.now()+5*60*1000;
-   lock.attempts=0;
-   setLock(lock);
-   $('login-lock').textContent='Muitas tentativas incorretas. Bloqueado por 5 minutos.';
-   $('login-lock').classList.remove('hidden-view');
-   toast('Acesso bloqueado por segurança.','error');
-   return;
-  }
-
-  setLock(lock);
-  toast(`Token incorreto. Tentativas restantes: ${5-lock.attempts}`,'error');
-  return;
- }
-
- setLock({});
- localStorage.setItem(SESSION_KEY,client.id);
- client.lastAccess=now();
- saveDB();
- $('login-lock').classList.add('hidden-view');
- $('login-token').value='';
+ localStorage.setItem(SESSION_KEY, client.id);
  openClientApp();
 }
 
-$('login-token').addEventListener('input',e=>{
- e.target.value=e.target.value.toUpperCase().replace(/[^A-Z0-9]/g,'').slice(0,4);
-});
-$('login-token').addEventListener('keydown',e=>{
- if(e.key==='Enter')login();
-});
+function activeClient() {
+ const id = localStorage.getItem(SESSION_KEY);
+ return db.clients.find(c => c.id === id);
+}
 
-/* =========================================
-   CLIENTE
-========================================= */
+function logout() {
+ localStorage.removeItem(SESSION_KEY);
+ showHome();
+ toast('Sessão encerrada.','info');
+}
 
-let currentPage='dashboard';
-
-function openClientApp(){
- const client=activeClient();
- if(!client || client.status!=='approved'){
-  localStorage.removeItem(SESSION_KEY);
-  showHome();
-  return;
- }
-
- $('header-name').textContent=client.name;
- $('avatar').textContent=client.name.charAt(0).toUpperCase();
+let currentPage = 'dashboard';
+function openClientApp() {
+ const client = activeClient();
+ if(!client) return showHome();
+ $('header-name').textContent = client.name;
+ $('avatar').textContent = client.name.charAt(0).toUpperCase();
  navigate('dashboard');
  showView('view-app');
 }
 
-function logout(){
- localStorage.removeItem(SESSION_KEY);
- showHome();
- toast('Você saiu da sua conta com segurança.','info');
-}
-
-function navigate(page){
- const client=activeClient();
- if(!client)return showHome();
-
- currentPage=page;
-
- const titles={
-  dashboard:['Início','Visão geral da sua conta'],
-  services:['Serviços','Conheça nossos serviços disponíveis'],
-  requests:['Solicitações','Acompanhe o andamento dos seus pedidos'],
-  appointments:['Agendamentos','Seus horários agendados'],
-  rewards:['Recompensas','Sua carteira de pontos e benefícios'],
-  profile:['Meu cadastro','Seus dados de atendimento']
+function navigate(page) {
+ currentPage = page;
+ const titles = {
+  dashboard: ['Início', 'Visão geral'],
+  services: ['Serviços', 'Catálogo WS'],
+  requests: ['Solicitações', 'Acompanhe seus chamados'],
+  appointments: ['Agendamentos', 'Sua agenda'],
+  rewards: ['Meus Pontos', 'Programa de benefícios'],
+  profile: ['Meu Cadastro', 'Dados pessoais']
  };
+ $('header-title').textContent = titles[page][0];
+ $('header-subtitle').textContent = titles[page][1];
 
- $('header-title').textContent=titles[page][0];
- $('header-subtitle').textContent=titles[page][1];
-
- document.querySelectorAll('.navbtn[data-page]').forEach(b=>{
-  b.classList.toggle('active',b.dataset.page===page);
+ document.querySelectorAll('.navbtn').forEach(b => {
+  b.classList.toggle('active', b.dataset.page === page);
  });
 
  renderClientPage();
 }
 
-document.querySelectorAll('[data-page]').forEach(b=>{
- b.addEventListener('click',()=>navigate(b.dataset.page));
+document.querySelectorAll('[data-page]').forEach(b => {
+ b.addEventListener('click', () => navigate(b.dataset.page));
 });
 
-function renderClientPage(){
- const client=activeClient();
- if(!client)return;
+function renderClientPage() {
+ const client = activeClient();
+ const content = $('page-content');
+ const requests = db.requests.filter(r => r.clientId === client.id);
+ const appointments = db.appointments.filter(a => a.clientId === client.id);
 
- const requests=db.requests.filter(r=>r.clientId===client.id);
- const appointments=db.appointments.filter(a=>a.clientId===client.id);
- const content=$('page-content');
-
- if(currentPage==='dashboard'){
-  content.innerHTML=`
-   <div class="mb-7">
-    <p class="text-cyan-400 text-xs font-bold tracking-widest">ÁREA DO CLIENTE</p>
-    <h2 class="text-2xl md:text-3xl font-black mt-2">Olá, ${escapeHTML(client.name.split(' ')[0])}!</h2>
-    <p class="text-slate-400 mt-1 text-sm">Bem-vindo à sua central WS Soluções.</p>
-   </div>
-
-   <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-7">
-    <div class="card p-5">
-     <div class="flex justify-between"><span class="text-slate-400 text-sm">Seus pontos</span><i data-lucide="gift" class="text-cyan-400"></i></div>
-     <p class="text-3xl font-black mt-3 text-cyan-400">${client.points||0}</p>
-     <p class="text-xs text-slate-500 mt-1">Pontos em carteira</p>
-    </div>
-    <div class="card p-5">
-     <div class="flex justify-between"><span class="text-slate-400 text-sm">Solicitações</span><i data-lucide="clipboard-list" class="text-blue-400"></i></div>
-     <p class="text-3xl font-black mt-3">${requests.length}</p>
-     <p class="text-xs text-slate-500 mt-1">Pedidos realizados</p>
-    </div>
-    <div class="card p-5">
-     <div class="flex justify-between"><span class="text-slate-400 text-sm">Agendamentos</span><i data-lucide="calendar" class="text-emerald-400"></i></div>
-     <p class="text-3xl font-black mt-3">${appointments.length}</p>
-     <p class="text-xs text-slate-500 mt-1">Horários solicitados</p>
-    </div>
-   </div>
-
-   <div class="grid lg:grid-cols-2 gap-5">
-    <div class="card p-6">
-     <div class="flex items-center gap-3 mb-4">
-      <i data-lucide="wrench" class="text-cyan-400"></i>
-      <h3 class="font-bold">Precisa de um serviço?</h3>
-     </div>
-     <p class="text-sm text-slate-400 mb-5">Confira nosso catálogo de serviços e faça sua solicitação em segundos.</p>
-     <button class="btn btn-primary w-full" onclick="navigate('services')">Ver serviços</button>
-    </div>
-    <div class="card p-6">
-     <div class="flex items-center gap-3 mb-4">
-      <i data-lucide="calendar-check" class="text-emerald-400"></i>
-      <h3 class="font-bold">Agende um atendimento</h3>
-     </div>
-     <p class="text-sm text-slate-400 mb-5">Escolha o melhor dia e horário para a visita ou execução do serviço.</p>
-     <button class="btn btn-secondary w-full" onclick="openAppointmentModal()">Solicitar agendamento</button>
-    </div>
-   </div>
-
-   <div class="mt-7">
-    <h3 class="font-bold mb-3">Últimas solicitações</h3>
-    ${requests.length?requests.slice(-3).reverse().map(requestCard).join(''):emptyState('clipboard-list','Nenhuma solicitação feita ainda.')}
-   </div>`;
- }
-
- if(currentPage==='services'){
-  const services=db.services.filter(s=>s.active);
-  content.innerHTML=`
+ if(currentPage === 'dashboard') {
+  content.innerHTML = `
    <div class="mb-6">
-    <h2 class="text-2xl font-bold">Nossos serviços</h2>
-    <p class="text-sm text-slate-400 mt-1">Escolha o serviço que você precisa e envie o pedido diretamente.</p>
+    <h2 class="text-2xl font-black">Olá, ${client.name.split(' ')[0]}!</h2>
+    <p class="text-slate-400 text-sm">Bem-vindo à central WS Soluções.</p>
    </div>
-   <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-    ${services.map(s=>`
-     <div class="card p-5 flex flex-col">
-      <div class="w-11 h-11 rounded-xl bg-cyan-500/10 flex items-center justify-center mb-4">
-       <i data-lucide="wrench" class="text-cyan-400"></i>
+   <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+    <div class="card p-5">
+     <span class="text-slate-400 text-sm">Seus Pontos</span>
+     <p class="text-3xl font-black text-cyan-400 mt-2">${client.points || 0}</p>
+    </div>
+    <div class="card p-5">
+     <span class="text-slate-400 text-sm">Chamados</span>
+     <p class="text-3xl font-black text-blue-400 mt-2">${requests.length}</p>
+    </div>
+    <div class="card p-5">
+     <span class="text-slate-400 text-sm">Agendamentos</span>
+     <p class="text-3xl font-black text-emerald-400 mt-2">${appointments.length}</p>
+    </div>
+   </div>
+   <div class="flex gap-3">
+    <button onclick="navigate('services')" class="btn btn-primary flex-1">Solicitar Serviço</button>
+    <button onclick="openAppointmentModal()" class="btn btn-secondary flex-1">Agendar Horário</button>
+   </div>`;
+ } else if(currentPage === 'services') {
+  content.innerHTML = `
+   <h2 class="text-xl font-bold mb-4">Nossos Serviços</h2>
+   <div class="grid sm:grid-cols-2 gap-4">
+    ${db.services.map(s => `
+     <div class="card p-5 flex flex-col justify-between">
+      <div>
+       <h3 class="font-bold text-cyan-400">${s.name}</h3>
+       <p class="text-sm text-slate-400 mt-2">${s.description}</p>
       </div>
-      <h3 class="font-bold">${escapeHTML(s.name)}</h3>
-      <p class="text-sm text-slate-400 mt-2 flex-1">${escapeHTML(s.description)}</p>
-      <button onclick="openRequestModal('${s.id}')" class="btn btn-primary w-full mt-5">Solicitar serviço</button>
+      <button onclick="requestServiceModal('${s.name}')" class="btn btn-primary w-full mt-4 text-xs">Pedir Orçamento / Serviço</button>
      </div>
     `).join('')}
-   </div>
-   ${services.length?'':emptyState('wrench','Nenhum serviço disponível no momento.')}`;
- }
-
- if(currentPage==='requests'){
-  content.innerHTML=`
-   <div class="flex flex-wrap justify-between items-center gap-3 mb-6">
-    <div><h2 class="text-2xl font-bold">Minhas solicitações</h2><p class="text-sm text-slate-400 mt-1">Acompanhe o andamento dos seus pedidos.</p></div>
-    <button onclick="navigate('services')" class="btn btn-primary text-sm">Nova solicitação</button>
-   </div>
-   ${requests.length?requests.slice().reverse().map(requestCard).join(''):emptyState('clipboard-list','Você ainda não tem solicitações registradas.')}`;
- }
-
- if(currentPage==='appointments'){
-  content.innerHTML=`
-   <div class="flex flex-wrap justify-between items-center gap-3 mb-6">
-    <div><h2 class="text-2xl font-bold">Meus agendamentos</h2><p class="text-sm text-slate-400 mt-1">Consulte seus horários agendados.</p></div>
-    <button onclick="openAppointmentModal()" class="btn btn-primary text-sm">Novo agendamento</button>
-   </div>
-   ${appointments.length?appointments.slice().reverse().map(appointmentCard).join(''):emptyState('calendar','Nenhum agendamento solicitado.')}`;
- }
-
- if(currentPage==='rewards'){
-  const transactions=db.transactions.filter(t=>t.clientId===client.id).slice().reverse();
-  content.innerHTML=`
-   <div class="card p-7 mb-6">
-    <p class="text-sm text-cyan-300 font-bold">SUA CARTEIRA WS</p>
-    <p class="text-5xl font-black mt-3">${client.points||0}</p>
-    <p class="text-slate-400 text-sm mt-1">Pontos disponíveis para resgate</p>
-    <div class="mt-6 bg-black/20 rounded-xl p-4">
-     <p class="text-sm font-semibold">Como funciona?</p>
-     <p class="text-xs text-slate-400 mt-1">Acumule pontos a cada serviço concluído e troque por vantagens exclusivas.</p>
+   </div>`;
+ } else if(currentPage === 'requests') {
+  content.innerHTML = `
+   <h2 class="text-xl font-bold mb-4">Meus Chamados</h2>
+   ${requests.length ? requests.map(r => `
+    <div class="panel p-4 rounded-xl mb-3">
+     <p class="font-bold">${r.service}</p>
+     <p class="text-sm text-slate-300 mt-1">${r.desc}</p>
+     <p class="text-xs text-amber-400 mt-2">Status: ${r.status}</p>
     </div>
-   </div>
+   `).join('') : '<p class="text-slate-500">Nenhum chamado aberto.</p>'}`;
+ } else if(currentPage === 'appointments') {
+  content.innerHTML = `
    <div class="flex justify-between items-center mb-4">
-    <h3 class="font-bold">Histórico de pontos</h3>
+    <h2 class="text-xl font-bold">Meus Agendamentos</h2>
+    <button onclick="openAppointmentModal()" class="btn btn-primary text-xs">+ Novo Horário</button>
    </div>
-   ${transactions.length?transactions.map(t=>`
-    <div class="panel p-4 rounded-xl flex items-center justify-between mb-2">
-     <div><p class="text-sm font-semibold">${escapeHTML(t.description)}</p><p class="text-xs text-slate-500 mt-1">${dateBR(t.createdAt)}</p></div>
-     <strong class="${t.amount>=0?'text-emerald-400':'text-red-400'}">${t.amount>0?'+':''}${t.amount}</strong>
-    </div>
-   `).join(''):emptyState('gift','Seu histórico de pontos aparecerá aqui.')}`;
- }
-
- if(currentPage==='profile'){
-  content.innerHTML=`
-   <div class="max-w-xl">
-    <h2 class="text-2xl font-bold mb-2">Meu cadastro</h2>
-    <p class="text-sm text-slate-400 mb-6">Informações registradas na WS Soluções.</p>
-    <div class="card p-6 space-y-5">
-     ${profileRow('Nome completo',client.name)}
-     ${profileRow('WhatsApp',client.phone)}
-     ${profileRow('Endereço',client.address)}
-     ${profileRow('Cliente desde',new Date(client.createdAt).toLocaleDateString('pt-BR'))}
-     <div class="border-t border-slate-700 pt-4">
-      <p class="text-xs text-slate-500">SEU TOKEN DE ACESSO</p>
-      <p class="text-xl font-black tracking-widest text-cyan-400 mt-2">${escapeHTML(client.token)}</p>
-      <p class="text-xs text-slate-500 mt-1">Guarde este token de 4 dígitos para acessar a central em outros momentos.</p>
+   ${appointments.length ? appointments.map(a => `
+    <div class="panel p-4 rounded-xl mb-3 flex justify-between items-center">
+     <div>
+      <p class="font-bold">${a.service}</p>
+      <p class="text-sm text-cyan-300">${a.date} às ${a.time}</p>
      </div>
+     <span class="badge ${a.status === 'Aprovado' ? 'bg-emerald-500/20 text-emerald-300' : 'bg-amber-500/20 text-amber-300'}">${a.status}</span>
     </div>
+   `).join('') : '<p class="text-slate-500">Nenhum agendamento na sua agenda.</p>'}`;
+ } else if(currentPage === 'rewards') {
+  content.innerHTML = `
+   <div class="card p-6 text-center">
+    <h3 class="text-slate-400 text-sm">Seu saldo atual</h3>
+    <p class="text-5xl font-black text-cyan-400 mt-2">${client.points} pts</p>
+    <p class="text-xs text-slate-500 mt-3">Acumule pontos trocando serviços com a WS Soluções.</p>
+   </div>`;
+ } else if(currentPage === 'profile') {
+  content.innerHTML = `
+   <div class="card p-6 space-y-3">
+    <p><b>Nome:</b> ${client.name}</p>
+    <p><b>WhatsApp:</b> ${client.phone}</p>
+    <p><b>Endereço:</b> ${client.address}</p>
+    <p><b>Seu Token:</b> <span class="text-cyan-400 font-black tracking-widest">${client.token}</span></p>
    </div>`;
  }
-
- if(window.lucide)lucide.createIcons();
+ if(window.lucide) lucide.createIcons();
 }
 
-function profileRow(label,value){
- return `<div><p class="text-xs text-slate-500 mb-1">${label}</p><p class="font-medium break-words">${escapeHTML(value)}</p></div>`;
+// Modais
+function openModal(html) {
+ $('modal-root').innerHTML = `<div class="modal-bg" onclick="if(event.target===this)closeModal()"><div class="modal">${html}</div></div>`;
+ if(window.lucide) lucide.createIcons();
 }
+function closeModal() { $('modal-root').innerHTML = ''; }
 
-function emptyState(icon,message){
- return `<div class="panel p-10 rounded-2xl text-center">
-  <i data-lucide="${icon}" class="w-9 h-9 text-slate-600 mx-auto mb-3"></i>
-  <p class="text-slate-400 text-sm">${message}</p>
- </div>`;
-}
-
-function statusBadge(status){
- const map={
-  pending:['Pendente','bg-amber-500/10 text-amber-400'],
-  approved:['Aprovado','bg-emerald-500/10 text-emerald-400'],
-  rejected:['Rejeitado','bg-red-500/10 text-red-400'],
-  progress:['Em andamento','bg-blue-500/10 text-blue-400'],
-  completed:['Concluído','bg-emerald-500/10 text-emerald-400'],
-  cancelled:['Cancelado','bg-red-500/10 text-red-400'],
-  confirmed:['Confirmado','bg-emerald-500/10 text-emerald-400']
- };
- const item=map[status]||[status,'bg-slate-700 text-slate-300'];
- return `<span class="badge ${item[1]}">${item[0]}</span>`;
-}
-
-function requestCard(r){
- return `
- <div class="panel p-4 rounded-xl mb-3">
-  <div class="flex flex-wrap items-start justify-between gap-3">
-   <div><p class="font-bold">${escapeHTML(r.service)}</p><p class="text-xs text-slate-500 mt-1">${dateBR(r.createdAt)}</p></div>
-   ${statusBadge(r.status)}
-  </div>
-  <p class="text-sm text-slate-400 mt-3">${escapeHTML(r.description)}</p>
-  ${r.adminNote?`<p class="text-xs text-cyan-300 mt-3">Observação da WS: ${escapeHTML(r.adminNote)}</p>`:''}
- </div>`;
-}
-
-function appointmentCard(a){
- return `
- <div class="panel p-4 rounded-xl mb-3">
-  <div class="flex justify-between flex-wrap gap-3">
-   <div><p class="font-bold">${escapeHTML(a.service)}</p>
-   <p class="text-sm text-slate-400 mt-1">${escapeHTML(a.date)} às ${escapeHTML(a.time)}</p></div>
-   ${statusBadge(a.status)}
-  </div>
-  ${a.note?`<p class="text-xs text-slate-500 mt-3">${escapeHTML(a.note)}</p>`:''}
- </div>`;
-}
-
-/* =========================================
-   MODAIS DO CLIENTE
-========================================= */
-
-function openModal(html){
- $('modal-root').innerHTML=`
- <div class="modal-bg" onclick="if(event.target===this)closeModal()">
-  <div class="modal">${html}</div>
- </div>`;
- if(window.lucide)lucide.createIcons();
-}
-
-function closeModal(){
- $('modal-root').innerHTML='';
-}
-
-function openRequestModal(serviceId){
- const service=db.services.find(s=>s.id===serviceId);
- if(!service)return;
-
+function requestServiceModal(serviceName) {
  openModal(`
-  <div class="flex justify-between items-center mb-5">
-   <h3 class="text-xl font-bold">Solicitar serviço</h3>
-   <button onclick="closeModal()" class="text-slate-400"><i data-lucide="x"></i></button>
-  </div>
-  <p class="text-cyan-400 font-bold mb-4">${escapeHTML(service.name)}</p>
-  <form id="request-form" class="space-y-4">
-   <div>
-    <label class="text-sm block mb-2">Descreva o que você precisa</label>
-    <textarea id="request-description" class="field" rows="4" required maxlength="1000" placeholder="Detalhes do local, defeito ou serviço desejado..."></textarea>
-   </div>
-   <button class="btn btn-primary w-full">Enviar solicitação</button>
+  <h3 class="text-lg font-bold mb-3">Solicitar: ${serviceName}</h3>
+  <form id="req-form" class="space-y-3">
+   <textarea id="req-desc" class="field" rows="3" placeholder="Descreva o que precisa..." required></textarea>
+   <button class="btn btn-primary w-full text-xs">Enviar Solicitação</button>
   </form>
  `);
-
- $('request-form').onsubmit=e=>{
+ $('req-form').onsubmit = e => {
   e.preventDefault();
-  const client=activeClient();
+  const client = activeClient();
   db.requests.push({
-   id:uid(),
-   clientId:client.id,
-   service:service.name,
-   description:$('request-description').value.trim(),
-   status:'pending',
-   adminNote:'',
-   createdAt:now()
+   id: Date.now(),
+   clientId: client.id,
+   service: serviceName,
+   desc: $('req-desc').value,
+   status: 'Em análise'
   });
   saveDB();
   closeModal();
-  renderClientPage();
+  navigate('requests');
   toast('Solicitação enviada com sucesso!','success');
  };
 }
 
-function openAppointmentModal(){
- const services=db.services.filter(s=>s.active);
-
+function openAppointmentModal() {
  openModal(`
-  <div class="flex justify-between mb-5">
-   <h3 class="text-xl font-bold">Novo agendamento</h3>
-   <button onclick="closeModal()" class="text-slate-400"><i data-lucide="x"></i></button>
-  </div>
-  <form id="appointment-form" class="space-y-4">
-   <div>
-    <label class="text-sm block mb-2">Tipo de atendimento</label>
-    <select id="appointment-service" class="field" required>
-     <option value="">Selecione o serviço</option>
-     ${services.map(s=>`<option>${escapeHTML(s.name)}</option>`).join('')}
-     <option>Visita técnica geral</option>
-    </select>
-   </div>
-   <div>
-    <label class="text-sm block mb-2">Data desejada</label>
-    <input type="date" id="appointment-date" class="field" required min="${new Date().toLocaleDateString('en-CA')}">
-   </div>
-   <div>
-    <label class="text-sm block mb-2">Horário desejado</label>
-    <input type="time" id="appointment-time" class="field" required>
-   </div>
-   <div>
-    <label class="text-sm block mb-2">Observações</label>
-    <textarea id="appointment-note" class="field" rows="2" maxlength="500" placeholder="Ponto de referência ou melhor horário"></textarea>
-   </div>
-   <p class="text-xs text-amber-400">O horário é uma solicitação e passará por confirmação da WS.</p>
-   <button class="btn btn-primary w-full">Solicitar horário</button>
+  <h3 class="text-lg font-bold mb-3">Agendar Atendimento</h3>
+  <form id="app-form" class="space-y-3">
+   <select id="app-serv" class="field" required>
+    <option value="">Selecione o serviço</option>
+    ${db.services.map(s => `<option>${s.name}</option>`).join('')}
+   </select>
+   <input type="date" id="app-date" class="field" required>
+   <input type="time" id="app-time" class="field" required>
+   <button class="btn btn-primary w-full text-xs">Solicitar Agendamento</button>
   </form>
  `);
-
- $('appointment-form').onsubmit=e=>{
+ $('app-form').onsubmit = e => {
   e.preventDefault();
-  const client=activeClient();
-  const date=$('appointment-date').value;
-  const time=$('appointment-time').value;
-
+  const client = activeClient();
   db.appointments.push({
-   id:uid(),
-   clientId:client.id,
-   service:$('appointment-service').value,
-   date,time,
-   note:$('appointment-note').value.trim(),
-   status:'pending',
-   createdAt:now()
+   id: Date.now(),
+   clientId: client.id,
+   service: $('app-serv').value,
+   date: $('app-date').value,
+   time: $('app-time').value,
+   status: 'Pendente'
   });
-
   saveDB();
   closeModal();
-  renderClientPage();
-  toast('Solicitação de agendamento enviada!','success');
+  navigate('appointments');
+  toast('Agendamento solicitado com sucesso!','success');
  };
 }
 
-/* =========================================
-   ADMINISTRADOR
-========================================= */
-
-let adminTab='clients';
-
-function enterAdmin(){
- adminTab='clients';
- renderAdmin();
+function enterAdmin() {
  showView('view-admin');
 }
 
-$('admin-tabs').addEventListener('click',e=>{
- const button=e.target.closest('[data-admin-tab]');
- if(!button)return;
- adminTab=button.dataset.adminTab;
- renderAdmin();
-});
-
-function renderAdmin(){
- const pending=db.clients.filter(c=>c.status==='pending').length;
- const approved=db.clients.filter(c=>c.status==='approved').length;
-
- $('admin-stats').innerHTML=`
-  ${statCard('Clientes',db.clients.length,'users')}
-  ${statCard('Pendentes',pending,'clock')}
-  ${statCard('Aprovados',approved,'user-check')}
-  ${statCard('Solicitações',db.requests.length,'clipboard-list')}
- `;
-
- document.querySelectorAll('[data-admin-tab]').forEach(b=>{
-  b.className='btn text-xs '+(b.dataset.adminTab===adminTab?'btn-primary':'btn-secondary');
- });
-
- if(adminTab==='clients')renderAdminClients();
- if(adminTab==='requests')renderAdminRequests();
- if(adminTab==='appointments')renderAdminAppointments();
- if(adminTab==='services')renderAdminServices();
- if(adminTab==='rewards')renderAdminRewards();
- if(adminTab==='settings')renderAdminSettings();
-
- if(window.lucide)lucide.createIcons();
+// Inicialização
+if(activeClient()) {
+ openClientApp();
+} else {
+ showHome();
 }
-
-function statCard(label,value,icon){
- return `<div class="card p-4">
-  <div class="flex items-center justify-between">
-   <span class="text-xs text-slate-400">${label}</span>
-   <i data-lucide="${icon}" class="w-4 h-4 text-cyan-400"></i>
-  </div>
-  <p class="text-3xl font-black mt-3">${value}</p>
- </div>`;
-}
-
-function renderAdminClients(){
- const clients=db.clients.slice().reverse();
-
- $('admin-content').innerHTML=`
-  <div class="flex justify-between items-center mb-5">
-   <div><h2 class="text-xl font-bold">Clientes</h2><p class="text-xs text-slate-500 mt-1">Gerenciamento de cadastros e tokens de acesso.</p></div>
-   <button class="btn btn-secondary text-xs" onclick="exportData()">Exportar dados</button>
-  </div>
-
-  <div class="flex flex-wrap gap-2 mb-5">
-   <button class="btn btn-secondary text-xs" onclick="filterClients('all')">Todos</button>
-   <button class="btn btn-secondary text-xs" onclick="filterClients('pending')">Pendentes</button>
-   <button class="btn btn-secondary text-xs" onclick="filterClients('approved')">Aprovados</button>
-   <button class="btn btn-secondary text-xs" onclick="filterClients('rejected')">Rejeitados</button>
-  </div>
-
-  <div id="client-list">
-   ${clients.length?clients.map(adminClientCard).join(''):emptyState('users','Nenhum cliente cadastrado.')}
-  </div>`;
-}
-
-function adminClientCard(c){
- return `
- <div class="panel p-4 rounded-xl mb-3 client-item" data-status="${c.status}">
-  <div class="flex flex-wrap justify-between gap-3">
-   <div class="min-w-0">
-    <p class="font-bold">${escapeHTML(c.name)}</p>
-    <p class="text-xs text-slate-400 mt-1">${escapeHTML(c.phone)}</p>
-    <p class="text-xs text-slate-500 mt-1 break-words">${escapeHTML(c.address)}</p>
-    <p class="text-xs text-slate-600 mt-2">Cadastro: ${dateBR(c.createdAt)}</p>
-   </div>
-   ${statusBadge(c.status)}
-  </div>
-
-  ${c.token?`<div class="bg-slate-950 p-3 rounded-lg mt-3 flex justify-between items-center">
-   <div><p class="text-[10px] text-slate-500">TOKEN DE ACESSO</p><p class="font-black tracking-widest text-cyan-400">${escapeHTML(c.token)}</p></div>
-   <div class="flex gap-2">
-    <button class="btn btn-secondary text-xs" onclick="copyToken('${c.id}')">Copiar</button>
-    <a href="https://wa.me/55${c.phone.replace(/\D/g,'')}?text=${encodeURIComponent('Olá '+c.name+', seu acesso à WS Soluções foi liberado! Seu token de 4 dígitos é: '+c.token+' - Acesse em nossa central.')}" target="_blank" class="btn btn-success text-xs">WhatsApp</a>
-   </div>
-  </div>`:''}
-
-  <div class="flex flex-wrap gap-2 mt-4">
-   ${c.status==='pending'?`
-    <button class="btn btn-success text-xs" onclick="approveClient('${c.id}')">Aprovar e gerar token</button>
-    <button class="btn btn-danger text-xs" onclick="rejectClient('${c.id}')">Rejeitar</button>
-   `:''}
-   ${c.status==='approved'?`
-    <button class="btn btn-secondary text-xs" onclick="showClientDetails('${c.id}')">Detalhes</button>
-    <button class="btn btn-secondary text-xs" onclick="changeToken('${c.id}')">Novo token</button>
-    <button class="btn btn-danger text-xs" onclick="revokeClient('${c.id}')">Revogar acesso</button>
-   `:''}
-   ${c.status==='rejected'?`
-    <button class="btn btn-success text-xs" onclick="approveClient('${c.id}')">Aprovar</button>
-    <button class="btn btn-danger text-xs" onclick="deleteClient('${c.id}')">Excluir</button>
-   `:''}
-  </div>
- </div>`;
-}
-
-function filterClients(status){
- document.querySelectorAll('.client-item').forEach(el=>{
-  el.style.display=status==='all'||el.dataset.status===status?'':'none';
- });
-}
-
-function approveClient(id){
- const c=findClient(id);
- if(!c)return;
- try{
-  c.token=createUniqueToken();
- }catch(e){
-  toast(e.message,'error');
-  return;
- }
- c.status='approved';
- c.approvedAt=now();
- saveDB();
- renderAdmin();
- openModal(`
-  <div class="text-center">
-   <div class="w-14 h-14 rounded-full bg-emerald-500/10 mx-auto flex items-center justify-center">
-    <i data-lucide="check-circle" class="w-8 h-8 text-emerald-400"></i>
-   </div>
-   <h3 class="text-xl font-bold mt-4">Cliente aprovado!</h3>
-   <p class="text-sm text-slate-400 mt-2">Token gerado para ${escapeHTML(c.name)}:</p>
-   <div class="text-4xl font-black tracking-[.35em] text-cyan-400 bg-slate-950 rounded-xl p-5 mt-4">${c.token}</div>
-   <div class="flex gap-2 mt-5">
-    <button class="btn btn-primary flex-1" onclick="copyToken('${c.id}');closeModal()">Copiar token</button>
-    <a href="https://wa.me/55${c.phone.replace(/\D/g,'')}?text=${encodeURIComponent('Olá '+c.name+', seu acesso à WS Soluções foi liberado! Seu token é: '+c.token)}" target="_blank" class="btn btn-success flex-1">Enviar Zap</a>
-   </div>
-   <button class="btn btn-secondary w-full mt-2" onclick="closeModal()">Fechar</button>
-  </div>
- `);
- toast('Cadastro aprovado com sucesso!','success');
-}
-
-function rejectClient(id){
- if(!confirm('Rejeitar este cadastro?'))return;
- const c=findClient(id);
- c.status='rejected';
- c.token=null;
- saveDB();
- renderAdmin();
- toast('Cadastro rejeitado.','info');
-}
-
-function revokeClient(id){
- if(!confirm('Revogar o acesso deste cliente?'))return;
- const c=findClient(id);
- c.status='rejected';
- c.token=null;
- saveDB();
- renderAdmin();
- toast('Acesso revogado.','success');
-}
-
-function changeToken(id){
- const c=findClient(id);
- if(!c)return;
- c.token=createUniqueToken();
- saveDB();
- renderAdmin();
- toast('Novo token gerado com sucesso.','success');
-}
-
-async function copyToken(id){
- const c=findClient(id);
- if(!c)return;
- try{
-  await navigator.clipboard.writeText(c.token);
-  toast('Token copiado para a área de transferência!','success');
- }catch(e){
-  prompt('Copie o token:',c.token);
- }
-}
-
-function deleteClient(id){
- if(!confirm('Excluir permanentemente este cadastro e seus dados?'))return;
- db.clients=db.clients.filter(c=>c.id!==id);
- db.requests=db.requests.filter(r=>r.clientId!==id);
- db.appointments=db.appointments.filter(a=>a.clientId!==id);
- db.transactions=db.transactions.filter(t=>t.clientId!==id);
- saveDB();
- renderAdmin();
- toast('Cadastro excluído.','success');
-}
-
-function showClientDetails(id){
- const c=findClient(id);
- const requests=db.requests.filter(r=>r.clientId===id);
- const appointments=db.appointments.filter(a=>a.clientId===id);
- openModal(`
-  <h3 class="text-xl font-bold mb-5">Detalhes do cliente</h3>
-  ${profileRow('Nome',c.name)}
-  <div class="mt-3">${profileRow('WhatsApp',c.phone)}</div>
-  <div class="mt-3">${profileRow('Endereço',c.address)}</div>
-  <div class="grid grid-cols-2 gap-3 mt-5">
-   <div class="panel rounded-xl p-3"><p class="text-xs text-slate-500">Pontos</p><p class="text-xl font-bold">${c.points||0}</p></div>
-   <div class="panel rounded-xl p-3"><p class="text-xs text-slate-500">Solicitações</p><p class="text-xl font-bold">${requests.length}</p></div>
-  </div>
-  <p class="text-xs text-slate-500 mt-5">Total de agendamentos: ${appointments.length}</p>
-  <button onclick="closeModal()" class="btn btn-secondary w-full mt-5">Fechar</button>
- `);
-}
-
-/* =========================================
-   SOLICITAÇÕES ADM
-========================================= */
-
-function renderAdminRequests(){
- $('admin-content').innerHTML=`
- <h2 class="text-xl font-bold mb-5">Solicitações de serviços</h2>
- ${db.requests.length?db.requests.slice().reverse().map(r=>{
-  const c=findClient(r.clientId);
-  return `
-   <div class="panel p-4 rounded-xl mb-3">
-    <div class="flex flex-wrap justify-between gap-3">
-     <div><p class="font-bold">${escapeHTML(r.service)}</p>
-      <p class="text-xs text-cyan-400 mt-1">${escapeHTML(c?.name||'Cliente removido')}</p>
-      <p class="text-xs text-slate-500">${escapeHTML(c?.phone||'')}</p>
-     </div>
-     ${statusBadge(r.status)}
-    </div>
-    <p class="text-sm text-slate-300 mt-4">${escapeHTML(r.description)}</p>
-    <p class="text-xs text-slate-600 mt-2">${dateBR(r.createdAt)}</p>
-    <div class="flex flex-wrap gap-2 mt-4">
-     <select class="field text-xs max-w-44" id="status-${r.id}">
-      <option value="pending" ${r.status==='pending'?'selected':''}>Pendente</option>
-      <option value="progress" ${r.status==='progress'?'selected':''}>Em andamento</option>
-      <option value="completed" ${r.status==='completed'?'selected':''}>Concluído</option>
-      <option value="cancelled" ${r.status==='cancelled'?'selected':''}>Cancelado</option>
-     </select>
-     <button class="btn btn-primary text-xs" onclick="updateRequest('${r.id}')">Atualizar</button>
-     <button class="btn btn-secondary text-xs" onclick="noteRequest('${r.id}')">Observação</button>
-     ${r.status==='completed'?`<button class="btn btn-success text-xs" onclick="rewardRequest('${r.id}')">Dar pontos</button>`:''}
-    </div>
-    ${r.adminNote?`<p class="text-xs text-cyan-300 mt-3">Obs WS: ${escapeHTML(r.adminNote)}</p>`:''}
-   </div>`;
- }).join(''):emptyState('clipboard-list','Nenhuma solicitação recebida.')}`;
-}
-
-function updateRequest(id){
- const r=db.requests.find(x=>x.id===id);
- r.status=$('status-'+id).value;
- saveDB();
- renderAdmin();
- toast('Solicitação atualizada.','success');
-}
-
-function noteRequest(id){
- const r=db.requests.find(x=>x.id===id);
- const note=prompt('Digite a observação para o cliente:',r.adminNote||'');
- if(note===null)return;
- r.adminNote=note.slice(0,500);
- saveDB();
- renderAdmin();
- toast('Observação salva.','success');
-}
-
-function rewardRequest(id){
- const r=db.requests.find(x=>x.id===id);
- if(!r || r.rewarded)return toast('Esta solicitação já gerou pontos.','error');
- const c=findClient(r.clientId);
- if(!c)return;
- const points=Number(db.settings.pointsPerService)||0;
- if(points<=0)return toast('Configure os pontos nas regras.','error');
- c.points=(c.points||0)+points;
- r.rewarded=true;
- db.transactions.push({
-  id:uid(),clientId:c.id,amount:points,
-  description:'Recompensa por serviço concluído',
-  createdAt:now()
- });
- saveDB();
- renderAdmin();
- toast(`${points} pontos adicionados para ${c.name}.`,'success');
-}
-
-/* =========================================
-   AGENDA ADM
-========================================= */
-
-function renderAdminAppointments(){
- $('admin-content').innerHTML=`
- <h2 class="text-xl font-bold mb-5">Agendamentos</h2>
- ${db.appointments.length?db.appointments.slice().sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time)).map(a=>{
-  const c=findClient(a.clientId);
-  return `
-   <div class="panel p-4 rounded-xl mb-3">
-    <div class="flex flex-wrap justify-between gap-3">
-     <div><p class="font-bold">${escapeHTML(a.service)}</p>
-     <p class="text-sm text-cyan-400 mt-1">${escapeHTML(c?.name||'Cliente removido')}</p>
-     <p class="text-xs text-slate-400">${escapeHTML(c?.phone||'')}</p></div>
-     ${statusBadge(a.status)}
-    </div>
-    <div class="bg-slate-950 rounded-xl p-3 mt-3">
-     <p class="font-bold">${escapeHTML(a.date)} às ${escapeHTML(a.time)}</p>
-     <p class="text-xs text-slate-500 mt-1">${escapeHTML(a.note)}</p>
-    </div>
-    <div class="flex flex-wrap gap-2 mt-4">
-     <select class="field max-w-44 text-xs" id="agenda-${a.id}">
-      <option value="pending" ${a.status==='pending'?'selected':''}>Pendente</option>
-      <option value="confirmed" ${a.status==='confirmed'?'selected':''}>Confirmado</option>
-      <option value="completed" ${a.status==='completed'?'selected':''}>Concluído</option>
-      <option value="cancelled" ${a.status==='cancelled'?'selected':''}>Cancelado</option>
-     </select>
-     <button onclick="updateAppointment('${a.id}')" class="btn btn-primary text-xs">Atualizar</button>
-    </div>
-   </div>`;
- }).join(''):emptyState('calendar','Nenhum agendamento solicitado.')}`;
-}
-
-function updateAppointment(id){
- const a=db.appointments.find(x=>x.id===id);
- a.status=$('agenda-'+id).value;
- saveDB();
- renderAdmin();
- toast('Agendamento atualizado.','success');
-}
-
-/* =========================================
-   SERVIÇOS ADM
-========================================= */
-
-function renderAdminServices(){
- $('admin-content').innerHTML=`
- <div class="flex justify-between items-center gap-3 mb-5">
-  <div><h2 class="text-xl font-bold">Serviços</h2><p class="text-xs text-slate-500 mt-1">Gerencie os serviços oferecidos.</p></div>
-  <button class="btn btn-primary text-xs" onclick="addService()">+ Novo serviço</button>
- </div>
- ${db.services.map(s=>`
-  <div class="panel p-4 rounded-xl mb-3 flex flex-wrap justify-between items-center gap-3">
-   <div><p class="font-bold">${escapeHTML(s.name)}</p><p class="text-sm text-slate-400 mt-1">${escapeHTML(s.description)}</p>
-   <p class="text-xs mt-2 ${s.active?'text-emerald-400':'text-red-400'}">${s.active?'Ativo':'Inativo'}</p></div>
-   <div class="flex gap-2">
-    <button class="btn btn-secondary text-xs" onclick="editService('${s.id}')">Editar</button>
-    <button class="btn ${s.active?'btn-danger':'btn-success'} text-xs" onclick="toggleService('${s.id}')">${s.active?'Desativar':'Ativar'}</button>
-   </div>
-  </div>
- `).join('')}`;
-}
-
-function addService(){
- openModal(`
-  <h3 class="text-xl font-bold mb-5">Novo serviço</h3>
-  <form id="service-form" class="space-y-4">
-   <input id="service-name" class="field" placeholder="Nome do serviço" required maxlength="80">
-   <textarea id="service-description" class="field" rows="3" placeholder="Descrição" required maxlength="300"></textarea>
-   <button class="btn btn-primary w-full">Cadastrar serviço</button>
-  </form>
- `);
- $('service-form').onsubmit=e=>{
-  e.preventDefault();
-  db.services.push({id:uid(),name:$('service-name').value.trim(),description:$('service-description').value.trim(),active:true});
-  saveDB();
-  closeModal();
-  renderAdmin();
-  toast('Serviço cadastrado com sucesso.','success');
- };
-}
-
-function editService(id){
- const s=db.services.find(x=>x.id===id);
- openModal(`
-  <h3 class="text-xl font-bold mb-5">Editar serviço</h3>
-  <form id="service-edit" class="space-y-4">
-   <input id="service-name" class="field" required maxlength="80" value="${escapeHTML(s.name)}">
-   <textarea id="service-description" class="field" rows="3" required maxlength="300">${escapeHTML(s.description)}</textarea>
-   <button class="btn btn-primary w-full">Salvar alterações</button>
-  </form>
- `);
- $('service-edit').onsubmit=e=>{
-  e.preventDefault();
-  s.name=$('service-name').value.trim();
-  s.description=$('service-description').value.trim();
-  saveDB();
-  closeModal();
-  renderAdmin();
-  toast('Serviço atualizado.','success');
- };
-}
-
-function toggleService(id){
- const s=db.services.find(x=>x.id===id);
- s.active=!s.active;
- saveDB();
- renderAdmin();
- toast('Status do serviço atualizado.','success');
-}
-
-/* =========================================
-   RECOMPENSAS ADM
-========================================= */
-
-function renderAdminRewards(){
- $('admin-content').innerHTML=`
- <div class="grid md:grid-cols-2 gap-4 mb-6">
-  <div class="card p-5">
-   <h3 class="font-bold mb-3">Configurações de pontos</h3>
-   <form id="reward-settings" class="space-y-3">
-    <label class="text-xs text-slate-400">Pontos por serviço concluído</label>
-    <input class="field" type="number" min="0" max="10000" id="points-service" value="${db.settings.pointsPerService}">
-    <label class="text-xs text-slate-400">Bônus por indicação</label>
-    <input class="field" type="number" min="0" max="10000" id="points-referral" value="${db.settings.referralBonus}">
-    <label class="text-xs text-slate-400">Pontos necessários para resgate</label>
-    <input class="field" type="number" min="1" id="points-redemption" value="${db.settings.redemptionPoints}">
-    <label class="text-xs text-slate-400">Valor do desconto (R$)</label>
-    <input class="field" type="number" min="1" step="0.01" id="redemption-value" value="${db.settings.redemptionValue}">
-    <button class="btn btn-primary w-full">Salvar regras</button>
-   </form>
-  </div>
-  <div class="card p-5">
-   <h3 class="font-bold mb-3">Adicionar ou retirar pontos</h3>
-   <form id="manual-points" class="space-y-3">
-    <label class="text-xs text-slate-400">Cliente</label>
-    <select id="points-client" class="field" required>
-     <option value="">Selecione o cliente</option>
-     ${db.clients.filter(c=>c.status==='approved').map(c=>`<option value="${c.id}">${escapeHTML(c.name)}</option>`).join('')}
-    </select>
-    <label class="text-xs text-slate-400">Quantidade de pontos</label>
-    <input id="points-amount" type="number" class="field" min="1" required>
-    <label class="text-xs text-slate-400">Operação</label>
-    <select id="points-operation" class="field"><option value="add">Adicionar pontos</option><option value="remove">Retirar pontos</option></select>
-    <input id="points-description" class="field" placeholder="Motivo (ex: Bônus especial)" required maxlength="120">
-    <button class="btn btn-primary w-full">Executar operação</button>
-   </form>
-  </div>
- </div>
-
- <h3 class="font-bold mb-3">Carteira de clientes</h3>
- ${db.clients.filter(c=>c.status==='approved').map(c=>`
-  <div class="panel p-4 rounded-xl mb-2 flex justify-between items-center gap-3">
-   <div><p class="font-bold">${escapeHTML(c.name)}</p><p class="text-xs text-slate-500">${escapeHTML(c.phone)}</p></div>
-   <p class="text-xl font-black text-cyan-400">${c.points||0} pts</p>
-  </div>
- `).join('')}
- `;
-
- $('reward-settings').onsubmit=e=>{
-  e.preventDefault();
-  db.settings.pointsPerService=Number($('points-service').value);
-  db.settings.referralBonus=Number($('points-referral').value);
-  db.settings.redemptionPoints=Number($('points-redemption').value);
-  db.settings.redemptionValue=Number($('redemption-value').value);
-  saveDB();
-  toast('Regras de pontos salvas.','success');
- };
-
- $('manual-points').onsubmit=e=>{
-  e.preventDefault();
-  const c=findClient($('points-client').value);
-  const amount=Number($('points-amount').value);
-  const operation=$('points-operation').value;
-  const description=$('points-description').value.trim();
-
-  if(!c||amount<=0)return;
-  const finalAmount=operation==='add'?amount:-amount;
-  if((c.points||0)+finalAmount<0)return toast('O cliente não tem pontos suficientes para essa retirada.','error');
-
-  c.points=(c.points||0)+finalAmount;
-  db.transactions.push({
-   id:uid(),clientId:c.id,amount:finalAmount,description,createdAt:now()
-  });
-  saveDB();
-  renderAdmin();
-  toast('Operação realizada com sucesso.','success');
- };
-}
-
-/* =========================================
-   DADOS / BACKUP
-========================================= */
-
-function renderAdminSettings(){
- $('admin-content').innerHTML=`
- <h2 class="text-xl font-bold mb-5">Gerenciamento de dados</h2>
- <div class="grid md:grid-cols-2 gap-4">
-  <div class="card p-5">
-   <i data-lucide="database" class="text-cyan-400 w-8 h-8 mb-3"></i>
-   <h3 class="font-bold">Armazenamento Local</h3>
-   <p class="text-sm text-slate-400 mt-2">Os dados ficam salvos de forma segura e rápida diretamente neste navegador.</p>
-   <p class="text-xs text-slate-500 mt-3">Clientes: ${db.clients.length}</p>
-   <p class="text-xs text-slate-500">Solicitações: ${db.requests.length}</p>
-   <p class="text-xs text-slate-500">Agendamentos: ${db.appointments.length}</p>
-  </div>
-  <div class="card p-5">
-   <i data-lucide="download" class="text-emerald-400 w-8 h-8 mb-3"></i>
-   <h3 class="font-bold">Backup e Restauração</h3>
-   <p class="text-sm text-slate-400 mt-2">Faça backup dos seus dados em arquivo JSON para segurança.</p>
-   <button class="btn btn-primary w-full mt-4" onclick="exportData()">Exportar backup JSON</button>
-   <button class="btn btn-secondary w-full mt-2" onclick="importData()">Importar backup JSON</button>
-  </div>
-  <div class="card p-5 md:col-span-2">
-   <i data-lucide="trash-2" class="text-red-400 w-8 h-8 mb-3"></i>
-   <h3 class="font-bold">Reiniciar Sistema</h3>
-   <p class="text-sm text-slate-400 mt-2">Apaga todos os cadastros e dados atuais deste navegador.</p>
-   <button class="btn btn-danger w-full mt-4" onclick="resetDB()">Zerar todos os dados</button>
-  </div>
- </div>`;
-}
-
-function exportData(){
- const blob=new Blob([JSON.stringify(db,null,2)],{type:'application/json'});
- const url=URL.createObjectURL(blob);
- const a=document.createElement('a');
- a.href=url;
- a.download='ws-solucoes-backup.json';
- a.click();
- URL.revokeObjectURL(url);
- toast('Backup exportado com sucesso.','success');
-}
-
-function importData(){
- const input=document.createElement('input');
- input.type='file';
- input.accept='.json,application/json';
- input.onchange=()=>{
-  const file=input.files[0];
-  if(!file)return;
-  const reader=new FileReader();
-  reader.onload=()=>{
-   try{
-    const data=JSON.parse(reader.result);
-    if(!Array.isArray(data.clients)||!Array.isArray(data.services))throw new Error();
-    if(!confirm('Deseja substituir os dados atuais pelos do arquivo de backup?'))return;
-    db=data;
-    saveDB();
-    renderAdmin();
-    toast('Backup importado com sucesso.','success');
-   }catch(e){toast('Arquivo de backup inválido.','error')}
-  };
-  reader.readAsText(file);
- };
- input.click();
-}
-
-function resetDB(){
- if(!confirm('Tem certeza? Todos os dados atuais serão apagados.'))return;
- db=seedDB();
- saveDB();
- localStorage.removeItem(SESSION_KEY);
- localStorage.removeItem(LOCK_KEY);
- renderAdmin();
- toast('Sistema reiniciado com dados padrão.','info');
-}
-
-/* =========================================
-   INICIALIZAÇÃO
-========================================= */
-
-function boot(){
- const client=activeClient();
- if(client && client.status==='approved'){
-  openClientApp();
- }else{
-  localStorage.removeItem(SESSION_KEY);
-  showHome();
- }
- if(window.lucide)lucide.createIcons();
-}
-
-boot();
-
 </script>
 </body>
 </html>
