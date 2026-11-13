@@ -1,844 +1,272 @@
+
 <!DOCTYPE html>
-<html lang="pt-BR" class="dark">
+<html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#020617">
-<title>WS SOLUÇÕES | Central do Cliente</title>
-
-<!-- Tailwind CSS -->
+<meta name="theme-color" content="#101820">
+<title>WS SOLUÇÕES | Minha Casa</title>
 <script src="https://cdn.tailwindcss.com"></script>
-<!-- Ícones Lucide -->
 <script src="https://unpkg.com/lucide@latest"></script>
-
-<script>
-tailwind.config = {
- darkMode:'class',
- theme:{
-  extend:{
-   colors:{
-    brand:{
-     400:'#22d3ee',
-     500:'#06b6d4',
-     600:'#0891b2'
-    }
-   },
-   fontFamily:{
-    sans:['Inter','system-ui','sans-serif']
-   }
-  }
- }
-}
-</script>
-
 <style>
-*{box-sizing:border-box}
-body{background:#020617;color:#e2e8f0;font-family:Inter,system-ui,sans-serif}
-.glass{background:rgba(15,23,42,0.92);border:1px solid rgba(148,163,184,0.1);backdrop-filter:blur(20px)}
-.panel{background:#0b1329;border:1px solid #1e293b}
-.field{width:100%;background:#020617;border:1px solid #334155;border-radius:14px;padding:14px;color:white;outline:none;transition:0.2s}
-.field:focus{border-color:#06b6d4;box-shadow:0 0 0 3px rgba(6,182,212,0.15)}
-.btn{padding:12px 18px;border-radius:14px;font-weight:600;transition:0.2s;display:inline-flex;align-items:center;justify-content:center;gap:8px}
-.btn-primary{background:linear-gradient(135deg, #0891b2, #06b6d4);color:white;box-shadow:0 4px 12px rgba(6,182,212,0.25)}
-.btn-primary:hover{opacity:0.9}
-.btn-secondary{background:#1e293b;color:#e2e8f0;border:1px solid #334155}
-.card{background:linear-gradient(145deg,#0e172a,#080f1e);border:1px solid #1e293b;border-radius:20px}
-.badge{font-size:11px;padding:4px 10px;border-radius:30px;font-weight:700}
-.modal-bg{position:fixed;inset:0;background:rgba(2,6,23,0.88);z-index:100;display:flex;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(8px)}
-.modal{background:#0b1329;border:1px solid #334155;border-radius:24px;width:100%;max-width:460px;padding:24px;max-height:90vh;overflow:auto}
-::-webkit-scrollbar{width:5px}
-::-webkit-scrollbar-thumb{background:#334155;border-radius:10px}
-.hidden-view{display:none!important}
+:root {
+  --bg:#101820;
+  --surface:#192630;
+  --surface2:#202f3a;
+  --text:#f1f5f9;
+  --muted:#9aabb8;
+  --line:#30414d;
+  --accent:#22d3ee;
+}
+body.light {
+  --bg:#f2f6f8;
+  --surface:#ffffff;
+  --surface2:#eaf0f3;
+  --text:#172630;
+  --muted:#617482;
+  --line:#d8e1e7;
+  --accent:#087f9a;
+}
+* { box-sizing:border-box; }
+body {
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:Inter,system-ui,sans-serif;
+  transition:background .2s,color .2s;
+}
+.surface {background:var(--surface);border:1px solid var(--line);}
+.surface2 {background:var(--surface2);}
+.muted {color:var(--muted);}
+.accent {color:var(--accent);}
+.status {
+  display:inline-flex;align-items:center;gap:7px;
+  border:1px solid var(--line);border-radius:99px;
+  padding:6px 10px;font-size:11px;font-weight:700;
+}
+.dot {width:7px;height:7px;border-radius:50%;background:#fbbf24;}
+.dot.green {background:#34d399;}
+.dot.blue {background:var(--accent);}
+.tab {
+  display:flex;flex-direction:column;align-items:center;
+  gap:5px;font-size:10px;color:var(--muted);
+  padding:9px 5px;flex:1;border-radius:12px;
+}
+.tab.active {color:var(--accent);background:var(--surface2);}
+.tab i {width:21px;height:21px;}
+button {cursor:pointer;}
+.num {font-variant-numeric:tabular-nums;}
+@media(min-width:700px) {
+  .app {max-width:650px;margin:auto;}
+  .bottom-nav {max-width:650px;left:50%!important;transform:translateX(-50%);}
+}
 </style>
 </head>
+<body>
+<div class="app min-h-screen pb-28">
 
-<body class="min-h-screen selection:bg-cyan-500 selection:text-black">
-
-<div id="toast-container" class="fixed top-4 right-4 z-[200] space-y-2"></div>
-
-<!-- ================= TELA DE LOGIN ================= -->
-<section id="view-home" class="min-h-screen flex items-center justify-center p-4">
- <div class="w-full max-w-sm">
-  <div class="text-center mb-8">
-   <div class="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-tr from-cyan-500/20 to-blue-500/20 border border-cyan-500/30 flex items-center justify-center mb-4 shadow-xl shadow-cyan-500/10">
-    <i data-lucide="zap" class="w-8 h-8 text-cyan-400"></i>
-   </div>
-   <h1 class="text-2xl font-black tracking-wider text-cyan-400">WS SOLUÇÕES</h1>
-   <p class="text-slate-400 text-xs mt-1">Central Inteligente do Cliente</p>
-  </div>
-
-  <div class="glass rounded-3xl p-6 shadow-2xl space-y-5 border border-slate-800/80">
-   <div>
-    <h2 class="text-lg font-bold">Acesso Rápido</h2>
-    <p class="text-xs text-slate-400 mt-0.5">Digite seu token de 4 dígitos.</p>
-   </div>
-
-   <div class="space-y-2">
-    <input id="login-token" maxlength="4" autocomplete="off"
-     class="field text-center text-2xl font-black tracking-[.4em] uppercase"
-     placeholder="AA52">
-    <p class="text-[11px] text-slate-500 text-center">Teste rápido: digite <b class="text-cyan-400">AA52</b></p>
-   </div>
-
-   <button onclick="login()" class="btn btn-primary w-full text-sm">
-    Entrar na Central
-    <i data-lucide="arrow-right" class="w-4 h-4"></i>
-   </button>
-
-   <div class="relative flex items-center gap-3 py-1">
-    <div class="h-px bg-slate-800 flex-1"></div>
-    <span class="text-[10px] text-slate-500 font-semibold tracking-wider">OU</span>
-    <div class="h-px bg-slate-800 flex-1"></div>
-   </div>
-
-   <button onclick="showRegistration()" class="btn btn-secondary w-full text-xs">
-    <i data-lucide="user-plus" class="w-4 h-4 text-cyan-400"></i>
-    Solicitar Acesso com WhatsApp
-   </button>
-
-   <div class="border-t border-slate-800/60 pt-3 text-center">
-    <button onclick="enterAdmin()" class="text-xs text-slate-500 hover:text-cyan-400 transition-colors inline-flex items-center gap-1.5">
-     <i data-lucide="shield-check" class="w-3.5 h-3.5"></i>
-     Painel Administrativo WS
-    </button>
-   </div>
-  </div>
- </div>
-</section>
-
-<!-- ================= TELA DE CADASTRO ================= -->
-<section id="view-registration" class="hidden-view min-h-screen flex items-center justify-center p-4">
- <div class="glass w-full max-w-sm rounded-3xl p-6 border border-slate-800">
-  <button onclick="showHome()" class="text-slate-400 text-xs mb-5 flex items-center gap-1.5 hover:text-slate-200">
-   <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i> Voltar
-  </button>
-
-  <div class="mb-5">
-   <h2 class="text-xl font-bold">Solicitar Acesso</h2>
-   <p class="text-xs text-slate-400 mt-0.5">Informe seus dados para receber o token.</p>
-  </div>
-
-  <form id="registration-form" class="space-y-3.5">
-   <div>
-    <label class="text-xs text-slate-300 block mb-1">Nome ou Apelido *</label>
-    <input id="reg-name" class="field text-sm" required maxlength="100" placeholder="Ex: João da Silva">
-   </div>
-   <div>
-    <label class="text-xs text-slate-300 block mb-1">WhatsApp (Obrigatório) *</label>
-    <input id="reg-phone" class="field text-sm" required maxlength="20" placeholder="(88) 99999-9999">
-   </div>
-   <div>
-    <label class="text-xs text-slate-300 block mb-1">Bairro / Endereço *</label>
-    <textarea id="reg-address" class="field text-sm" required maxlength="250" rows="2" placeholder="Ex: Centro, Crato - CE"></textarea>
-   </div>
-   <div>
-    <label class="text-xs text-slate-300 block mb-1">Quem te indicou? (Opcional)</label>
-    <input id="reg-indicacao" class="field text-sm" maxlength="50" placeholder="WhatsApp de quem indicou">
-   </div>
-
-   <button class="btn btn-primary w-full text-sm mt-2" type="submit">Enviar Solicitação</button>
-  </form>
- </div>
-</section>
-
-<!-- ================= AGUARDANDO APROVAÇÃO ================= -->
-<section id="view-pending" class="hidden-view min-h-screen flex items-center justify-center p-4">
- <div class="glass rounded-3xl p-8 max-w-sm w-full text-center border border-slate-800">
-  <div class="w-14 h-14 rounded-2xl bg-amber-500/10 border border-amber-500/20 mx-auto flex items-center justify-center mb-4">
-   <i data-lucide="clock" class="w-7 h-7 text-amber-400"></i>
-  </div>
-  <h2 class="text-xl font-bold">Solicitação Enviada!</h2>
-  <p class="text-slate-400 mt-2 text-xs leading-relaxed">Seu cadastro está aguardando liberação. Assim que aprovado, enviaremos seu token pelo WhatsApp.</p>
-  <button onclick="showHome()" class="btn btn-secondary w-full text-xs mt-6">Voltar ao Início</button>
- </div>
-</section>
-
-<!-- ================= PAINEL DO CLIENTE ================= -->
-<section id="view-app" class="hidden-view min-h-screen flex flex-col">
- <header class="h-16 border-b border-slate-800/80 bg-slate-950/90 backdrop-blur-md px-4 md:px-8 flex items-center justify-between sticky top-0 z-40">
-  <div class="flex items-center gap-3">
-   <div class="w-9 h-9 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400">
-    <i data-lucide="zap" class="w-5 h-5"></i>
-   </div>
-   <div>
-    <h1 class="text-sm font-bold tracking-wide text-cyan-400">WS SOLUÇÕES</h1>
-    <p class="text-[10px] text-slate-400" id="header-subtitle">Crato-CE e Região</p>
-   </div>
-  </div>
-
-  <div class="flex items-center gap-3">
-   <div class="text-right hidden sm:block">
-    <p class="text-xs font-bold text-slate-200" id="header-name">Cliente</p>
-    <p class="text-[10px] text-emerald-400">● Conectado</p>
-   </div>
-   
-   <!-- MENU SANDUÍCHE -->
-   <div class="relative">
-    <button onclick="toggleMenu()" class="w-10 h-10 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-300 hover:text-cyan-400 hover:border-cyan-500/30 transition-all">
-     <i data-lucide="menu" class="w-5 h-5"></i>
-    </button>
-
-    <div id="dropdown-menu" class="hidden absolute right-0 mt-2 w-60 bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl p-2 z-50 space-y-1">
-     <button onclick="navigate('dashboard'); toggleMenu()" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs text-slate-300 hover:bg-slate-800 hover:text-cyan-400 transition-colors">
-      <i data-lucide="layout-dashboard" class="w-4 h-4 text-cyan-400"></i> Visão Geral & Atalhos
-     </button>
-     <button onclick="navigate('services'); toggleMenu()" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs text-slate-300 hover:bg-slate-800 hover:text-cyan-400 transition-colors">
-      <i data-lucide="wrench" class="w-4 h-4 text-blue-400"></i> Catálogo de Serviços
-     </button>
-     <button onclick="navigate('requests'); toggleMenu()" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs text-slate-300 hover:bg-slate-800 hover:text-cyan-400 transition-colors">
-      <i data-lucide="clipboard-list" class="w-4 h-4 text-amber-400"></i> Meus Chamados
-     </button>
-     <button onclick="navigate('appointments'); toggleMenu()" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs text-slate-300 hover:bg-slate-800 hover:text-cyan-400 transition-colors">
-      <i data-lucide="calendar-days" class="w-4 h-4 text-emerald-400"></i> Agendamentos
-     </button>
-     <button onclick="navigate('rewards'); toggleMenu()" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs text-cyan-400 bg-cyan-500/10 hover:bg-cyan-500/20 font-semibold transition-colors">
-      <i data-lucide="gift" class="w-4 h-4"></i> Cashback & Indicação
-     </button>
-     <button onclick="navigate('guarantee'); toggleMenu()" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs text-slate-300 hover:bg-slate-800 hover:text-cyan-400 transition-colors">
-      <i data-lucide="shield-check" class="w-4 h-4 text-purple-400"></i> Garantia & Equipamentos
-     </button>
-     <button onclick="navigate('profile'); toggleMenu()" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs text-slate-300 hover:bg-slate-800 hover:text-cyan-400 transition-colors">
-      <i data-lucide="user" class="w-4 h-4"></i> Meu Cadastro & Token
-     </button>
-     <div class="border-t border-slate-800 pt-1 mt-1">
-      <button onclick="logout()" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs text-red-400 hover:bg-red-950/30 transition-colors">
-       <i data-lucide="log-out" class="w-4 h-4"></i> Sair da Conta
-      </button>
-     </div>
+  <header class="px-5 pt-7 pb-5 flex justify-between items-center">
+    <div>
+      <div class="flex items-center gap-2">
+        <div class="w-9 h-9 rounded-xl flex items-center justify-center font-black text-slate-950"
+             style="background:var(--accent)">WS</div>
+        <div>
+          <div class="font-black tracking-wide text-sm">WS SOLUÇÕES</div>
+          <div class="muted text-[10px] tracking-widest">ÁREA DO CLIENTE</div>
+        </div>
+      </div>
     </div>
-   </div>
-  </div>
- </header>
+    <div class="flex items-center gap-3">
+      <button onclick="notify()" class="relative p-2 surface rounded-xl">
+        <i data-lucide="bell" width="19"></i>
+        <span class="absolute top-1 right-1 w-2 h-2 bg-cyan-400 rounded-full"></span>
+      </button>
+      <button onclick="toggleTheme()" class="p-2 surface rounded-xl">
+        <i id="themeIcon" data-lucide="sun" width="19"></i>
+      </button>
+      <div class="w-9 h-9 rounded-full surface2 flex items-center justify-center font-bold text-sm">W</div>
+    </div>
+  </header>
 
- <!-- Conteúdo Principal -->
- <main class="flex-1 p-4 md:p-8 max-w-4xl w-full mx-auto">
-  <div id="page-content"></div>
- </main>
+  <main class="px-5 space-y-5">
+    <section>
+      <p class="muted text-sm">Bem-vindo de volta,</p>
+      <h1 class="text-2xl font-bold mt-1">Wellington 👋</h1>
+      <p class="muted text-xs mt-1">Sua residência, seus serviços, tudo organizado.</p>
+    </section>
 
- <footer class="border-t border-slate-800/80 p-4 text-center text-[11px] text-slate-500 flex flex-col sm:flex-row items-center justify-center gap-2">
-  <span>WS SOLUÇÕES • Profissionalismo em Elétrica, CFTV e Instalações</span>
-  <span class="hidden sm:inline">•</span>
-  <a href="https://wa.me/5588999999999?text=Olá,%20vim%20pelo%20app%20da%20WS%20Soluções!" target="_blank" class="text-cyan-400 hover:underline">Suporte Direto no WhatsApp</a>
- </footer>
-</section>
+    <section class="surface rounded-2xl p-4">
+      <div class="flex justify-between items-center mb-4">
+        <div>
+          <p class="muted text-[10px] uppercase tracking-widest">Sua residência</p>
+          <h2 class="font-bold mt-1">Minha Casa</h2>
+        </div>
+        <button class="muted text-xs flex items-center gap-1" onclick="notify()">
+          Trocar <i data-lucide="chevron-down" width="15"></i>
+        </button>
+      </div>
+      <div class="surface2 rounded-xl p-3 flex items-center gap-3">
+        <div class="w-12 h-12 rounded-xl flex items-center justify-center"
+             style="background:var(--bg)">
+          <i data-lucide="house" class="accent" width="25"></i>
+        </div>
+        <div class="flex-1">
+          <p class="font-semibold text-sm">Passaporte da Residência</p>
+          <p class="muted text-xs mt-1">Histórico técnico da sua casa</p>
+        </div>
+        <span class="status"><span class="dot green"></span>Ativo</span>
+      </div>
+      <div class="grid grid-cols-3 gap-2 mt-3 text-center">
+        <div class="surface2 rounded-xl p-3">
+          <p class="font-bold text-xl num">08</p>
+          <p class="muted text-[10px] mt-1">Equipamentos</p>
+        </div>
+        <div class="surface2 rounded-xl p-3">
+          <p class="font-bold text-xl num">05</p>
+          <p class="muted text-[10px] mt-1">Instalações</p>
+        </div>
+        <div class="surface2 rounded-xl p-3">
+          <p class="font-bold text-xl num">02</p>
+          <p class="muted text-[10px] mt-1">Garantias</p>
+        </div>
+      </div>
+      <button onclick="notify()" class="w-full mt-3 py-3 rounded-xl text-sm font-bold"
+              style="background:var(--accent);color:#08232b">
+        Abrir Passaporte <i data-lucide="arrow-up-right" class="inline" width="16"></i>
+      </button>
+    </section>
 
-<!-- ================= PAINEL ADM DE TESTE ================= -->
-<section id="view-admin" class="hidden-view min-h-screen p-4 md:p-8 max-w-4xl mx-auto">
- <div class="flex justify-between items-center mb-6">
-  <div>
-   <h1 class="text-xl font-bold text-cyan-400">PAINEL ADMINISTRATIVO (TESTE)</h1>
-   <p class="text-xs text-slate-400">Gerenciamento de saldos, chamados e garantias</p>
-  </div>
-  <button onclick="showHome()" class="btn btn-secondary text-xs">Sair do ADM</button>
- </div>
+    <section>
+      <div class="flex justify-between items-center mb-3">
+        <h2 class="font-bold">Próximo atendimento</h2>
+        <span class="muted text-xs">Ver agenda</span>
+      </div>
+      <div class="surface rounded-2xl p-4">
+        <div class="flex justify-between items-center">
+          <span class="status"><span class="dot"></span>Agendado</span>
+          <span class="muted text-xs">OS #WS-0028</span>
+        </div>
+        <div class="flex gap-3 mt-4">
+          <div class="surface2 rounded-xl p-3 text-center min-w-[62px]">
+            <p class="accent text-xs font-bold">NOV</p>
+            <p class="font-black text-2xl num">18</p>
+          </div>
+          <div class="flex-1">
+            <h3 class="font-bold">Manutenção elétrica</h3>
+            <p class="muted text-xs mt-1">Período da manhã</p>
+            <p class="muted text-xs mt-2 flex items-center gap-1">
+              <i data-lucide="map-pin" width="13"></i> Minha Casa
+            </p>
+          </div>
+        </div>
+        <div class="mt-4 pt-3 border-t flex justify-between items-center"
+             style="border-color:var(--line)">
+          <p class="muted text-xs">Acompanhe o andamento</p>
+          <button onclick="notify()" class="accent text-xs font-bold">Detalhes →</button>
+        </div>
+      </div>
+    </section>
 
- <div class="grid sm:grid-cols-2 gap-4 mb-6">
-  <div class="card p-5">
-   <p class="text-xs text-slate-400 mb-1">TOKEN DE TESTE ATIVO:</p>
-   <p class="text-2xl font-black text-cyan-400 tracking-widest">AA52</p>
-  </div>
-  <div class="card p-5 flex flex-col justify-between">
-   <p class="text-xs text-slate-400 mb-1">STATUS DE SALDO DO CLIENTE TESTE:</p>
-   <div id="admin-debt-control" class="flex items-center justify-between mt-2">
-    <!-- Renderizado dinamicamente -->
-   </div>
-  </div>
- </div>
+    <section>
+      <div class="flex justify-between items-center mb-3">
+        <h2 class="font-bold">Clube WS</h2>
+        <span class="muted text-xs">Minha carteira</span>
+      </div>
+      <div class="rounded-2xl p-5 relative overflow-hidden"
+           style="background:linear-gradient(120deg,#07566b,#123847)">
+        <div class="absolute -right-8 -top-12 w-40 h-40 rounded-full border border-cyan-300/20"></div>
+        <div class="absolute -right-2 -top-6 w-28 h-28 rounded-full border border-cyan-300/20"></div>
+        <div class="relative">
+          <p class="text-cyan-100/80 text-xs uppercase tracking-widest">Saldo disponível</p>
+          <h2 class="text-3xl font-black mt-2 num">R$ 45,00</h2>
+          <div class="flex justify-between items-end mt-5">
+            <div>
+              <p class="text-cyan-100/70 text-[10px]">Créditos promocionais WS</p>
+              <p class="text-white text-xs mt-1">Não sacável · Uso em serviços</p>
+            </div>
+            <i data-lucide="wallet" class="text-cyan-200" width="30"></i>
+          </div>
+        </div>
+      </div>
+    </section>
 
- <div class="space-y-4">
-  <h3 class="font-bold text-sm text-cyan-300">Chamados e Solicitações de Orçamento</h3>
-  <div id="admin-requests-list" class="space-y-3"></div>
+    <section>
+      <div class="flex justify-between items-center mb-3">
+        <h2 class="font-bold">Acesso rápido</h2>
+      </div>
+      <div class="grid grid-cols-4 gap-2">
+        <button onclick="notify()" class="surface rounded-xl p-3 flex flex-col items-center gap-2">
+          <i data-lucide="calendar-plus" class="accent" width="21"></i>
+          <span class="text-[10px]">Agendar</span>
+        </button>
+        <button onclick="notify()" class="surface rounded-xl p-3 flex flex-col items-center gap-2">
+          <i data-lucide="file-text" class="accent" width="21"></i>
+          <span class="text-[10px]">Orçamentos</span>
+        </button>
+        <button onclick="notify()" class="surface rounded-xl p-3 flex flex-col items-center gap-2">
+          <i data-lucide="message-circle" class="accent" width="21"></i>
+          <span class="text-[10px]">Suporte</span>
+        </button>
+        <button onclick="notify()" class="surface rounded-xl p-3 flex flex-col items-center gap-2">
+          <i data-lucide="qr-code" class="accent" width="21"></i>
+          <span class="text-[10px]">Meu QR</span>
+        </button>
+      </div>
+    </section>
 
-  <h3 class="font-bold text-sm text-emerald-300 mt-6">Agendamentos Pendentes</h3>
-  <div id="admin-appointments-list" class="space-y-3"></div>
- </div>
-</section>
+    <section>
+      <h2 class="font-bold mb-3">Atividade recente</h2>
+      <div class="surface rounded-2xl p-4 space-y-4">
+        <div class="flex gap-3">
+          <div class="w-9 h-9 surface2 rounded-full flex items-center justify-center">
+            <i data-lucide="check-check" class="accent" width="17"></i>
+          </div>
+          <div class="flex-1">
+            <p class="text-sm font-semibold">Instalação concluída</p>
+            <p class="muted text-xs mt-1">Câmera externa · 10 nov</p>
+          </div>
+          <span class="status"><span class="dot green"></span>Concluído</span>
+        </div>
+        <div class="flex gap-3">
+          <div class="w-9 h-9 surface2 rounded-full flex items-center justify-center">
+            <i data-lucide="file-check" class="accent" width="17"></i>
+          </div>
+          <div class="flex-1">
+            <p class="text-sm font-semibold">Garantia registrada</p>
+            <p class="muted text-xs mt-1">Câmera externa · 10 nov</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
 
-<div id="modal-root"></div>
+<nav class="bottom-nav fixed bottom-0 left-0 right-0 surface border-t px-3 pt-2 pb-[max(10px,env(safe-area-inset-bottom))] flex z-50">
+  <button class="tab active"><i data-lucide="house"></i>Início</button>
+  <button class="tab" onclick="notify()"><i data-lucide="clipboard-list"></i>Serviços</button>
+  <button class="tab" onclick="notify()"><i data-lucide="calendar-days"></i>Agenda</button>
+  <button class="tab" onclick="notify()"><i data-lucide="contact"></i>Residência</button>
+  <button class="tab" onclick="notify()"><i data-lucide="user-round"></i>Perfil</button>
+</nav>
 
 <script>
-/* =========================================
-   LÓGICA E BANCO DE DADOS LOCAL COM SALDO PENDENTE
-========================================= */
-const DB_KEY = 'ws_solucoes_db_v4';
-const SESSION_KEY = 'ws_client_session_v4';
-
-const $ = id => document.getElementById(id);
-
-function seedDB() {
- return {
-  clients: [
-   { id: 'cli-vip', name: 'Wellington (Cliente Teste)', phone: '88999999999', address: 'Centro, Crato - CE', status: 'approved', token: 'AA52', points: 40, pendingBalance: 120.00, debtServiceRef: 'Manutenção de Eletrodomésticos e Fiação', indicacao: '' }
-  ],
-  services: [
-   { id: 's1', name: 'Instalação de Câmeras (CFTV)', desc: 'Configuração completa de DVR, NVR, câmeras Intelbras e acesso remoto no celular.' },
-   { id: 's2', name: 'Serviços Elétricos Residenciais', desc: 'Troca de dijuntores, tomadas, instalação de luminárias e reparos com segurança total.' },
-   { id: 's3', name: 'Manutenção de Eletrodomésticos', desc: 'Conserto especializado em ventiladores, micro-ondas, caixas de som e tanquinhos.' },
-   { id: 's4', name: 'Instalação de Forro PVC', desc: 'Estrutura metálica reforçada, alinhamento perfeito e acabamento impecável.' }
-  ],
-  requests: [
-   { id: 101, clientId: 'cli-vip', service: 'Instalação de Câmeras (CFTV)', desc: 'Orçamento para 3 câmeras na frente da residência.', status: 'Em andamento', photo: '' }
-  ],
-  appointments: [
-   { id: 201, clientId: 'cli-vip', service: 'Serviços Elétricos Residenciais', date: '2026-11-15', time: '14:00', status: 'Aprovado' }
-  ],
-  guarantees: [
-   { id: 301, clientId: 'cli-vip', service: 'Instalação de Forro PVC (Sala e Cozinha)', date: '2026-08-10', validUntil: '2027-08-10', details: 'Estrutura metálica em metalon, acabamento completo com molduras.' }
-  ]
- };
+function notify() {
+  alert("Demonstração visual: esta função será implementada na versão funcional.");
 }
-
-let db = JSON.parse(localStorage.getItem(DB_KEY)) || seedDB();
-function saveDB() { localStorage.setItem(DB_KEY, JSON.stringify(db)); }
-
-function toast(msg, type='info') {
- const el = document.createElement('div');
- const colors = { success: 'border-emerald-500 text-emerald-300', error: 'border-red-500 text-red-300', info: 'border-cyan-500 text-cyan-300' };
- el.className = `bg-slate-900 border-l-4 ${colors[type]} rounded-xl shadow-2xl px-4 py-3 text-xs max-w-sm`;
- el.textContent = msg;
- $('toast-container').appendChild(el);
- setTimeout(() => el.remove(), 3500);
+function toggleTheme() {
+  document.body.classList.toggle("light");
+  const light = document.body.classList.contains("light");
+  document.getElementById("themeIcon").setAttribute(
+    "data-lucide", light ? "moon" : "sun"
+  );
+  lucide.createIcons();
 }
-
-function showView(id) {
- document.querySelectorAll('body > section').forEach(el => el.classList.add('hidden-view'));
- $(id).classList.remove('hidden-view');
- window.scrollTo(0,0);
- if(window.lucide) lucide.createIcons();
- if(id === 'view-admin') renderAdminPanel();
-}
-
-function showHome() { showView('view-home'); }
-function showRegistration() { $('registration-form').reset(); showView('view-registration'); }
-
-function toggleMenu() {
- const menu = $('dropdown-menu');
- menu.classList.toggle('hidden');
-}
-
-window.addEventListener('click', e => {
- const menu = $('dropdown-menu');
- if(menu && !menu.classList.contains('hidden') && !e.target.closest('button')) {
-  menu.classList.add('hidden');
- }
-});
-
-$('registration-form').addEventListener('submit', e => {
- e.preventDefault();
- const name = $('reg-name').value.trim();
- const phone = $('reg-phone').value.trim();
- const address = $('reg-address').value.trim();
- const indicacao = $('reg-indicacao').value.trim();
-
- if(!phone.replace(/\D/g,'')) {
-  toast('Informe um WhatsApp válido.','error');
-  return;
- }
-
- db.clients.push({
-  id: 'cli-' + Date.now(),
-  name, phone, address,
-  status: 'pending',
-  token: 'WS' + Math.floor(10 + Math.random() * 90),
-  points: 10,
-  pendingBalance: 0,
-  debtServiceRef: '',
-  indicacao
- });
- saveDB();
- showView('view-pending');
- toast('Solicitação enviada com sucesso!','success');
-});
-
-function login() {
- const token = $('login-token').value.trim().toUpperCase();
- const client = db.clients.find(c => c.token === token && c.status === 'approved');
-
- if(!client) {
-  toast('Token inválido ou aguardando aprovação.','error');
-  return;
- }
-
- localStorage.setItem(SESSION_KEY, client.id);
- openClientApp();
-}
-
-function activeClient() {
- const id = localStorage.getItem(SESSION_KEY);
- return db.clients.find(c => c.id === id);
-}
-
-function logout() {
- localStorage.removeItem(SESSION_KEY);
- showHome();
- toast('Sessão encerrada com segurança.','info');
-}
-
-let currentPage = 'dashboard';
-function openClientApp() {
- const client = activeClient();
- if(!client) return showHome();
- $('header-name').textContent = client.name;
- navigate('dashboard');
- showView('view-app');
-}
-
-function navigate(page) {
- currentPage = page;
- renderClientPage();
-}
-
-function renderClientPage() {
- const client = activeClient();
- const content = $('page-content');
- const requests = db.requests.filter(r => r.clientId === client.id);
- const appointments = db.appointments.filter(a => a.clientId === client.id);
- const guarantees = db.guarantees.filter(g => g.clientId === client.id);
-
- // ALERTA DE SALDO PENDENTE
- let debtAlertHTML = '';
- if(client.pendingBalance && client.pendingBalance > 0) {
-  const pixKey = '88999999999'; // Chave pix de exemplo da WS Soluções
-  debtAlertHTML = `
-   <div class="bg-amber-500/10 border border-amber-500/30 rounded-2xl p-4 mb-6 text-xs space-y-3">
-    <div class="flex items-start gap-3">
-     <div class="w-9 h-9 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center shrink-0">
-      <i data-lucide="alert-circle" class="w-5 h-5"></i>
-     </div>
-     <div class="flex-1">
-      <h3 class="font-bold text-amber-300 text-sm">Saldo Pendente em Aberto</h3>
-      <p class="text-slate-300 mt-0.5">Você possui o valor de <b class="text-amber-300">R$ ${client.pendingBalance.toFixed(2)}</b> referente a: <em>${client.debtServiceRef || 'Serviço prestado'}</em>.</p>
-     </div>
-    </div>
-    <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-3">
-     <div>
-      <span class="text-slate-400 block text-[10px]">Chave Pix (Celular):</span>
-      <span class="font-bold text-cyan-400">${pixKey}</span>
-     </div>
-     <button onclick="openPaymentModal(${client.pendingBalance})" class="btn btn-primary text-xs w-full sm:w-auto">
-      <i data-lucide="upload" class="w-3.5 h-3.5"></i> Enviar Comprovante de Pagamento
-     </button>
-    </div>
-   </div>`;
- }
-
- if(currentPage === 'dashboard') {
-  content.innerHTML = `
-   ${debtAlertHTML}
-   <div class="mb-6">
-    <h2 class="text-xl font-black">Olá, ${client.name.split(' ')[0]}! 👋</h2>
-    <p class="text-slate-400 text-xs mt-0.5">Bem-vindo à sua central de serviços técnicos no Crato e região.</p>
-   </div>
-
-   <!-- CARDS DE RESUMO -->
-   <div class="grid grid-cols-3 gap-3 mb-6">
-    <div class="card p-3.5 text-center">
-     <span class="text-[11px] text-slate-400 block mb-1">Cashback</span>
-     <p class="text-xl font-black text-cyan-400">${client.points || 0} pts</p>
-     <span class="text-[9px] text-slate-500">Saldo WS</span>
-    </div>
-    <div class="card p-3.5 text-center">
-     <span class="text-[11px] text-slate-400 block mb-1">Chamados</span>
-     <p class="text-xl font-black text-blue-400">${requests.length}</p>
-     <span class="text-[9px] text-slate-500">Ativos</span>
-    </div>
-    <div class="card p-3.5 text-center">
-     <span class="text-[11px] text-slate-400 block mb-1">Garantias</span>
-     <p class="text-xl font-black text-purple-400">${guarantees.length}</p>
-     <span class="text-[9px] text-slate-500">Ativas</span>
-    </div>
-   </div>
-
-   <!-- BLOCO DE ATALHOS RÁPIDOS -->
-   <div class="card p-5 mb-6 space-y-4">
-    <h3 class="font-bold text-sm text-cyan-300 flex items-center gap-2"><i data-lucide="sparkles" class="w-4 h-4"></i> Ações Rápidas</h3>
-    <div class="grid sm:grid-cols-2 gap-3">
-     <button onclick="${client.pendingBalance > 0 ? "toast('Regularize seu saldo pendente para abrir novos chamados.','error')" : "navigate('services')"}" class="btn btn-primary text-xs w-full justify-start py-3 ${client.pendingBalance > 0 ? 'opacity-60' : ''}">
-      <i data-lucide="wrench" class="w-4 h-4"></i> Solicitar Novo Serviço / Orçamento
-     </button>
-     <button onclick="openAppointmentModal()" class="btn btn-secondary text-xs w-full justify-start py-3">
-      <i data-lucide="calendar-plus" class="w-4 h-4 text-emerald-400"></i> Agendar Visita Técnica
-     </button>
-    </div>
-   </div>
-
-   <!-- ÚLTIMOS CHAMADOS E STATUS -->
-   <div>
-    <div class="flex justify-between items-center mb-3">
-     <h3 class="font-bold text-sm">Seus Chamados Recentes</h3>
-     <button onclick="navigate('requests')" class="text-xs text-cyan-400 hover:underline">Ver todos</button>
-    </div>
-    ${requests.length ? requests.slice(-2).reverse().map(r => `
-     <div class="panel p-4 rounded-2xl mb-2.5 text-xs flex justify-between items-center">
-      <div>
-       <p class="font-bold text-slate-200">${r.service}</p>
-       <p class="text-slate-400 mt-1">${r.desc}</p>
-      </div>
-      <span class="badge bg-amber-500/20 text-amber-300 whitespace-nowrap">${r.status}</span>
-     </div>
-    `).join('') : '<p class="text-slate-500 text-xs italic">Nenhum chamado aberto no momento.</p>'}
-   </div>`;
- } else if(currentPage === 'services') {
-  if(client.pendingBalance > 0) {
-   content.innerHTML = `
-    <div class="card p-8 text-center space-y-4">
-     <div class="w-12 h-12 rounded-2xl bg-amber-500/20 text-amber-400 mx-auto flex items-center justify-center">
-      <i data-lucide="lock" class="w-6 h-6"></i>
-     </div>
-     <h2 class="text-lg font-bold">Solicitações Temporariamente Bloqueadas</h2>
-     <p class="text-xs text-slate-400 max-w-sm mx-auto">Você possui um saldo pendente de R$ ${client.pendingBalance.toFixed(2)}. Regularize o pagamento para liberar novos orçamentos e chamados.</p>
-     <button onclick="navigate('dashboard')" class="btn btn-primary text-xs">Ver Meus Pagamentos</button>
-    </div>`;
-  } else {
-   content.innerHTML = `
-    <div class="mb-5">
-     <h2 class="text-lg font-bold">Catálogo de Serviços WS</h2>
-     <p class="text-xs text-slate-400 mt-0.5">Escolha abaixo o que você precisa para sua casa ou comércio.</p>
-    </div>
-    <div class="grid sm:grid-cols-2 gap-4">
-     ${db.services.map(s => `
-      <div class="card p-5 flex flex-col justify-between space-y-4">
-       <div>
-        <div class="w-10 h-10 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400 mb-3">
-         <i data-lucide="wrench" class="w-5 h-5"></i>
-        </div>
-        <h3 class="font-bold text-cyan-300 text-sm">${s.name}</h3>
-        <p class="text-xs text-slate-400 mt-2 leading-relaxed">${s.desc}</p>
-       </div>
-       <button onclick="requestServiceModal('${s.name}')" class="btn btn-primary w-full text-xs">Solicitar Orçamento / Atendimento</button>
-      </div>
-     `).join('')}
-    </div>`;
-  }
- } else if(currentPage === 'requests') {
-  content.innerHTML = `
-   <div class="flex justify-between items-center mb-4">
-    <div>
-     <h2 class="text-lg font-bold">Meus Chamados</h2>
-     <p class="text-xs text-slate-400">Acompanhe o andamento dos seus pedidos.</p>
-    </div>
-    <button onclick="${client.pendingBalance > 0 ? "toast('Regularize seu saldo pendente para abrir novos chamados.','error')" : "navigate('services')"}" class="btn btn-primary text-xs">+ Novo Chamado</button>
-   </div>
-   ${requests.length ? requests.map(r => `
-    <div class="panel p-4 rounded-2xl mb-3 text-xs space-y-2">
-     <div class="flex justify-between font-bold text-sm">
-      <span class="text-cyan-300">${r.service}</span>
-      <span class="badge bg-amber-500/20 text-amber-300">${r.status}</span>
-     </div>
-     <p class="text-slate-300"><b>Detalhes:</b> ${r.desc}</p>
-     ${r.photo ? `<div class="mt-2"><span class="text-[10px] text-slate-400 block mb-1">Foto enviada:</span><img src="${r.photo}" class="w-24 h-24 object-cover rounded-xl border border-slate-800"></div>` : ''}
-     <p class="text-[10px] text-slate-500 pt-1 border-t border-slate-800">Identificação do Chamado: #${r.id}</p>
-    </div>
-   `).join('') : '<p class="text-slate-500 text-xs italic">Nenhum chamado registrado ainda.</p>'}`;
- } else if(currentPage === 'appointments') {
-  content.innerHTML = `
-   <div class="flex justify-between items-center mb-4">
-    <div>
-     <h2 class="text-lg font-bold">Meus Agendamentos</h2>
-     <p class="text-xs text-slate-400">Horários reservados com a nossa equipe.</p>
-    </div>
-    <button onclick="openAppointmentModal()" class="btn btn-primary text-xs">+ Agendar Horário</button>
-   </div>
-   ${appointments.length ? appointments.map(a => `
-    <div class="panel p-4 rounded-2xl mb-3 flex justify-between items-center text-xs">
-     <div class="space-y-1">
-      <p class="font-bold text-sm text-cyan-300">${a.service}</p>
-      <p class="text-slate-300 flex items-center gap-1.5"><i data-lucide="calendar" class="w-3.5 h-3.5 text-cyan-400"></i> ${a.date} às ${a.time}</p>
-     </div>
-     <span class="badge ${a.status === 'Aprovado' ? 'bg-emerald-500/20 text-emerald-300' : 'bg-amber-500/20 text-amber-300'}">${a.status}</span>
-    </div>
-   `).join('') : '<p class="text-slate-500 text-xs italic">Nenhum agendamento na sua agenda.</p>'}`;
- } else if(currentPage === 'rewards') {
-  const whatsappUrl = `https://wa.me/?text=${encodeURIComponent('Olá! Estou indicando a WS Soluções para serviços de elétrica, CFTV e forro de PVC. Quando chamar eles, informe meu WhatsApp (' + client.phone + ') para ganharmos cashback de desconto!')}`;
-  content.innerHTML = `
-   <div class="card p-6 mb-5 text-center space-y-2">
-    <span class="text-[10px] text-cyan-400 font-bold tracking-widest uppercase">CASHBACK & FIDELIDADE WS</span>
-    <p class="text-4xl font-black text-cyan-400 mt-2">${client.points || 0} pts</p>
-    <p class="text-xs text-slate-400">Créditos acumulados para descontos</p>
-   </div>
-
-   <div class="card p-5 space-y-4 mb-5">
-    <h3 class="font-bold text-sm text-cyan-300 flex items-center gap-2"><i data-lucide="share-2" class="w-4 h-4"></i> Indique Amigos e Ganhe</h3>
-    <p class="text-xs text-slate-300 leading-relaxed">O seu código de indicação pessoal é o seu próprio número de WhatsApp cadastrado:</p>
-    <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800 text-center">
-     <span class="font-black text-cyan-400 text-base tracking-wider">${client.phone}</span>
-    </div>
-    <ul class="text-xs text-slate-400 space-y-2 pl-4 list-disc">
-     <li>Compartilhe com vizinhos e amigos.</li>
-     <li>Quando o indicado fechar serviço e formos concluir, você ganha cashback.</li>
-    </ul>
-    <a href="${whatsappUrl}" target="_blank" class="btn btn-primary w-full text-xs justify-center py-3">
-     <i data-lucide="message-circle" class="w-4 h-4"></i> Convidar Amigos via WhatsApp
-    </a>
-   </div>`;
- } else if(currentPage === 'guarantee') {
-  content.innerHTML = `
-   <div class="space-y-4">
-    <div class="mb-3">
-     <h2 class="text-lg font-bold">Garantia & Equipamentos</h2>
-     <p class="text-xs text-slate-400">Histórico de instalações e prazos de garantia vigentes.</p>
-    </div>
-    ${guarantees.length ? guarantees.map(g => `
-     <div class="card p-5 space-y-3">
-      <div class="flex justify-between items-start">
-       <h3 class="font-bold text-sm text-cyan-300">${g.service}</h3>
-       <span class="badge bg-purple-500/20 text-purple-300">Garantia Ativa</span>
-      </div>
-      <p class="text-xs text-slate-300">${g.details}</p>
-      <div class="flex justify-between text-[11px] text-slate-400 pt-2 border-t border-slate-800">
-       <span>Instalação: ${g.date}</span>
-       <span class="text-emerald-400 font-semibold">Válido até: ${g.validUntil}</span>
-      </div>
-     </div>
-    `).join('') : '<p class="text-slate-500 text-xs italic">Nenhum equipamento com garantia registrada no momento.</p>'}
-   </div>`;
- } else if(currentPage === 'profile') {
-  content.innerHTML = `
-   <h2 class="text-lg font-bold mb-4">Meu Cadastro & Token</h2>
-   <div class="card p-6 space-y-4 text-xs">
-    <div class="flex items-center gap-4 pb-4 border-b border-slate-800">
-     <div class="w-12 h-12 rounded-2xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 text-lg font-black">
-      ${client.name.charAt(0).toUpperCase()}
-     </div>
-     <div>
-      <h3 class="font-bold text-sm text-slate-200">${client.name}</h3>
-      <p class="text-slate-400 mt-0.5">Cliente Verificado WS</p>
-     </div>
-    </div>
-    <div class="space-y-3">
-     <p><b class="text-slate-400 block mb-0.5">WhatsApp de Contato:</b> ${client.phone}</p>
-     <p><b class="text-slate-400 block mb-0.5">Endereço Cadastrado:</b> ${client.address}</p>
-     <p><b class="text-slate-400 block mb-0.5">Quem Indicou:</b> ${client.indicacao || 'Nenhuma indicação informada'}</p>
-     <div class="border-t border-slate-800 pt-3">
-      <b class="text-slate-400 block mb-1">Seu Token Secreto de 4 Dígitos:</b>
-      <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 flex justify-between items-center">
-       <span class="text-cyan-400 font-black tracking-widest text-base">${client.token}</span>
-       <span class="text-[10px] text-emerald-400 font-bold bg-emerald-500/10 px-2 py-1 rounded-md">Ativo</span>
-      </div>
-     </div>
-    </div>
-   </div>`;
- }
- if(window.lucide) lucide.createIcons();
-}
-
-function openModal(html) {
- $('modal-root').innerHTML = `<div class="modal-bg" onclick="if(event.target===this)closeModal()"><div class="modal">${html}</div></div>`;
- if(window.lucide) lucide.createIcons();
-}
-function closeModal() { $('modal-root').innerHTML = ''; }
-
-function requestServiceModal(serviceName) {
- openModal(`
-  <h3 class="text-base font-bold mb-3">Solicitar: ${serviceName}</h3>
-  <form id="req-form" class="space-y-3 text-xs">
-   <textarea id="req-desc" class="field text-xs" rows="3" placeholder="Descreva o que precisa com detalhes..." required></textarea>
-   <div>
-    <label class="text-slate-400 block mb-1">Anexar Foto do Local / Problema (Opcional):</label>
-    <input type="file" id="req-photo" accept="image/*" class="field text-xs file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-cyan-500/20 file:text-cyan-300 hover:file:bg-cyan-500/30">
-   </div>
-   <button class="btn btn-primary w-full text-xs">Enviar Chamado com Foto</button>
-  </form>
- `);
- $('req-form').onsubmit = e => {
-  e.preventDefault();
-  const client = activeClient();
-  const fileInput = $('req-photo');
-  
-  if(fileInput.files && fileInput.files[0]) {
-   const reader = new FileReader();
-   reader.onload = function(evt) {
-    saveNewRequest(client.id, serviceName, $('req-desc').value, evt.target.result);
-   };
-   reader.readAsDataURL(fileInput.files[0]);
-  } else {
-   saveNewRequest(client.id, serviceName, $('req-desc').value, '');
-  }
- };
-}
-
-function saveNewRequest(clientId, service, desc, photo) {
- db.requests.push({
-  id: Date.now(),
-  clientId,
-  service,
-  desc,
-  status: 'Em análise',
-  photo
- });
- saveDB();
- closeModal();
- navigate('requests');
- toast('Chamado enviado com sucesso!','success');
-}
-
-function openAppointmentModal() {
- openModal(`
-  <h3 class="text-base font-bold mb-3">Agendar Visita / Atendimento</h3>
-  <form id="app-form" class="space-y-3 text-xs">
-   <select id="app-serv" class="field text-xs" required>
-    <option value="">Selecione o serviço</option>
-    ${db.services.map(s => `<option>${s.name}</option>`).join('')}
-   </select>
-   <div>
-    <label class="text-slate-400 block mb-1">Data preferencial:</label>
-    <input type="date" id="app-date" class="field text-xs" required>
-   </div>
-   <div>
-    <label class="text-slate-400 block mb-1">Horário preferencial:</label>
-    <input type="time" id="app-time" class="field text-xs" required>
-   </div>
-   <button class="btn btn-primary w-full text-xs mt-2">Solicitar Agendamento</button>
-  </form>
- `);
- $('app-form').onsubmit = e => {
-  e.preventDefault();
-  const client = activeClient();
-  db.appointments.push({
-   id: Date.now(),
-   clientId: client.id,
-   service: $('app-serv').value,
-   date: $('app-date').value,
-   time: $('app-time').value,
-   status: 'Pendente'
-  });
-  saveDB();
-  closeModal();
-  navigate('appointments');
-  toast('Agendamento solicitado com sucesso!','success');
- };
-}
-
-function openPaymentModal(amount) {
- openModal(`
-  <h3 class="text-base font-bold mb-2">Enviar Comprovante de Pagamento</h3>
-  <p class="text-xs text-slate-400 mb-4">Realize o Pix no valor de <b class="text-cyan-400">R$ ${amount.toFixed(2)}</b> para a chave <b class="text-white">88999999999</b> (Wellington S. Ribeiro) e envie o comprovante abaixo.</p>
-  <form id="pay-form" class="space-y-3 text-xs">
-   <div>
-    <label class="text-slate-400 block mb-1">Anexar Comprovante (Imagem/Print):</label>
-    <input type="file" id="pay-proof" accept="image/*" class="field text-xs file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-cyan-500/20 file:text-cyan-300 hover:file:bg-cyan-500/30" required>
-   </div>
-   <button class="btn btn-primary w-full text-xs mt-2">Enviar para Validação ADM</button>
-  </form>
- `);
- $('pay-form').onsubmit = e => {
-  e.preventDefault();
-  const fileInput = $('pay-proof');
-  if(fileInput.files && fileInput.files[0]) {
-   const reader = new FileReader();
-   reader.onload = function(evt) {
-    const client = activeClient();
-    // Marca como em análise de pagamento
-    client.paymentProof = evt.target.result;
-    saveDB();
-    closeModal();
-    toast('Comprovante enviado! Aguardando confirmação do administrador.','success');
-    renderClientPage();
-   };
-   reader.readAsDataURL(fileInput.files[0]);
-  }
- };
-}
-
-function enterAdmin() { showView('view-admin'); }
-
-function renderAdminPanel() {
- const client = db.clients.find(c => c.token === 'AA52');
- const debtBox = $('admin-debt-control');
- if(client) {
-  if(client.pendingBalance > 0) {
-   debtBox.innerHTML = `
-    <div>
-     <p class="text-amber-400 font-bold text-sm">Pendente: R$ ${client.pendingBalance.toFixed(2)}</p>
-     <p class="text-[10px] text-slate-400">${client.debtServiceRef}</p>
-     ${client.paymentProof ? '<span class="badge bg-cyan-500/20 text-cyan-300 mt-1 inline-block">Comprovante enviado pelo cliente!</span>' : ''}
-    </div>
-    <button onclick="adminClearDebt('${client.id}')" class="btn btn-primary text-xs bg-emerald-600 hover:bg-emerald-500">Confirmar Pagamento / Quitar</button>
-   `;
-  } else {
-   debtBox.innerHTML = `
-    <span class="text-emerald-400 font-bold text-xs flex items-center gap-1.5"><i data-lucide="check-circle" class="w-4 h-4"></i> Sem saldo pendente (Quitado)</span>
-    <button onclick="adminAddDebt('${client.id}')" class="btn btn-secondary text-xs">+ Adicionar Cobrança</button>
-   `;
-  }
- }
-
- const reqList = $('admin-requests-list');
- reqList.innerHTML = db.requests.length ? db.requests.map(r => `
-  <div class="panel p-4 rounded-2xl text-xs space-y-2">
-   <div class="flex justify-between font-bold text-sm">
-    <span class="text-cyan-300">${r.service}</span>
-    <span class="badge bg-amber-500/20 text-amber-300">${r.status}</span>
-   </div>
-   <p class="text-slate-300"><b>Detalhes:</b> ${r.desc}</p>
-   ${r.photo ? `<div class="mt-2"><span class="text-[10px] text-slate-400 block mb-1">Foto anexada:</span><img src="${r.photo}" class="w-20 h-20 object-cover rounded-xl border border-slate-800"></div>` : ''}
-   <div class="pt-2 flex gap-2">
-    <button onclick="adminApproveRequest(${r.id})" class="btn btn-primary text-xs py-1.5 px-3">Aprovar Chamado</button>
-   </div>
-  </div>
- `).join('') : '<p class="text-slate-500 text-xs italic">Nenhum chamado pendente.</p>';
-
- const appList = $('admin-appointments-list');
- appList.innerHTML = db.appointments.length ? db.appointments.map(a => `
-  <div class="panel p-4 rounded-2xl text-xs flex justify-between items-center">
-   <div>
-    <p class="font-bold text-sm text-emerald-300">${a.service}</p>
-    <p class="text-slate-300">${a.date} às ${a.time} - Status: ${a.status}</p>
-   </div>
-   <button onclick="adminApproveAppointment(${a.id})" class="btn btn-primary text-xs py-1.5 px-3">Aprovar Visita</button>
-  </div>
- `).join('') : '<p class="text-slate-500 text-xs italic">Nenhum agendamento pendente.</p>';
-
- if(window.lucide) lucide.createIcons();
-}
-
-function adminClearDebt(clientId) {
- const client = db.clients.find(c => c.id === clientId);
- if(client) {
-  client.pendingBalance = 0;
-  client.debtServiceRef = '';
-  client.paymentProof = '';
-  saveDB();
-  renderAdminPanel();
-  toast('Pagamento confirmado e saldo quitado com sucesso!','success');
- }
-}
-
-function adminAddDebt(clientId) {
- const client = db.clients.find(c => c.id === clientId);
- if(client) {
-  client.pendingBalance = 150.00;
-  client.debtServiceRef = 'Instalação de Disjuntor e Fiação Elétrica';
-  saveDB();
-  renderAdminPanel();
-  toast('Cobrança adicionada para o cliente de teste.','info');
- }
-}
-
-function adminApproveRequest(id) {
- const req = db.requests.find(r => r.id === id);
- if(req) {
-  req.status = 'Em Andamento / Aprovado';
-  saveDB();
-  renderAdminPanel();
-  toast('Chamado aprovado com sucesso!','success');
- }
-}
-
-function adminApproveAppointment(id) {
- const app = db.appointments.find(a => a.id === id);
- if(app) {
-  app.status = 'Aprovado';
-  saveDB();
-  renderAdminPanel();
-  toast('Agendamento aprovado com sucesso!','success');
- }
-}
-
-if(activeClient()) {
- openClientApp();
-} else {
- showHome();
+lucide.createIcons();
+if (window.matchMedia &&
+    window.matchMedia("(prefers-color-scheme: light)").matches) {
+  document.body.classList.add("light");
+  document.getElementById("themeIcon").setAttribute("data-lucide","moon");
+  lucide.createIcons();
 }
 </script>
 </body>
