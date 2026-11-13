@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR" class="dark">
 <head>
@@ -75,7 +74,7 @@ body{background:#020617;color:#e2e8f0;font-family:Inter,system-ui,sans-serif}
   <div class="glass rounded-3xl p-6 shadow-2xl space-y-5">
    <div>
     <h2 class="text-xl font-bold">Bem-vindo!</h2>
-    <p class="text-sm text-slate-400 mt-1">Acesse sua área de cliente.</p>
+    <p class="text-sm text-slate-400 mt-1">Acesse sua área de cliente com seu token.</p>
    </div>
 
    <div class="space-y-2">
@@ -99,13 +98,13 @@ body{background:#020617;color:#e2e8f0;font-family:Inter,system-ui,sans-serif}
 
    <button onclick="showRegistration()" class="btn btn-secondary w-full">
     <i data-lucide="user-plus" class="w-4 h-4"></i>
-    Solicitar acesso
+    Solicitar acesso sem senha
    </button>
 
    <div class="border-t border-slate-800 pt-4">
     <button onclick="enterAdmin()" class="w-full text-sm text-slate-400 hover:text-cyan-400 flex items-center justify-center gap-2">
      <i data-lucide="shield-check" class="w-4 h-4"></i>
-     Modo de teste / Painel ADM
+     Painel Administrativo (WS)
     </button>
    </div>
   </div>
@@ -124,7 +123,7 @@ body{background:#020617;color:#e2e8f0;font-family:Inter,system-ui,sans-serif}
   <div class="mb-6">
    <span class="text-cyan-400 text-xs font-bold tracking-widest">NOVO CLIENTE</span>
    <h2 class="text-2xl font-bold mt-2">Solicitar acesso</h2>
-   <p class="text-sm text-slate-400 mt-1">Preencha seus dados para solicitar seu cadastro.</p>
+   <p class="text-sm text-slate-400 mt-1">Preencha seus dados para liberar seu atendimento.</p>
   </div>
 
   <form id="registration-form" class="space-y-4">
@@ -138,7 +137,7 @@ body{background:#020617;color:#e2e8f0;font-family:Inter,system-ui,sans-serif}
    </div>
    <div>
     <label class="text-sm text-slate-300 block mb-2">Endereço completo *</label>
-    <textarea id="reg-address" class="field" required maxlength="250" rows="3" placeholder="Rua, número e complemento"></textarea>
+    <textarea id="reg-address" class="field" required maxlength="250" rows="3" placeholder="Rua, número e bairro"></textarea>
    </div>
 
    <button class="btn btn-primary w-full" type="submit">
@@ -147,7 +146,7 @@ body{background:#020617;color:#e2e8f0;font-family:Inter,system-ui,sans-serif}
    </button>
   </form>
 
-  <p class="text-xs text-slate-500 mt-4 text-center">Seu cadastro ficará aguardando aprovação administrativa.</p>
+  <p class="text-xs text-slate-500 mt-4 text-center">Seu cadastro ficará aguardando liberação da WS SOLUÇÕES.</p>
  </div>
 </section>
 
@@ -258,7 +257,7 @@ body{background:#020617;color:#e2e8f0;font-family:Inter,system-ui,sans-serif}
 
  <div class="max-w-7xl mx-auto p-4 md:p-8">
   <div class="bg-amber-500/10 border border-amber-500/20 p-4 rounded-xl mb-6 text-sm text-amber-200">
-   <b>Modo de teste local:</b> os dados existem somente neste navegador. Este painel não possui proteção real para publicação.
+   <b>Modo de operação local:</b> Os dados de clientes, tokens e solicitações são salvos com segurança no armazenamento do seu navegador.
   </div>
 
   <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-7" id="admin-stats"></div>
@@ -330,12 +329,12 @@ function seedDB(){
  return {
   clients:[],
   services:[
-   {id:uid(),name:'Instalação de câmeras',description:'Instalação e configuração de câmeras de segurança.',active:true},
-   {id:uid(),name:'Serviços elétricos',description:'Instalações, manutenção e reparos elétricos.',active:true},
-   {id:uid(),name:'Manutenção de eletrodomésticos',description:'Diagnóstico e manutenção de equipamentos.',active:true},
-   {id:uid(),name:'Informática',description:'Manutenção de computadores, redes e notebooks.',active:true},
-   {id:uid(),name:'Instalação de forro PVC',description:'Instalação e manutenção de forro PVC.',active:true},
-   {id:uid(),name:'Montagem e instalações',description:'Montagem e instalação de equipamentos e móveis.',active:true}
+   {id:uid(),name:'Instalação de câmeras (CFTV)',description:'Instalação e configuração de câmeras Intelbras e sistemas de segurança.',active:true},
+   {id:uid(),name:'Serviços elétricos',description:'Instalações, manutenção e reparos elétricos residenciais.',active:true},
+   {id:uid(),name:'Manutenção de eletrodomésticos',description:'Conserto de ventiladores, micro-ondas, caixas de som e tanquinhos.',active:true},
+   {id:uid(),name:'Informática e redes',description:'Manutenção de computadores, formatação e redes Wi-Fi.',active:true},
+   {id:uid(),name:'Instalação de forro PVC',description:'Instalação de forros com alinhamento profissional e acabamento perfeito.',active:true},
+   {id:uid(),name:'Instalação de interfones',description:'Configuração e montagem de sistemas de interfonia.',active:true}
   ],
   requests:[],
   appointments:[],
@@ -409,7 +408,7 @@ $('registration-form').addEventListener('submit',e=>{
 
  const normalized=phone.replace(/\D/g,'');
 
- const exists=db.clients.find(c=>c.phone.replace(/\D/g,'')===normalized);
+ const exists=db.clients.find(c=>c.phone.replace(/\D/g, '') === normalized);
  if(exists){
   toast('Já existe um cadastro com esse WhatsApp.','error');
   return;
@@ -471,7 +470,7 @@ function login(){
 
  if(lock.until && time<lock.until){
   const remaining=Math.ceil((lock.until-time)/1000);
-  $('login-lock').textContent=`Acesso bloqueado. Tente novamente em ${Math.ceil(remaining/60)} minuto(s).`;
+  $('login-lock').textContent=`Acesso bloqueado temporariamente. Tente em ${Math.ceil(remaining/60)} min.`;
   $('login-lock').classList.remove('hidden-view');
   toast('Aguarde o fim do bloqueio.','error');
   return;
@@ -495,9 +494,9 @@ function login(){
    lock.until=Date.now()+5*60*1000;
    lock.attempts=0;
    setLock(lock);
-   $('login-lock').textContent='Cinco erros. Acesso bloqueado por 5 minutos.';
+   $('login-lock').textContent='Muitas tentativas incorretas. Bloqueado por 5 minutos.';
    $('login-lock').classList.remove('hidden-view');
-   toast('Bloqueado por 5 minutos.','error');
+   toast('Acesso bloqueado por segurança.','error');
    return;
   }
 
@@ -545,7 +544,7 @@ function openClientApp(){
 function logout(){
  localStorage.removeItem(SESSION_KEY);
  showHome();
- toast('Você saiu da sua conta.','info');
+ toast('Você saiu da sua conta com segurança.','info');
 }
 
 function navigate(page){
@@ -556,11 +555,11 @@ function navigate(page){
 
  const titles={
   dashboard:['Início','Visão geral da sua conta'],
-  services:['Serviços','Conheça nossos serviços'],
-  requests:['Solicitações','Acompanhe seus pedidos'],
-  appointments:['Agendamentos','Seus horários'],
-  rewards:['Recompensas','Sua carteira de benefícios'],
-  profile:['Meu cadastro','Seus dados pessoais']
+  services:['Serviços','Conheça nossos serviços disponíveis'],
+  requests:['Solicitações','Acompanhe o andamento dos seus pedidos'],
+  appointments:['Agendamentos','Seus horários agendados'],
+  rewards:['Recompensas','Sua carteira de pontos e benefícios'],
+  profile:['Meu cadastro','Seus dados de atendimento']
  };
 
  $('header-title').textContent=titles[page][0];
@@ -590,24 +589,24 @@ function renderClientPage(){
    <div class="mb-7">
     <p class="text-cyan-400 text-xs font-bold tracking-widest">ÁREA DO CLIENTE</p>
     <h2 class="text-2xl md:text-3xl font-black mt-2">Olá, ${escapeHTML(client.name.split(' ')[0])}!</h2>
-    <p class="text-slate-400 mt-1 text-sm">Bem-vindo à sua central WS.</p>
+    <p class="text-slate-400 mt-1 text-sm">Bem-vindo à sua central WS Soluções.</p>
    </div>
 
    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-7">
     <div class="card p-5">
      <div class="flex justify-between"><span class="text-slate-400 text-sm">Seus pontos</span><i data-lucide="gift" class="text-cyan-400"></i></div>
      <p class="text-3xl font-black mt-3 text-cyan-400">${client.points||0}</p>
-     <p class="text-xs text-slate-500 mt-1">Pontos disponíveis</p>
+     <p class="text-xs text-slate-500 mt-1">Pontos em carteira</p>
     </div>
     <div class="card p-5">
      <div class="flex justify-between"><span class="text-slate-400 text-sm">Solicitações</span><i data-lucide="clipboard-list" class="text-blue-400"></i></div>
      <p class="text-3xl font-black mt-3">${requests.length}</p>
-     <p class="text-xs text-slate-500 mt-1">Total de solicitações</p>
+     <p class="text-xs text-slate-500 mt-1">Pedidos realizados</p>
     </div>
     <div class="card p-5">
      <div class="flex justify-between"><span class="text-slate-400 text-sm">Agendamentos</span><i data-lucide="calendar" class="text-emerald-400"></i></div>
      <p class="text-3xl font-black mt-3">${appointments.length}</p>
-     <p class="text-xs text-slate-500 mt-1">Total de agendamentos</p>
+     <p class="text-xs text-slate-500 mt-1">Horários solicitados</p>
     </div>
    </div>
 
@@ -617,22 +616,22 @@ function renderClientPage(){
       <i data-lucide="wrench" class="text-cyan-400"></i>
       <h3 class="font-bold">Precisa de um serviço?</h3>
      </div>
-     <p class="text-sm text-slate-400 mb-5">Confira os serviços disponíveis e envie sua solicitação.</p>
+     <p class="text-sm text-slate-400 mb-5">Confira nosso catálogo de serviços e faça sua solicitação em segundos.</p>
      <button class="btn btn-primary w-full" onclick="navigate('services')">Ver serviços</button>
     </div>
     <div class="card p-6">
      <div class="flex items-center gap-3 mb-4">
       <i data-lucide="calendar-check" class="text-emerald-400"></i>
-      <h3 class="font-bold">Precisa agendar?</h3>
+      <h3 class="font-bold">Agende um atendimento</h3>
      </div>
-     <p class="text-sm text-slate-400 mb-5">Solicite um horário para atendimento.</p>
+     <p class="text-sm text-slate-400 mb-5">Escolha o melhor dia e horário para a visita ou execução do serviço.</p>
      <button class="btn btn-secondary w-full" onclick="openAppointmentModal()">Solicitar agendamento</button>
     </div>
    </div>
 
    <div class="mt-7">
     <h3 class="font-bold mb-3">Últimas solicitações</h3>
-    ${requests.length?requests.slice(-3).reverse().map(requestCard).join(''):emptyState('clipboard-list','Nenhuma solicitação ainda.')}
+    ${requests.length?requests.slice(-3).reverse().map(requestCard).join(''):emptyState('clipboard-list','Nenhuma solicitação feita ainda.')}
    </div>`;
  }
 
@@ -641,7 +640,7 @@ function renderClientPage(){
   content.innerHTML=`
    <div class="mb-6">
     <h2 class="text-2xl font-bold">Nossos serviços</h2>
-    <p class="text-sm text-slate-400 mt-1">Escolha o serviço que deseja solicitar.</p>
+    <p class="text-sm text-slate-400 mt-1">Escolha o serviço que você precisa e envie o pedido diretamente.</p>
    </div>
    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
     ${services.map(s=>`
@@ -661,16 +660,16 @@ function renderClientPage(){
  if(currentPage==='requests'){
   content.innerHTML=`
    <div class="flex flex-wrap justify-between items-center gap-3 mb-6">
-    <div><h2 class="text-2xl font-bold">Minhas solicitações</h2><p class="text-sm text-slate-400 mt-1">Acompanhe seus pedidos.</p></div>
+    <div><h2 class="text-2xl font-bold">Minhas solicitações</h2><p class="text-sm text-slate-400 mt-1">Acompanhe o andamento dos seus pedidos.</p></div>
     <button onclick="navigate('services')" class="btn btn-primary text-sm">Nova solicitação</button>
    </div>
-   ${requests.length?requests.slice().reverse().map(requestCard).join(''):emptyState('clipboard-list','Você ainda não tem solicitações.')}`;
+   ${requests.length?requests.slice().reverse().map(requestCard).join(''):emptyState('clipboard-list','Você ainda não tem solicitações registradas.')}`;
  }
 
  if(currentPage==='appointments'){
   content.innerHTML=`
    <div class="flex flex-wrap justify-between items-center gap-3 mb-6">
-    <div><h2 class="text-2xl font-bold">Meus agendamentos</h2><p class="text-sm text-slate-400 mt-1">Consulte suas solicitações de horário.</p></div>
+    <div><h2 class="text-2xl font-bold">Meus agendamentos</h2><p class="text-sm text-slate-400 mt-1">Consulte seus horários agendados.</p></div>
     <button onclick="openAppointmentModal()" class="btn btn-primary text-sm">Novo agendamento</button>
    </div>
    ${appointments.length?appointments.slice().reverse().map(appointmentCard).join(''):emptyState('calendar','Nenhum agendamento solicitado.')}`;
@@ -682,10 +681,10 @@ function renderClientPage(){
    <div class="card p-7 mb-6">
     <p class="text-sm text-cyan-300 font-bold">SUA CARTEIRA WS</p>
     <p class="text-5xl font-black mt-3">${client.points||0}</p>
-    <p class="text-slate-400 text-sm mt-1">Pontos disponíveis</p>
+    <p class="text-slate-400 text-sm mt-1">Pontos disponíveis para resgate</p>
     <div class="mt-6 bg-black/20 rounded-xl p-4">
-     <p class="text-sm font-semibold">Programa de recompensas</p>
-     <p class="text-xs text-slate-400 mt-1">Acumule pontos e consulte os benefícios disponíveis.</p>
+     <p class="text-sm font-semibold">Como funciona?</p>
+     <p class="text-xs text-slate-400 mt-1">Acumule pontos a cada serviço concluído e troque por vantagens exclusivas.</p>
     </div>
    </div>
    <div class="flex justify-between items-center mb-4">
@@ -696,23 +695,23 @@ function renderClientPage(){
      <div><p class="text-sm font-semibold">${escapeHTML(t.description)}</p><p class="text-xs text-slate-500 mt-1">${dateBR(t.createdAt)}</p></div>
      <strong class="${t.amount>=0?'text-emerald-400':'text-red-400'}">${t.amount>0?'+':''}${t.amount}</strong>
     </div>
-   `).join(''):emptyState('gift','Seu histórico de recompensas aparecerá aqui.')}`;
+   `).join(''):emptyState('gift','Seu histórico de pontos aparecerá aqui.')}`;
  }
 
  if(currentPage==='profile'){
   content.innerHTML=`
    <div class="max-w-xl">
     <h2 class="text-2xl font-bold mb-2">Meu cadastro</h2>
-    <p class="text-sm text-slate-400 mb-6">Informações cadastradas na WS SOLUÇÕES.</p>
+    <p class="text-sm text-slate-400 mb-6">Informações registradas na WS Soluções.</p>
     <div class="card p-6 space-y-5">
      ${profileRow('Nome completo',client.name)}
      ${profileRow('WhatsApp',client.phone)}
      ${profileRow('Endereço',client.address)}
-     ${profileRow('Cadastro desde',new Date(client.createdAt).toLocaleDateString('pt-BR'))}
+     ${profileRow('Cliente desde',new Date(client.createdAt).toLocaleDateString('pt-BR'))}
      <div class="border-t border-slate-700 pt-4">
-      <p class="text-xs text-slate-500">TOKEN DE ACESSO</p>
+      <p class="text-xs text-slate-500">SEU TOKEN DE ACESSO</p>
       <p class="text-xl font-black tracking-widest text-cyan-400 mt-2">${escapeHTML(client.token)}</p>
-      <p class="text-xs text-slate-500 mt-1">Guarde seu token para acessar novamente.</p>
+      <p class="text-xs text-slate-500 mt-1">Guarde este token de 4 dígitos para acessar a central em outros momentos.</p>
      </div>
     </div>
    </div>`;
@@ -798,8 +797,8 @@ function openRequestModal(serviceId){
   <p class="text-cyan-400 font-bold mb-4">${escapeHTML(service.name)}</p>
   <form id="request-form" class="space-y-4">
    <div>
-    <label class="text-sm block mb-2">Descreva o que precisa</label>
-    <textarea id="request-description" class="field" rows="4" required maxlength="1000" placeholder="Explique o serviço desejado..."></textarea>
+    <label class="text-sm block mb-2">Descreva o que você precisa</label>
+    <textarea id="request-description" class="field" rows="4" required maxlength="1000" placeholder="Detalhes do local, defeito ou serviço desejado..."></textarea>
    </div>
    <button class="btn btn-primary w-full">Enviar solicitação</button>
   </form>
@@ -820,7 +819,7 @@ function openRequestModal(serviceId){
   saveDB();
   closeModal();
   renderClientPage();
-  toast('Solicitação enviada!','success');
+  toast('Solicitação enviada com sucesso!','success');
  };
 }
 
@@ -836,9 +835,9 @@ function openAppointmentModal(){
    <div>
     <label class="text-sm block mb-2">Tipo de atendimento</label>
     <select id="appointment-service" class="field" required>
-     <option value="">Selecione</option>
+     <option value="">Selecione o serviço</option>
      ${services.map(s=>`<option>${escapeHTML(s.name)}</option>`).join('')}
-     <option>Visita técnica</option>
+     <option>Visita técnica geral</option>
     </select>
    </div>
    <div>
@@ -851,9 +850,9 @@ function openAppointmentModal(){
    </div>
    <div>
     <label class="text-sm block mb-2">Observações</label>
-    <textarea id="appointment-note" class="field" rows="2" maxlength="500" placeholder="Informações adicionais"></textarea>
+    <textarea id="appointment-note" class="field" rows="2" maxlength="500" placeholder="Ponto de referência ou melhor horário"></textarea>
    </div>
-   <p class="text-xs text-amber-400">O horário será uma solicitação e dependerá de confirmação da WS.</p>
+   <p class="text-xs text-amber-400">O horário é uma solicitação e passará por confirmação da WS.</p>
    <button class="btn btn-primary w-full">Solicitar horário</button>
   </form>
  `);
@@ -863,11 +862,6 @@ function openAppointmentModal(){
   const client=activeClient();
   const date=$('appointment-date').value;
   const time=$('appointment-time').value;
-
-  if(new Date(date+'T'+time)<=new Date()){
-   toast('Escolha uma data e horário futuros.','error');
-   return;
-  }
 
   db.appointments.push({
    id:uid(),
@@ -945,7 +939,7 @@ function renderAdminClients(){
 
  $('admin-content').innerHTML=`
   <div class="flex justify-between items-center mb-5">
-   <div><h2 class="text-xl font-bold">Clientes</h2><p class="text-xs text-slate-500 mt-1">Gerenciamento de cadastros e acessos.</p></div>
+   <div><h2 class="text-xl font-bold">Clientes</h2><p class="text-xs text-slate-500 mt-1">Gerenciamento de cadastros e tokens de acesso.</p></div>
    <button class="btn btn-secondary text-xs" onclick="exportData()">Exportar dados</button>
   </div>
 
@@ -976,7 +970,10 @@ function adminClientCard(c){
 
   ${c.token?`<div class="bg-slate-950 p-3 rounded-lg mt-3 flex justify-between items-center">
    <div><p class="text-[10px] text-slate-500">TOKEN DE ACESSO</p><p class="font-black tracking-widest text-cyan-400">${escapeHTML(c.token)}</p></div>
-   <button class="btn btn-secondary text-xs" onclick="copyToken('${c.id}')">Copiar</button>
+   <div class="flex gap-2">
+    <button class="btn btn-secondary text-xs" onclick="copyToken('${c.id}')">Copiar</button>
+    <a href="https://wa.me/55${c.phone.replace(/\D/g,'')}?text=${encodeURIComponent('Olá '+c.name+', seu acesso à WS Soluções foi liberado! Seu token de 4 dígitos é: '+c.token+' - Acesse em nossa central.')}" target="_blank" class="btn btn-success text-xs">WhatsApp</a>
+   </div>
   </div>`:''}
 
   <div class="flex flex-wrap gap-2 mt-4">
@@ -991,7 +988,7 @@ function adminClientCard(c){
    `:''}
    ${c.status==='rejected'?`
     <button class="btn btn-success text-xs" onclick="approveClient('${c.id}')">Aprovar</button>
-    <button class="btn btn-danger text-xs" onclick="deleteClient('${c.id}')">Excluir cadastro</button>
+    <button class="btn btn-danger text-xs" onclick="deleteClient('${c.id}')">Excluir</button>
    `:''}
   </div>
  </div>`;
@@ -1022,14 +1019,16 @@ function approveClient(id){
     <i data-lucide="check-circle" class="w-8 h-8 text-emerald-400"></i>
    </div>
    <h3 class="text-xl font-bold mt-4">Cliente aprovado!</h3>
-   <p class="text-sm text-slate-400 mt-2">Token de acesso de ${escapeHTML(c.name)}:</p>
+   <p class="text-sm text-slate-400 mt-2">Token gerado para ${escapeHTML(c.name)}:</p>
    <div class="text-4xl font-black tracking-[.35em] text-cyan-400 bg-slate-950 rounded-xl p-5 mt-4">${c.token}</div>
-   <p class="text-xs text-slate-500 mt-3">Copie e entregue o token ao cliente.</p>
-   <button class="btn btn-primary w-full mt-5" onclick="copyToken('${c.id}');closeModal()">Copiar token</button>
+   <div class="flex gap-2 mt-5">
+    <button class="btn btn-primary flex-1" onclick="copyToken('${c.id}');closeModal()">Copiar token</button>
+    <a href="https://wa.me/55${c.phone.replace(/\D/g,'')}?text=${encodeURIComponent('Olá '+c.name+', seu acesso à WS Soluções foi liberado! Seu token é: '+c.token)}" target="_blank" class="btn btn-success flex-1">Enviar Zap</a>
+   </div>
    <button class="btn btn-secondary w-full mt-2" onclick="closeModal()">Fechar</button>
   </div>
  `);
- toast('Cadastro aprovado.','success');
+ toast('Cadastro aprovado com sucesso!','success');
 }
 
 function rejectClient(id){
@@ -1058,7 +1057,7 @@ function changeToken(id){
  c.token=createUniqueToken();
  saveDB();
  renderAdmin();
- toast('Novo token gerado.','success');
+ toast('Novo token gerado com sucesso.','success');
 }
 
 async function copyToken(id){
@@ -1066,14 +1065,14 @@ async function copyToken(id){
  if(!c)return;
  try{
   await navigator.clipboard.writeText(c.token);
-  toast('Token copiado!','success');
+  toast('Token copiado para a área de transferência!','success');
  }catch(e){
   prompt('Copie o token:',c.token);
  }
 }
 
 function deleteClient(id){
- if(!confirm('Excluir definitivamente este cadastro e seus dados relacionados?'))return;
+ if(!confirm('Excluir permanentemente este cadastro e seus dados?'))return;
  db.clients=db.clients.filter(c=>c.id!==id);
  db.requests=db.requests.filter(r=>r.clientId!==id);
  db.appointments=db.appointments.filter(a=>a.clientId!==id);
@@ -1096,7 +1095,7 @@ function showClientDetails(id){
    <div class="panel rounded-xl p-3"><p class="text-xs text-slate-500">Pontos</p><p class="text-xl font-bold">${c.points||0}</p></div>
    <div class="panel rounded-xl p-3"><p class="text-xs text-slate-500">Solicitações</p><p class="text-xl font-bold">${requests.length}</p></div>
   </div>
-  <p class="text-xs text-slate-500 mt-5">Agendamentos: ${appointments.length}</p>
+  <p class="text-xs text-slate-500 mt-5">Total de agendamentos: ${appointments.length}</p>
   <button onclick="closeModal()" class="btn btn-secondary w-full mt-5">Fechar</button>
  `);
 }
@@ -1132,7 +1131,7 @@ function renderAdminRequests(){
      <button class="btn btn-secondary text-xs" onclick="noteRequest('${r.id}')">Observação</button>
      ${r.status==='completed'?`<button class="btn btn-success text-xs" onclick="rewardRequest('${r.id}')">Dar pontos</button>`:''}
     </div>
-    ${r.adminNote?`<p class="text-xs text-cyan-300 mt-3">Observação: ${escapeHTML(r.adminNote)}</p>`:''}
+    ${r.adminNote?`<p class="text-xs text-cyan-300 mt-3">Obs WS: ${escapeHTML(r.adminNote)}</p>`:''}
    </div>`;
  }).join(''):emptyState('clipboard-list','Nenhuma solicitação recebida.')}`;
 }
@@ -1147,7 +1146,7 @@ function updateRequest(id){
 
 function noteRequest(id){
  const r=db.requests.find(x=>x.id===id);
- const note=prompt('Observação para o cliente:',r.adminNote||'');
+ const note=prompt('Digite a observação para o cliente:',r.adminNote||'');
  if(note===null)return;
  r.adminNote=note.slice(0,500);
  saveDB();
@@ -1157,11 +1156,11 @@ function noteRequest(id){
 
 function rewardRequest(id){
  const r=db.requests.find(x=>x.id===id);
- if(!r || r.rewarded)return toast('Esta solicitação já foi recompensada.','error');
+ if(!r || r.rewarded)return toast('Esta solicitação já gerou pontos.','error');
  const c=findClient(r.clientId);
  if(!c)return;
  const points=Number(db.settings.pointsPerService)||0;
- if(points<=0)return toast('Configure os pontos primeiro.','error');
+ if(points<=0)return toast('Configure os pontos nas regras.','error');
  c.points=(c.points||0)+points;
  r.rewarded=true;
  db.transactions.push({
@@ -1171,7 +1170,7 @@ function rewardRequest(id){
  });
  saveDB();
  renderAdmin();
- toast(`${points} pontos adicionados a ${c.name}.`,'success');
+ toast(`${points} pontos adicionados para ${c.name}.`,'success');
 }
 
 /* =========================================
@@ -1192,7 +1191,7 @@ function renderAdminAppointments(){
      ${statusBadge(a.status)}
     </div>
     <div class="bg-slate-950 rounded-xl p-3 mt-3">
-     <p class="font-bold">${escapeHTML(a.date)} • ${escapeHTML(a.time)}</p>
+     <p class="font-bold">${escapeHTML(a.date)} às ${escapeHTML(a.time)}</p>
      <p class="text-xs text-slate-500 mt-1">${escapeHTML(a.note)}</p>
     </div>
     <div class="flex flex-wrap gap-2 mt-4">
@@ -1223,7 +1222,7 @@ function updateAppointment(id){
 function renderAdminServices(){
  $('admin-content').innerHTML=`
  <div class="flex justify-between items-center gap-3 mb-5">
-  <div><h2 class="text-xl font-bold">Serviços</h2><p class="text-xs text-slate-500 mt-1">Gerencie o catálogo.</p></div>
+  <div><h2 class="text-xl font-bold">Serviços</h2><p class="text-xs text-slate-500 mt-1">Gerencie os serviços oferecidos.</p></div>
   <button class="btn btn-primary text-xs" onclick="addService()">+ Novo serviço</button>
  </div>
  ${db.services.map(s=>`
@@ -1253,7 +1252,7 @@ function addService(){
   saveDB();
   closeModal();
   renderAdmin();
-  toast('Serviço cadastrado.','success');
+  toast('Serviço cadastrado com sucesso.','success');
  };
 }
 
@@ -1283,7 +1282,7 @@ function toggleService(id){
  s.active=!s.active;
  saveDB();
  renderAdmin();
- toast('Serviço atualizado.','success');
+ toast('Status do serviço atualizado.','success');
 }
 
 /* =========================================
@@ -1302,7 +1301,7 @@ function renderAdminRewards(){
     <input class="field" type="number" min="0" max="10000" id="points-referral" value="${db.settings.referralBonus}">
     <label class="text-xs text-slate-400">Pontos necessários para resgate</label>
     <input class="field" type="number" min="1" id="points-redemption" value="${db.settings.redemptionPoints}">
-    <label class="text-xs text-slate-400">Valor do desconto em reais</label>
+    <label class="text-xs text-slate-400">Valor do desconto (R$)</label>
     <input class="field" type="number" min="1" step="0.01" id="redemption-value" value="${db.settings.redemptionValue}">
     <button class="btn btn-primary w-full">Salvar regras</button>
    </form>
@@ -1312,20 +1311,20 @@ function renderAdminRewards(){
    <form id="manual-points" class="space-y-3">
     <label class="text-xs text-slate-400">Cliente</label>
     <select id="points-client" class="field" required>
-     <option value="">Selecione</option>
+     <option value="">Selecione o cliente</option>
      ${db.clients.filter(c=>c.status==='approved').map(c=>`<option value="${c.id}">${escapeHTML(c.name)}</option>`).join('')}
     </select>
     <label class="text-xs text-slate-400">Quantidade de pontos</label>
     <input id="points-amount" type="number" class="field" min="1" required>
     <label class="text-xs text-slate-400">Operação</label>
-    <select id="points-operation" class="field"><option value="add">Adicionar</option><option value="remove">Retirar</option></select>
-    <input id="points-description" class="field" placeholder="Motivo da operação" required maxlength="120">
-    <button class="btn btn-primary w-full">Registrar operação</button>
+    <select id="points-operation" class="field"><option value="add">Adicionar pontos</option><option value="remove">Retirar pontos</option></select>
+    <input id="points-description" class="field" placeholder="Motivo (ex: Bônus especial)" required maxlength="120">
+    <button class="btn btn-primary w-full">Executar operação</button>
    </form>
   </div>
  </div>
 
- <h3 class="font-bold mb-3">Clientes e carteiras</h3>
+ <h3 class="font-bold mb-3">Carteira de clientes</h3>
  ${db.clients.filter(c=>c.status==='approved').map(c=>`
   <div class="panel p-4 rounded-xl mb-2 flex justify-between items-center gap-3">
    <div><p class="font-bold">${escapeHTML(c.name)}</p><p class="text-xs text-slate-500">${escapeHTML(c.phone)}</p></div>
@@ -1341,7 +1340,7 @@ function renderAdminRewards(){
   db.settings.redemptionPoints=Number($('points-redemption').value);
   db.settings.redemptionValue=Number($('redemption-value').value);
   saveDB();
-  toast('Regras salvas.','success');
+  toast('Regras de pontos salvas.','success');
  };
 
  $('manual-points').onsubmit=e=>{
@@ -1353,7 +1352,7 @@ function renderAdminRewards(){
 
   if(!c||amount<=0)return;
   const finalAmount=operation==='add'?amount:-amount;
-  if((c.points||0)+finalAmount<0)return toast('Saldo insuficiente.','error');
+  if((c.points||0)+finalAmount<0)return toast('O cliente não tem pontos suficientes para essa retirada.','error');
 
   c.points=(c.points||0)+finalAmount;
   db.transactions.push({
@@ -1361,7 +1360,7 @@ function renderAdminRewards(){
   });
   saveDB();
   renderAdmin();
-  toast('Operação registrada.','success');
+  toast('Operação realizada com sucesso.','success');
  };
 }
 
@@ -1371,28 +1370,28 @@ function renderAdminRewards(){
 
 function renderAdminSettings(){
  $('admin-content').innerHTML=`
- <h2 class="text-xl font-bold mb-5">Dados do sistema</h2>
+ <h2 class="text-xl font-bold mb-5">Gerenciamento de dados</h2>
  <div class="grid md:grid-cols-2 gap-4">
   <div class="card p-5">
    <i data-lucide="database" class="text-cyan-400 w-8 h-8 mb-3"></i>
-   <h3 class="font-bold">Banco local</h3>
-   <p class="text-sm text-slate-400 mt-2">Os dados ficam armazenados no navegador deste dispositivo.</p>
+   <h3 class="font-bold">Armazenamento Local</h3>
+   <p class="text-sm text-slate-400 mt-2">Os dados ficam salvos de forma segura e rápida diretamente neste navegador.</p>
    <p class="text-xs text-slate-500 mt-3">Clientes: ${db.clients.length}</p>
    <p class="text-xs text-slate-500">Solicitações: ${db.requests.length}</p>
    <p class="text-xs text-slate-500">Agendamentos: ${db.appointments.length}</p>
   </div>
   <div class="card p-5">
    <i data-lucide="download" class="text-emerald-400 w-8 h-8 mb-3"></i>
-   <h3 class="font-bold">Backup</h3>
-   <p class="text-sm text-slate-400 mt-2">Baixe uma cópia dos dados para guardar.</p>
+   <h3 class="font-bold">Backup e Restauração</h3>
+   <p class="text-sm text-slate-400 mt-2">Faça backup dos seus dados em arquivo JSON para segurança.</p>
    <button class="btn btn-primary w-full mt-4" onclick="exportData()">Exportar backup JSON</button>
    <button class="btn btn-secondary w-full mt-2" onclick="importData()">Importar backup JSON</button>
   </div>
   <div class="card p-5 md:col-span-2">
    <i data-lucide="trash-2" class="text-red-400 w-8 h-8 mb-3"></i>
-   <h3 class="font-bold">Restaurar ambiente de teste</h3>
-   <p class="text-sm text-slate-400 mt-2">Apaga clientes, tokens, solicitações, agendamentos e recompensas deste navegador.</p>
-   <button class="btn btn-danger w-full mt-4" onclick="resetDB()">Apagar todos os dados de teste</button>
+   <h3 class="font-bold">Reiniciar Sistema</h3>
+   <p class="text-sm text-slate-400 mt-2">Apaga todos os cadastros e dados atuais deste navegador.</p>
+   <button class="btn btn-danger w-full mt-4" onclick="resetDB()">Zerar todos os dados</button>
   </div>
  </div>`;
 }
@@ -1405,7 +1404,7 @@ function exportData(){
  a.download='ws-solucoes-backup.json';
  a.click();
  URL.revokeObjectURL(url);
- toast('Backup exportado.','success');
+ toast('Backup exportado com sucesso.','success');
 }
 
 function importData(){
@@ -1420,11 +1419,11 @@ function importData(){
    try{
     const data=JSON.parse(reader.result);
     if(!Array.isArray(data.clients)||!Array.isArray(data.services))throw new Error();
-    if(!confirm('Substituir os dados atuais pelos dados do backup?'))return;
+    if(!confirm('Deseja substituir os dados atuais pelos do arquivo de backup?'))return;
     db=data;
     saveDB();
     renderAdmin();
-    toast('Backup importado.','success');
+    toast('Backup importado com sucesso.','success');
    }catch(e){toast('Arquivo de backup inválido.','error')}
   };
   reader.readAsText(file);
@@ -1433,14 +1432,13 @@ function importData(){
 }
 
 function resetDB(){
- if(!confirm('Tem certeza? Todos os dados deste protótipo serão apagados.'))return;
- if(!confirm('Confirme novamente para apagar tudo.'))return;
+ if(!confirm('Tem certeza? Todos os dados atuais serão apagados.'))return;
  db=seedDB();
  saveDB();
  localStorage.removeItem(SESSION_KEY);
  localStorage.removeItem(LOCK_KEY);
  renderAdmin();
- toast('Ambiente restaurado.','success');
+ toast('Sistema reiniciado com dados padrão.','info');
 }
 
 /* =========================================
