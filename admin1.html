@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#020617">
+<title>WS SOLUÇÕES | Painel Administrativo</title>
+
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com"></script>
+<!-- Ícones Lucide -->
+<script src="https://unpkg.com/lucide@latest"></script>
+
+<script>
+tailwind.config = {
+ darkMode:'class',
+ theme:{
+  extend:{
+   colors:{
+    brand:{
+     400:'#22d3ee',
+     500:'#06b6d4',
+     600:'#0891b2'
+    }
+   },
+   fontFamily:{
+    sans:['Inter','system-ui','sans-serif']
+   }
+  }
+ }
+}
+</script>
+
+<style>
+*{box-sizing:border-box}
+body{background:#020617;color:#e2e8f0;font-family:Inter,system-ui,sans-serif}
+.glass{background:rgba(15,23,42,0.9);border:1px solid rgba(148,163,184,0.08);backdrop-filter:blur(20px)}
+.panel{background:#0b1329;border:1px solid #1e293b}
+.field{width:100%;background:#020617;border:1px solid #334155;border-radius:12px;padding:12px;color:white;outline:none;transition:0.2s}
+.field:focus{border-color:#06b6d4;box-shadow:0 0 0 3px rgba(6,182,212,0.15)}
+.btn{padding:10px 16px;border-radius:12px;font-weight:600;transition:0.2s;display:inline-flex;align-items:center;justify-content:center;gap:8px}
+.btn-primary{background:linear-gradient(135deg, #0891b2, #06b6d4);color:white;box-shadow:0 4px 12px rgba(6,182,212,0.25)}
+.btn-primary:hover{opacity:0.9}
+.btn-secondary{background:#1e293b;color:#e2e8f0;border:1px solid #334155}
+.btn-success{background:#14532d;color:#bbf7d0;border:1px solid #166534}
+.btn-danger{background:#7f1d1d;color:#fecaca;border:1px solid #991b1b}
+.card{background:linear-gradient(145deg,#0e172a,#080f1e);border:1px solid #1e293b;border-radius:20px}
+.badge{font-size:11px;padding:4px 10px;border-radius:30px;font-weight:700}
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-thumb{background:#334155;border-radius:10px}
+</style>
+</head>
+
+<body class="min-h-screen selection:bg-cyan-500 selection:text-black p-4 md:p-8">
+
+<div id="toast-container" class="fixed top-4 right-4 z-[200] space-y-2"></div>
+
+<div class="max-w-6xl mx-auto space-y-6">
+ <!-- TOPO DO ADM -->
+ <header class="glass p-5 rounded-2xl flex flex-wrap items-center justify-between gap-4 border border-slate-800">
+  <div class="flex items-center gap-3">
+   <div class="w-10 h-10 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400">
+    <i data-lucide="shield-check" class="w-6 h-6"></i>
+   </div>
+   <div>
+    <h1 class="text-lg font-black tracking-wider text-cyan-400">WS ADMIN</h1>
+    <p class="text-xs text-slate-400">Painel de Controle e Gestão</p>
+   </div>
+  </div>
+  <div class="flex items-center gap-2">
+   <span class="text-xs bg-cyan-500/10 text-cyan-300 border border-cyan-500/30 px-3 py-1.5 rounded-xl font-semibold">Modo Local (Compartilha banco com o Cliente)</span>
+  </div>
+ </header>
+
+ <!-- ABAS DE NAVEGAÇÃO DO ADM -->
+ <div class="flex gap-2 overflow-x-auto pb-2" id="admin-nav">
+  <button onclick="switchAdminTab('clients')" class="btn btn-primary text-xs whitespace-nowrap" data-tab="clients">Gerenciar Clientes & Tokens</button>
+  <button onclick="switchAdminTab('appointments')" class="btn btn-secondary text-xs whitespace-nowrap" data-tab="appointments">Agenda & Confirmações WhatsApp</button>
+  <button onclick="switchAdminTab('requests')" class="btn btn-secondary text-xs whitespace-nowrap" data-tab="requests">Chamados de Serviços</button>
+ </div>
+
+ <!-- CONTEÚDO DAS ABAS -->
+ <main id="admin-content" class="space-y-4"></main>
+</div>
+
+<script>
+/* =========================================
+   LÓGICA DO PAINEL ADM (Sincronizado via LocalStorage)
+========================================= */
+const DB_KEY = 'ws_solucoes_db_v3';
+const $ = id => document.getElementById(id);
+
+let db = JSON.parse(localStorage.getItem(DB_KEY)) || { clients: [], services: [], requests: [], appointments: [] };
+function saveDB() { localStorage.setItem(DB_KEY, JSON.stringify(db)); }
+
+function toast(msg, type='info') {
+ const el = document.createElement('div');
+ const colors = { success: 'border-emerald-500 text-emerald-300', error: 'border-red-500 text-red-300', info: 'border-cyan-500 text-cyan-300' };
+ el.className = `bg-slate-900 border-l-4 ${colors[type]} rounded-xl shadow-2xl px-4 py-3 text-xs max-w-sm`;
+ el.textContent = msg;
+ $('toast-container').appendChild(el);
+ setTimeout(() => el.remove(), 3500);
+}
+
+let currentAdminTab = 'clients';
+
+function switchAdminTab(tab) {
+ currentAdminTab = tab;
+ document.querySelectorAll('#admin-nav button').forEach(b => {
+  b.className = 'btn text-xs whitespace-nowrap ' + (b.dataset.tab === tab ? 'btn-primary' : 'btn-secondary');
+ });
+ renderAdminContent();
+}
+
+function renderAdminContent() {
+ db = JSON.parse(localStorage.getItem(DB_KEY)) || db;
+ const container = $('admin-content');
+
+ if(currentAdminTab === 'clients') {
+  container.innerHTML = `
+   <div class="card p-5">
+    <h2 class="font-bold text-sm mb-4 text-slate-200">Clientes Cadastrados & Liberação de Tokens</h2>
+    <div class="space-y-3">
+     ${db.clients.length ? db.clients.map(c => `
+      <div class="panel p-4 rounded-xl flex flex-wrap justify-between items-center gap-4 text-xs">
+       <div>
+        <p class="font-bold text-sm text-cyan-300">${c.name} <span class="badge ${c.status === 'approved' ? 'bg-emerald-500/20 text-emerald-300' : 'bg-amber-500/20 text-amber-300'} ml-2">${c.status === 'approved' ? 'Aprovado' : 'Pendente'}</span></p>
+        <p class="text-slate-400 mt-1">WhatsApp: <b>${c.phone}</b> | Endereço: ${c.address}</p>
+        ${c.indicacao ? `<p class="text-cyan-400 mt-1">Indicado por (WhatsApp): ${c.indicacao}</p>` : ''}
+        <p class="text-slate-500 mt-1">Token atual: <b class="text-cyan-400 tracking-widest">${c.token || 'Não gerado'}</b> | Pontos: ${c.points || 0}</p>
+       </div>
+       <div class="flex gap-2">
+        ${c.status !== 'approved' ? `
+         <button onclick="approveClient('${c.id}')" class="btn btn-success text-xs">Aprovar & Gerar Token</button>
+        ` : `
+         <button onclick="promptNewToken('${c.id}')" class="btn btn-secondary text-xs">Trocar Token</button>
+        `}
+        <button onclick="deleteClient('${c.id}')" class="btn btn-danger text-xs">Excluir</button>
+       </div>
+      </div>
+     `).join('') : '<p class="text-slate-500 text-xs">Nenhum cliente cadastrado ainda.</p>'}
+    </div>
+   </div>`;
+ } else if(currentAdminTab === 'appointments') {
+  container.innerHTML = `
+   <div class="card p-5">
+    <h2 class="font-bold text-sm mb-4 text-slate-200">Agenda de Atendimentos & Atalhos WhatsApp</h2>
+    <div class="space-y-3">
+     ${db.appointments.length ? db.appointments.map(a => {
+      const client = db.clients.find(c => c.id === a.clientId) || { name: 'Cliente Removido', phone: '88999999999' };
+      const msgAprovado = encodeURIComponent(`Olá ${client.name}! Seu agendamento para *${a.service}* na data *${a.date}* às *${a.time}* foi *APROVADO* pela WS Soluções. Nos vemos lá!`);
+      const msgRecusado = encodeURIComponent(`Olá ${client.name}! Infelizmente não conseguiremos atender o agendamento de *${a.service}* em ${a.date} às ${a.time} devido à nossa agenda. Poderíamos remarcar?`);
+
+      return `
+       <div class="panel p-4 rounded-xl flex flex-wrap justify-between items-center gap-4 text-xs">
+        <div>
+         <p class="font-bold text-sm text-cyan-300">${a.service} <span class="badge ${a.status === 'Aprovado' ? 'bg-emerald-500/20 text-emerald-300' : a.status === 'Recusado' ? 'bg-red-500/20 text-red-300' : 'bg-amber-500/20 text-amber-300'} ml-2">${a.status}</span></p>
+         <p class="text-slate-300 mt-1">Cliente: <b>${client.name}</b> (${client.phone})</p>
+         <p class="text-cyan-400 mt-1">Data/Hora: ${a.date} às ${a.time}</p>
+        </div>
+        <div class="flex flex-wrap gap-2">
+         <button onclick="updateAppointmentStatus('${a.id}', 'Aprovado')" class="btn btn-success text-xs">Aprovar</button>
+         <button onclick="updateAppointmentStatus('${a.id}', 'Recusado')" class="btn btn-danger text-xs">Recusar</button>
+         <a href="https://wa.me/55${client.phone.replace(/\D/g,'')}?text=${msgAprovado}" target="_blank" class="btn btn-primary text-xs">Zap Confirmação</a>
+         <a href="https://wa.me/55${client.phone.replace(/\D/g,'')}?text=${msgRecusado}" target="_blank" class="btn btn-secondary text-xs">Zap Recusa</a>
+        </div>
+       </div>`;
+     }).join('') : '<p class="text-slate-500 text-xs">Nenhum agendamento solicitado pelos clientes.</p>'}
+    </div>
+   </div>`;
+ } else if(currentAdminTab === 'requests') {
+  container.innerHTML = `
+   <div class="card p-5">
+    <h2 class="font-bold text-sm mb-4 text-slate-200">Chamados e Solicitações de Serviços</h2>
+    <div class="space-y-3">
+     ${db.requests.length ? db.requests.map(r => {
+      const client = db.clients.find(c => c.id === r.clientId) || { name: 'Cliente Removido', phone: '88999999999' };
+      return `
+       <div class="panel p-4 rounded-xl flex flex-wrap justify-between items-center gap-4 text-xs">
+        <div>
+         <p class="font-bold text-sm text-cyan-300">${r.service} <span class="badge bg-blue-500/20 text-blue-300 ml-2">${r.status}</span></p>
+         <p class="text-slate-300 mt-1">Cliente: <b>${client.name}</b> (${client.phone})</p>
+         <p class="text-slate-400 mt-1">Detalhes: ${r.desc}</p>
+        </div>
+        <div>
+         <button onclick="concludeRequestAndReward('${r.id}', '${r.clientId}')" class="btn btn-primary text-xs">Concluir & Dar Pontos</button>
+        </div>
+       </div>`;
+     }).join('') : '<p class="text-slate-500 text-xs">Nenhum chamado aberto.</p>'}
+    </div>
+   </div>`;
+ }
+ if(window.lucide) lucide.createIcons();
+}
+
+// Funções Administrativas
+function approveClient(id) {
+ const client = db.clients.find(c => c.id === id);
+ if(!client) return;
+ client.status = 'approved';
+ client.token = 'WS' + Math.floor(1000 + Math.random() * 9000); // Token de 4 dígitos seguro
+ saveDB();
+ renderAdminContent();
+ toast(`Cliente ${client.name} aprovado! Token gerado: ${client.token}`, 'success');
+}
+
+function promptNewToken(id) {
+ const client = db.clients.find(c => c.id === id);
+ const newToken = prompt('Digite o novo token de 4 caracteres para este cliente:', 'AB12');
+ if(!newToken || newToken.length !== 4) return;
+ client.token = newToken.toUpperCase();
+ saveDB();
+ renderAdminContent();
+ toast('Token atualizado com sucesso!', 'success');
+}
+
+function deleteClient(id) {
+ if(!confirm('Deseja excluir este cliente?')) return;
+ db.clients = db.clients.filter(c => c.id !== id);
+ saveDB();
+ renderAdminContent();
+ toast('Cliente excluído.', 'info');
+}
+
+function updateAppointmentStatus(id, status) {
+ const app = db.appointments.find(a => a.id == id);
+ if(!app) return;
+ app.status = status;
+ saveDB();
+ renderAdminContent();
+ toast(`Agendamento marcado como ${status}.`, 'success');
+}
+
+function concludeRequestAndReward(reqId, clientId) {
+ const req = db.requests.find(r => r.id == reqId);
+ const client = db.clients.find(c => c.id == clientId);
+ if(!req || !client) return;
+
+ req.status = 'Concluído';
+ client.points = (client.points || 0) + 20; // Adiciona 20 pontos por serviço concluído
+
+ // Verificar se tem indicação válida para creditar o "padrinho"
+ if(client.indicacao) {
+  const padrinho = db.clients.find(p => p.phone.includes(client.indicacao.replace(/\D/g,'')));
+  if(padrinho) {
+   padrinho.points = (padrinho.points || 0) + 20; // Bônus de indicação validada
+   toast(`Indicação validada! +20 pontos para o padrinho ${padrinho.name}.`, 'success');
+  }
+ }
+
+ saveDB();
+ renderAdminContent();
+ toast(`Serviço concluído! +20 pontos creditados para ${client.name}.`, 'success');
+}
+
+// Inicialização do ADM
+renderAdminContent();
+</script>
+</body>
+</html>
