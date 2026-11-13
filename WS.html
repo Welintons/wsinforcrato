@@ -34,223 +34,210 @@ tailwind.config = {
 <style>
 *{box-sizing:border-box}
 body{background:#020617;color:#e2e8f0;font-family:Inter,system-ui,sans-serif}
-.glass{background:rgba(15,23,42,.88);border:1px solid rgba(148,163,184,.12);backdrop-filter:blur(16px)}
-.panel{background:#0f172a;border:1px solid #1e293b}
-.field{width:100%;background:#020617;border:1px solid #334155;border-radius:12px;padding:13px;color:white;outline:none;transition:.2s}
-.field:focus{border-color:#06b6d4;box-shadow:0 0 0 3px #06b6d422}
-.btn{padding:12px 16px;border-radius:12px;font-weight:650;transition:.2s;display:inline-flex;align-items:center;justify-content:center;gap:8px}
-.btn-primary{background:#0891b2;color:white}
-.btn-primary:hover{background:#06b6d4}
+.glass{background:rgba(15,23,42,0.9);border:1px solid rgba(148,163,184,0.08);backdrop-filter:blur(20px)}
+.panel{background:#0b1329;border:1px solid #1e293b}
+.field{width:100%;background:#020617;border:1px solid #334155;border-radius:14px;padding:14px;color:white;outline:none;transition:0.2s}
+.field:focus{border-color:#06b6d4;box-shadow:0 0 0 3px rgba(6,182,212,0.15)}
+.btn{padding:12px 18px;border-radius:14px;font-weight:600;transition:0.2s;display:inline-flex;align-items:center;justify-content:center;gap:8px}
+.btn-primary{background:linear-gradient(135deg, #0891b2, #06b6d4);color:white;box-shadow:0 4px 12px rgba(6,182,212,0.25)}
+.btn-primary:hover{opacity:0.9}
 .btn-secondary{background:#1e293b;color:#e2e8f0;border:1px solid #334155}
 .btn-danger{background:#7f1d1d;color:#fecaca}
-.btn-success{background:#14532d;color:#bbf7d0}
-.btn:disabled{opacity:.45;cursor:not-allowed}
-.card{background:linear-gradient(145deg,#111e32,#0b1425);border:1px solid #26364c;border-radius:18px}
-.navbtn{display:flex;align-items:center;gap:10px;width:100%;padding:12px;border-radius:11px;color:#94a3b8;text-align:left}
-.navbtn.active,.navbtn:hover{background:#164e63;color:#67e8f9}
-.badge{font-size:11px;padding:4px 9px;border-radius:30px;font-weight:700}
-.modal-bg{position:fixed;inset:0;background:#000b;z-index:100;display:flex;align-items:center;justify-content:center;padding:16px}
-.modal{background:#0f172a;border:1px solid #334155;border-radius:20px;width:100%;max-width:460px;padding:24px;max-height:90vh;overflow:auto}
-::-webkit-scrollbar{width:6px}
+.card{background:linear-gradient(145deg,#0e172a,#080f1e);border:1px solid #1e293b;border-radius:20px}
+.badge{font-size:11px;padding:4px 10px;border-radius:30px;font-weight:700}
+.modal-bg{position:fixed;inset:0;background:rgba(2,6,23,0.85);z-index:100;display:flex;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(8px)}
+.modal{background:#0b1329;border:1px solid #334155;border-radius:24px;width:100%;max-width:460px;padding:24px;max-height:90vh;overflow:auto}
+::-webkit-scrollbar{width:5px}
 ::-webkit-scrollbar-thumb{background:#334155;border-radius:10px}
 .hidden-view{display:none!important}
-@media(min-width:768px){.app-layout{grid-template-columns:240px 1fr}}
 </style>
 </head>
 
-<body class="min-h-screen">
+<body class="min-h-screen selection:bg-cyan-500 selection:text-black">
 
 <div id="toast-container" class="fixed top-4 right-4 z-[200] space-y-2"></div>
 
-<!-- TELA INICIAL (LOGIN POR TOKEN) -->
+<!-- ================= TELA DE LOGIN (TOKEN) ================= -->
 <section id="view-home" class="min-h-screen flex items-center justify-center p-4">
- <div class="w-full max-w-md">
+ <div class="w-full max-w-sm">
   <div class="text-center mb-8">
-   <div class="w-20 h-20 mx-auto rounded-3xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center mb-5 shadow-lg shadow-cyan-500/10">
-    <i data-lucide="zap" class="w-10 h-10 text-cyan-400"></i>
+   <div class="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-tr from-cyan-500/20 to-blue-500/20 border border-cyan-500/30 flex items-center justify-center mb-4 shadow-xl shadow-cyan-500/10">
+    <i data-lucide="zap" class="w-8 h-8 text-cyan-400"></i>
    </div>
-   <h1 class="text-3xl font-black tracking-widest text-cyan-400">WS SOLUÇÕES</h1>
-   <p class="text-slate-400 text-sm mt-2">Central do Cliente • Atendimento Direto</p>
+   <h1 class="text-2xl font-black tracking-wider text-cyan-400">WS SOLUÇÕES</h1>
+   <p class="text-slate-400 text-xs mt-1">Central do Cliente • Sem Senhas</p>
   </div>
 
-  <div class="glass rounded-3xl p-6 shadow-2xl space-y-5">
+  <div class="glass rounded-3xl p-6 shadow-2xl space-y-5 border border-slate-800/80">
    <div>
-    <h2 class="text-xl font-bold">Acesso Rápido</h2>
-    <p class="text-sm text-slate-400 mt-1">Digite seu token de 4 dígitos para entrar.</p>
+    <h2 class="text-lg font-bold">Acesso Direto</h2>
+    <p class="text-xs text-slate-400 mt-0.5">Digite seu token de 4 dígitos.</p>
    </div>
 
    <div class="space-y-2">
-    <label class="text-sm text-slate-300">Token de acesso</label>
     <input id="login-token" maxlength="4" autocomplete="off"
-     class="field text-center text-2xl font-black tracking-[.5em] uppercase"
+     class="field text-center text-2xl font-black tracking-[.4em] uppercase"
      placeholder="AA52">
-    <p class="text-xs text-slate-500 text-center">Dica de teste: digite <b>AA52</b></p>
-    <p id="login-lock" class="text-xs text-red-400 hidden-view"></p>
+    <p class="text-[11px] text-slate-500 text-center">Teste rápido: digite <b class="text-cyan-400">AA52</b></p>
    </div>
 
-   <button onclick="login()" class="btn btn-primary w-full">
-    <i data-lucide="log-in" class="w-4 h-4"></i>
-    Entrar na minha conta
+   <button onclick="login()" class="btn btn-primary w-full text-sm">
+    Entrar na Central
+    <i data-lucide="arrow-right" class="w-4 h-4"></i>
    </button>
 
-   <div class="relative flex items-center gap-3">
-    <div class="h-px bg-slate-700 flex-1"></div>
-    <span class="text-xs text-slate-500">NÃO TEM CADASTRO?</span>
-    <div class="h-px bg-slate-700 flex-1"></div>
+   <div class="relative flex items-center gap-3 py-1">
+    <div class="h-px bg-slate-800 flex-1"></div>
+    <span class="text-[10px] text-slate-500 font-semibold tracking-wider">OU</span>
+    <div class="h-px bg-slate-800 flex-1"></div>
    </div>
 
-   <button onclick="showRegistration()" class="btn btn-secondary w-full">
-    <i data-lucide="user-plus" class="w-4 h-4"></i>
-    Solicitar acesso (com WhatsApp)
+   <button onclick="showRegistration()" class="btn btn-secondary w-full text-xs">
+    <i data-lucide="user-plus" class="w-4 h-4 text-cyan-400"></i>
+    Solicitar Acesso com WhatsApp
    </button>
 
-   <div class="border-t border-slate-800 pt-4">
-    <button onclick="enterAdmin()" class="w-full text-sm text-slate-400 hover:text-cyan-400 flex items-center justify-center gap-2">
-     <i data-lucide="shield-check" class="w-4 h-4"></i>
+   <div class="border-t border-slate-800/60 pt-3 text-center">
+    <button onclick="enterAdmin()" class="text-xs text-slate-500 hover:text-cyan-400 transition-colors inline-flex items-center gap-1.5">
+     <i data-lucide="shield-check" class="w-3.5 h-3.5"></i>
      Painel Administrativo WS
     </button>
    </div>
   </div>
-
-  <p class="text-center text-xs text-slate-600 mt-6">WS SOLUÇÕES • Crato - CE e Região</p>
  </div>
 </section>
 
-<!-- TELA DE CADASTRO (EXIGE WHATSAPP) -->
+<!-- ================= TELA DE CADASTRO (EXIGE WHATSAPP) ================= -->
 <section id="view-registration" class="hidden-view min-h-screen flex items-center justify-center p-4">
- <div class="glass w-full max-w-md rounded-3xl p-6">
-  <button onclick="showHome()" class="text-slate-400 text-sm mb-6 flex items-center gap-2">
-   <i data-lucide="arrow-left" class="w-4 h-4"></i> Voltar
+ <div class="glass w-full max-w-sm rounded-3xl p-6 border border-slate-800">
+  <button onclick="showHome()" class="text-slate-400 text-xs mb-5 flex items-center gap-1.5 hover:text-slate-200">
+   <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i> Voltar
   </button>
 
-  <div class="mb-6">
-   <span class="text-cyan-400 text-xs font-bold tracking-widest">NOVO CLIENTE</span>
-   <h2 class="text-2xl font-bold mt-2">Solicitar acesso</h2>
-   <p class="text-sm text-slate-400 mt-1">Informe seu WhatsApp para receber seu token de liberação.</p>
+  <div class="mb-5">
+   <h2 class="text-xl font-bold">Solicitar Acesso</h2>
+   <p class="text-xs text-slate-400 mt-0.5">Informe seu WhatsApp para liberação do token.</p>
   </div>
 
-  <form id="registration-form" class="space-y-4">
+  <form id="registration-form" class="space-y-3.5">
    <div>
-    <label class="text-sm text-slate-300 block mb-2">Nome completo *</label>
-    <input id="reg-name" class="field" required maxlength="100" placeholder="Seu nome ou apelido">
+    <label class="text-xs text-slate-300 block mb-1">Nome ou Apelido *</label>
+    <input id="reg-name" class="field text-sm" required maxlength="100" placeholder="Ex: João da Silva">
    </div>
    <div>
-    <label class="text-sm text-slate-300 block mb-2">WhatsApp (Obrigatório) *</label>
-    <input id="reg-phone" class="field" required maxlength="20" placeholder="(88) 99999-9999">
+    <label class="text-xs text-slate-300 block mb-1">WhatsApp (Obrigatório) *</label>
+    <input id="reg-phone" class="field text-sm" required maxlength="20" placeholder="(88) 99999-9999">
    </div>
    <div>
-    <label class="text-sm text-slate-300 block mb-2">Endereço / Bairro *</label>
-    <textarea id="reg-address" class="field" required maxlength="250" rows="3" placeholder="Ex: Centro, Crato - CE"></textarea>
+    <label class="text-xs text-slate-300 block mb-1">Bairro / Endereço *</label>
+    <textarea id="reg-address" class="field text-sm" required maxlength="250" rows="2" placeholder="Ex: Centro, Crato - CE"></textarea>
+   </div>
+   <div>
+    <label class="text-xs text-slate-300 block mb-1">Quem te indicou? (Opcional)</label>
+    <input id="reg-indicacao" class="field text-sm" maxlength="50" placeholder="WhatsApp de quem indicou">
+    <p class="text-[10px] text-slate-500 mt-1">Seu amigo ganha pontos se você fechar serviço.</p>
    </div>
 
-   <button class="btn btn-primary w-full" type="submit">
-    Enviar solicitação
-    <i data-lucide="arrow-right" class="w-4 h-4"></i>
+   <button class="btn btn-primary w-full text-sm mt-2" type="submit">
+    Enviar Solicitação
    </button>
   </form>
  </div>
 </section>
 
-<!-- AGUARDANDO APROVAÇÃO -->
+<!-- ================= AGUARDANDO APROVAÇÃO ================= -->
 <section id="view-pending" class="hidden-view min-h-screen flex items-center justify-center p-4">
- <div class="glass rounded-3xl p-8 max-w-md w-full text-center">
-  <div class="w-16 h-16 rounded-full bg-amber-500/10 mx-auto flex items-center justify-center mb-5">
-   <i data-lucide="clock" class="w-8 h-8 text-amber-400"></i>
+ <div class="glass rounded-3xl p-8 max-w-sm w-full text-center border border-slate-800">
+  <div class="w-14 h-14 rounded-2xl bg-amber-500/10 border border-amber-500/20 mx-auto flex items-center justify-center mb-4">
+   <i data-lucide="clock" class="w-7 h-7 text-amber-400"></i>
   </div>
-  <h2 class="text-2xl font-bold">Solicitação enviada!</h2>
-  <p class="text-slate-400 mt-3 text-sm">Seu pedido foi registrado. Assim que aprovado por nossa equipe, você receberá o token pelo WhatsApp.</p>
-  <button onclick="showHome()" class="btn btn-secondary w-full mt-6">Voltar ao início</button>
+  <h2 class="text-xl font-bold">Solicitação Enviada!</h2>
+  <p class="text-slate-400 mt-2 text-xs leading-relaxed">Seu cadastro está aguardando liberação. Assim que aprovado, enviaremos seu token pelo WhatsApp.</p>
+  <button onclick="showHome()" class="btn btn-secondary w-full text-xs mt-6">Voltar ao Início</button>
  </div>
 </section>
 
-<!-- PAINEL PRINCIPAL DO CLIENTE -->
-<section id="view-app" class="hidden-view min-h-screen">
- <div class="app-layout grid min-h-screen">
+<!-- ================= PAINEL DO CLIENTE REFORMULADO ================= -->
+<section id="view-app" class="hidden-view min-h-screen flex flex-col">
+ <!-- Topo Moderno com Menu Sanduíche -->
+ <header class="h-16 border-b border-slate-800/80 bg-slate-950/90 backdrop-blur-md px-4 md:px-8 flex items-center justify-between sticky top-0 z-40">
+  <div class="flex items-center gap-3">
+   <div class="w-9 h-9 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400">
+    <i data-lucide="zap" class="w-5 h-5"></i>
+   </div>
+   <div>
+    <h1 class="text-sm font-bold tracking-wide text-cyan-400">WS SOLUÇÕES</h1>
+    <p class="text-[10px] text-slate-400" id="header-subtitle">Área do Cliente</p>
+   </div>
+  </div>
 
-  <!-- SIDEBAR DESKTOP -->
-  <aside class="hidden md:flex flex-col bg-slate-950 border-r border-slate-800 p-4">
-   <div class="flex items-center gap-3 p-3 mb-7">
-    <div class="w-10 h-10 rounded-xl bg-cyan-500/10 flex items-center justify-center">
-     <i data-lucide="zap" class="text-cyan-400"></i>
-    </div>
-    <div>
-     <p class="font-black tracking-wider text-cyan-400">WS SOLUÇÕES</p>
-     <p class="text-[10px] text-slate-500">CENTRAL DO CLIENTE</p>
+  <div class="flex items-center gap-3">
+   <div class="text-right hidden sm:block">
+    <p class="text-xs font-bold text-slate-200" id="header-name">Cliente</p>
+    <p class="text-[10px] text-emerald-400">Acesso Ativo</p>
+   </div>
+   
+   <!-- MENU SANDUÍCHE COMPACTO -->
+   <div class="relative">
+    <button onclick="toggleMenu()" class="w-10 h-10 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center text-slate-300 hover:text-cyan-400 hover:border-cyan-500/30 transition-all">
+     <i data-lucide="menu" class="w-5 h-5"></i>
+    </button>
+
+    <!-- Dropdown Menu Sanduíche -->
+    <div id="dropdown-menu" class="hidden absolute right-0 mt-2 w-56 bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl p-2 z-50 space-y-1">
+     <button onclick="navigate('dashboard'); toggleMenu()" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs text-slate-300 hover:bg-slate-800 hover:text-cyan-400 transition-colors">
+      <i data-lucide="layout-dashboard" class="w-4 h-4"></i> Início
+     </button>
+     <button onclick="navigate('services'); toggleMenu()" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs text-slate-300 hover:bg-slate-800 hover:text-cyan-400 transition-colors">
+      <i data-lucide="wrench" class="w-4 h-4"></i> Nossos Serviços
+     </button>
+     <button onclick="navigate('requests'); toggleMenu()" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs text-slate-300 hover:bg-slate-800 hover:text-cyan-400 transition-colors">
+      <i data-lucide="clipboard-list" class="w-4 h-4"></i> Meus Chamados
+     </button>
+     <button onclick="navigate('appointments'); toggleMenu()" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs text-slate-300 hover:bg-slate-800 hover:text-cyan-400 transition-colors">
+      <i data-lucide="calendar-days" class="w-4 h-4"></i> Agendamentos
+     </button>
+     <button onclick="navigate('rewards'); toggleMenu()" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs text-cyan-400 bg-cyan-500/10 hover:bg-cyan-500/20 font-semibold transition-colors">
+      <i data-lucide="gift" class="w-4 h-4"></i> Sistema de Pontos & Indicação
+     </button>
+     <button onclick="navigate('profile'); toggleMenu()" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs text-slate-300 hover:bg-slate-800 hover:text-cyan-400 transition-colors">
+      <i data-lucide="user" class="w-4 h-4"></i> Meu Cadastro
+     </button>
+     <div class="border-t border-slate-800 pt-1 mt-1">
+      <button onclick="logout()" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs text-red-400 hover:bg-red-950/30 transition-colors">
+       <i data-lucide="log-out" class="w-4 h-4"></i> Sair da Conta
+      </button>
+     </div>
     </div>
    </div>
+  </div>
+ </header>
 
-   <nav class="space-y-1 flex-1">
-    <button class="navbtn active" data-page="dashboard"><i data-lucide="layout-dashboard"></i> Início</button>
-    <button class="navbtn" data-page="services"><i data-lucide="wrench"></i> Serviços</button>
-    <button class="navbtn" data-page="requests"><i data-lucide="clipboard-list"></i> Solicitações</button>
-    <button class="navbtn" data-page="appointments"><i data-lucide="calendar-days"></i> Agendamentos</button>
-    <button class="navbtn" data-page="rewards"><i data-lucide="gift"></i> Meus Pontos</button>
-    <button class="navbtn" data-page="profile"><i data-lucide="user"></i> Meu Cadastro</button>
-   </nav>
+ <!-- Conteúdo Dinâmico -->
+ <main class="flex-1 p-4 md:p-8 max-w-4xl w-full mx-auto">
+  <div id="page-content"></div>
+ </main>
 
-   <button onclick="logout()" class="navbtn mt-5 text-red-400 hover:bg-red-950/30">
-    <i data-lucide="log-out"></i> Sair da conta
-   </button>
-  </aside>
-
-  <!-- CONTEÚDO PRINCIPAL -->
-  <main class="min-w-0 flex flex-col">
-   <header class="h-16 border-b border-slate-800 flex items-center justify-between px-4 md:px-8 bg-slate-950/80 sticky top-0 z-30">
-    <div class="flex items-center gap-3">
-     <div class="md:hidden w-9 h-9 bg-cyan-500/10 rounded-lg flex items-center justify-center">
-      <i data-lucide="zap" class="text-cyan-400"></i>
-     </div>
-     <div>
-      <p class="font-bold" id="header-title">Início</p>
-      <p class="text-[10px] text-slate-500" id="header-subtitle">Área do cliente</p>
-     </div>
-    </div>
-    <div class="flex items-center gap-3">
-     <div class="text-right">
-      <p class="text-xs font-bold" id="header-name">Cliente</p>
-      <p class="text-[10px] text-emerald-400">Token Ativo</p>
-     </div>
-     <div class="w-9 h-9 rounded-full bg-cyan-900 flex items-center justify-center text-cyan-300 font-bold" id="avatar">C</div>
-    </div>
-   </header>
-
-   <!-- MENU MOBILE -->
-   <div class="md:hidden flex overflow-x-auto gap-2 p-3 border-b border-slate-800 bg-slate-950">
-    <button class="btn btn-secondary text-xs whitespace-nowrap" onclick="navigate('dashboard')">Início</button>
-    <button class="btn btn-secondary text-xs whitespace-nowrap" onclick="navigate('services')">Serviços</button>
-    <button class="btn btn-secondary text-xs whitespace-nowrap" onclick="navigate('requests')">Chamados</button>
-    <button class="btn btn-secondary text-xs whitespace-nowrap" onclick="navigate('appointments')">Agenda</button>
-    <button class="btn btn-secondary text-xs whitespace-nowrap" onclick="navigate('rewards')">Pontos</button>
-    <button class="btn btn-danger text-xs whitespace-nowrap" onclick="logout()">Sair</button>
-   </div>
-
-   <div class="p-4 md:p-8 max-w-6xl w-full mx-auto flex-1">
-    <div id="page-content"></div>
-   </div>
-
-   <footer class="border-t border-slate-800 p-4 text-center text-xs text-slate-600">
-    WS SOLUÇÕES • Qualidade e Confiança em Serviços Técnicos.
-   </footer>
-  </main>
- </div>
+ <footer class="border-t border-slate-800/80 p-4 text-center text-[11px] text-slate-500">
+  WS SOLUÇÕES • Qualidade e Confiança
+ </footer>
 </section>
 
-<!-- PAINEL ADM SIMPLIFICADO DE TESTE -->
-<section id="view-admin" class="hidden-view min-h-screen p-4 md:p-8 max-w-5xl mx-auto">
+<!-- ================= PAINEL ADM DE TESTE ================= -->
+<section id="view-admin" class="hidden-view min-h-screen p-4 md:p-8 max-w-4xl mx-auto">
  <div class="flex justify-between items-center mb-6">
   <div>
-   <h1 class="text-2xl font-black text-cyan-400">PAINEL ADMINISTRATIVO (WS)</h1>
-   <p class="text-xs text-slate-400">Gerencie clientes e agendamentos de teste</p>
+   <h1 class="text-xl font-bold text-cyan-400">PAINEL ADMINISTRATIVO (TESTE)</h1>
+   <p class="text-xs text-slate-400">Gerenciamento local simplificado</p>
   </div>
   <button onclick="showHome()" class="btn btn-secondary text-xs">Sair do ADM</button>
  </div>
- <div class="panel p-6 rounded-2xl mb-6">
-  <h3 class="font-bold mb-2">Token de Teste Ativo: <span class="text-cyan-400 text-lg">AA52</span></h3>
-  <p class="text-sm text-slate-400">Você pode usar o token <b>AA52</b> na tela inicial para entrar instantaneamente como o cliente de demonstração "Wellington (Cliente VIP)".</p>
+ <div class="card p-5 mb-5">
+  <p class="text-xs text-slate-400 mb-1">TOKEN DE TESTE PRÉ-PROGRAMADO:</p>
+  <p class="text-2xl font-black text-cyan-400 tracking-widest">AA52</p>
  </div>
- <div id="admin-requests-list" class="space-y-3">
-  <h3 class="font-bold mb-2">Agendamentos recebidos dos clientes:</h3>
-  <!-- Lista dinâmica de agendamentos com botões WhatsApp -->
+ <div id="admin-appointments-list" class="space-y-3">
+  <h3 class="font-bold text-sm mb-3">Agendamentos Solicitados:</h3>
  </div>
 </section>
 
@@ -258,23 +245,23 @@ body{background:#020617;color:#e2e8f0;font-family:Inter,system-ui,sans-serif}
 
 <script>
 /* =========================================
-   LÓGICA DO CLIENTE & BANCO LOCAL
+   LÓGICA E BANCO DE DADOS LOCAL
 ========================================= */
-const DB_KEY = 'ws_solucoes_db_v2';
-const SESSION_KEY = 'ws_client_session_v2';
+const DB_KEY = 'ws_solucoes_db_v3';
+const SESSION_KEY = 'ws_client_session_v3';
 
 const $ = id => document.getElementById(id);
 
 function seedDB() {
  return {
   clients: [
-   { id: 'cli-vip', name: 'Wellington (Cliente Teste)', phone: '88999999999', address: 'Crato - CE', status: 'approved', token: 'AA52', points: 40 }
+   { id: 'cli-vip', name: 'Wellington (Cliente Teste)', phone: '88999999999', address: 'Centro, Crato - CE', status: 'approved', token: 'AA52', points: 30, indicacao: '' }
   ],
   services: [
-   { id: 's1', name: 'Instalação de Câmeras (CFTV)', description: 'Instalação, configuração de DVR/NVR e câmeras de segurança.' },
-   { id: 's2', name: 'Serviços Elétricos', description: 'Manutenção, tomadas, disjuntores e instalações residenciais.' },
-   { id: 's3', name: 'Manutenção de Eletrodomésticos', description: 'Conserto de ventiladores, micro-ondas, caixas de som e tanquinhos.' },
-   { id: 's4', name: 'Instalação de Forro PVC', description: 'Estrutura metálica e forro com acabamento profissional.' }
+   { id: 's1', name: 'Instalação de Câmeras (CFTV)', desc: 'Configuração e montagem de segurança Intelbras.' },
+   { id: 's2', name: 'Serviços Elétricos', desc: 'Manutenção residencial e instalações em geral.' },
+   { id: 's3', name: 'Eletrodomésticos', desc: 'Conserto de ventiladores, micro-ondas e tanquinhos.' },
+   { id: 's4', name: 'Forro de PVC', desc: 'Instalação com alinhamento e acabamento perfeito.' }
   ],
   requests: [],
   appointments: []
@@ -287,7 +274,7 @@ function saveDB() { localStorage.setItem(DB_KEY, JSON.stringify(db)); }
 function toast(msg, type='info') {
  const el = document.createElement('div');
  const colors = { success: 'border-emerald-500 text-emerald-300', error: 'border-red-500 text-red-300', info: 'border-cyan-500 text-cyan-300' };
- el.className = `bg-slate-900 border-l-4 ${colors[type]} rounded-xl shadow-xl px-4 py-3 text-sm max-w-sm`;
+ el.className = `bg-slate-900 border-l-4 ${colors[type]} rounded-xl shadow-2xl px-4 py-3 text-xs max-w-sm`;
  el.textContent = msg;
  $('toast-container').appendChild(el);
  setTimeout(() => el.remove(), 3500);
@@ -303,15 +290,29 @@ function showView(id) {
 function showHome() { showView('view-home'); }
 function showRegistration() { $('registration-form').reset(); showView('view-registration'); }
 
+function toggleMenu() {
+ const menu = $('dropdown-menu');
+ menu.classList.toggle('hidden');
+}
+
+// Fechar menu ao clicar fora
+window.addEventListener('click', e => {
+ const menu = $('dropdown-menu');
+ if(menu && !menu.classList.contains('hidden') && !e.target.closest('button')) {
+  menu.classList.add('hidden');
+ }
+});
+
 // Cadastro exigindo WhatsApp
 $('registration-form').addEventListener('submit', e => {
  e.preventDefault();
  const name = $('reg-name').value.trim();
  const phone = $('reg-phone').value.trim();
  const address = $('reg-address').value.trim();
+ const indicacao = $('reg-indicacao').value.trim();
 
  if(!phone.replace(/\D/g,'')) {
-  toast('Por favor, informe um WhatsApp válido.','error');
+  toast('Informe um WhatsApp válido.','error');
   return;
  }
 
@@ -320,7 +321,8 @@ $('registration-form').addEventListener('submit', e => {
   name, phone, address,
   status: 'pending',
   token: 'WS' + Math.floor(10 + Math.random() * 90),
-  points: 10
+  points: 0,
+  indicacao
  });
  saveDB();
  showView('view-pending');
@@ -349,7 +351,7 @@ function activeClient() {
 function logout() {
  localStorage.removeItem(SESSION_KEY);
  showHome();
- toast('Sessão encerrada.','info');
+ toast('Sessão encerrada com segurança.','info');
 }
 
 let currentPage = 'dashboard';
@@ -357,34 +359,14 @@ function openClientApp() {
  const client = activeClient();
  if(!client) return showHome();
  $('header-name').textContent = client.name;
- $('avatar').textContent = client.name.charAt(0).toUpperCase();
  navigate('dashboard');
  showView('view-app');
 }
 
 function navigate(page) {
  currentPage = page;
- const titles = {
-  dashboard: ['Início', 'Visão geral'],
-  services: ['Serviços', 'Catálogo WS'],
-  requests: ['Solicitações', 'Acompanhe seus chamados'],
-  appointments: ['Agendamentos', 'Sua agenda'],
-  rewards: ['Meus Pontos', 'Programa de benefícios'],
-  profile: ['Meu Cadastro', 'Dados pessoais']
- };
- $('header-title').textContent = titles[page][0];
- $('header-subtitle').textContent = titles[page][1];
-
- document.querySelectorAll('.navbtn').forEach(b => {
-  b.classList.toggle('active', b.dataset.page === page);
- });
-
  renderClientPage();
 }
-
-document.querySelectorAll('[data-page]').forEach(b => {
- b.addEventListener('click', () => navigate(b.dataset.page));
-});
 
 function renderClientPage() {
  const client = activeClient();
@@ -395,80 +377,107 @@ function renderClientPage() {
  if(currentPage === 'dashboard') {
   content.innerHTML = `
    <div class="mb-6">
-    <h2 class="text-2xl font-black">Olá, ${client.name.split(' ')[0]}!</h2>
-    <p class="text-slate-400 text-sm">Bem-vindo à central WS Soluções.</p>
+    <h2 class="text-xl font-black">Olá, ${client.name.split(' ')[0]}!</h2>
+    <p class="text-slate-400 text-xs mt-0.5">Seu painel rápido de serviços WS.</p>
    </div>
-   <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
-    <div class="card p-5">
-     <span class="text-slate-400 text-sm">Seus Pontos</span>
-     <p class="text-3xl font-black text-cyan-400 mt-2">${client.points || 0}</p>
+
+   <div class="grid grid-cols-2 gap-3 mb-6">
+    <div class="card p-4">
+     <span class="text-xs text-slate-400 flex items-center gap-1.5"><i data-lucide="gift" class="w-3.5 h-3.5 text-cyan-400"></i> Seus Pontos</span>
+     <p class="text-2xl font-black text-cyan-400 mt-2">${client.points || 0} pts</p>
     </div>
-    <div class="card p-5">
-     <span class="text-slate-400 text-sm">Chamados</span>
-     <p class="text-3xl font-black text-blue-400 mt-2">${requests.length}</p>
-    </div>
-    <div class="card p-5">
-     <span class="text-slate-400 text-sm">Agendamentos</span>
-     <p class="text-3xl font-black text-emerald-400 mt-2">${appointments.length}</p>
+    <div class="card p-4">
+     <span class="text-xs text-slate-400 flex items-center gap-1.5"><i data-lucide="clipboard-list" class="w-3.5 h-3.5 text-blue-400"></i> Chamados</span>
+     <p class="text-2xl font-black text-blue-400 mt-2">${requests.length}</p>
     </div>
    </div>
-   <div class="flex gap-3">
-    <button onclick="navigate('services')" class="btn btn-primary flex-1">Solicitar Serviço</button>
-    <button onclick="openAppointmentModal()" class="btn btn-secondary flex-1">Agendar Horário</button>
+
+   <div class="card p-5 space-y-3 mb-6">
+    <h3 class="font-bold text-sm">Ações Rápidas</h3>
+    <div class="grid sm:grid-cols-2 gap-2.5">
+     <button onclick="navigate('services')" class="btn btn-primary text-xs w-full justify-center">Solicitar Serviço</button>
+     <button onclick="openAppointmentModal()" class="btn btn-secondary text-xs w-full justify-center">Agendar Horário</button>
+    </div>
+   </div>
+
+   <div>
+    <h3 class="font-bold text-sm mb-3">Últimos Chamados</h3>
+    ${requests.length ? requests.slice(-2).reverse().map(r => `
+     <div class="panel p-3.5 rounded-xl mb-2 text-xs">
+      <div class="flex justify-between font-bold"><span>${r.service}</span><span class="text-amber-400">${r.status}</span></div>
+      <p class="text-slate-400 mt-1">${r.desc}</p>
+     </div>
+    `).join('') : '<p class="text-slate-500 text-xs">Nenhum chamado recente.</p>'}
    </div>`;
  } else if(currentPage === 'services') {
   content.innerHTML = `
-   <h2 class="text-xl font-bold mb-4">Nossos Serviços</h2>
-   <div class="grid sm:grid-cols-2 gap-4">
+   <h2 class="text-lg font-bold mb-4">Catálogo de Serviços</h2>
+   <div class="grid sm:grid-cols-2 gap-3">
     ${db.services.map(s => `
-     <div class="card p-5 flex flex-col justify-between">
+     <div class="card p-4 flex flex-col justify-between">
       <div>
-       <h3 class="font-bold text-cyan-400">${s.name}</h3>
-       <p class="text-sm text-slate-400 mt-2">${s.description}</p>
+       <h3 class="font-bold text-cyan-400 text-sm">${s.name}</h3>
+       <p class="text-xs text-slate-400 mt-1.5">${s.desc}</p>
       </div>
-      <button onclick="requestServiceModal('${s.name}')" class="btn btn-primary w-full mt-4 text-xs">Pedir Orçamento / Serviço</button>
+      <button onclick="requestServiceModal('${s.name}')" class="btn btn-primary w-full text-xs mt-4">Pedir Serviço</button>
      </div>
     `).join('')}
    </div>`;
  } else if(currentPage === 'requests') {
   content.innerHTML = `
-   <h2 class="text-xl font-bold mb-4">Meus Chamados</h2>
+   <h2 class="text-lg font-bold mb-4">Meus Chamados</h2>
    ${requests.length ? requests.map(r => `
-    <div class="panel p-4 rounded-xl mb-3">
-     <p class="font-bold">${r.service}</p>
-     <p class="text-sm text-slate-300 mt-1">${r.desc}</p>
-     <p class="text-xs text-amber-400 mt-2">Status: ${r.status}</p>
+    <div class="panel p-4 rounded-xl mb-3 text-xs">
+     <div class="flex justify-between font-bold text-sm"><span>${r.service}</span><span class="text-amber-400">${r.status}</span></div>
+     <p class="text-slate-300 mt-2">${r.desc}</p>
     </div>
-   `).join('') : '<p class="text-slate-500">Nenhum chamado aberto.</p>'}`;
+   `).join('') : '<p class="text-slate-500 text-xs">Nenhum chamado registrado.</p>'}`;
  } else if(currentPage === 'appointments') {
   content.innerHTML = `
    <div class="flex justify-between items-center mb-4">
-    <h2 class="text-xl font-bold">Meus Agendamentos</h2>
+    <h2 class="text-lg font-bold">Meus Agendamentos</h2>
     <button onclick="openAppointmentModal()" class="btn btn-primary text-xs">+ Novo Horário</button>
    </div>
    ${appointments.length ? appointments.map(a => `
-    <div class="panel p-4 rounded-xl mb-3 flex justify-between items-center">
+    <div class="panel p-4 rounded-xl mb-3 flex justify-between items-center text-xs">
      <div>
-      <p class="font-bold">${a.service}</p>
-      <p class="text-sm text-cyan-300">${a.date} às ${a.time}</p>
+      <p class="font-bold text-sm">${a.service}</p>
+      <p class="text-cyan-300 mt-1">${a.date} às ${a.time}</p>
      </div>
      <span class="badge ${a.status === 'Aprovado' ? 'bg-emerald-500/20 text-emerald-300' : 'bg-amber-500/20 text-amber-300'}">${a.status}</span>
     </div>
-   `).join('') : '<p class="text-slate-500">Nenhum agendamento na sua agenda.</p>'}`;
+   `).join('') : '<p class="text-slate-500 text-xs">Nenhum agendamento na agenda.</p>'}`;
  } else if(currentPage === 'rewards') {
+  const whatsappUrl = `https://wa.me/?text=${encodeURIComponent('Olá! Estou indicando a WS Soluções para serviços elétricos, câmeras e forro de PVC. Quando chamar eles, informe meu WhatsApp (' + client.phone + ') para ganharmos pontos de desconto!')}`;
   content.innerHTML = `
-   <div class="card p-6 text-center">
-    <h3 class="text-slate-400 text-sm">Seu saldo atual</h3>
-    <p class="text-5xl font-black text-cyan-400 mt-2">${client.points} pts</p>
-    <p class="text-xs text-slate-500 mt-3">Acumule pontos trocando serviços com a WS Soluções.</p>
+   <div class="card p-6 mb-6 text-center">
+    <span class="text-xs text-cyan-400 font-bold tracking-widest">PROGRAMA DE FIDELIDADE</span>
+    <p class="text-4xl font-black text-cyan-400 mt-3">${client.points || 0} pts</p>
+    <p class="text-xs text-slate-400 mt-1">Pontos acumulados em carteira</p>
+   </div>
+
+   <div class="card p-5 space-y-4">
+    <h3 class="font-bold text-sm text-cyan-300 flex items-center gap-2"><i data-lucide="share-2" class="w-4 h-4"></i> Indique Amigos e Ganhe</h3>
+    <p class="text-xs text-slate-300 leading-relaxed">O seu código de indicação pessoal é o seu próprio número de WhatsApp cadastrado:</p>
+    <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 text-center">
+     <span class="font-black text-cyan-400 text-base tracking-wider">${client.phone}</span>
+    </div>
+    <p class="text-[11px] text-slate-400 leading-relaxed">Quando um amigo for fechar serviço com a WS, basta ele informar o seu WhatsApp. Assim que o serviço for concluído, os pontos são creditados para você!</p>
+    <a href="${whatsappUrl}" target="_blank" class="btn btn-primary w-full text-xs justify-center">
+     <i data-lucide="message-circle" class="w-4 h-4"></i> Convidar Amigos via WhatsApp
+    </a>
    </div>`;
  } else if(currentPage === 'profile') {
   content.innerHTML = `
-   <div class="card p-6 space-y-3">
-    <p><b>Nome:</b> ${client.name}</p>
-    <p><b>WhatsApp:</b> ${client.phone}</p>
-    <p><b>Endereço:</b> ${client.address}</p>
-    <p><b>Seu Token:</b> <span class="text-cyan-400 font-black tracking-widest">${client.token}</span></p>
+   <h2 class="text-lg font-bold mb-4">Meu Cadastro</h2>
+   <div class="card p-5 space-y-3 text-xs">
+    <p><b class="text-slate-400 block mb-0.5">Nome:</b> ${client.name}</p>
+    <p><b class="text-slate-400 block mb-0.5">WhatsApp:</b> ${client.phone}</p>
+    <p><b class="text-slate-400 block mb-0.5">Endereço:</b> ${client.address}</p>
+    <div class="border-t border-slate-800 pt-3">
+     <b class="text-slate-400 block mb-1">Seu Token de Acesso:</b>
+     <span class="text-cyan-400 font-black tracking-widest text-sm">${client.token}</span>
+    </div>
    </div>`;
  }
  if(window.lucide) lucide.createIcons();
@@ -483,10 +492,10 @@ function closeModal() { $('modal-root').innerHTML = ''; }
 
 function requestServiceModal(serviceName) {
  openModal(`
-  <h3 class="text-lg font-bold mb-3">Solicitar: ${serviceName}</h3>
+  <h3 class="text-base font-bold mb-3">Solicitar: ${serviceName}</h3>
   <form id="req-form" class="space-y-3">
-   <textarea id="req-desc" class="field" rows="3" placeholder="Descreva o que precisa..." required></textarea>
-   <button class="btn btn-primary w-full text-xs">Enviar Solicitação</button>
+   <textarea id="req-desc" class="field text-xs" rows="3" placeholder="Descreva o que precisa..." required></textarea>
+   <button class="btn btn-primary w-full text-xs">Enviar Chamado</button>
   </form>
  `);
  $('req-form').onsubmit = e => {
@@ -502,21 +511,21 @@ function requestServiceModal(serviceName) {
   saveDB();
   closeModal();
   navigate('requests');
-  toast('Solicitação enviada com sucesso!','success');
+  toast('Chamado enviado com sucesso!','success');
  };
 }
 
 function openAppointmentModal() {
  openModal(`
-  <h3 class="text-lg font-bold mb-3">Agendar Atendimento</h3>
-  <form id="app-form" class="space-y-3">
-   <select id="app-serv" class="field" required>
+  <h3 class="text-base font-bold mb-3">Solicitar Agendamento</h3>
+  <form id="app-form" class="space-y-3 text-xs">
+   <select id="app-serv" class="field text-xs" required>
     <option value="">Selecione o serviço</option>
     ${db.services.map(s => `<option>${s.name}</option>`).join('')}
    </select>
-   <input type="date" id="app-date" class="field" required>
-   <input type="time" id="app-time" class="field" required>
-   <button class="btn btn-primary w-full text-xs">Solicitar Agendamento</button>
+   <input type="date" id="app-date" class="field text-xs" required>
+   <input type="time" id="app-time" class="field text-xs" required>
+   <button class="btn btn-primary w-full text-xs mt-2">Enviar para Confirmação</button>
   </form>
  `);
  $('app-form').onsubmit = e => {
@@ -537,9 +546,7 @@ function openAppointmentModal() {
  };
 }
 
-function enterAdmin() {
- showView('view-admin');
-}
+function enterAdmin() { showView('view-admin'); }
 
 // Inicialização
 if(activeClient()) {
