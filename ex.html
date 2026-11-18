@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestão de Excursões - Demo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        [x-cloak] { display: none !important; }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #0f172a; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 font-sans antialiased pb-24" x-data="excursaoApp()" x-init="initIcons()">
+
+    <!-- Header / Seleção de Viagem -->
+    <header class="bg-slate-900 border-b border-slate-800 sticky top-0 z-30 px-4 py-3 shadow-lg">
+        <div class="max-w-lg mx-auto flex items-center justify-between">
+            <div>
+                <span class="text-[10px] uppercase tracking-wider font-bold text-cyan-400 bg-cyan-950/60 border border-cyan-800/50 px-2 py-0.5 rounded-full">
+                    Painel do Organizador
+                </span>
+                <select x-model="viagemAtualId" class="mt-1 block w-full bg-transparent text-lg font-bold text-white focus:outline-none cursor-pointer">
+                    <template x-for="v in viagens" :key="v.id">
+                        <option :value="v.id" class="bg-slate-900 text-white" x-text="v.destino + ' (' + v.data + ')'"></option>
+                    </template>
+                </select>
+            </div>
+            <button @click="modalNovoPassageiro = true" class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold p-2.5 rounded-xl shadow-lg shadow-cyan-500/20 transition flex items-center gap-1 text-sm">
+                <i data-lucide="user-plus" class="w-5 h-5"></i>
+                <span class="hidden sm:inline">Novo</span>
+            </button>
+        </div>
+    </header>
+
+    <main class="max-w-lg mx-auto px-4 pt-4 space-y-5">
+
+        <!-- Cards de Resumo Rápido -->
+        <div class="grid grid-cols-3 gap-2.5">
+            <div class="bg-slate-900 border border-slate-800 p-3 rounded-2xl">
+                <p class="text-xs text-slate-400">Vagas</p>
+                <p class="text-lg font-extrabold text-white mt-0.5">
+                    <span x-text="passageirosViagem.length"></span><span class="text-slate-500 text-sm font-normal" x-text="'/' + viagemAtual.vagas"></span>
+                </p>
+                <div class="w-full bg-slate-800 h-1.5 rounded-full mt-2 overflow-hidden">
+                    <div class="bg-cyan-400 h-full rounded-full transition-all" :style="'width: ' + (passageirosViagem.length / viagemAtual.vagas * 100) + '%'"></div>
+                </div>
+            </div>
+
+            <div class="bg-slate-900 border border-slate-800 p-3 rounded-2xl">
+                <p class="text-xs text-slate-400">Recebido</p>
+                <p class="text-base font-extrabold text-emerald-400 mt-0.5" x-text="formatarMoeda(totalRecebido)"></p>
+                <p class="text-[10px] text-slate-500 mt-1" x-text="'Previsto: ' + formatarMoeda(totalPrevisto)"></p>
+            </div>
+
+            <div class="bg-slate-900 border border-slate-800 p-3 rounded-2xl">
+                <p class="text-xs text-slate-400">A Receber</p>
+                <p class="text-base font-extrabold text-amber-400 mt-0.5" x-text="formatarMoeda(totalPendente)"></p>
+                <p class="text-[10px] text-slate-500 mt-1" x-text="qtdPendentes + ' pendentes'"></p>
+            </div>
+        </div>
+
+        <!-- Barra de Busca -->
+        <div class="relative">
+            <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5"></i>
+            <input type="text" x-model="busca" placeholder="Buscar passageiro, CPF ou poltrona..." 
+                class="w-full bg-slate-900 border border-slate-800 rounded-xl pl-10 pr-4 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500">
+        </div>
+
+        <!-- ABA 1: LISTA DE PASSAGEIROS & FINANCEIRO -->
+        <div x-show="aba === 'lista'" class="space-y-3">
+            <div class="flex items-center justify-between text-xs text-slate-400 px-1">
+                <span>Passageiros Cadastrados</span>
+                <div class="flex gap-2">
+                    <button @click="filtroStatus = 'todos'" :class="filtroStatus === 'todos' ? 'text-cyan-400 font-bold' : ''">Todos</button>
+                    <span>•</span>
+                    <button @click="filtroStatus = 'pendente'" :class="filtroStatus === 'pendente' ? 'text-amber-400 font-bold' : ''">Devendo</button>
+                    <span>•</span>
+                    <button @click="filtroStatus = 'pago'" :class="filtroStatus === 'pago' ? 'text-emerald-400 font-bold' : ''">Quitados</button>
+                </div>
+            </div>
+
+            <template x-for="p in passageirosFiltrados" :key="p.id">
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-3.5 flex items-center justify-between gap-3 hover:border-slate-700 transition">
+                    <div class="flex items-center gap-3 min-w-0">
+                        <!-- Badge da Poltrona -->
+                        <div class="w-11 h-11 rounded-xl bg-slate-800 border border-slate-700 flex flex-col items-center justify-center shrink-0">
+                            <span class="text-[9px] text-slate-400 uppercase">Polt.</span>
+                            <span class="text-sm font-black text-cyan-400" x-text="p.poltrona"></span>
+                        </div>
+                        
+                        <div class="min-w-0">
+                            <h3 class="font-bold text-sm text-white truncate" x-text="p.nome"></h3>
+                            <p class="text-xs text-slate-400 truncate" x-text="'Embarque: ' + p.embarque"></p>
+                            <div class="flex items-center gap-2 mt-1">
+                                <span class="text-[11px] font-semibold px-2 py-0.5 rounded-md"
+                                    :class="{
+                                        'bg-emerald-950 text-emerald-400 border border-emerald-800/50': p.pago >= viagemAtual.valor,
+                                        'bg-amber-950 text-amber-400 border border-amber-800/50': p.pago > 0 && p.pago < viagemAtual.valor,
+                                        'bg-rose-950 text-rose-400 border border-rose-800/50': p.pago == 0
+                                    }"
+                                    x-text="statusPagamento(p)">
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Ações Rápidas -->
+                    <div class="flex items-center gap-1.5 shrink-0">
+                        <button @click="abrirWhatsApp(p)" title="Enviar Cobrança/Comprovante no WhatsApp"
+                            class="p-2 bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-400 border border-emerald-700/40 rounded-xl transition">
+                            <i data-lucide="message-circle" class="w-4 h-4"></i>
+                        </button>
+                        <button @click="abrirEdicaoPagamento(p)" title="Registrar Pagamento"
+                            class="p-2 bg-slate-800 hover:bg-slate-700 text-cyan-400 border border-slate-700 rounded-xl transition">
+                            <i data-lucide="dollar-sign" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                </div>
+            </template>
+        </div>
+
+        <!-- ABA 2: MAPA DO ÔNIBUS -->
+        <div x-show="aba === 'onibus'" x-cloak class="bg-slate-900 border border-slate-800 rounded-2xl p-4">
+            <div class="flex items-center justify-between mb-4">
+                <div>
+                    <h2 class="font-bold text-white text-sm">Mapa de Assentos</h2>
+                    <p class="text-xs text-slate-400">Toque em uma poltrona para ver ou reservar</p>
+                </div>
+                <div class="flex gap-3 text-[11px]">
+                    <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-sm bg-slate-800 border border-slate-600"></span> Livre</span>
+                    <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-sm bg-cyan-500"></span> Ocupada</span>
+                </div>
+            </div>
+
+            <!-- Frente do Ônibus -->
+            <div class="max-w-[260px] mx-auto bg-slate-950 border-2 border-slate-800 rounded-t-3xl rounded-b-xl p-3">
+                <div class="border-b border-slate-800 pb-2 mb-3 flex justify-between items-center text-[10px] text-slate-500 uppercase font-bold px-2">
+                    <span>Motorista</span>
+                    <span>Porta</span>
+                </div>
+
+                <!-- Grade de Poltronas (44 lugares) -->
+                <div class="grid grid-cols-5 gap-1.5 text-center">
+                    <template x-for="num in 44" :key="num">
+                        <template x-if="true">
+                            <div class="contents">
+                                <!-- Corredor no meio -->
+                                <div x-show="(num - 1) % 4 === 2" class="w-4"></div>
+                                
+                                <button @click="selecionarPoltrona(num)"
+                                    class="h-9 rounded-lg text-xs font-bold flex items-center justify-center transition border"
+                                    :class="getPassageiroPorPoltrona(num) 
+                                        ? 'bg-cyan-500/20 border-cyan-500 text-cyan-300' 
+                                        : 'bg-slate-900 border-slate-800 text-slate-500 hover:border-slate-600'"
+                                    x-text="num.toString().padStart(2, '0')">
+                                </button>
+                            </div>
+                        </template>
+                    </template>
+                </div>
+            </div>
+        </div>
+
+        <!-- ABA 3: CHECKLIST DE EMBARQUE -->
+        <div x-show="aba === 'embarque'" x-cloak class="space-y-3">
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 flex items-center justify-between">
+                <div>
+                    <h2 class="font-bold text-white text-sm">Chamada de Embarque</h2>
+                    <p class="text-xs text-slate-400">Marque quem já entrou no ônibus</p>
+                </div>
+                <div class="text-right">
+                    <span class="text-lg font-black text-cyan-400" x-text="totalEmbarcados"></span>
+                    <span class="text-xs text-slate-400" x-text="'/' + passageirosViagem.length"></span>
+                </div>
+            </div>
+
+            <template x-for="p in passageirosViagem" :key="p.id">
+                <div @click="p.embarcou = !p.embarcou" 
+                    class="bg-slate-900 border rounded-2xl p-3.5 flex items-center justify-between cursor-pointer transition"
+                    :class="p.embarcou ? 'border-emerald-600/50 bg-emerald-950/10' : 'border-slate-800'">
+                    <div class="flex items-center gap-3">
+                        <div class="w-6 h-6 rounded-lg flex items-center justify-center border transition"
+                            :class="p.embarcou ? 'bg-emerald-500 border-emerald-500 text-slate-950' : 'border-slate-600'">
+                            <i x-show="p.embarcou" data-lucide="check" class="w-4 h-4 stroke-[3]"></i>
+                        </div>
+                        <div>
+                            <p class="font-bold text-sm" :class="p.embarcou ? 'text-emerald-300 line-through' : 'text-white'" x-text="p.nome"></p>
+                            <p class="text-xs text-slate-400" x-text="'Poltrona ' + p.poltrona + ' • ' + p.embarque"></p>
+                        </div>
+                    </div>
+                    <span class="text-[11px] font-bold px-2 py-1 rounded-lg"
+                        :class="p.embarcou ? 'bg-emerald-500/20 text-emerald-400' : 'bg-slate-800 text-slate-400'"
+                        x-text="p.embarcou ? 'A Bordo' : 'Aguardando'">
+                    </span>
+                </div>
+            </template>
+        </div>
+
+    </main>
+
+    <!-- Navegação Inferior (Estilo App Nativo) -->
+    <nav class="fixed bottom-0 inset-x-0 bg-slate-900/95 backdrop-blur-md border-t border-slate-800 z-30">
+        <div class="max-w-lg mx-auto grid grid-cols-3 h-16">
+            <button @click="aba = 'lista'" class="flex flex-col items-center justify-center gap-1 transition"
+                :class="aba === 'lista' ? 'text-cyan-400' : 'text-slate-500 hover:text-slate-300'">
+                <i data-lucide="users" class="w-5 h-5"></i>
+                <span class="text-[11px] font-semibold">Passageiros</span>
+            </button>
+            <button @click="aba = 'onibus'" class="flex flex-col items-center justify-center gap-1 transition"
+                :class="aba === 'onibus' ? 'text-cyan-400' : 'text-slate-500 hover:text-slate-300'">
+                <i data-lucide="bus" class="w-5 h-5"></i>
+                <span class="text-[11px] font-semibold">Poltronas</span>
+            </button>
+            <button @click="aba = 'embarque'" class="flex flex-col items-center justify-center gap-1 transition"
+                :class="aba === 'embarque' ? 'text-cyan-400' : 'text-slate-500 hover:text-slate-300'">
+                <i data-lucide="clipboard-check" class="w-5 h-5"></i>
+                <span class="text-[11px] font-semibold">Embarque</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- MODAL: Novo Passageiro -->
+    <div x-show="modalNovoPassageiro" x-cloak class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-end sm:items-center justify-center p-4">
+        <div @click.away="modalNovoPassageiro = false" class="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-md p-5 space-y-4">
+            <div class="flex justify-between items-center">
+                <h3 class="font-bold text-lg text-white">Cadastrar Passageiro</h3>
+                <button @click="modalNovoPassageiro = false" class="text-slate-400 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+            
+            <div class="space-y-3">
+                <div>
+                    <label class="text-xs text-slate-400">Nome Completo</label>
+                    <input type="text" x-model="novo.nome" placeholder="Ex: Maria Aparecida" class="w-full mt-1 bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="text-xs text-slate-400">WhatsApp</label>
+                        <input type="text" x-model="novo.telefone" placeholder="88999999999" class="w-full mt-1 bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white">
+                    </div>
+                    <div>
+                        <label class="text-xs text-slate-400">Poltrona (1 a 44)</label>
+                        <input type="number" x-model.number="novo.poltrona" min="1" max="44" class="w-full mt-1 bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white">
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="text-xs text-slate-400">Ponto de Embarque</label>
+                        <input type="text" x-model="novo.embarque" placeholder="Ex: Praça da Sé" class="w-full mt-1 bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white">
+                    </div>
+                    <div>
+                        <label class="text-xs text-slate-400">Valor já Pago (R$)</label>
+                        <input type="number" x-model.number="novo.pago" class="w-full mt-1 bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white">
+                    </div>
+                </div>
+            </div>
+
+            <button @click="salvarPassageiro()" class="w-full bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold py-3 rounded-xl transition">
+                Salvar Reserva
+            </button>
+        </div>
+    </div>
+
+    <!-- MODAL: Atualizar Pagamento -->
+    <div x-show="passageiroEditando" x-cloak class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div @click.away="passageiroEditando = null" class="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-sm p-5 space-y-4" x-if="passageiroEditando">
+            <h3 class="font-bold text-base text-white" x-text="'Financeiro: ' + passageiroEditando.nome"></h3>
+            <p class="text-xs text-slate-400" x-text="'Valor total da passagem: ' + formatarMoeda(viagemAtual.valor)"></p>
+            
+            <div>
+                <label class="text-xs text-slate-400">Total Pago até agora (R$)</label>
+                <input type="number" x-model.number="passageiroEditando.pago" class="w-full mt-1 bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-lg font-bold text-emerald-400">
+            </div>
+
+            <div class="flex gap-2">
+                <button @click="passageiroEditando.pago = viagemAtual.valor; passageiroEditando = null" class="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 rounded-xl text-xs">
+                    Quitar Tudo
+                </button>
+                <button @click="passageiroEditando = null" class="flex-1 bg-cyan-500 text-slate-950 font-bold py-2.5 rounded-xl text-xs">
+                    Confirmar Valor
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function excursaoApp() {
+            return {
+                aba: 'lista',
+                busca: '',
+                filtroStatus: 'todos',
+                viagemAtualId: 1,
+                modalNovoPassageiro: false,
+                passageiroEditando: null,
+                novo: { nome: '', telefone: '', poltrona: '', embarque: 'Centro', pago: 0 },
+
+                viagens: [
+                    { id: 1, destino: 'Juazeiro do Norte - Romaria', data: '15/12', vagas: 44, valor: 180 },
+                    { id: 2, destino: 'Praia de Canoa Quebrada', data: '22/01', vagas: 44, valor: 250 }
+                ],
+
+                passageiros: [
+                    { id: 101, viagemId: 1, nome: 'Dona Tereza Cristina', telefone: '5588999991111', poltrona: 1, embarque: 'Praça Matriz', pago: 180, embarcou: true },
+                    { id: 102, viagemId: 1, nome: 'Seu Antônio Carlos', telefone: '5588999992222', poltrona: 2, embarque: 'Praça Matriz', pago: 100, embarcou: true },
+                    { id: 103, viagemId: 1, nome: 'Mariana Oliveira', telefone: '5588999993333', poltrona: 5, embarque: 'Posto Shell', pago: 0, embarcou: false },
+                    { id: 104, viagemId: 1, nome: 'José Raimundo', telefone: '5588999994444', poltrona: 6, embarque: 'Posto Shell', pago: 180, embarcou: false },
+                    { id: 105, viagemId: 1, nome: 'Francisca das Chagas', telefone: '5588999995555', poltrona: 9, embarque: 'Terminal', pago: 90, embarcou: false },
+                    { id: 106, viagemId: 2, nome: 'Lucas Mendes', telefone: '5588999996666', poltrona: 3, embarque: 'Centro', pago: 250, embarcou: false }
+                ],
+
+                initIcons() {
+                    this.$nextTick(() => lucide.createIcons());
+                    this.$watch('aba', () => this.$nextTick(() => lucide.createIcons()));
+                },
+
+                get viagemAtual() {
+                    return this.viagens.find(v => v.id == this.viagemAtualId);
+                },
+
+                get passageirosViagem() {
+                    return this.passageiros
+                        .filter(p => p.viagemId == this.viagemAtualId)
+                        .sort((a, b) => a.poltrona - b.poltrona);
+                },
+
+                get passageirosFiltrados() {
+                    return this.passageirosViagem.filter(p => {
+                        const matchBusca = p.nome.toLowerCase().includes(this.busca.toLowerCase()) || p.poltrona.toString() === this.busca;
+                        if (this.filtroStatus === 'pago') return matchBusca && p.pago >= this.viagemAtual.valor;
+                        if (this.filtroStatus === 'pendente') return matchBusca && p.pago < this.viagemAtual.valor;
+                        return matchBusca;
+                    });
+                },
+
+                get totalRecebido() {
+                    return this.passageirosViagem.reduce((acc, p) => acc + Number(p.pago), 0);
+                },
+
+                get totalPrevisto() {
+                    return this.passageirosViagem.length * this.viagemAtual.valor;
+                },
+
+                get totalPendente() {
+                    return Math.max(0, this.totalPrevisto - this.totalRecebido);
+                },
+
+                get qtdPendentes() {
+                    return this.passageirosViagem.filter(p => p.pago < this.viagemAtual.valor).length;
+                },
+
+                get totalEmbarcados() {
+                    return this.passageirosViagem.filter(p => p.embarcou).length;
+                },
+
+                formatarMoeda(valor) {
+                    return Number(valor).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+                },
+
+                statusPagamento(p) {
+                    const total = this.viagemAtual.valor;
+                    if (p.pago >= total) return 'Quitado (' + this.formatarMoeda(p.pago) + ')';
+                    if (p.pago > 0) return 'Falta ' + this.formatarMoeda(total - p.pago);
+                    return 'Pendente (' + this.formatarMoeda(total) + ')';
+                },
+
+                getPassageiroPorPoltrona(num) {
+                    return this.passageirosViagem.find(p => p.poltrona === num);
+                },
+
+                selecionarPoltrona(num) {
+                    const ocupante = this.getPassageiroPorPoltrona(num);
+                    if (ocupante) {
+                        this.passageiroEditando = ocupante;
+                    } else {
+                        this.novo = { nome: '', telefone: '', poltrona: num, embarque: 'Centro', pago: 0 };
+                        this.modalNovoPassageiro = true;
+                    }
+                    this.$nextTick(() => lucide.createIcons());
+                },
+
+                salvarPassageiro() {
+                    if (!this.novo.nome || !this.novo.poltrona) return alert('Preencha nome e poltrona!');
+                    this.passageiros.push({
+                        id: Date.now(),
+                        viagemId: Number(this.viagemAtualId),
+                        nome: this.novo.nome,
+                        telefone: this.novo.telefone || '5588999999999',
+                        poltrona: Number(this.novo.poltrona),
+                        embarque: this.novo.embarque || 'Centro',
+                        pago: Number(this.novo.pago) || 0,
+                        embarcou: false
+                    });
+                    this.modalNovoPassageiro = false;
+                    this.novo = { nome: '', telefone: '', poltrona: '', embarque: 'Centro', pago: 0 };
+                    this.$nextTick(() => lucide.createIcons());
+                },
+
+                abrirEdicaoPagamento(p) {
+                    this.passageiroEditando = p;
+                },
+
+                abrirWhatsApp(p) {
+                    const falta = this.viagemAtual.valor - p.pago;
+                    let msg = '';
+                    if (falta <= 0) {
+                        msg = `Olá ${p.nome}! Passando para confirmar sua vaga na excursão *${this.viagemAtual.destino}* (${this.viagemAtual.data}). Poltrona *${p.poltrona}*, embarque: *${p.embarque}*. Pagamento 100% quitado!`;
+                    } else {
+                        msg = `Olá ${p.nome}! Tudo bem? Lembrete da sua reserva para *${this.viagemAtual.destino}* (${this.viagemAtual.data}) - Poltrona *${p.poltrona}*. Consta um saldo restante de *${this.formatarMoeda(falta)}*. Qualquer dúvida estou à disposição!`;
+                    }
+                    window.open(`https://wa.me/${p.telefone}?text=${encodeURIComponent(msg)}`, '_blank');
+                }
+            }
+        }
+    </script>
+</body>
+</html>
