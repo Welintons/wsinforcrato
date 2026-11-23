@@ -101,23 +101,6 @@
       -webkit-text-fill-color: transparent;
     }
 
-    .lock {
-      border: 1px solid var(--border);
-      background: rgba(27, 39, 66, 0.6);
-      color: var(--muted);
-      border-radius: 12px;
-      width: 40px;
-      height: 40px;
-      display: grid;
-      place-items: center;
-    }
-
-    .lock:hover {
-      border-color: var(--accent);
-      color: var(--accent-light);
-      background: var(--panel2);
-    }
-
     /* LAYOUT PRINCIPAL */
     .container {
       max-width: 1080px;
@@ -323,6 +306,40 @@
       font-weight: 800;
     }
 
+    /* CARDS DE OPÇÃO NA MINHA CONTA */
+    .account-options {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 14px;
+      margin-top: 16px;
+    }
+
+    .account-option-card {
+      background: rgba(15, 23, 42, 0.65);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .account-option-card:hover {
+      border-color: var(--border-strong);
+    }
+
+    .option-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      background: rgba(245, 158, 11, 0.15);
+      color: var(--accent-light);
+      display: grid;
+      place-items: center;
+      margin-bottom: 10px;
+    }
+
     /* FORMULÁRIOS E BOTÕES */
     .row {
       display: flex;
@@ -334,6 +351,21 @@
     .field {
       flex: 1;
       min-width: 190px;
+    }
+
+    .form-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .input-label {
+      display: block;
+      font-size: 12.5px;
+      font-weight: 600;
+      color: #cbd5e1;
+      margin-bottom: 6px;
     }
 
     input {
@@ -386,24 +418,6 @@
 
     .btn.secondary:hover:not(:disabled) {
       background: var(--panel-hover);
-    }
-
-    .btn.danger {
-      background: rgba(239, 68, 68, 0.18);
-      border: 1px solid rgba(239, 68, 68, 0.4);
-      color: #fca5a5;
-      box-shadow: none;
-    }
-
-    .btn.danger:hover:not(:disabled) {
-      background: var(--red);
-      color: #fff;
-    }
-
-    .btn.green {
-      background: linear-gradient(135deg, #34d399, var(--green));
-      color: #032619;
-      box-shadow: 0 6px 20px var(--green-glow);
     }
 
     .hidden {
@@ -613,88 +627,24 @@
       color: #fca5a5;
     }
 
-    /* ADMIN */
-    .tabs {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      margin: 18px 0;
-    }
-
-    .tab {
-      background: var(--panel2);
-      color: #cbd5e1;
-      border: 1px solid var(--border);
-      padding: 10px 14px;
-      border-radius: 10px;
-      font-size: 13px;
-      font-weight: 600;
-    }
-
-    .tab.active {
-      background: linear-gradient(135deg, var(--accent-light), var(--accent));
-      color: #1c1204;
-      border-color: transparent;
-      font-weight: 800;
-    }
-
-    .stat-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 12px;
-      margin-top: 16px;
-    }
-
-    .stat {
-      background: rgba(11, 18, 33, 0.6);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 16px;
-    }
-
-    .stat strong {
-      display: block;
-      font-size: 24px;
-      color: var(--accent-light);
-      margin-top: 6px;
-      font-weight: 800;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 13.5px;
-    }
-
-    td, th {
-      text-align: left;
-      padding: 12px 10px;
-      border-bottom: 1px solid var(--border);
-    }
-
-    th {
-      color: var(--muted);
-      font-weight: 700;
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-    }
-
-    .table-wrap {
-      overflow-x: auto;
-    }
-
     /* MODAIS */
     .modal {
       position: fixed;
       inset: 0;
-      background: rgba(5, 9, 18, 0.8);
+      background: rgba(5, 9, 18, 0.82);
       backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
       z-index: 60;
       display: flex;
       align-items: center;
       justify-content: center;
       padding: 16px;
+      animation: fadeIn 0.2s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
     }
 
     .modal-box {
@@ -709,11 +659,36 @@
       box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.75);
     }
 
-    .modal-box h2 {
-      margin-top: 0;
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 6px;
+    }
+
+    .modal-header h2 {
+      margin: 0;
       display: flex;
       align-items: center;
       gap: 8px;
+      font-size: 20px;
+    }
+
+    .modal-close {
+      background: var(--panel2);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+    }
+
+    .modal-close:hover {
+      color: #fff;
+      background: var(--panel-hover);
     }
 
     .token-card {
@@ -792,10 +767,6 @@
         font-size: 15px;
       }
 
-      .stat-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
       .container {
         padding: 14px 12px 105px;
       }
@@ -838,9 +809,7 @@
       <div class="brand-badge"><i data-lucide="ticket" size="19"></i></div>
       <div>RIFA <span>PREMIADA</span></div>
     </div>
-    <button class="lock" onclick="openAdminLogin()" aria-label="Área administrativa">
-      <i data-lucide="shield-check" size="19"></i>
-    </button>
+    <span class="tag"><i data-lucide="award" size="13"></i> Edição Mondial</span>
   </header>
 
   <main class="container">
@@ -908,7 +877,7 @@
             <p>Após a confirmação do pagamento, seus números são aprovados.</p>
           </div>
         </div>
-        <button class="btn" onclick="goToPage('account')">
+        <button class="btn" onclick="openRegisterModal()">
           <i data-lucide="user-plus" size="18"></i> Criar minha conta
         </button>
       </section>
@@ -999,32 +968,32 @@
 
     <!-- MINHA CONTA -->
     <section class="page" id="page-account">
-      <section class="card" id="registerSection">
-        <h2 class="section-title"><i data-lucide="user-plus" size="21"></i> Criar cadastro</h2>
-        <p>Seu token será permanente e permitirá consultar todos os seus pedidos.</p>
-        <div class="row" style="margin-top:14px">
-          <div class="field">
-            <input id="name" placeholder="Nome completo" maxlength="100">
-          </div>
-          <div class="field">
-            <input id="whatsapp" placeholder="WhatsApp com DDD" inputmode="tel" maxlength="20">
-          </div>
-          <button class="btn" onclick="register()">
-            <i data-lucide="check-circle" size="18"></i> Criar cadastro
-          </button>
-        </div>
-      </section>
+      <section class="card" id="accountAccessSection">
+        <h2 class="section-title"><i data-lucide="user-circle" size="21"></i> Acesso do participante</h2>
+        <p>Escolha uma opção abaixo para criar seu token ou entrar na sua conta.</p>
 
-      <section class="card" id="loginSection">
-        <h2 class="section-title"><i data-lucide="key-round" size="21"></i> Já tenho meu token</h2>
-        <p>Entre para selecionar números e consultar seus pedidos.</p>
-        <div class="row" style="margin-top:14px">
-          <div class="field">
-            <input id="clientToken" placeholder="Token de 5 caracteres" maxlength="5" style="text-transform:uppercase;letter-spacing:2px;font-weight:700">
+        <div class="account-options">
+          <div class="account-option-card">
+            <div>
+              <div class="option-icon"><i data-lucide="user-plus" size="21"></i></div>
+              <strong style="font-size:17px;color:#fff;display:block">Primeira vez aqui?</strong>
+              <p class="small" style="margin-top:6px">Cadastre seu nome e WhatsApp para gerar seu token permanente e participar da rifa.</p>
+            </div>
+            <button class="btn" style="width:100%" onclick="openRegisterModal()">
+              <i data-lucide="user-plus" size="18"></i> Criar cadastro
+            </button>
           </div>
-          <button class="btn" onclick="clientLogin()">
-            <i data-lucide="log-in" size="18"></i> Entrar
-          </button>
+
+          <div class="account-option-card">
+            <div>
+              <div class="option-icon"><i data-lucide="key-round" size="21"></i></div>
+              <strong style="font-size:17px;color:#fff;display:block">Já tenho meu token</strong>
+              <p class="small" style="margin-top:6px">Informe seu código de 5 caracteres para escolher números e acompanhar seus pedidos.</p>
+            </div>
+            <button class="btn secondary" style="width:100%" onclick="openLoginModal()">
+              <i data-lucide="log-in" size="18"></i> Entrar com token
+            </button>
+          </div>
         </div>
       </section>
 
@@ -1032,46 +1001,81 @@
         <h2 class="section-title"><i data-lucide="badge-check" size="21"></i> Minha conta</h2>
         <p id="clientName" style="font-size:16px;color:#fff;font-weight:600"></p>
         <p class="small">Seu acesso está ativo neste dispositivo enquanto você permanecer conectado.</p>
-        <button class="btn secondary" style="margin-top:12px" onclick="logoutClient()">
-          <i data-lucide="log-out" size="17"></i> Sair da conta
-        </button>
-      </section>
-    </section>
-
-    <!-- PAINEL ADMINISTRATIVO -->
-    <section class="card hidden" id="adminPanel">
-      <div class="row" style="justify-content:space-between">
-        <div>
-          <span class="tag"><i data-lucide="lock" size="13"></i> ÁREA RESTRITA</span>
-          <h2 class="section-title" style="margin-top:10px">Painel administrativo</h2>
+        <div class="row" style="margin-top:14px">
+          <button class="btn" onclick="goToPage('numbers')">
+            <i data-lucide="grid-3x3" size="17"></i> Escolher números
+          </button>
+          <button class="btn secondary" onclick="logoutClient()">
+            <i data-lucide="log-out" size="17"></i> Sair da conta
+          </button>
         </div>
-        <button class="btn secondary" onclick="adminLogout()">
-          <i data-lucide="log-out" size="17"></i> Sair
-        </button>
-      </div>
-      <div class="stat-grid" id="adminStats"></div>
-      <div class="tabs">
-        <button class="tab active" onclick="adminTab('pending',this)">Pendentes</button>
-        <button class="tab" onclick="adminTab('all',this)">Todos pedidos</button>
-        <button class="tab" onclick="adminTab('manual',this)">Venda manual</button>
-        <button class="tab" onclick="adminTab('numbers',this)">Números</button>
-        <button class="tab" onclick="adminTab('clients',this)">Clientes</button>
-        <button class="tab" onclick="adminTab('payments',this)">Pagamentos</button>
-      </div>
-      <div id="adminContent"></div>
-      <button class="btn secondary" style="margin-top:18px" onclick="loadAdmin()">
-        <i data-lucide="refresh-cw" size="16"></i> Atualizar painel
-      </button>
+      </section>
     </section>
   </main>
 
   <footer>Rifa Premiada · Ventilador Mondial VSP-30-B</footer>
   <div id="toast"></div>
 
-  <!-- MODAL TOKEN -->
+  <!-- MODAL CRIAR CADASTRO -->
+  <div class="modal hidden" id="registerModal" onclick="if(event.target===this)closeRegisterModal()">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h2><i data-lucide="user-plus" size="21" style="color:var(--accent-light)"></i> Criar cadastro</h2>
+        <button class="modal-close" onclick="closeRegisterModal()" aria-label="Fechar">
+          <i data-lucide="x" size="18"></i>
+        </button>
+      </div>
+      <p>Seu token será permanente e permitirá consultar todos os seus pedidos.</p>
+      <div class="form-stack">
+        <div>
+          <label class="input-label" for="name">Nome completo</label>
+          <input id="name" placeholder="Ex: João da Silva" maxlength="100">
+        </div>
+        <div>
+          <label class="input-label" for="whatsapp">WhatsApp com DDD</label>
+          <input id="whatsapp" placeholder="Ex: (88) 99999-9999" inputmode="tel" maxlength="20">
+        </div>
+        <button class="btn" style="width:100%;margin-top:4px" onclick="register()">
+          <i data-lucide="check-circle" size="18"></i> Gerar meu token
+        </button>
+      </div>
+      <p class="small" style="text-align:center;margin-top:14px">
+        Já possui cadastro? <a href="#" style="color:var(--accent-light);font-weight:700;text-decoration:none" onclick="event.preventDefault();closeRegisterModal();openLoginModal()">Entrar com token</a>
+      </p>
+    </div>
+  </div>
+
+  <!-- MODAL ENTRAR COM TOKEN -->
+  <div class="modal hidden" id="loginModal" onclick="if(event.target===this)closeLoginModal()">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h2><i data-lucide="key-round" size="21" style="color:var(--accent-light)"></i> Entrar com token</h2>
+        <button class="modal-close" onclick="closeLoginModal()" aria-label="Fechar">
+          <i data-lucide="x" size="18"></i>
+        </button>
+      </div>
+      <p>Digite seu código de 5 caracteres para liberar a seleção de números.</p>
+      <div class="form-stack">
+        <div>
+          <label class="input-label" for="clientToken">Seu token permanente</label>
+          <input id="clientToken" placeholder="EX: A7K9P" maxlength="5" style="text-transform:uppercase;letter-spacing:3px;font-weight:800;font-size:18px;text-align:center">
+        </div>
+        <button class="btn" style="width:100%;margin-top:4px" onclick="clientLogin()">
+          <i data-lucide="log-in" size="18"></i> Acessar minha conta
+        </button>
+      </div>
+      <p class="small" style="text-align:center;margin-top:14px">
+        Ainda não tem token? <a href="#" style="color:var(--accent-light);font-weight:700;text-decoration:none" onclick="event.preventDefault();closeLoginModal();openRegisterModal()">Criar cadastro</a>
+      </p>
+    </div>
+  </div>
+
+  <!-- MODAL TOKEN GERADO -->
   <div class="modal hidden" id="tokenModal">
     <div class="modal-box">
-      <h2><i data-lucide="party-popper" size="22" style="color:var(--accent-light)"></i> Cadastro realizado!</h2>
+      <div class="modal-header">
+        <h2><i data-lucide="party-popper" size="22" style="color:var(--accent-light)"></i> Cadastro realizado!</h2>
+      </div>
       <p>Guarde seu token. Ele será necessário para entrar e consultar seus pedidos.</p>
       <div class="token-card" id="tokenCard">
         <p>SEU TOKEN PERMANENTE</p>
@@ -1086,21 +1090,7 @@
           <i data-lucide="download" size="17"></i> Salvar imagem
         </button>
       </div>
-      <button class="btn secondary" style="width:100%;margin-top:10px" onclick="closeTokenModal()">Fechar</button>
-    </div>
-  </div>
-
-  <!-- LOGIN ADMIN -->
-  <div class="modal hidden" id="adminLoginModal">
-    <div class="modal-box">
-      <h2><i data-lucide="shield" size="21" style="color:var(--accent-light)"></i> Acesso administrativo</h2>
-      <p>Entre com o usuário autorizado no Supabase.</p>
-      <input id="adminEmail" type="email" placeholder="E-mail administrativo">
-      <input id="adminPassword" type="password" placeholder="Senha" style="margin-top:10px">
-      <div class="row" style="margin-top:16px">
-        <button class="btn" style="flex:1" onclick="adminLogin()">Entrar</button>
-        <button class="btn secondary" style="flex:1" onclick="closeAdminLogin()">Cancelar</button>
-      </div>
+      <button class="btn secondary" style="width:100%;margin-top:10px" onclick="closeTokenModal();openLoginModal()">Continuar para entrar</button>
     </div>
   </div>
 
@@ -1112,13 +1102,7 @@
     let clientToken=null;
     let clientData=null;
     let selectedNumbers=[];
-    let manualSelected=[];
     let numbersData=[];
-    let adminUser=null;
-    let currentAdminTab='pending';
-    let cachedOrders=[];
-    let cachedParticipants=[];
-    let cachedPayments=[];
 
     /* NAVEGAÇÃO */
     function showPage(page,button){
@@ -1136,6 +1120,29 @@
 
     function goToPage(page){
       showPage(page);
+    }
+
+    /* MODAIS DE CADASTRO E LOGIN */
+    function openRegisterModal(){
+      document.getElementById('registerModal').classList.remove('hidden');
+      setTimeout(()=>document.getElementById('name')?.focus(),50);
+    }
+
+    function closeRegisterModal(){
+      document.getElementById('registerModal').classList.add('hidden');
+    }
+
+    function openLoginModal(){
+      document.getElementById('loginModal').classList.remove('hidden');
+      setTimeout(()=>document.getElementById('clientToken')?.focus(),50);
+    }
+
+    function closeLoginModal(){
+      document.getElementById('loginModal').classList.add('hidden');
+    }
+
+    function closeTokenModal(){
+      document.getElementById('tokenModal').classList.add('hidden');
     }
 
     /* UTILITÁRIOS */
@@ -1168,18 +1175,6 @@
       }[char]));
     }
 
-    function closeTokenModal(){
-      document.getElementById('tokenModal').classList.add('hidden');
-    }
-
-    function openAdminLogin(){
-      document.getElementById('adminLoginModal').classList.remove('hidden');
-    }
-
-    function closeAdminLogin(){
-      document.getElementById('adminLoginModal').classList.add('hidden');
-    }
-
     /* CADASTRO */
     async function register(){
       const name=document.getElementById('name').value.trim();
@@ -1199,6 +1194,7 @@
 
       if(!data||!data.success)return toast('Cadastro não confirmado.');
 
+      closeRegisterModal();
       document.getElementById('generatedToken').textContent=data.token;
       document.getElementById('tokenModal').classList.remove('hidden');
       document.getElementById('clientToken').value=data.token;
@@ -1242,11 +1238,11 @@
       }
       if(!data||!data.success)return toast('Token não encontrado.');
 
+      closeLoginModal();
       clientToken=token;
       clientData=data;
       document.getElementById('clientInfo').classList.remove('hidden');
-      document.getElementById('loginSection').classList.add('hidden');
-      document.getElementById('registerSection').classList.add('hidden');
+      document.getElementById('accountAccessSection').classList.add('hidden');
       document.getElementById('clientName').textContent='Olá, '+data.participant+'!';
       document.getElementById('numbersMessage').textContent=
         'Toque nos números disponíveis para selecioná-los.';
@@ -1263,8 +1259,7 @@
       clientData=null;
       selectedNumbers=[];
       document.getElementById('clientInfo').classList.add('hidden');
-      document.getElementById('loginSection').classList.remove('hidden');
-      document.getElementById('registerSection').classList.remove('hidden');
+      document.getElementById('accountAccessSection').classList.remove('hidden');
       document.getElementById('clientToken').value='';
       document.getElementById('numbersMessage').textContent=
         'Entre com seu token para selecionar números.';
@@ -1310,8 +1305,8 @@
         button.onclick=()=>{
           if(item.status==='sold')return;
           if(!clientToken){
-            toast('Entre com seu token na aba Minha conta para selecionar.');
-            goToPage('account');
+            toast('Entre com seu token ou faça seu cadastro para selecionar.');
+            openLoginModal();
             return;
           }
           if(selectedNumbers.includes(item.id)){
@@ -1353,7 +1348,7 @@
     async function sendOrder(){
       if(!clientToken){
         toast('Entre com seu token primeiro.');
-        goToPage('account');
+        openLoginModal();
         return;
       }
       if(!selectedNumbers.length)return toast('Escolha pelo menos um número.');
@@ -1426,416 +1421,10 @@
       });
     }
 
-    /* LOGIN ADMINISTRATIVO */
-    async function adminLogin(){
-      const email=document.getElementById('adminEmail').value.trim();
-      const password=document.getElementById('adminPassword').value;
-      if(!email||!password)return toast('Informe e-mail e senha.');
-
-      const {data,error}=await db.auth.signInWithPassword({email,password});
-      if(error){
-        console.error('Erro de login:',error);
-        return toast('Falha no login: '+error.message);
-      }
-
-      const user=data.user;
-      if(!user){
-        await db.auth.signOut();
-        return toast('O Supabase não retornou um usuário autenticado.');
-      }
-
-      const {data:admin,error:adminError}=await db
-        .from('admin_users')
-        .select('id')
-        .eq('id',user.id)
-        .maybeSingle();
-
-      console.log('USUÁRIO AUTENTICADO:',user.id);
-      console.log('ADMIN ENCONTRADO:',admin);
-      console.log('ERRO DA CONSULTA ADMIN:',adminError);
-
-      if(adminError){
-        await db.auth.signOut();
-        return toast('Erro ao verificar administrador: '+adminError.message);
-      }
-
-      if(!admin){
-        await db.auth.signOut();
-        return toast('Usuário não autorizado. ID: '+user.id);
-      }
-
-      adminUser=user;
-      closeAdminLogin();
-      document.getElementById('adminPanel').classList.remove('hidden');
-      await loadAdmin();
-      document.getElementById('adminPanel').scrollIntoView({behavior:'smooth'});
-      toast('Acesso administrativo liberado.');
-    }
-
-    async function adminLogout(){
-      await db.auth.signOut();
-      adminUser=null;
-      document.getElementById('adminPanel').classList.add('hidden');
-      toast('Sessão administrativa encerrada.');
-    }
-
-    /* CARREGAMENTO DO PAINEL */
-    async function loadAdmin(){
-      if(!adminUser)return;
-
-      const [numbers,orders,participants,payments]=await Promise.all([
-        db.from('numbers').select('id,status').order('id'),
-        db.from('orders').select('*').order('created_at',{ascending:false}),
-        db.from('participants').select('id,full_name,whatsapp,created_at'),
-        db.from('payments').select('*').order('created_at',{ascending:false})
-      ]);
-
-      const errors=[numbers,orders,participants,payments].filter(x=>x.error);
-      if(errors.length){
-        console.error('Erros painel:',errors);
-        return toast('Erro ao carregar painel: '+
-          errors.map(x=>x.error.message).join(' | '));
-      }
-
-      numbersData=numbers.data||[];
-      cachedOrders=orders.data||[];
-      cachedParticipants=participants.data||[];
-      cachedPayments=payments.data||[];
-
-      const sold=numbersData.filter(n=>n.status==='sold').length;
-      const pending=cachedOrders.filter(o=>o.status==='pending').length;
-      const confirmed=cachedPayments
-        .filter(p=>p.status==='confirmed')
-        .reduce((s,p)=>s+Number(p.amount),0);
-
-      document.getElementById('adminStats').innerHTML=`
-        <div class="stat"><span class="small">Números vendidos</span><strong>${sold}/100</strong></div>
-        <div class="stat"><span class="small">Pedidos pendentes</span><strong>${pending}</strong></div>
-        <div class="stat"><span class="small">Cadastros com token</span><strong>${cachedParticipants.length}</strong></div>
-        <div class="stat"><span class="small">Confirmado</span><strong>${money(confirmed)}</strong></div>
-      `;
-
-      renderAdminTab();
-    }
-
-    /* ABAS ADMINISTRATIVAS */
-    function adminTab(tab,button){
-      currentAdminTab=tab;
-      document.querySelectorAll('#adminPanel .tab')
-        .forEach(b=>b.classList.remove('active'));
-      button.classList.add('active');
-      renderAdminTab();
-    }
-
-    function renderAdminTab(){
-      const box=document.getElementById('adminContent');
-
-      if(currentAdminTab==='manual'){
-        renderManualSale(box);
-        return;
-      }
-
-      if(currentAdminTab==='numbers'){
-        box.innerHTML='<h3>Números da rifa</h3><div class="numbers" id="adminNumbers"></div>';
-        const grid=document.getElementById('adminNumbers');
-        numbersData.forEach(n=>{
-          const el=document.createElement('div');
-          el.className='number '+(n.status==='sold'?'sold':'');
-          el.style.display='grid';
-          el.style.placeItems='center';
-          el.textContent=String(n.id).padStart(2,'0');
-          grid.appendChild(el);
-        });
-        return;
-      }
-
-      if(currentAdminTab==='clients'){
-        box.innerHTML=`
-          <h3>Clientes cadastrados com token</h3>
-          <div class="table-wrap">
-            <table>
-              <thead><tr><th>Nome</th><th>WhatsApp</th><th>Cadastro</th></tr></thead>
-              <tbody>
-                ${cachedParticipants.map(p=>`
-                  <tr>
-                    <td>${escapeHTML(p.full_name)}</td>
-                    <td>${escapeHTML(p.whatsapp)}</td>
-                    <td>${new Date(p.created_at).toLocaleDateString('pt-BR')}</td>
-                  </tr>
-                `).join('')}
-              </tbody>
-            </table>
-          </div>
-          <p class="small">Vendas sem cadastro aparecem em Todos pedidos.</p>
-        `;
-        return;
-      }
-
-      if(currentAdminTab==='payments'){
-        box.innerHTML=`
-          <h3>Pagamentos</h3>
-          <div class="table-wrap">
-            <table>
-              <thead><tr><th>Pedido</th><th>Valor</th><th>Status</th></tr></thead>
-              <tbody>
-                ${cachedPayments.map(p=>`
-                  <tr>
-                    <td>${escapeHTML(p.order_id)}</td>
-                    <td>${money(p.amount)}</td>
-                    <td>${escapeHTML(p.status)}</td>
-                  </tr>
-                `).join('')}
-              </tbody>
-            </table>
-          </div>
-        `;
-        return;
-      }
-
-      let orders=cachedOrders;
-      if(currentAdminTab==='pending')
-        orders=orders.filter(o=>o.status==='pending');
-
-      if(!orders.length){
-        box.innerHTML='<p>Nenhum pedido nesta categoria.</p>';
-        return;
-      }
-
-      box.innerHTML='<h3>'+
-        (currentAdminTab==='pending'?'Pedidos aguardando aprovação':'Todos os pedidos')+
-        '</h3><div id="adminOrders"></div>';
-
-      const list=document.getElementById('adminOrders');
-      orders.forEach(order=>{
-        const participant=cachedParticipants.find(p=>p.id===order.participant_id);
-        const name=order.customer_name||participant?.full_name||'Cliente sem cadastro';
-        const whatsapp=order.customer_whatsapp||participant?.whatsapp||'—';
-
-        const div=document.createElement('div');
-        div.className='order';
-        const cls=order.status==='approved'?'approved':
-          order.status==='rejected'?'rejected':'pending';
-
-        div.innerHTML=`
-          <strong>${escapeHTML(name)}</strong>
-          <span class="status ${cls}">${escapeHTML(order.status)}</span>
-          <p>${money(order.total_amount)} · ${new Date(order.created_at).toLocaleString('pt-BR')}</p>
-          <p class="small">Pedido: ${escapeHTML(order.id)}</p>
-          <p class="small">WhatsApp: ${escapeHTML(whatsapp)}</p>
-          <p class="small">${order.customer_name?'Venda manual, sem token':'Pedido de cliente cadastrado'}</p>
-          <div class="row" id="orderNumbers-${order.id}"></div>
-          ${order.status==='pending'?`
-            <div class="row" style="margin-top:12px">
-              <button class="btn green" onclick="approveOrder('${order.id}')">Confirmar pagamento e aprovar</button>
-              <button class="btn danger" onclick="rejectOrder('${order.id}')">Rejeitar</button>
-            </div>
-          `:''}
-        `;
-        list.appendChild(div);
-        loadOrderNumbers(order.id);
-      });
-    }
-
-    /* VENDA MANUAL */
-    function renderManualSale(box){
-      manualSelected=[];
-      box.innerHTML=`
-        <h3>Registrar venda sem cadastro</h3>
-        <p>Use esta opção para pessoas que não querem criar token. A venda será registrada como paga e aprovada imediatamente.</p>
-        <div class="row">
-          <div class="field"><input id="manualName" placeholder="Nome da pessoa" maxlength="100"></div>
-          <div class="field"><input id="manualWhatsapp" placeholder="WhatsApp com DDD" maxlength="20"></div>
-        </div>
-        <p><strong>Selecione os números disponíveis:</strong></p>
-        <div class="numbers" id="manualNumbers"></div>
-        <div class="summary">
-          <div><div class="small">Selecionados</div><strong id="manualCount">0</strong></div>
-          <div><div class="small">Total</div><div class="price" id="manualPrice">R$ 0,00</div></div>
-          <button class="btn green" id="manualSaveBtn" onclick="saveManualSale()" disabled>Registrar venda paga</button>
-        </div>
-      `;
-      renderManualNumbers();
-    }
-
-    function renderManualNumbers(){
-      const grid=document.getElementById('manualNumbers');
-      if(!grid)return;
-      grid.innerHTML='';
-
-      numbersData.forEach(n=>{
-        const b=document.createElement('button');
-        b.className='number';
-        b.textContent=String(n.id).padStart(2,'0');
-        if(n.status==='sold'){
-          b.classList.add('sold');
-          b.disabled=true;
-          b.title='Já vendido';
-        }else if(manualSelected.includes(n.id)){
-          b.classList.add('selected');
-        }
-        b.onclick=()=>{
-          if(n.status==='sold')return;
-          if(manualSelected.includes(n.id))
-            manualSelected=manualSelected.filter(x=>x!==n.id);
-          else
-            manualSelected.push(n.id);
-          renderManualNumbers();
-          updateManualSummary();
-        };
-        grid.appendChild(b);
-      });
-
-      updateManualSummary();
-    }
-
-    function updateManualSummary(){
-      const count=manualSelected.length;
-      const countEl=document.getElementById('manualCount');
-      const priceEl=document.getElementById('manualPrice');
-      const saveBtn=document.getElementById('manualSaveBtn');
-      if(!countEl)return;
-      countEl.textContent=count;
-      priceEl.textContent=money(priceFor(count));
-      saveBtn.disabled=!count;
-    }
-
-    async function saveManualSale(){
-      if(!adminUser)return toast('Sessão administrativa não encontrada.');
-      const name=document.getElementById('manualName').value.trim();
-      const whatsapp=document.getElementById('manualWhatsapp').value.trim();
-
-      if(name.length<3)return toast('Informe o nome da pessoa.');
-      if(whatsapp.length<8)return toast('Informe um WhatsApp válido.');
-      if(!manualSelected.length)return toast('Selecione pelo menos um número.');
-
-      const numbers=[...manualSelected].sort((a,b)=>a-b);
-      if(!confirm(
-        'Confirma o recebimento do pagamento de '+money(priceFor(numbers.length))+
-        ' e a venda dos números '+
-        numbers.map(n=>String(n).padStart(2,'0')).join(', ')+'?'
-      ))return;
-
-      const btn=document.getElementById('manualSaveBtn');
-      btn.disabled=true;
-      btn.textContent='Registrando...';
-
-      const {data,error}=await db.rpc('admin_create_manual_sale',{
-        p_name:name,
-        p_whatsapp:whatsapp,
-        p_numbers:numbers
-      });
-
-      if(error){
-        console.error('Erro na venda manual:',error);
-        btn.disabled=false;
-        btn.textContent='Registrar venda paga';
-        return toast('Não foi possível registrar: '+error.message);
-      }
-
-      if(!data||!data.success){
-        btn.disabled=false;
-        btn.textContent='Registrar venda paga';
-        return toast('O banco não confirmou a venda.');
-      }
-
-      toast('Venda manual registrada! Total: '+money(data.total));
-      await loadAdmin();
-      await loadNumbers();
-      currentAdminTab='manual';
-      document.querySelectorAll('#adminPanel .tab')
-        .forEach(b=>b.classList.remove('active'));
-      const manualTabButton=[...document.querySelectorAll('#adminPanel .tab')]
-        .find(b=>b.textContent.includes('Venda manual'));
-      if(manualTabButton)manualTabButton.classList.add('active');
-      renderAdminTab();
-    }
-
-    /* NÚMEROS DOS PEDIDOS ADMIN */
-    async function loadOrderNumbers(orderId){
-      const {data,error}=await db.from('order_numbers')
-        .select('number_id').eq('order_id',orderId);
-      if(error){
-        console.error(error);
-        return;
-      }
-      const box=document.getElementById('orderNumbers-'+orderId);
-      if(box){
-        box.textContent='Números: '+(data||[])
-          .map(x=>String(x.number_id).padStart(2,'0')).join(', ');
-      }
-    }
-
-    /* APROVAR E REJEITAR */
-    async function approveOrder(orderId){
-      if(!confirm('Confirma que o pagamento foi verificado e deseja aprovar este pedido?'))
-        return;
-
-      const {data,error}=await db.rpc('approve_raffle_order',{
-        p_order_id:orderId
-      });
-      if(error){
-        console.error(error);
-        return toast('Não foi possível aprovar: '+error.message);
-      }
-      toast('Pedido aprovado e números vendidos.');
-      await loadAdmin();
-      await loadNumbers();
-    }
-
-    async function rejectOrder(orderId){
-      if(!confirm('Deseja realmente rejeitar este pedido?'))return;
-
-      const {data,error}=await db.rpc('reject_raffle_order',{
-        p_order_id:orderId
-      });
-      if(error){
-        console.error(error);
-        return toast('Não foi possível rejeitar: '+error.message);
-      }
-      toast('Pedido rejeitado.');
-      await loadAdmin();
-    }
-
-    /* RECUPERAÇÃO DA SESSÃO ADMINISTRATIVA */
-    async function restoreAdminSession(){
-      const {data,error}=await db.auth.getSession();
-      if(error){
-        console.error('Erro ao recuperar sessão:',error);
-        return;
-      }
-
-      const user=data.session?.user;
-      if(!user)return;
-
-      const {data:admin,error:adminError}=await db
-        .from('admin_users')
-        .select('id')
-        .eq('id',user.id)
-        .maybeSingle();
-
-      console.log('RECUPERAÇÃO - USUÁRIO:',user.id);
-      console.log('RECUPERAÇÃO - ADMIN:',admin);
-      console.log('RECUPERAÇÃO - ERRO:',adminError);
-
-      if(adminError){
-        console.error('Não foi possível verificar a sessão administrativa:',adminError);
-        return;
-      }
-
-      if(admin){
-        adminUser=user;
-        document.getElementById('adminPanel').classList.remove('hidden');
-        await loadAdmin();
-      }else{
-        await db.auth.signOut();
-      }
-    }
-
     /* INICIALIZAÇÃO */
     document.addEventListener('DOMContentLoaded',async()=>{
       if(window.lucide)lucide.createIcons();
       await loadNumbers();
-      await restoreAdminSession();
     });
   </script>
 </body>
