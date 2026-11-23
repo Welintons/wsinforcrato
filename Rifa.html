@@ -45,7 +45,7 @@
       min-height: 100vh;
     }
 
-    button, input {
+    button, input, textarea, select {
       font: inherit;
     }
 
@@ -65,6 +65,7 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
+      gap: 12px;
       border-bottom: 1px solid var(--border);
       background: rgba(11, 17, 32, 0.85);
       backdrop-filter: blur(14px);
@@ -113,11 +114,80 @@
       margin-top: 2px;
     }
 
-    /* LAYOUT PRINCIPAL */
+    /* LAYOUT PRINCIPAL COM MENU LATERAL NO DESKTOP */
     .container {
-      max-width: 1080px;
+      max-width: 1180px;
       margin: auto;
-      padding: 20px 16px 90px;
+      padding: 20px 16px 110px;
+    }
+
+    .admin-shell {
+      display: grid;
+      grid-template-columns: 245px minmax(0, 1fr);
+      gap: 20px;
+      align-items: start;
+      margin-top: 16px;
+    }
+
+    .side-nav {
+      background: linear-gradient(180deg, rgba(25, 36, 61, 0.92) 0%, rgba(19, 28, 49, 0.96) 100%);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 12px;
+      position: sticky;
+      top: 86px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      box-shadow: 0 12px 32px -10px rgba(0, 0, 0, 0.45);
+    }
+
+    .side-nav-header {
+      padding: 6px 10px 10px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 4px;
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+    }
+
+    .nav-btn {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      border: 1px solid transparent;
+      background: transparent;
+      color: var(--muted);
+      padding: 11px 13px;
+      border-radius: 12px;
+      font-size: 13.5px;
+      font-weight: 700;
+      text-align: left;
+    }
+
+    .nav-btn:hover:not(.active) {
+      color: #f8fafc;
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    .nav-btn.active {
+      background: linear-gradient(135deg, var(--accent-light), var(--accent));
+      color: #1c1204;
+      box-shadow: 0 4px 14px var(--accent-glow);
+    }
+
+    .nav-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .admin-main {
+      min-width: 0;
     }
 
     .card {
@@ -125,8 +195,25 @@
       border: 1px solid var(--border);
       border-radius: 20px;
       padding: 24px;
-      margin-top: 20px;
       box-shadow: 0 12px 32px -10px rgba(0, 0, 0, 0.45);
+    }
+
+    .card + .card {
+      margin-top: 18px;
+    }
+
+    .section-panel {
+      display: none;
+      animation: fadeUp 0.22s ease;
+    }
+
+    .section-panel.active {
+      display: block;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     .tag {
@@ -204,7 +291,7 @@
       margin-bottom: 6px;
     }
 
-    input {
+    input, textarea, select {
       background: #0b1221;
       border: 1px solid var(--border);
       color: white;
@@ -215,7 +302,7 @@
       transition: border-color 0.2s, box-shadow 0.2s;
     }
 
-    input:focus {
+    input:focus, textarea:focus, select:focus {
       border-color: var(--accent);
       box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.15);
     }
@@ -227,11 +314,12 @@
       gap: 8px;
       border: 0;
       border-radius: 12px;
-      padding: 13px 18px;
+      padding: 12px 18px;
       background: linear-gradient(135deg, var(--accent-light), var(--accent));
       color: #1c1204;
       font-weight: 800;
       box-shadow: 0 6px 20px var(--accent-glow);
+      text-decoration: none;
     }
 
     .btn:hover:not(:disabled) {
@@ -272,6 +360,12 @@
       background: linear-gradient(135deg, #34d399, var(--green));
       color: #032619;
       box-shadow: 0 6px 20px var(--green-glow);
+    }
+
+    .btn.sm {
+      padding: 8px 13px;
+      font-size: 12.5px;
+      border-radius: 10px;
     }
 
     .hidden {
@@ -380,40 +474,15 @@
       color: #fca5a5;
     }
 
-    /* ADMIN */
-    .tabs {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      margin: 18px 0;
-    }
-
-    .tab {
-      background: var(--panel2);
-      color: #cbd5e1;
-      border: 1px solid var(--border);
-      padding: 10px 14px;
-      border-radius: 10px;
-      font-size: 13px;
-      font-weight: 600;
-    }
-
-    .tab.active {
-      background: linear-gradient(135deg, var(--accent-light), var(--accent));
-      color: #1c1204;
-      border-color: transparent;
-      font-weight: 800;
-    }
-
     .stat-grid {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(auto-fit, minmax(175px, 1fr));
       gap: 12px;
       margin-top: 16px;
     }
 
     .stat {
-      background: rgba(11, 18, 33, 0.6);
+      background: rgba(11, 18, 33, 0.65);
       border: 1px solid var(--border);
       border-radius: 14px;
       padding: 16px;
@@ -421,7 +490,7 @@
 
     .stat strong {
       display: block;
-      font-size: 24px;
+      font-size: 22px;
       color: var(--accent-light);
       margin-top: 6px;
       font-weight: 800;
@@ -441,6 +510,14 @@
       border-radius: 14px;
       padding: 16px;
       margin-top: 14px;
+    }
+
+    .danger-confirm-box {
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.45);
+      border-radius: 14px;
+      padding: 16px;
+      margin-top: 12px;
     }
 
     .token-reveal-box {
@@ -550,7 +627,55 @@
       text-align: center;
     }
 
-    @media (max-width: 700px) {
+    /* RESPONSIVIDADE MOBILE (MENU INFERIOR FIXO ESTILO APP) */
+    @media (max-width: 860px) {
+      .admin-shell {
+        grid-template-columns: 1fr;
+        gap: 0;
+        margin-top: 8px;
+      }
+
+      .side-nav {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        top: auto;
+        z-index: 40;
+        flex-direction: row;
+        overflow-x: auto;
+        gap: 4px;
+        padding: 7px 8px calc(7px + env(safe-area-inset-bottom));
+        border-radius: 18px 18px 0 0;
+        border-left: 0;
+        border-right: 0;
+        border-bottom: 0;
+        background: rgba(11, 17, 32, 0.96);
+        backdrop-filter: blur(16px);
+        box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.55);
+        scrollbar-width: none;
+      }
+
+      .side-nav::-webkit-scrollbar {
+        display: none;
+      }
+
+      .side-nav-header {
+        display: none;
+      }
+
+      .nav-btn {
+        flex: 0 0 auto;
+        min-width: 74px;
+        flex-direction: column;
+        justify-content: center;
+        gap: 4px;
+        padding: 8px 8px;
+        border-radius: 11px;
+        font-size: 10.5px;
+        text-align: center;
+      }
+
       .numbers {
         grid-template-columns: repeat(5, minmax(0, 1fr));
         gap: 8px;
@@ -560,16 +685,16 @@
         font-size: 15px;
       }
 
-      .stat-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
       .container {
-        padding: 14px 12px 90px;
+        padding: 14px 12px 105px;
       }
 
       header {
         padding: 0 16px;
+      }
+
+      #toast {
+        bottom: 86px;
       }
     }
   </style>
@@ -589,37 +714,178 @@
   </header>
 
   <main class="container">
-    <!-- PAINEL ADMINISTRATIVO -->
-    <section class="card hidden" id="adminPanel">
-      <div class="row" style="justify-content:space-between">
-        <div>
-          <span class="tag"><i data-lucide="lock" size="13"></i> ÁREA RESTRITA · WS SOLUÇÕES</span>
-          <h2 class="section-title" style="margin-top:10px">Painel administrativo</h2>
-        </div>
-        <button class="btn secondary" onclick="adminLogout()">
-          <i data-lucide="log-out" size="17"></i> Sair
+    <div class="admin-shell hidden" id="adminShell">
+      <!-- MENU DE NAVEGAÇÃO ADMINISTRATIVO -->
+      <nav class="side-nav" id="adminNav" aria-label="Menu administrativo">
+        <div class="side-nav-header">Menu · WS Soluções</div>
+        <button type="button" class="nav-btn active" data-section="overview" onclick="selectAdminSection('overview',this)">
+          <span class="nav-icon"><i data-lucide="layout-dashboard" size="18"></i></span>
+          <span>Visão geral</span>
         </button>
+        <button type="button" class="nav-btn" data-section="orders" onclick="selectAdminSection('orders',this)">
+          <span class="nav-icon"><i data-lucide="receipt" size="18"></i></span>
+          <span>Pedidos</span>
+        </button>
+        <button type="button" class="nav-btn" data-section="manual" onclick="selectAdminSection('manual',this)">
+          <span class="nav-icon"><i data-lucide="plus-circle" size="18"></i></span>
+          <span>Venda manual</span>
+        </button>
+        <button type="button" class="nav-btn" data-section="numbers" onclick="selectAdminSection('numbers',this)">
+          <span class="nav-icon"><i data-lucide="grid-3x3" size="18"></i></span>
+          <span>Números</span>
+        </button>
+        <button type="button" class="nav-btn" data-section="clients" onclick="selectAdminSection('clients',this)">
+          <span class="nav-icon"><i data-lucide="users" size="18"></i></span>
+          <span>Clientes</span>
+        </button>
+        <button type="button" class="nav-btn" data-section="payments" onclick="selectAdminSection('payments',this)">
+          <span class="nav-icon"><i data-lucide="wallet" size="18"></i></span>
+          <span>Pagamentos</span>
+        </button>
+        <button type="button" class="nav-btn" data-section="settings" onclick="selectAdminSection('settings',this)">
+          <span class="nav-icon"><i data-lucide="sliders-horizontal" size="18"></i></span>
+          <span>Configurações</span>
+        </button>
+        <button type="button" class="nav-btn" data-section="admin_session" onclick="selectAdminSection('admin_session',this)">
+          <span class="nav-icon"><i data-lucide="shield" size="18"></i></span>
+          <span>Administração</span>
+        </button>
+      </nav>
+
+      <!-- CONTEÚDO DAS SEÇÕES -->
+      <div class="admin-main" id="adminPanel">
+        <!-- 1. VISÃO GERAL -->
+        <section class="card section-panel active" id="section-overview">
+          <span class="tag"><i data-lucide="bar-chart-3" size="13"></i> INDICADORES · WS SOLUÇÕES</span>
+          <h2 class="section-title" style="margin-top:10px">Visão geral da rifa</h2>
+          <p class="small">Indicadores atualizados com base nos registros do Supabase.</p>
+          <div class="stat-grid" id="adminStats"></div>
+        </section>
+
+        <!-- 2. PEDIDOS -->
+        <section class="card section-panel" id="section-orders">
+          <span class="tag"><i data-lucide="receipt" size="13"></i> GESTÃO DE PEDIDOS</span>
+          <h2 class="section-title" style="margin-top:10px">Pedidos</h2>
+          <p class="small">Analise pedidos pendentes, aprove, rejeite ou exclua pedidos em qualquer situação.</p>
+
+          <div class="row" style="margin:14px 0">
+            <button type="button" class="btn sm" id="filterPendingBtn" onclick="setOrderFilter('pending')">Pedidos pendentes</button>
+            <button type="button" class="btn secondary sm" id="filterAllBtn" onclick="setOrderFilter('all')">Todos os pedidos</button>
+          </div>
+
+          <div id="deleteConfirmPanel" class="hidden"></div>
+          <div id="adminOrdersList"></div>
+        </section>
+
+        <!-- 3. VENDA MANUAL -->
+        <section class="card section-panel" id="section-manual">
+          <span class="tag"><i data-lucide="plus-circle" size="13"></i> REGISTRO DIRETO</span>
+          <h2 class="section-title" style="margin-top:10px">Venda manual</h2>
+          <div id="manualSaleBox"></div>
+        </section>
+
+        <!-- 4. NÚMEROS -->
+        <section class="card section-panel" id="section-numbers">
+          <span class="tag"><i data-lucide="grid-3x3" size="13"></i> GRADE 01 A 100</span>
+          <h2 class="section-title" style="margin-top:10px">Números da rifa</h2>
+          <p class="small">Grade completa de 01 a 100 identificando disponíveis e vendidos, com consulta detalhada de histórico.</p>
+          <div class="numbers" id="adminNumbersGrid"></div>
+
+          <h3 style="margin-top:24px">Consultar número (01 a 100)</h3>
+          <div class="tool-box">
+            <div class="row">
+              <div class="field" style="max-width:220px">
+                <label class="input-label" for="lookupNumberInput">Número (01 a 100)</label>
+                <input id="lookupNumberInput" type="number" min="1" max="100" step="1" placeholder="Ex: 07">
+              </div>
+              <div style="align-self:flex-end">
+                <button type="button" class="btn" id="lookupNumberBtn" onclick="lookupRaffleNumber()">
+                  <i data-lucide="search" size="17"></i> Consultar
+                </button>
+              </div>
+            </div>
+            <div id="lookupNumberResult" style="margin-top:16px"></div>
+          </div>
+        </section>
+
+        <!-- 5. CLIENTES -->
+        <section class="card section-panel" id="section-clients">
+          <span class="tag"><i data-lucide="users" size="13"></i> PARTICIPANTES E TOKENS</span>
+          <h2 class="section-title" style="margin-top:10px">Clientes</h2>
+
+          <div id="clientsListBox"></div>
+
+          <h3 style="margin-top:24px">Recuperar token do participante</h3>
+          <div id="recoverTokenBox"></div>
+        </section>
+
+        <!-- 6. PAGAMENTOS -->
+        <section class="card section-panel" id="section-payments">
+          <span class="tag"><i data-lucide="wallet" size="13"></i> CONTROLE FINANCEIRO</span>
+          <h2 class="section-title" style="margin-top:10px">Pagamentos</h2>
+          <div class="row" style="margin:12px 0">
+            <button type="button" class="btn sm" id="payFilterAllBtn" onclick="setPaymentFilter('all')">Todos</button>
+            <button type="button" class="btn secondary sm" id="payFilterConfirmedBtn" onclick="setPaymentFilter('confirmed')">Confirmados</button>
+            <button type="button" class="btn secondary sm" id="payFilterPendingBtn" onclick="setPaymentFilter('pending')">Pendentes</button>
+          </div>
+          <div id="paymentsBox"></div>
+        </section>
+
+        <!-- 7. CONFIGURAÇÕES -->
+        <section class="card section-panel" id="section-settings">
+          <span class="tag"><i data-lucide="sliders-horizontal" size="13"></i> PARÂMETROS DA RIFA</span>
+          <h2 class="section-title" style="margin-top:10px">Configurações</h2>
+          <p class="small">Ajuste informações da rifa e regras de preços. Alterações persistentes dependem da função/tabela configurada no Supabase.</p>
+
+          <div class="tool-box">
+            <div class="form-stack" style="margin-top:0">
+              <div>
+                <label class="input-label" for="cfgTitle">Nome da rifa</label>
+                <input id="cfgTitle" placeholder="Ex: Rifa Premiada · Ventilador Mondial VSP-30-B">
+              </div>
+              <div>
+                <label class="input-label" for="cfgPrize">Descrição do prêmio</label>
+                <textarea id="cfgPrize" rows="3" placeholder="Ex: Ventilador de mesa Mondial Super Power VSP-30-B (30 cm, 6 pás, 3 velocidades, oscilante)"></textarea>
+              </div>
+              <div class="row">
+                <div class="field">
+                  <label class="input-label" for="cfgDrawDate">Data do sorteio</label>
+                  <input id="cfgDrawDate" type="datetime-local">
+                </div>
+                <div class="field">
+                  <label class="input-label" for="cfgStatus">Status da rifa</label>
+                  <select id="cfgStatus">
+                    <option value="active">Ativa</option>
+                    <option value="paused">Pausada</option>
+                  </select>
+                </div>
+              </div>
+              <div>
+                <label class="input-label">Regras de preços (base de 1 a 4 números)</label>
+                <div class="row">
+                  <div class="field"><input id="cfgPrice1" type="number" min="0" step="0.5" placeholder="1 número (ex: 6)" value="6"></div>
+                  <div class="field"><input id="cfgPrice2" type="number" min="0" step="0.5" placeholder="2 números (ex: 10)" value="10"></div>
+                  <div class="field"><input id="cfgPrice3" type="number" min="0" step="0.5" placeholder="3 números (ex: 15)" value="15"></div>
+                  <div class="field"><input id="cfgPrice4" type="number" min="0" step="0.5" placeholder="4 números (ex: 18)" value="18"></div>
+                </div>
+              </div>
+              <div class="row" style="margin-top:6px">
+                <button type="button" class="btn" id="saveSettingsBtn" onclick="saveRaffleSettings()">
+                  <i data-lucide="save" size="17"></i> Salvar configurações
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 8. ADMINISTRAÇÃO -->
+        <section class="card section-panel" id="section-admin_session">
+          <span class="tag"><i data-lucide="shield" size="13"></i> SESSÃO ADMINISTRATIVA</span>
+          <h2 class="section-title" style="margin-top:10px">Administração</h2>
+          <div id="adminSessionBox" class="tool-box"></div>
+        </section>
       </div>
-
-      <div class="stat-grid" id="adminStats"></div>
-
-      <div class="tabs">
-        <button class="tab active" onclick="adminTab('pending',this)">Pendentes</button>
-        <button class="tab" onclick="adminTab('all',this)">Todos pedidos</button>
-        <button class="tab" onclick="adminTab('manual',this)">Venda manual</button>
-        <button class="tab" onclick="adminTab('numbers',this)">Números</button>
-        <button class="tab" onclick="adminTab('lookup',this)">Consultar número</button>
-        <button class="tab" onclick="adminTab('clients',this)">Clientes</button>
-        <button class="tab" onclick="adminTab('recover_token',this)">Recuperar token</button>
-        <button class="tab" onclick="adminTab('payments',this)">Pagamentos</button>
-      </div>
-
-      <div id="adminContent"></div>
-
-      <button class="btn secondary" style="margin-top:18px" onclick="loadAdmin()">
-        <i data-lucide="refresh-cw" size="16"></i> Atualizar painel
-      </button>
-    </section>
+    </div>
   </main>
 
   <footer>
@@ -644,8 +910,8 @@
           <input id="adminPassword" type="password" placeholder="Senha">
         </div>
         <div class="row" style="margin-top:6px">
-          <button class="btn" style="flex:1" onclick="adminLogin()">Entrar</button>
-          <button class="btn secondary" style="flex:1" onclick="closeAdminLogin()">Cancelar</button>
+          <button type="button" class="btn" style="flex:1" onclick="adminLogin()">Entrar</button>
+          <button type="button" class="btn secondary" style="flex:1" onclick="closeAdminLogin()">Cancelar</button>
         </div>
       </div>
     </div>
@@ -659,12 +925,16 @@
     let manualSelected=[];
     let numbersData=[];
     let adminUser=null;
-    let currentAdminTab='pending';
+    let currentSection='overview';
+    let currentOrderFilter='pending';
+    let currentPaymentFilter='all';
     let cachedOrders=[];
+    let cachedOrderNumbersMap={};
     let cachedParticipants=[];
     let cachedPayments=[];
     let pendingTokenResetTarget=null;
     let oneTimeResetToken=null;
+    let pendingDeleteOrderId=null;
 
     /* UTILITÁRIOS */
     function toast(message){
@@ -672,7 +942,7 @@
       el.textContent=message;
       el.style.display='block';
       clearTimeout(window.toastTimer);
-      window.toastTimer=setTimeout(()=>el.style.display='none',4000);
+      window.toastTimer=setTimeout(()=>el.style.display='none',4200);
     }
 
     function money(value){
@@ -700,6 +970,12 @@
       return String(phone??'').replace(/\D/g,'');
     }
 
+    function whatsappUrl(phone,text){
+      const digits=normalizePhoneDigits(phone);
+      const clean=digits.length<=11?'55'+digits:digits;
+      return 'https://wa.me/'+clean+'?text='+encodeURIComponent(text||'');
+    }
+
     function statusBadge(status){
       const s=String(status||'').toLowerCase();
       if(s==='approved'||s==='confirmed'||s==='paid'||s==='sold'){
@@ -708,7 +984,7 @@
       if(s==='rejected'||s==='cancelled'||s==='canceled'||s==='failed'){
         return `<span class="status rejected">${escapeHTML(status)}</span>`;
       }
-      return `<span class="status pending">${escapeHTML(status||'pendente')}</span>`;
+      return `<span class="status pending">${escapeHTML(status||'pending')}</span>`;
     }
 
     function openAdminLogin(){
@@ -717,6 +993,40 @@
 
     function closeAdminLogin(){
       document.getElementById('adminLoginModal').classList.add('hidden');
+    }
+
+    /* NAVEGAÇÃO POR MENU */
+    function selectAdminSection(section,button){
+      if(currentSection==='clients'&&section!=='clients'){
+        clearOneTimeResetToken();
+        pendingTokenResetTarget=null;
+      }
+      if(currentSection==='orders'&&section!=='orders'){
+        cancelDeleteOrderPrompt();
+      }
+
+      currentSection=section;
+      document.querySelectorAll('.section-panel').forEach(p=>p.classList.remove('active'));
+      document.getElementById('section-'+section)?.classList.add('active');
+
+      document.querySelectorAll('#adminNav .nav-btn').forEach(b=>b.classList.remove('active'));
+      if(button){
+        button.classList.add('active');
+      }else{
+        document.querySelector(`#adminNav .nav-btn[data-section="${section}"]`)?.classList.add('active');
+      }
+
+      if(section==='manual'){
+        renderManualSale();
+      }
+      if(section==='clients'){
+        renderClientsSection();
+      }
+      if(section==='admin_session'){
+        renderAdminSessionSection();
+      }
+
+      window.scrollTo({top:0,behavior:'smooth'});
     }
 
     /* LOGIN ADMINISTRATIVO */
@@ -743,10 +1053,6 @@
         .eq('id',user.id)
         .maybeSingle();
 
-      console.log('USUÁRIO AUTENTICADO:',user.id);
-      console.log('ADMIN ENCONTRADO:',admin);
-      console.log('ERRO DA CONSULTA ADMIN:',adminError);
-
       if(adminError){
         await db.auth.signOut();
         return toast('Erro ao verificar administrador: '+adminError.message);
@@ -759,34 +1065,35 @@
 
       adminUser=user;
       closeAdminLogin();
-      document.getElementById('adminPanel').classList.remove('hidden');
+      document.getElementById('adminShell').classList.remove('hidden');
       await loadAdmin();
-      document.getElementById('adminPanel').scrollIntoView({behavior:'smooth'});
       toast('Acesso administrativo liberado.');
     }
 
     async function adminLogout(){
       clearOneTimeResetToken();
       pendingTokenResetTarget=null;
+      cancelDeleteOrderPrompt();
       await db.auth.signOut();
       adminUser=null;
-      document.getElementById('adminPanel').classList.add('hidden');
+      document.getElementById('adminShell').classList.add('hidden');
       openAdminLogin();
       toast('Sessão administrativa encerrada.');
     }
 
-    /* CARREGAMENTO DO PAINEL */
+    /* CARREGAMENTO GERAL DO PAINEL */
     async function loadAdmin(){
       if(!adminUser)return;
 
-      const [numbers,orders,participants,payments]=await Promise.all([
+      const [numbers,orders,orderNums,participants,payments]=await Promise.all([
         db.from('numbers').select('id,status').order('id'),
         db.from('orders').select('*').order('created_at',{ascending:false}),
+        db.from('order_numbers').select('order_id,number_id'),
         db.from('participants').select('id,full_name,whatsapp,created_at'),
         db.from('payments').select('*').order('created_at',{ascending:false})
       ]);
 
-      const errors=[numbers,orders,participants,payments].filter(x=>x.error);
+      const errors=[numbers,orders,orderNums,participants,payments].filter(x=>x.error);
       if(errors.length){
         console.error('Erros painel:',errors);
         return toast('Erro ao carregar painel: '+
@@ -798,456 +1105,225 @@
       cachedParticipants=participants.data||[];
       cachedPayments=payments.data||[];
 
+      cachedOrderNumbersMap={};
+      (orderNums.data||[]).forEach(row=>{
+        if(!cachedOrderNumbersMap[row.order_id])cachedOrderNumbersMap[row.order_id]=[];
+        cachedOrderNumbersMap[row.order_id].push(row.number_id);
+      });
+
+      renderOverviewStats();
+      renderOrdersSection();
+      renderNumbersGrid();
+      renderClientsSection();
+      renderPaymentsSection();
+      renderAdminSessionSection();
+      if(currentSection==='manual')renderManualSale();
+    }
+
+    /* 1. VISÃO GERAL */
+    function renderOverviewStats(){
       const sold=numbersData.filter(n=>n.status==='sold').length;
+      const totalNums=numbersData.length||100;
+      const available=numbersData.filter(n=>n.status!=='sold').length;
       const pending=cachedOrders.filter(o=>o.status==='pending').length;
       const confirmed=cachedPayments
         .filter(p=>p.status==='confirmed')
         .reduce((s,p)=>s+Number(p.amount),0);
 
       document.getElementById('adminStats').innerHTML=`
-        <div class="stat"><span class="small">Números vendidos</span><strong>${sold}/100</strong></div>
+        <div class="stat"><span class="small">Números vendidos</span><strong>${sold}/${totalNums}</strong></div>
+        <div class="stat"><span class="small">Números disponíveis</span><strong>${available}</strong></div>
         <div class="stat"><span class="small">Pedidos pendentes</span><strong>${pending}</strong></div>
-        <div class="stat"><span class="small">Cadastros com token</span><strong>${cachedParticipants.length}</strong></div>
-        <div class="stat"><span class="small">Confirmado</span><strong>${money(confirmed)}</strong></div>
+        <div class="stat"><span class="small">Confirmado em pagamentos</span><strong>${money(confirmed)}</strong></div>
+        <div class="stat"><span class="small">Clientes cadastrados</span><strong>${cachedParticipants.length}</strong></div>
       `;
-
-      renderAdminTab();
     }
 
-    /* ABAS ADMINISTRATIVAS */
-    function adminTab(tab,button){
-      if(currentAdminTab==='recover_token'&&tab!=='recover_token'){
-        clearOneTimeResetToken();
-        pendingTokenResetTarget=null;
-      }
-      currentAdminTab=tab;
-      document.querySelectorAll('#adminPanel .tab')
-        .forEach(b=>b.classList.remove('active'));
-      if(button)button.classList.add('active');
-      renderAdminTab();
+    /* 2. PEDIDOS (APROVAR, REJEITAR E EXCLUIR VIA RPC) */
+    function setOrderFilter(filter){
+      currentOrderFilter=filter;
+      document.getElementById('filterPendingBtn').className=
+        filter==='pending'?'btn sm':'btn secondary sm';
+      document.getElementById('filterAllBtn').className=
+        filter==='all'?'btn sm':'btn secondary sm';
+      cancelDeleteOrderPrompt();
+      renderOrdersSection();
     }
 
-    function renderAdminTab(){
-      const box=document.getElementById('adminContent');
+    function getOrderCustomerInfo(order){
+      const participant=cachedParticipants.find(p=>p.id===order.participant_id);
+      const name=order.customer_name||participant?.full_name||'Cliente sem cadastro';
+      const whatsapp=order.customer_whatsapp||participant?.whatsapp||'—';
+      return { name, whatsapp };
+    }
 
-      if(currentAdminTab==='manual'){
-        renderManualSale(box);
-        return;
-      }
-
-      if(currentAdminTab==='numbers'){
-        box.innerHTML='<h3>Números da rifa</h3><div class="numbers" id="adminNumbers"></div>';
-        const grid=document.getElementById('adminNumbers');
-        numbersData.forEach(n=>{
-          const el=document.createElement('div');
-          el.className='number '+(n.status==='sold'?'sold':'');
-          el.style.display='grid';
-          el.style.placeItems='center';
-          el.textContent=String(n.id).padStart(2,'0');
-          grid.appendChild(el);
-        });
-        return;
-      }
-
-      if(currentAdminTab==='lookup'){
-        renderNumberLookup(box);
-        return;
-      }
-
-      if(currentAdminTab==='recover_token'){
-        renderRecoverToken(box);
-        return;
-      }
-
-      if(currentAdminTab==='clients'){
-        box.innerHTML=`
-          <h3>Clientes cadastrados com token</h3>
-          <div class="table-wrap">
-            <table>
-              <thead><tr><th>Nome</th><th>WhatsApp</th><th>Cadastro</th></tr></thead>
-              <tbody>
-                ${cachedParticipants.map(p=>`
-                  <tr>
-                    <td>${escapeHTML(p.full_name)}</td>
-                    <td>${escapeHTML(p.whatsapp)}</td>
-                    <td>${new Date(p.created_at).toLocaleDateString('pt-BR')}</td>
-                  </tr>
-                `).join('')}
-              </tbody>
-            </table>
-          </div>
-          <p class="small">Vendas sem cadastro aparecem em Todos pedidos.</p>
-        `;
-        return;
-      }
-
-      if(currentAdminTab==='payments'){
-        box.innerHTML=`
-          <h3>Pagamentos</h3>
-          <div class="table-wrap">
-            <table>
-              <thead><tr><th>Pedido</th><th>Valor</th><th>Status</th></tr></thead>
-              <tbody>
-                ${cachedPayments.map(p=>`
-                  <tr>
-                    <td>${escapeHTML(p.order_id)}</td>
-                    <td>${money(p.amount)}</td>
-                    <td>${escapeHTML(p.status)}</td>
-                  </tr>
-                `).join('')}
-              </tbody>
-            </table>
-          </div>
-        `;
-        return;
-      }
-
-      let orders=cachedOrders;
-      if(currentAdminTab==='pending')
-        orders=orders.filter(o=>o.status==='pending');
+    function renderOrdersSection(){
+      const list=document.getElementById('adminOrdersList');
+      const orders=currentOrderFilter==='pending'
+        ? cachedOrders.filter(o=>o.status==='pending')
+        : cachedOrders;
 
       if(!orders.length){
-        box.innerHTML='<p>Nenhum pedido nesta categoria.</p>';
+        list.innerHTML='<p>Nenhum pedido nesta categoria.</p>';
         return;
       }
 
-      box.innerHTML='<h3>'+
-        (currentAdminTab==='pending'?'Pedidos aguardando aprovação':'Todos os pedidos')+
-        '</h3><div id="adminOrders"></div>';
-
-      const list=document.getElementById('adminOrders');
+      list.innerHTML='';
       orders.forEach(order=>{
-        const participant=cachedParticipants.find(p=>p.id===order.participant_id);
-        const name=order.customer_name||participant?.full_name||'Cliente sem cadastro';
-        const whatsapp=order.customer_whatsapp||participant?.whatsapp||'—';
+        const { name, whatsapp }=getOrderCustomerInfo(order);
+        const nums=(cachedOrderNumbersMap[order.id]||[])
+          .slice().sort((a,b)=>a-b)
+          .map(n=>String(n).padStart(2,'0'));
 
         const div=document.createElement('div');
         div.className='order';
         const cls=order.status==='approved'?'approved':
           order.status==='rejected'?'rejected':'pending';
 
+        const waLink=normalizePhoneDigits(whatsapp).length>=8
+          ? `<a class="btn secondary sm" target="_blank" rel="noopener" href="${whatsappUrl(whatsapp,'Olá '+name+', referente ao pedido '+order.id+' da rifa WS Soluções.')}">WhatsApp</a>`
+          : '';
+
         div.innerHTML=`
-          <strong>${escapeHTML(name)}</strong>
-          <span class="status ${cls}">${escapeHTML(order.status)}</span>
-          <p>${money(order.total_amount)} · ${new Date(order.created_at).toLocaleString('pt-BR')}</p>
-          <p class="small">Pedido: ${escapeHTML(order.id)}</p>
-          <p class="small">WhatsApp: ${escapeHTML(whatsapp)}</p>
-          <p class="small">${order.customer_name?'Venda manual, sem token':'Pedido de cliente cadastrado'}</p>
-          <div class="row" id="orderNumbers-${order.id}"></div>
-          ${order.status==='pending'?`
-            <div class="row" style="margin-top:12px">
-              <button class="btn green" onclick="approveOrder('${order.id}')">Confirmar pagamento e aprovar</button>
-              <button class="btn danger" onclick="rejectOrder('${order.id}')">Rejeitar</button>
+          <div class="row" style="justify-content:space-between;align-items:flex-start">
+            <div>
+              <strong>${escapeHTML(name)}</strong>
+              <span class="status ${cls}">${escapeHTML(order.status)}</span>
+              <p>${money(order.total_amount)} · ${order.created_at?new Date(order.created_at).toLocaleString('pt-BR'):'—'}</p>
+              <p class="small">Pedido: <strong>${escapeHTML(order.id)}</strong></p>
+              <p class="small">WhatsApp: ${escapeHTML(whatsapp)} · ${order.customer_name?'Venda manual':'Cliente cadastrado'}</p>
+              <p class="small">Números: ${nums.length?escapeHTML(nums.join(', ')):'—'}</p>
             </div>
-          `:''}
+            ${waLink}
+          </div>
+          <div class="row" style="margin-top:12px">
+            ${order.status==='pending'?`
+              <button type="button" class="btn green sm" onclick="approveOrder('${escapeHTML(order.id)}')">Confirmar pagamento e aprovar</button>
+              <button type="button" class="btn secondary sm" onclick="rejectOrder('${escapeHTML(order.id)}')">Rejeitar</button>
+            `:''}
+            <button type="button" class="btn danger sm" onclick="promptDeleteOrder('${escapeHTML(order.id)}')">
+              <i data-lucide="trash-2" size="14"></i> Excluir pedido
+            </button>
+          </div>
         `;
         list.appendChild(div);
-        loadOrderNumbers(order.id);
       });
+
+      if(window.lucide)lucide.createIcons();
     }
 
-    /* 1. RECUPERAR TOKEN (admin_reset_participant_token) */
-    function clearOneTimeResetToken(){
-      oneTimeResetToken=null;
-      const el=document.getElementById('oneTimeTokenDisplay');
-      if(el)el.textContent='-----';
-      const box=document.getElementById('oneTimeTokenBox');
-      if(box)box.classList.add('hidden');
-    }
+    function promptDeleteOrder(orderId){
+      const order=cachedOrders.find(o=>String(o.id)===String(orderId));
+      if(!order)return toast('Pedido não encontrado na lista carregada.');
 
-    function renderRecoverToken(box){
+      pendingDeleteOrderId=order.id;
+      const { name, whatsapp }=getOrderCustomerInfo(order);
+      const nums=(cachedOrderNumbersMap[order.id]||[])
+        .slice().sort((a,b)=>a-b)
+        .map(n=>String(n).padStart(2,'0')).join(', ')||'—';
+
+      const isApprovedOrPaid=['approved','paid','confirmed'].includes(String(order.status||'').toLowerCase());
+      const box=document.getElementById('deleteConfirmPanel');
+      box.className=isApprovedOrPaid?'danger-confirm-box':'confirm-box';
       box.innerHTML=`
-        <h3>Recuperar token do participante</h3>
-        <p class="small">Busque pelo WhatsApp, confirme os dados do cliente e gere um novo token. O novo código é exibido apenas uma vez e não é salvo no navegador.</p>
-
-        <div class="tool-box">
-          <div class="row">
-            <div class="field">
-              <label class="input-label" for="recoverWhatsappInput">WhatsApp do cliente</label>
-              <input id="recoverWhatsappInput" placeholder="Ex: 88999999999 ou (88) 99999-9999" inputmode="tel" maxlength="25">
-            </div>
-            <div style="align-self:flex-end">
-              <button type="button" class="btn" id="searchParticipantBtn" onclick="searchParticipantForReset()">
-                <i data-lucide="search" size="17"></i> Buscar
-              </button>
-            </div>
-          </div>
-
-          <div id="resetConfirmationArea" class="hidden"></div>
-          <div id="oneTimeTokenBox" class="token-reveal-box hidden">
-            <p style="color:#475569;font-size:12px;font-weight:700;margin:0">NOVO TOKEN (EXIBIÇÃO ÚNICA)</p>
-            <strong id="oneTimeTokenDisplay">-----</strong>
-            <p style="color:#475569;font-size:12px;margin:0 0 12px">Copie agora e envie ao cliente. Ao ocultar/fechar, ele não poderá ser exibido novamente por esta tela.</p>
-            <div class="row" style="justify-content:center">
-              <button type="button" class="btn" onclick="copyOneTimeResetToken()">
-                <i data-lucide="copy" size="16"></i> Copiar novo token
-              </button>
-              <button type="button" class="btn secondary" onclick="clearOneTimeResetToken()">
-                <i data-lucide="eye-off" size="16"></i> Ocultar token
-              </button>
-            </div>
-          </div>
+        <div class="small" style="font-weight:800;color:${isApprovedOrPaid?'#fca5a5':'var(--accent-light)'}">
+          ${isApprovedOrPaid?'ATENÇÃO: EXCLUSÃO DE PEDIDO APROVADO / PAGO':'CONFIRMAR EXCLUSÃO DE PEDIDO'}
+        </div>
+        <p style="color:#fff;margin:8px 0 4px"><strong>Pedido:</strong> ${escapeHTML(order.id)} (${statusBadge(order.status)})</p>
+        <p class="small" style="margin:2px 0"><strong>Cliente:</strong> ${escapeHTML(name)} (${escapeHTML(whatsapp)})</p>
+        <p class="small" style="margin:2px 0"><strong>Números associados:</strong> ${escapeHTML(nums)}</p>
+        <p class="small" style="margin:2px 0"><strong>Valor:</strong> ${money(order.total_amount)}</p>
+        <p class="small" style="color:#fde68a;margin:8px 0 12px">
+          Esta operação poderá liberar os números associados caso não exista outra venda válida. ${isApprovedOrPaid?'Como o pedido está aprovado/pago, a exclusão também impactará registros financeiros/pagamentos vinculados e ficará registrada na auditoria.':'A operação será executada pela RPC administrativa no Supabase.'}
+        </p>
+        <div class="row">
+          <button type="button" class="btn danger sm" id="confirmDeleteOrderBtn" onclick="executeDeleteOrder('${escapeHTML(order.id)}',${isApprovedOrPaid})">
+            Confirmar exclusão definitiva
+          </button>
+          <button type="button" class="btn secondary sm" onclick="cancelDeleteOrderPrompt()">Cancelar</button>
         </div>
       `;
-      if(window.lucide)lucide.createIcons();
+      box.scrollIntoView({behavior:'smooth',block:'nearest'});
     }
 
-    async function searchParticipantForReset(){
+    function cancelDeleteOrderPrompt(){
+      pendingDeleteOrderId=null;
+      const box=document.getElementById('deleteConfirmPanel');
+      if(box){
+        box.className='hidden';
+        box.innerHTML='';
+      }
+    }
+
+    async function executeDeleteOrder(orderId,isApprovedOrPaid){
       if(!adminUser)return toast('Sessão administrativa não encontrada.');
-      clearOneTimeResetToken();
-      pendingTokenResetTarget=null;
-
-      const rawWhatsapp=document.getElementById('recoverWhatsappInput').value.trim();
-      const digits=normalizePhoneDigits(rawWhatsapp);
-      if(digits.length<8)return toast('Informe um WhatsApp válido.');
-
-      const btn=document.getElementById('searchParticipantBtn');
-      btn.disabled=true;
-      btn.textContent='Buscando...';
-
-      const {data,error}=await db
-        .from('participants')
-        .select('id,full_name,whatsapp,created_at');
-
-      btn.innerHTML='<i data-lucide="search" size="17"></i> Buscar';
-      btn.disabled=false;
-      if(window.lucide)lucide.createIcons();
-
-      if(error){
-        console.error('Erro ao buscar participante:',error);
-        return toast('Não foi possível buscar o cliente: '+error.message);
-      }
-
-      const matches=(data||[]).filter(p=>normalizePhoneDigits(p.whatsapp)===digits);
-      const area=document.getElementById('resetConfirmationArea');
-
-      if(!matches.length){
-        area.classList.add('hidden');
-        area.innerHTML='';
-        return toast('Nenhum cliente cadastrado encontrado com esse WhatsApp.');
-      }
-
-      const client=matches[0];
-      pendingTokenResetTarget={
-        id:client.id,
-        full_name:client.full_name,
-        whatsapp:client.whatsapp,
-        rpcWhatsapp:client.whatsapp||rawWhatsapp
-      };
-
-      area.classList.remove('hidden');
-      area.innerHTML=`
-        <div class="confirm-box">
-          <div class="small" style="color:var(--accent-light);font-weight:700">CONFIRMAÇÃO DO CLIENTE</div>
-          <p style="color:#fff;font-weight:700;font-size:15px;margin:6px 0 2px">${escapeHTML(client.full_name)}</p>
-          <p class="small" style="margin:0">WhatsApp: <strong style="color:#e2e8f0">${escapeHTML(client.whatsapp)}</strong></p>
-          <p class="small" style="margin:2px 0 12px">Cadastro: ${client.created_at?new Date(client.created_at).toLocaleDateString('pt-BR'):'—'}</p>
-          <div class="row">
-            <button type="button" class="btn green" id="generateNewTokenBtn" onclick="confirmAndGenerateNewToken()">
-              <i data-lucide="refresh-cw" size="17"></i> Gerar novo token
-            </button>
-            <button type="button" class="btn secondary" onclick="cancelTokenReset()">Cancelar</button>
-          </div>
-        </div>
-      `;
-      if(window.lucide)lucide.createIcons();
-    }
-
-    function cancelTokenReset(){
-      pendingTokenResetTarget=null;
-      const area=document.getElementById('resetConfirmationArea');
-      if(area){
-        area.classList.add('hidden');
-        area.innerHTML='';
-      }
-    }
-
-    async function confirmAndGenerateNewToken(){
-      if(!adminUser)return toast('Sessão administrativa não encontrada.');
-      if(!pendingTokenResetTarget)return toast('Busque e confirme o cliente primeiro.');
-
-      const btn=document.getElementById('generateNewTokenBtn');
+      const btn=document.getElementById('confirmDeleteOrderBtn');
       if(btn){
         btn.disabled=true;
-        btn.textContent='Gerando...';
+        btn.textContent='Excluindo...';
       }
 
-      const payloadWhatsapp=pendingTokenResetTarget.rpcWhatsapp;
-      const {data,error}=await db.rpc('admin_reset_participant_token',{
-        p_whatsapp:payloadWhatsapp
+      const {data,error}=await db.rpc('admin_delete_raffle_order',{
+        p_order_id:orderId,
+        p_confirm_approved:Boolean(isApprovedOrPaid)
       });
 
       if(error){
-        console.error('Erro ao resetar token:',error);
+        console.error('Erro ao excluir pedido via RPC:',error);
         if(btn){
           btn.disabled=false;
-          btn.innerHTML='<i data-lucide="refresh-cw" size="17"></i> Gerar novo token';
-          if(window.lucide)lucide.createIcons();
+          btn.textContent='Confirmar exclusão definitiva';
         }
-        return toast('Não foi possível gerar novo token: '+error.message);
+        return toast('Não foi possível excluir o pedido (verifique a RPC admin_delete_raffle_order no banco): '+error.message);
       }
 
-      const newToken=data?.new_token
-        ||(Array.isArray(data)?data[0]?.new_token:null);
-
-      if(!newToken){
+      if(data&&data.success===false){
         if(btn){
           btn.disabled=false;
-          btn.innerHTML='<i data-lucide="refresh-cw" size="17"></i> Gerar novo token';
-          if(window.lucide)lucide.createIcons();
+          btn.textContent='Confirmar exclusão definitiva';
         }
-        return toast('O banco não retornou o new_token.');
+        return toast(data.message||'Exclusão não confirmada pelo banco.');
       }
 
-      pendingTokenResetTarget=null;
-      const area=document.getElementById('resetConfirmationArea');
-      if(area){
-        area.classList.add('hidden');
-        area.innerHTML='';
-      }
-
-      oneTimeResetToken=String(newToken);
-      const tokenBox=document.getElementById('oneTimeTokenBox');
-      const tokenEl=document.getElementById('oneTimeTokenDisplay');
-      if(tokenEl)tokenEl.textContent=oneTimeResetToken;
-      if(tokenBox)tokenBox.classList.remove('hidden');
-      if(window.lucide)lucide.createIcons();
-
-      toast('Novo token gerado! Exibição única.');
+      cancelDeleteOrderPrompt();
+      toast('Pedido excluído com sucesso.');
+      await loadAdmin();
     }
 
-    async function copyOneTimeResetToken(){
-      if(!oneTimeResetToken)return toast('Nenhum token disponível para copiar.');
-      try{
-        await navigator.clipboard.writeText(oneTimeResetToken);
-        toast('Novo token copiado!');
-      }catch(e){
-        toast('Não foi possível copiar automaticamente.');
-      }
-    }
-
-    /* 2. CONSULTAR NÚMERO (admin_lookup_raffle_number) */
-    function renderNumberLookup(box){
-      box.innerHTML=`
-        <h3>Consultar número (01 a 100)</h3>
-        <p class="small">Digite um número de 01 a 100 para verificar o status atual e o histórico completo de pedidos.</p>
-
-        <div class="tool-box">
-          <div class="row">
-            <div class="field" style="max-width:220px">
-              <label class="input-label" for="lookupNumberInput">Número (01 a 100)</label>
-              <input id="lookupNumberInput" type="number" min="1" max="100" step="1" placeholder="Ex: 07">
-            </div>
-            <div style="align-self:flex-end">
-              <button type="button" class="btn" id="lookupNumberBtn" onclick="lookupRaffleNumber()">
-                <i data-lucide="search" size="17"></i> Consultar
-              </button>
-            </div>
-          </div>
-
-          <div id="lookupNumberResult" style="margin-top:16px"></div>
-        </div>
-      `;
-      if(window.lucide)lucide.createIcons();
-    }
-
-    async function lookupRaffleNumber(){
-      if(!adminUser)return toast('Sessão administrativa não encontrada.');
-      const raw=document.getElementById('lookupNumberInput').value.trim();
-      const num=Number(raw);
-      if(!Number.isInteger(num)||num<1||num>100){
-        return toast('Informe um número válido de 01 a 100.');
-      }
-
-      const btn=document.getElementById('lookupNumberBtn');
-      btn.disabled=true;
-      btn.textContent='Consultando...';
-
-      const {data,error}=await db.rpc('admin_lookup_raffle_number',{
-        p_number:num
-      });
-
-      btn.innerHTML='<i data-lucide="search" size="17"></i> Consultar';
-      btn.disabled=false;
-      if(window.lucide)lucide.createIcons();
-
-      if(error){
-        console.error('Erro ao consultar número:',error);
-        return toast('Erro na consulta: '+error.message);
-      }
-
-      const resultBox=document.getElementById('lookupNumberResult');
-      if(!data){
-        resultBox.innerHTML='<p class="small">Nenhum dado retornado para o número '+String(num).padStart(2,'0')+'.</p>';
+    async function approveOrder(orderId){
+      if(!confirm('Confirma que o pagamento foi verificado e deseja aprovar este pedido?'))
         return;
+
+      const {error}=await db.rpc('approve_raffle_order',{
+        p_order_id:orderId
+      });
+      if(error){
+        console.error(error);
+        return toast('Não foi possível aprovar: '+error.message);
       }
-
-      const payload=Array.isArray(data)?(data[0]||{}):data;
-      const numberLabel=String(payload.number ?? payload.number_id ?? num).padStart(2,'0');
-      const currentStatus=payload.status ?? payload.number_status ?? 'desconhecido';
-      const history=Array.isArray(payload.orders)
-        ? payload.orders
-        : Array.isArray(payload.history)
-          ? payload.history
-          : [];
-
-      resultBox.innerHTML=`
-        <div class="order" style="border:1px solid var(--border);border-radius:14px;padding:16px;background:rgba(19,28,49,0.7)">
-          <div class="row" style="justify-content:space-between">
-            <div>
-              <strong style="font-size:17px;color:#fff">Número ${escapeHTML(numberLabel)}</strong>
-              ${statusBadge(currentStatus)}
-            </div>
-            <span class="small">${history.length} registro(s) no histórico</span>
-          </div>
-
-          <h3 style="margin-top:16px">Histórico de pedidos</h3>
-          ${!history.length
-            ? '<p class="small">Nenhum pedido encontrado para este número.</p>'
-            : `
-              <div class="table-wrap">
-                <table>
-                  <thead>
-                    <tr>
-                      <th>Nome</th>
-                      <th>WhatsApp</th>
-                      <th>Valor</th>
-                      <th>Data</th>
-                      <th>Situação</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    ${history.map(item=>{
-                      const name=item.customer_name||item.full_name||item.participant_name||'Cliente sem cadastro';
-                      const whatsapp=item.customer_whatsapp||item.whatsapp||'—';
-                      const amount=item.total_amount ?? item.amount ?? 0;
-                      const dateRaw=item.created_at || item.order_date || item.date;
-                      const dateText=dateRaw?new Date(dateRaw).toLocaleString('pt-BR'):'—';
-                      const sit=item.status ?? item.order_status ?? '—';
-                      return `
-                        <tr>
-                          <td>${escapeHTML(name)}</td>
-                          <td>${escapeHTML(whatsapp)}</td>
-                          <td>${money(amount)}</td>
-                          <td>${escapeHTML(dateText)}</td>
-                          <td>${statusBadge(sit)}</td>
-                        </tr>
-                      `;
-                    }).join('')}
-                  </tbody>
-                </table>
-              </div>
-            `
-          }
-        </div>
-      `;
+      toast('Pedido aprovado e números vendidos.');
+      await loadAdmin();
     }
 
-    /* VENDA MANUAL */
-    function renderManualSale(box){
+    async function rejectOrder(orderId){
+      if(!confirm('Deseja realmente rejeitar este pedido?'))return;
+
+      const {error}=await db.rpc('reject_raffle_order',{
+        p_order_id:orderId
+      });
+      if(error){
+        console.error(error);
+        return toast('Não foi possível rejeitar: '+error.message);
+      }
+      toast('Pedido rejeitado.');
+      await loadAdmin();
+    }
+
+    /* 3. VENDA MANUAL */
+    function renderManualSale(){
+      const box=document.getElementById('manualSaleBox');
       manualSelected=[];
       box.innerHTML=`
-        <h3>Registrar venda sem cadastro</h3>
         <p>Use esta opção para pessoas que não querem criar token. A venda será registrada como paga e aprovada imediatamente.</p>
         <div class="row">
           <div class="field"><input id="manualName" placeholder="Nome da pessoa" maxlength="100"></div>
@@ -1258,7 +1334,7 @@
         <div class="summary">
           <div><div class="small">Selecionados</div><strong id="manualCount">0</strong></div>
           <div><div class="small">Total</div><div class="price" id="manualPrice">R$ 0,00</div></div>
-          <button class="btn green" id="manualSaveBtn" onclick="saveManualSale()" disabled>Registrar venda paga</button>
+          <button type="button" class="btn green" id="manualSaveBtn" onclick="saveManualSale()" disabled>Registrar venda paga</button>
         </div>
       `;
       renderManualNumbers();
@@ -1271,6 +1347,7 @@
 
       numbersData.forEach(n=>{
         const b=document.createElement('button');
+        b.type='button';
         b.className='number';
         b.textContent=String(n.id).padStart(2,'0');
         if(n.status==='sold'){
@@ -1347,58 +1424,476 @@
 
       toast('Venda manual registrada! Total: '+money(data.total));
       await loadAdmin();
-      currentAdminTab='manual';
-      document.querySelectorAll('#adminPanel .tab')
-        .forEach(b=>b.classList.remove('active'));
-      const manualTabButton=[...document.querySelectorAll('#adminPanel .tab')]
-        .find(b=>b.textContent.includes('Venda manual'));
-      if(manualTabButton)manualTabButton.classList.add('active');
-      renderAdminTab();
+      renderManualSale();
     }
 
-    /* NÚMEROS DOS PEDIDOS ADMIN */
-    async function loadOrderNumbers(orderId){
-      const {data,error}=await db.from('order_numbers')
-        .select('number_id').eq('order_id',orderId);
-      if(error){
-        console.error(error);
-        return;
-      }
-      const box=document.getElementById('orderNumbers-'+orderId);
-      if(box){
-        box.textContent='Números: '+(data||[])
-          .map(x=>String(x.number_id).padStart(2,'0')).join(', ');
-      }
-    }
+    /* 4. NÚMEROS E CONSULTA (admin_lookup_raffle_number) */
+    function renderNumbersGrid(){
+      const grid=document.getElementById('adminNumbersGrid');
+      if(!grid)return;
+      grid.innerHTML='';
 
-    /* APROVAR E REJEITAR */
-    async function approveOrder(orderId){
-      if(!confirm('Confirma que o pagamento foi verificado e deseja aprovar este pedido?'))
-        return;
-
-      const {data,error}=await db.rpc('approve_raffle_order',{
-        p_order_id:orderId
+      numbersData.forEach(n=>{
+        const b=document.createElement('button');
+        b.type='button';
+        b.className='number '+(n.status==='sold'?'sold':'');
+        b.textContent=String(n.id).padStart(2,'0');
+        b.title=n.status==='sold'
+          ?'Vendido — clique para consultar histórico'
+          :'Disponível — clique para consultar histórico';
+        b.onclick=()=>{
+          const input=document.getElementById('lookupNumberInput');
+          if(input)input.value=n.id;
+          lookupRaffleNumber(n.id);
+        };
+        grid.appendChild(b);
       });
-      if(error){
-        console.error(error);
-        return toast('Não foi possível aprovar: '+error.message);
+    }
+
+    async function lookupRaffleNumber(presetNumber){
+      if(!adminUser)return toast('Sessão administrativa não encontrada.');
+      const raw=presetNumber ?? document.getElementById('lookupNumberInput').value.trim();
+      const num=Number(raw);
+      if(!Number.isInteger(num)||num<1||num>100){
+        return toast('Informe um número válido de 01 a 100.');
       }
-      toast('Pedido aprovado e números vendidos.');
+
+      const btn=document.getElementById('lookupNumberBtn');
+      if(btn){
+        btn.disabled=true;
+        btn.textContent='Consultando...';
+      }
+
+      const {data,error}=await db.rpc('admin_lookup_raffle_number',{
+        p_number:num
+      });
+
+      if(btn){
+        btn.innerHTML='<i data-lucide="search" size="17"></i> Consultar';
+        btn.disabled=false;
+        if(window.lucide)lucide.createIcons();
+      }
+
+      if(error){
+        console.error('Erro ao consultar número:',error);
+        return toast('Erro na consulta: '+error.message);
+      }
+
+      const resultBox=document.getElementById('lookupNumberResult');
+      const payload=Array.isArray(data)?(data[0]||{}):(data||{});
+      const numberLabel=String(payload.number ?? payload.number_id ?? num).padStart(2,'0');
+      const currentStatus=payload.status ?? payload.number_status ?? 'desconhecido';
+      const history=Array.isArray(payload.orders)
+        ? payload.orders
+        : Array.isArray(payload.history)
+          ? payload.history
+          : [];
+
+      resultBox.innerHTML=`
+        <div class="order" style="border:1px solid var(--border);border-radius:14px;padding:16px;background:rgba(19,28,49,0.75)">
+          <div class="row" style="justify-content:space-between">
+            <div>
+              <strong style="font-size:17px;color:#fff">Número ${escapeHTML(numberLabel)}</strong>
+              ${statusBadge(currentStatus)}
+            </div>
+            <span class="small">${history.length} registro(s) no histórico</span>
+          </div>
+
+          <h3 style="margin-top:16px">Histórico de pedidos</h3>
+          ${!history.length
+            ? '<p class="small">Nenhum pedido encontrado para este número.</p>'
+            : `
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Nome do comprador</th>
+                      <th>WhatsApp</th>
+                      <th>Valor</th>
+                      <th>Data</th>
+                      <th>Situação</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    ${history.map(item=>{
+                      const name=item.customer_name||item.full_name||item.participant_name||'Cliente sem cadastro';
+                      const whatsapp=item.customer_whatsapp||item.whatsapp||'—';
+                      const amount=item.total_amount ?? item.amount ?? 0;
+                      const dateRaw=item.created_at || item.order_date || item.date;
+                      const dateText=dateRaw?new Date(dateRaw).toLocaleString('pt-BR'):'—';
+                      const sit=item.status ?? item.order_status ?? '—';
+                      return `
+                        <tr>
+                          <td>${escapeHTML(name)}</td>
+                          <td>${escapeHTML(whatsapp)}</td>
+                          <td>${money(amount)}</td>
+                          <td>${escapeHTML(dateText)}</td>
+                          <td>${statusBadge(sit)}</td>
+                        </tr>
+                      `;
+                    }).join('')}
+                  </tbody>
+                </table>
+              </div>
+            `
+          }
+        </div>
+      `;
+    }
+
+    /* 5. CLIENTES E RECUPERAÇÃO DE TOKEN (admin_reset_participant_token) */
+    function renderClientsSection(){
+      const listBox=document.getElementById('clientsListBox');
+      if(listBox){
+        listBox.innerHTML=`
+          <h3>Clientes cadastrados com token</h3>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Nome</th><th>WhatsApp</th><th>Data de cadastro</th></tr></thead>
+              <tbody>
+                ${!cachedParticipants.length
+                  ? '<tr><td colspan="3" class="small">Nenhum cliente cadastrado.</td></tr>'
+                  : cachedParticipants.map(p=>`
+                    <tr>
+                      <td>${escapeHTML(p.full_name)}</td>
+                      <td>${escapeHTML(p.whatsapp)}</td>
+                      <td>${p.created_at?new Date(p.created_at).toLocaleDateString('pt-BR'):'—'}</td>
+                    </tr>
+                  `).join('')}
+              </tbody>
+            </table>
+          </div>
+          <p class="small">Vendas manuais (sem token) aparecem em Pedidos.</p>
+        `;
+      }
+
+      const recoverBox=document.getElementById('recoverTokenBox');
+      if(recoverBox){
+        recoverBox.innerHTML=`
+          <p class="small">Busque pelo WhatsApp, confirme nome e telefone do cliente e gere um novo token. O novo token aparece apenas uma vez e não é armazenado no navegador.</p>
+          <div class="tool-box">
+            <div class="row">
+              <div class="field">
+                <label class="input-label" for="recoverWhatsappInput">Buscar cliente pelo WhatsApp</label>
+                <input id="recoverWhatsappInput" placeholder="Ex: 88999999999 ou (88) 99999-9999" inputmode="tel" maxlength="25">
+              </div>
+              <div style="align-self:flex-end">
+                <button type="button" class="btn" id="searchParticipantBtn" onclick="searchParticipantForReset()">
+                  <i data-lucide="search" size="17"></i> Buscar cliente
+                </button>
+              </div>
+            </div>
+            <div id="resetConfirmationArea" class="hidden"></div>
+          </div>
+        `;
+        if(window.lucide)lucide.createIcons();
+      }
+    }
+
+    function clearOneTimeResetToken(){
+      oneTimeResetToken=null;
+      const modal=document.getElementById('oneTimeTokenModal');
+      if(modal)modal.remove();
+    }
+
+    function showOneTimeTokenModal(tokenValue,clientName){
+      clearOneTimeResetToken();
+      oneTimeResetToken=String(tokenValue);
+
+      const modal=document.createElement('div');
+      modal.className='modal';
+      modal.id='oneTimeTokenModal';
+      modal.innerHTML=`
+        <div class="modal-box">
+          <h2><i data-lucide="key-round" size="21" style="color:var(--accent-light)"></i> Novo token gerado</h2>
+          <p>Cliente: <strong style="color:#fff">${escapeHTML(clientName||'')}</strong></p>
+          <p class="small">Este token é exibido <strong>apenas uma vez</strong> e não será salvo no navegador.</p>
+          <div class="token-reveal-box">
+            <p style="color:#475569;font-size:12px;font-weight:700;margin:0">NOVO TOKEN PERMANENTE</p>
+            <strong id="modalOneTimeTokenValue">${escapeHTML(oneTimeResetToken)}</strong>
+            <p style="color:#475569;font-size:12px;margin:0">Copie e envie ao participante antes de ocultar.</p>
+          </div>
+          <div class="row" style="margin-top:16px">
+            <button type="button" class="btn" style="flex:1" onclick="copyOneTimeResetToken()">
+              <i data-lucide="copy" size="16"></i> Copiar token
+            </button>
+            <button type="button" class="btn secondary" style="flex:1" onclick="clearOneTimeResetToken()">
+              <i data-lucide="eye-off" size="16"></i> Ocultar token
+            </button>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(modal);
+      if(window.lucide)lucide.createIcons();
+    }
+
+    async function searchParticipantForReset(){
+      if(!adminUser)return toast('Sessão administrativa não encontrada.');
+      clearOneTimeResetToken();
+      pendingTokenResetTarget=null;
+
+      const rawWhatsapp=document.getElementById('recoverWhatsappInput').value.trim();
+      const digits=normalizePhoneDigits(rawWhatsapp);
+      if(digits.length<8)return toast('Informe um WhatsApp válido.');
+
+      const btn=document.getElementById('searchParticipantBtn');
+      btn.disabled=true;
+      btn.textContent='Buscando...';
+
+      const {data,error}=await db
+        .from('participants')
+        .select('id,full_name,whatsapp,created_at');
+
+      btn.innerHTML='<i data-lucide="search" size="17"></i> Buscar cliente';
+      btn.disabled=false;
+      if(window.lucide)lucide.createIcons();
+
+      if(error){
+        console.error('Erro ao buscar participante:',error);
+        return toast('Não foi possível buscar o cliente: '+error.message);
+      }
+
+      const matches=(data||[]).filter(p=>normalizePhoneDigits(p.whatsapp)===digits);
+      const area=document.getElementById('resetConfirmationArea');
+
+      if(!matches.length){
+        area.classList.add('hidden');
+        area.innerHTML='';
+        return toast('Nenhum cliente cadastrado encontrado com esse WhatsApp.');
+      }
+
+      const client=matches[0];
+      pendingTokenResetTarget={
+        id:client.id,
+        full_name:client.full_name,
+        whatsapp:client.whatsapp,
+        rpcWhatsapp:client.whatsapp||rawWhatsapp
+      };
+
+      area.classList.remove('hidden');
+      area.innerHTML=`
+        <div class="confirm-box">
+          <div class="small" style="color:var(--accent-light);font-weight:700">CONFIRMAÇÃO DO CLIENTE</div>
+          <p style="color:#fff;font-weight:700;font-size:15px;margin:6px 0 2px">${escapeHTML(client.full_name)}</p>
+          <p class="small" style="margin:0 0 12px">Telefone / WhatsApp: <strong style="color:#e2e8f0">${escapeHTML(client.whatsapp)}</strong></p>
+          <div class="row">
+            <button type="button" class="btn green" id="generateNewTokenBtn" onclick="confirmAndGenerateNewToken()">
+              <i data-lucide="refresh-cw" size="17"></i> Confirmar e gerar novo token
+            </button>
+            <button type="button" class="btn secondary" onclick="cancelTokenReset()">Cancelar</button>
+          </div>
+        </div>
+      `;
+      if(window.lucide)lucide.createIcons();
+    }
+
+    function cancelTokenReset(){
+      pendingTokenResetTarget=null;
+      const area=document.getElementById('resetConfirmationArea');
+      if(area){
+        area.classList.add('hidden');
+        area.innerHTML='';
+      }
+    }
+
+    async function confirmAndGenerateNewToken(){
+      if(!adminUser)return toast('Sessão administrativa não encontrada.');
+      if(!pendingTokenResetTarget)return toast('Busque e confirme o cliente primeiro.');
+
+      const btn=document.getElementById('generateNewTokenBtn');
+      if(btn){
+        btn.disabled=true;
+        btn.textContent='Gerando...';
+      }
+
+      const targetClient=pendingTokenResetTarget;
+      const {data,error}=await db.rpc('admin_reset_participant_token',{
+        p_whatsapp:targetClient.rpcWhatsapp
+      });
+
+      if(error){
+        console.error('Erro ao resetar token:',error);
+        if(btn){
+          btn.disabled=false;
+          btn.innerHTML='<i data-lucide="refresh-cw" size="17"></i> Confirmar e gerar novo token';
+          if(window.lucide)lucide.createIcons();
+        }
+        return toast('Não foi possível gerar novo token: '+error.message);
+      }
+
+      const newToken=data?.new_token
+        ||(Array.isArray(data)?data[0]?.new_token:null);
+
+      if(!newToken){
+        if(btn){
+          btn.disabled=false;
+          btn.innerHTML='<i data-lucide="refresh-cw" size="17"></i> Confirmar e gerar novo token';
+          if(window.lucide)lucide.createIcons();
+        }
+        return toast('O banco não retornou o new_token.');
+      }
+
+      pendingTokenResetTarget=null;
+      cancelTokenReset();
+      showOneTimeTokenModal(newToken,targetClient.full_name);
+      toast('Novo token gerado (exibição única).');
+    }
+
+    async function copyOneTimeResetToken(){
+      if(!oneTimeResetToken)return toast('Nenhum token disponível para copiar.');
+      try{
+        await navigator.clipboard.writeText(oneTimeResetToken);
+        toast('Novo token copiado!');
+      }catch(e){
+        toast('Não foi possível copiar automaticamente.');
+      }
+    }
+
+    /* 6. PAGAMENTOS */
+    function setPaymentFilter(filter){
+      currentPaymentFilter=filter;
+      document.getElementById('payFilterAllBtn').className=
+        filter==='all'?'btn sm':'btn secondary sm';
+      document.getElementById('payFilterConfirmedBtn').className=
+        filter==='confirmed'?'btn sm':'btn secondary sm';
+      document.getElementById('payFilterPendingBtn').className=
+        filter==='pending'?'btn sm':'btn secondary sm';
+      renderPaymentsSection();
+    }
+
+    function renderPaymentsSection(){
+      const box=document.getElementById('paymentsBox');
+      if(!box)return;
+
+      const list=currentPaymentFilter==='all'
+        ? cachedPayments
+        : cachedPayments.filter(p=>String(p.status||'').toLowerCase()===currentPaymentFilter);
+
+      if(!list.length){
+        box.innerHTML='<p class="small">Nenhum pagamento encontrado para este filtro.</p>';
+        return;
+      }
+
+      box.innerHTML=`
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Pedido</th>
+                <th>Valor</th>
+                <th>Data</th>
+                <th>Situação</th>
+                <th>Correção ADM</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${list.map(p=>{
+                const dt=p.created_at?new Date(p.created_at).toLocaleString('pt-BR'):'—';
+                const isConfirmed=String(p.status||'').toLowerCase()==='confirmed';
+                return `
+                  <tr>
+                    <td>${escapeHTML(p.order_id)}</td>
+                    <td>${money(p.amount)}</td>
+                    <td>${escapeHTML(dt)}</td>
+                    <td>${statusBadge(p.status)}</td>
+                    <td>
+                      <div class="row" style="gap:6px">
+                        <button type="button" class="btn green sm" ${isConfirmed?'disabled':''} onclick="correctPaymentStatus('${escapeHTML(p.id)}','confirmed')">Confirmar</button>
+                        <button type="button" class="btn secondary sm" onclick="correctPaymentStatus('${escapeHTML(p.id)}','pending')">Pendente</button>
+                      </div>
+                    </td>
+                  </tr>
+                `;
+              }).join('')}
+            </tbody>
+          </table>
+        </div>
+      `;
+    }
+
+    async function correctPaymentStatus(paymentId,newStatus){
+      if(!adminUser)return toast('Sessão administrativa não encontrada.');
+      if(!confirm(`Confirmar alteração do pagamento ${paymentId} para "${newStatus}"?`))return;
+
+      const {data,error}=await db.rpc('admin_update_payment_status',{
+        p_payment_id:paymentId,
+        p_new_status:newStatus,
+        p_reason:'Correção administrativa pelo painel WS Soluções'
+      });
+
+      if(error){
+        console.error('Erro na correção de pagamento:',error);
+        return toast('Correção não concluída (verifique a RPC admin_update_payment_status no banco): '+error.message);
+      }
+
+      if(data&&data.success===false){
+        return toast(data.message||'Correção não autorizada pelo banco.');
+      }
+
+      toast('Pagamento atualizado.');
       await loadAdmin();
     }
 
-    async function rejectOrder(orderId){
-      if(!confirm('Deseja realmente rejeitar este pedido?'))return;
+    /* 7. CONFIGURAÇÕES */
+    async function saveRaffleSettings(){
+      if(!adminUser)return toast('Sessão administrativa não encontrada.');
+      const title=document.getElementById('cfgTitle').value.trim();
+      const prize=document.getElementById('cfgPrize').value.trim();
+      const drawDate=document.getElementById('cfgDrawDate').value||null;
+      const isActive=document.getElementById('cfgStatus').value==='active';
+      const priceTable={
+        1:Number(document.getElementById('cfgPrice1').value||6),
+        2:Number(document.getElementById('cfgPrice2').value||10),
+        3:Number(document.getElementById('cfgPrice3').value||15),
+        4:Number(document.getElementById('cfgPrice4').value||18)
+      };
 
-      const {data,error}=await db.rpc('reject_raffle_order',{
-        p_order_id:orderId
+      const btn=document.getElementById('saveSettingsBtn');
+      btn.disabled=true;
+      btn.textContent='Salvando...';
+
+      const {data,error}=await db.rpc('admin_update_raffle_settings',{
+        p_title:title,
+        p_prize_description:prize,
+        p_draw_date:drawDate,
+        p_is_active:isActive,
+        p_price_table:priceTable
       });
+
+      btn.innerHTML='<i data-lucide="save" size="17"></i> Salvar configurações';
+      btn.disabled=false;
+      if(window.lucide)lucide.createIcons();
+
       if(error){
-        console.error(error);
-        return toast('Não foi possível rejeitar: '+error.message);
+        console.error('Erro ao salvar configurações:',error);
+        return toast('Não foi possível salvar no banco (verifique a RPC admin_update_raffle_settings): '+error.message);
       }
-      toast('Pedido rejeitado.');
-      await loadAdmin();
+
+      if(data&&data.success===false){
+        return toast(data.message||'Configurações não salvas pelo banco.');
+      }
+
+      toast('Configurações salvas.');
+    }
+
+    /* 8. ADMINISTRAÇÃO / SESSÃO */
+    function renderAdminSessionSection(){
+      const box=document.getElementById('adminSessionBox');
+      if(!box)return;
+      box.innerHTML=`
+        <p><strong>Administrador:</strong> ${escapeHTML(adminUser?.email||'—')}</p>
+        <p class="small"><strong>ID do usuário:</strong> ${escapeHTML(adminUser?.id||'—')}</p>
+        <p class="small"><strong>Projeto Supabase:</strong> ${escapeHTML(SUPABASE_URL)}</p>
+        <div class="row" style="margin-top:16px">
+          <button type="button" class="btn" onclick="loadAdmin()">
+            <i data-lucide="refresh-cw" size="16"></i> Atualizar painel
+          </button>
+          <button type="button" class="btn secondary" onclick="adminLogout()">
+            <i data-lucide="log-out" size="16"></i> Encerrar sessão
+          </button>
+        </div>
+      `;
+      if(window.lucide)lucide.createIcons();
     }
 
     /* RECUPERAÇÃO DA SESSÃO ADMINISTRATIVA */
@@ -1422,10 +1917,6 @@
         .eq('id',user.id)
         .maybeSingle();
 
-      console.log('RECUPERAÇÃO - USUÁRIO:',user.id);
-      console.log('RECUPERAÇÃO - ADMIN:',admin);
-      console.log('RECUPERAÇÃO - ERRO:',adminError);
-
       if(adminError){
         console.error('Não foi possível verificar a sessão administrativa:',adminError);
         openAdminLogin();
@@ -1434,7 +1925,7 @@
 
       if(admin){
         adminUser=user;
-        document.getElementById('adminPanel').classList.remove('hidden');
+        document.getElementById('adminShell').classList.remove('hidden');
         await loadAdmin();
       }else{
         await db.auth.signOut();
