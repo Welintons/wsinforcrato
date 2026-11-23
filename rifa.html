@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#0b1120">
-  <title>Rifa Premiada | Mondial</title>
+  <title>Rifa Premiada | Mondial · WS Soluções</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -67,7 +67,7 @@
       align-items: center;
       justify-content: space-between;
       border-bottom: 1px solid var(--border);
-      background: rgba(11, 17, 32, 0.8);
+      background: rgba(11, 17, 32, 0.85);
       backdrop-filter: blur(14px);
       -webkit-backdrop-filter: blur(14px);
       position: sticky;
@@ -78,15 +78,12 @@
     .brand {
       display: flex;
       align-items: center;
-      gap: 10px;
-      font-size: 20px;
-      font-weight: 800;
-      letter-spacing: -0.02em;
+      gap: 11px;
     }
 
     .brand-badge {
-      width: 34px;
-      height: 34px;
+      width: 36px;
+      height: 36px;
       border-radius: 10px;
       background: linear-gradient(135deg, var(--accent-light), var(--accent));
       color: #1c1204;
@@ -95,10 +92,26 @@
       box-shadow: 0 4px 14px var(--accent-glow);
     }
 
-    .brand span {
+    .brand-title {
+      font-size: 19px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+    }
+
+    .brand-title span {
       background: linear-gradient(90deg, #fbbf24, #f59e0b);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
+    }
+
+    .brand-sub {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-top: 2px;
     }
 
     /* LAYOUT PRINCIPAL */
@@ -109,7 +122,7 @@
     }
 
     .card {
-      background: linear-gradient(180deg, rgba(25, 36, 61, 0.9) 0%, rgba(19, 28, 49, 0.95) 100%);
+      background: linear-gradient(180deg, rgba(25, 36, 61, 0.92) 0%, rgba(19, 28, 49, 0.96) 100%);
       border: 1px solid var(--border);
       border-radius: 20px;
       padding: 24px;
@@ -272,7 +285,7 @@
       line-height: 1.45;
     }
 
-    /* TABELA DE PREÇOS */
+    /* TABELA DE PREÇOS E EXPLICAÇÃO DIDÁTICA */
     .promo-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
@@ -290,20 +303,65 @@
 
     .promo-pill.highlight {
       border-color: var(--border-strong);
-      background: linear-gradient(145deg, rgba(245, 158, 11, 0.16), rgba(19, 28, 49, 0.95));
+      background: linear-gradient(145deg, rgba(245, 158, 11, 0.18), rgba(19, 28, 49, 0.95));
     }
 
     .promo-pill span {
       display: block;
-      font-size: 12px;
-      color: var(--muted);
+      font-size: 12.5px;
+      color: #cbd5e1;
       margin-bottom: 4px;
     }
 
     .promo-pill strong {
-      font-size: 20px;
+      font-size: 22px;
       color: var(--accent-light);
       font-weight: 800;
+    }
+
+    .promo-explain {
+      margin-top: 16px;
+      background: rgba(11, 18, 33, 0.65);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px 18px;
+    }
+
+    .promo-explain-title {
+      font-size: 14.5px;
+      font-weight: 700;
+      color: #fff;
+      margin: 0 0 6px;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .promo-examples {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(195px, 1fr));
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .promo-example-item {
+      background: rgba(25, 36, 61, 0.7);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-size: 13px;
+      color: #e2e8f0;
+    }
+
+    .promo-example-item strong {
+      color: var(--accent-light);
+    }
+
+    .promo-example-item small {
+      display: block;
+      color: var(--muted);
+      font-size: 11.5px;
+      margin-top: 2px;
     }
 
     /* CARDS DE OPÇÃO NA MINHA CONTA */
@@ -346,11 +404,6 @@
       gap: 10px;
       flex-wrap: wrap;
       align-items: center;
-    }
-
-    .field {
-      flex: 1;
-      min-width: 190px;
     }
 
     .form-stack {
@@ -420,6 +473,12 @@
       background: var(--panel-hover);
     }
 
+    .btn.sm {
+      padding: 8px 13px;
+      font-size: 12.5px;
+      border-radius: 10px;
+    }
+
     .hidden {
       display: none !important;
     }
@@ -483,7 +542,50 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* GRADE DE NÚMEROS */
+    /* BARRA DE DISPONIBILIDADE E GRADE DE NÚMEROS */
+    .grid-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+      padding: 12px 14px;
+      background: rgba(11, 18, 33, 0.6);
+      border-radius: 14px;
+      border: 1px solid var(--border);
+    }
+
+    .avail-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 13px;
+      font-weight: 700;
+      color: #6ee7b7;
+    }
+
+    .legend {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      font-size: 12px;
+      color: #cbd5e1;
+    }
+
+    .legend span {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .dot {
+      display: inline-block;
+      width: 11px;
+      height: 11px;
+      border-radius: 4px;
+    }
+
     .numbers {
       display: grid;
       grid-template-columns: repeat(10, minmax(0, 1fr));
@@ -529,32 +631,6 @@
 
     .number.locked {
       cursor: pointer;
-    }
-
-    .legend {
-      display: flex;
-      gap: 18px;
-      flex-wrap: wrap;
-      margin-top: 14px;
-      padding: 10px 14px;
-      background: rgba(11, 18, 33, 0.55);
-      border-radius: 12px;
-      border: 1px solid var(--border);
-      font-size: 12.5px;
-      color: #cbd5e1;
-    }
-
-    .legend span {
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-    }
-
-    .dot {
-      display: inline-block;
-      width: 12px;
-      height: 12px;
-      border-radius: 4px;
     }
 
     .summary {
@@ -721,6 +797,12 @@
       color: var(--muted);
       font-size: 12.5px;
       padding: 28px 16px;
+      line-height: 1.6;
+    }
+
+    footer strong {
+      color: #e2e8f0;
+      letter-spacing: 0.04em;
     }
 
     #toast {
@@ -806,8 +888,11 @@
 <body>
   <header>
     <div class="brand">
-      <div class="brand-badge"><i data-lucide="ticket" size="19"></i></div>
-      <div>RIFA <span>PREMIADA</span></div>
+      <div class="brand-badge"><i data-lucide="ticket" size="20"></i></div>
+      <div>
+        <div class="brand-title">RIFA <span>PREMIADA</span></div>
+        <div class="brand-sub">WS Soluções</div>
+      </div>
     </div>
     <span class="tag"><i data-lucide="award" size="13"></i> Edição Mondial</span>
   </header>
@@ -833,7 +918,7 @@
     <section class="page active" id="page-home">
       <section class="hero">
         <div>
-          <span class="tag"><i data-lucide="sparkles" size="14"></i> PRÊMIO DA RIFA</span>
+          <span class="tag"><i data-lucide="sparkles" size="14"></i> PRÊMIO DA RIFA · WS SOLUÇÕES</span>
           <h1>Concorra a um <span>Mondial</span>!</h1>
           <p>Ventilador de mesa Mondial Super Power VSP-30-B. São 30 cm, 6 pás e 3 velocidades para refrescar seu ambiente.</p>
           <div class="features">
@@ -883,7 +968,7 @@
       </section>
 
       <section class="card">
-        <h2 class="section-title"><i data-lucide="tags" size="21"></i> Valores dos números</h2>
+        <h2 class="section-title"><i data-lucide="tags" size="21"></i> Tabela de valores (bem fácil de entender)</h2>
         <div class="promo-grid">
           <div class="promo-pill">
             <span>1 número</span>
@@ -902,7 +987,34 @@
             <strong>R$ 18</strong>
           </div>
         </div>
-        <p class="small">A cada grupo de 4 números, o desconto promocional se repete automaticamente.</p>
+
+        <div class="promo-explain">
+          <p class="promo-explain-title">
+            <i data-lucide="help-circle" size="17" style="color:var(--accent-light)"></i>
+            Passou de 4 números? Veja como funciona:
+          </p>
+          <p class="small" style="margin:0">
+            Cada grupo de <strong style="color:#fff">4 números</strong> sai por <strong style="color:var(--accent-light)">R$ 18</strong>, e os números que sobrarem entram no preço normal da tabela:
+          </p>
+          <div class="promo-examples">
+            <div class="promo-example-item">
+              5 números = <strong>R$ 24</strong>
+              <small>(R$ 18 + R$ 6)</small>
+            </div>
+            <div class="promo-example-item">
+              6 números = <strong>R$ 28</strong>
+              <small>(R$ 18 + R$ 10)</small>
+            </div>
+            <div class="promo-example-item">
+              7 números = <strong>R$ 33</strong>
+              <small>(R$ 18 + R$ 15)</small>
+            </div>
+            <div class="promo-example-item">
+              8 números = <strong>R$ 36</strong>
+              <small>(R$ 18 + R$ 18)</small>
+            </div>
+          </div>
+        </div>
       </section>
     </section>
 
@@ -911,12 +1023,26 @@
       <section class="card">
         <h2 class="section-title"><i data-lucide="grid-3x3" size="21"></i> Escolha seus números</h2>
         <p id="numbersMessage">Toque nos números disponíveis para visualizar. Entre com seu token para fazer uma seleção.</p>
-        <div class="legend">
-          <span><i class="dot" style="background:#1f2e4d;border:1px solid rgba(148,163,184,0.35)"></i>Disponível</span>
-          <span><i class="dot" style="background:#f59e0b"></i>Selecionado</span>
-          <span><i class="dot" style="background:rgba(127,29,29,0.65);border:1px solid rgba(239,68,68,0.4)"></i>Vendido</span>
+
+        <div class="grid-toolbar">
+          <div class="avail-badge">
+            <i data-lucide="check-circle-2" size="16"></i>
+            <span id="availableCounter">Carregando disponíveis...</span>
+          </div>
+          <div class="row" style="gap:12px">
+            <div class="legend">
+              <span><i class="dot" style="background:#1f2e4d;border:1px solid rgba(148,163,184,0.35)"></i>Livre</span>
+              <span><i class="dot" style="background:#f59e0b"></i>Selecionado</span>
+              <span id="soldLegend" class="hidden"><i class="dot" style="background:rgba(127,29,29,0.65);border:1px solid rgba(239,68,68,0.4)"></i>Vendido</span>
+            </div>
+            <button type="button" class="btn secondary sm" id="toggleSoldBtn" onclick="toggleShowSold()">
+              Mostrar vendidos
+            </button>
+          </div>
         </div>
+
         <div class="numbers" id="numbersGrid"></div>
+
         <div class="summary">
           <div>
             <div class="small">Selecionados</div>
@@ -925,6 +1051,7 @@
           <div>
             <div class="small">Total da seleção</div>
             <div class="price" id="selectedPrice">R$ 0,00</div>
+            <div class="small" id="priceBreakdown"></div>
           </div>
           <button class="btn" onclick="goToPage('orders')">
             Continuar <i data-lucide="arrow-right" size="18"></i>
@@ -947,6 +1074,7 @@
           <div style="text-align:right">
             <div class="small">Valor total</div>
             <div class="price" id="orderSelectedPrice">R$ 0,00</div>
+            <div class="small" id="orderPriceBreakdown"></div>
           </div>
         </div>
         <div id="selectedList" class="order">
@@ -1013,7 +1141,10 @@
     </section>
   </main>
 
-  <footer>Rifa Premiada · Ventilador Mondial VSP-30-B</footer>
+  <footer>
+    <strong>WS SOLUÇÕES</strong><br>
+    Rifa Premiada · Ventilador Mondial VSP-30-B
+  </footer>
   <div id="toast"></div>
 
   <!-- MODAL CRIAR CADASTRO -->
@@ -1078,7 +1209,7 @@
       </div>
       <p>Guarde seu token. Ele será necessário para entrar e consultar seus pedidos.</p>
       <div class="token-card" id="tokenCard">
-        <p>SEU TOKEN PERMANENTE</p>
+        <p>WS SOLUÇÕES · TOKEN PERMANENTE</p>
         <strong id="generatedToken">-----</strong>
         <p>Guarde este código em local seguro.</p>
       </div>
@@ -1103,6 +1234,7 @@
     let clientData=null;
     let selectedNumbers=[];
     let numbersData=[];
+    let showSoldNumbers=false;
 
     /* NAVEGAÇÃO */
     function showPage(page,button){
@@ -1169,6 +1301,17 @@
       return total;
     }
 
+    function priceBreakdownText(qty){
+      if(qty<=4)return '';
+      const prices=[0,6,10,15,18];
+      const groups=Math.floor(qty/4);
+      const rem=qty%4;
+      const parts=[];
+      for(let i=0;i<groups;i++)parts.push('R$ 18');
+      if(rem>0)parts.push('R$ '+prices[rem]);
+      return '('+parts.join(' + ')+')';
+    }
+
     function escapeHTML(value){
       return String(value??'').replace(/[&<>"']/g,char=>({
         '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
@@ -1217,7 +1360,7 @@
       try{
         const canvas=await html2canvas(document.getElementById('tokenCard'),{scale:2});
         const link=document.createElement('a');
-        link.download='meu-token-rifa.png';
+        link.download='meu-token-ws-solucoes.png';
         link.href=canvas.toDataURL('image/png');
         link.click();
       }catch(e){
@@ -1270,6 +1413,15 @@
     }
 
     /* NÚMEROS */
+    function toggleShowSold(){
+      showSoldNumbers=!showSoldNumbers;
+      const btn=document.getElementById('toggleSoldBtn');
+      const soldLegend=document.getElementById('soldLegend');
+      if(btn)btn.textContent=showSoldNumbers?'Ocultar vendidos':'Mostrar vendidos';
+      if(soldLegend)soldLegend.classList.toggle('hidden',!showSoldNumbers);
+      renderNumbers();
+    }
+
     async function loadNumbers(){
       const {data,error}=await db.from('numbers').select('id,status').order('id');
       if(error){
@@ -1285,7 +1437,24 @@
       const grid=document.getElementById('numbersGrid');
       grid.innerHTML='';
 
-      numbersData.forEach(item=>{
+      const totalCount=numbersData.length;
+      const availableCount=numbersData.filter(n=>n.status!=='sold').length;
+      const counterEl=document.getElementById('availableCounter');
+      if(counterEl){
+        counterEl.textContent=availableCount+' de '+totalCount+' disponíveis';
+      }
+
+      const visibleNumbers=showSoldNumbers
+        ? numbersData
+        : numbersData.filter(item=>item.status!=='sold');
+
+      if(!visibleNumbers.length){
+        grid.innerHTML='<p class="small" style="grid-column:1/-1;text-align:center;padding:20px 0">Todos os números já foram vendidos!</p>';
+        updateSelection();
+        return;
+      }
+
+      visibleNumbers.forEach(item=>{
         const button=document.createElement('button');
         button.className='number';
         button.textContent=String(item.id).padStart(2,'0');
@@ -1327,10 +1496,17 @@
     function updateSelection(){
       const count=selectedNumbers.length;
       const total=money(priceFor(count));
+      const breakdown=priceBreakdownText(count);
+
       document.getElementById('selectedCount').textContent=count;
       document.getElementById('selectedPrice').textContent=total;
       document.getElementById('orderSelectedCount').textContent=count;
       document.getElementById('orderSelectedPrice').textContent=total;
+
+      const breakEl=document.getElementById('priceBreakdown');
+      const orderBreakEl=document.getElementById('orderPriceBreakdown');
+      if(breakEl)breakEl.textContent=breakdown;
+      if(orderBreakEl)orderBreakEl.textContent=breakdown;
 
       const list=document.getElementById('selectedList');
       if(!count){
