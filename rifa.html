@@ -767,6 +767,23 @@
       background: var(--panel-hover);
     }
 
+    .pix-box {
+      background: rgba(11, 18, 33, 0.8);
+      border: 1px solid var(--border-strong);
+      border-radius: 16px;
+      padding: 18px;
+      margin: 16px 0;
+      text-align: center;
+    }
+
+    .pix-box strong {
+      display: block;
+      font-size: 24px;
+      color: var(--accent-light);
+      margin: 8px 0;
+      letter-spacing: 0.04em;
+    }
+
     .token-card {
       background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%);
       color: #0f172a;
@@ -1147,6 +1164,28 @@
   </footer>
   <div id="toast"></div>
 
+  <!-- MODAL PIX AO ENVIAR PEDIDO -->
+  <div class="modal hidden" id="pixModal" onclick="if(event.target===this)closePixModal()">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h2><i data-lucide="qr-code" size="21" style="color:var(--accent-light)"></i> Pague via PIX</h2>
+        <button class="modal-close" onclick="closePixModal()" aria-label="Fechar">
+          <i data-lucide="x" size="18"></i>
+        </button>
+      </div>
+      <p>Pedido enviado! Faça o pagamento na chave PIX abaixo:</p>
+      <div class="pix-box">
+        <span class="small">CHAVE PIX · WELLINGTON SILVA RIBEIRO</span>
+        <strong id="pixKeyDisplay">07622950319</strong>
+        <p class="small" style="margin:0">Total do pedido: <strong style="display:inline;font-size:15px" id="pixModalTotal">R$ 0,00</strong></p>
+      </div>
+      <button class="btn" style="width:100%" onclick="copyPixKey()">
+        <i data-lucide="copy" size="18"></i> Copiar chave PIX
+      </button>
+      <button class="btn secondary" style="width:100%;margin-top:10px" onclick="closePixModal()">Fechar</button>
+    </div>
+  </div>
+
   <!-- MODAL CRIAR CADASTRO -->
   <div class="modal hidden" id="registerModal" onclick="if(event.target===this)closeRegisterModal()">
     <div class="modal-box">
@@ -1228,6 +1267,7 @@
   <script>
     const SUPABASE_URL='https://supohabonmgsrjljlugj.supabase.co';
     const SUPABASE_KEY='sb_publishable_vPpRawuRveyEYI0rdQuV7g_7nASyNXA';
+    const PIX_KEY='07622950319';
     const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
     let clientToken=null;
@@ -1254,7 +1294,7 @@
       showPage(page);
     }
 
-    /* MODAIS DE CADASTRO E LOGIN */
+    /* MODAIS DE CADASTRO, LOGIN E PIX */
     function openRegisterModal(){
       document.getElementById('registerModal').classList.remove('hidden');
       setTimeout(()=>document.getElementById('name')?.focus(),50);
@@ -1275,6 +1315,25 @@
 
     function closeTokenModal(){
       document.getElementById('tokenModal').classList.add('hidden');
+    }
+
+    function openPixModal(totalAmount){
+      document.getElementById('pixKeyDisplay').textContent=PIX_KEY;
+      document.getElementById('pixModalTotal').textContent=money(totalAmount);
+      document.getElementById('pixModal').classList.remove('hidden');
+    }
+
+    function closePixModal(){
+      document.getElementById('pixModal').classList.add('hidden');
+    }
+
+    async function copyPixKey(){
+      try{
+        await navigator.clipboard.writeText(PIX_KEY);
+        toast('Chave PIX copiada!');
+      }catch(e){
+        toast('Copie a chave PIX: '+PIX_KEY);
+      }
     }
 
     /* UTILITÁRIOS */
@@ -1553,6 +1612,7 @@
         return toast('O pedido não foi confirmado.');
       }
 
+      const orderTotal=Number(data.total ?? priceFor(numbers.length));
       selectedNumbers=[];
       await loadNumbers();
 
@@ -1565,7 +1625,8 @@
       }
 
       updateSelection();
-      toast('Pedido enviado! Total: '+money(data.total));
+      openPixModal(orderTotal);
+      toast('Pedido enviado! Total: '+money(orderTotal));
     }
 
     /* HISTÓRICO DO CLIENTE */
