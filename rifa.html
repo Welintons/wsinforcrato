@@ -6,159 +6,72 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#101827">
 <title>Rifa Premiada | Mondial</title>
-
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
-
 <style>
-:root {
-  --bg:#101827;
-  --panel:#192538;
-  --panel2:#223249;
-  --text:#f5f7fb;
-  --muted:#9baac0;
-  --accent:#f5b942;
-  --green:#20c77a;
-  --red:#e75b68;
-  --border:#304158;
-}
+:root{--bg:#101827;--panel:#192538;--panel2:#223249;--text:#f5f7fb;--muted:#9baac0;--accent:#f5b942;--green:#20c77a;--red:#e75b68;--border:#304158}
 *{box-sizing:border-box}
-body{
-  margin:0;background:var(--bg);color:var(--text);
-  font-family:Arial,sans-serif;
-}
-button,input{font:inherit}
-button{cursor:pointer}
-header{
-  height:66px;padding:0 5%;display:flex;align-items:center;
-  justify-content:space-between;border-bottom:1px solid var(--border);
-  background:#111d2d;position:sticky;top:0;z-index:10;
-}
-.brand{font-size:19px;font-weight:900}
-.brand span{color:var(--accent)}
-.lock{
-  border:1px solid var(--border);background:transparent;color:#b9c5d5;
-  border-radius:50%;width:38px;height:38px;font-size:17px;
-}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,sans-serif}
+button,input{font:inherit}button{cursor:pointer}
+header{height:66px;padding:0 5%;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);background:#111d2d;position:sticky;top:0;z-index:10}
+.brand{font-size:19px;font-weight:900}.brand span{color:var(--accent)}
+.lock{border:1px solid var(--border);background:transparent;color:#b9c5d5;border-radius:50%;width:38px;height:38px;font-size:17px}
 .container{max-width:1100px;margin:auto;padding:24px 16px 60px}
-.hero{
-  display:grid;grid-template-columns:1fr 1fr;gap:25px;
-  align-items:center;background:linear-gradient(135deg,#1c2b40,#172235);
-  border:1px solid var(--border);border-radius:22px;padding:25px;
-}
-.tag{
-  display:inline-block;background:#473a20;color:#ffd77d;
-  padding:7px 11px;border-radius:20px;font-size:12px;font-weight:bold;
-}
-h1{font-size:clamp(28px,5vw,46px);line-height:1.08;margin:17px 0}
-h1 span{color:var(--accent)}
+.hero{display:grid;grid-template-columns:1fr 1fr;gap:25px;align-items:center;background:linear-gradient(135deg,#1c2b40,#172235);border:1px solid var(--border);border-radius:22px;padding:25px}
+.tag{display:inline-block;background:#473a20;color:#ffd77d;padding:7px 11px;border-radius:20px;font-size:12px;font-weight:bold}
+h1{font-size:clamp(28px,5vw,46px);line-height:1.08;margin:17px 0}h1 span{color:var(--accent)}
 p{color:var(--muted);line-height:1.6}
-.product{
-  width:100%;max-height:310px;object-fit:contain;
-  background:#fff;border-radius:16px;padding:10px;
-}
+.product{width:100%;max-height:310px;object-fit:contain;background:#fff;border-radius:16px;padding:10px}
 .features{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}
-.features span{
-  background:var(--panel2);padding:9px 12px;border-radius:8px;
-  color:#dce5f2;font-size:12px;
-}
-.card{
-  background:var(--panel);border:1px solid var(--border);
-  border-radius:16px;padding:20px;margin-top:20px;
-}
+.features span{background:var(--panel2);padding:9px 12px;border-radius:8px;color:#dce5f2;font-size:12px}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:16px;padding:20px;margin-top:20px}
 .section-title{font-size:21px;margin:0 0 8px}
 .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-input{
-  background:#101c2c;border:1px solid var(--border);color:white;
-  border-radius:9px;padding:13px;width:100%;outline:none;
-}
+input{background:#101c2c;border:1px solid var(--border);color:white;border-radius:9px;padding:13px;width:100%;outline:none}
 input:focus{border-color:var(--accent)}
 .field{flex:1;min-width:180px}
-.btn{
-  border:0;border-radius:9px;padding:13px 17px;
-  background:var(--accent);color:#241a08;font-weight:800;
-}
+.btn{border:0;border-radius:9px;padding:13px 17px;background:var(--accent);color:#241a08;font-weight:800}
 .btn:disabled{opacity:.5;cursor:not-allowed}
 .btn.secondary{background:var(--panel2);color:white}
-.btn.danger{background:#71313b;color:white}
-.btn.green{background:var(--green);color:#052b19}
-.numbers{
-  display:grid;grid-template-columns:repeat(10,minmax(0,1fr));
-  gap:7px;margin-top:17px;
-}
-.number{
-  aspect-ratio:1;background:#26364b;border:1px solid #3b4e68;
-  color:white;border-radius:8px;font-weight:bold;font-size:13px;
-}
+.btn.danger{background:#71313b;color:white}.btn.green{background:var(--green);color:#052b19}
+.numbers{display:grid;grid-template-columns:repeat(10,minmax(0,1fr));gap:7px;margin-top:17px}
+.number{aspect-ratio:1;background:#26364b;border:1px solid #3b4e68;color:white;border-radius:8px;font-weight:bold;font-size:13px}
 .number.selected{background:var(--accent);color:#241a08;border-color:var(--accent)}
 .number.sold{background:#63343b;color:#e5a8ad;border-color:#63343b;cursor:not-allowed}
+.number.locked{cursor:default}
 .legend{display:flex;gap:15px;flex-wrap:wrap;margin-top:15px;font-size:12px;color:var(--muted)}
 .dot{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px}
-.summary{
-  display:flex;justify-content:space-between;align-items:center;
-  gap:15px;flex-wrap:wrap;margin-top:20px;padding-top:17px;
-  border-top:1px solid var(--border)
-}
+.summary{display:flex;justify-content:space-between;align-items:center;gap:15px;flex-wrap:wrap;margin-top:20px;padding-top:17px;border-top:1px solid var(--border)}
 .price{font-size:24px;color:var(--accent);font-weight:900}
 .small{font-size:12px;color:var(--muted)}
 .hidden{display:none!important}
-.modal{
-  position:fixed;inset:0;background:#000b;z-index:50;
-  display:flex;align-items:center;justify-content:center;padding:15px;
-}
-.modal-box{
-  width:100%;max-width:440px;background:var(--panel);
-  border:1px solid var(--border);border-radius:18px;padding:23px;
-  max-height:90vh;overflow:auto;
-}
+.modal{position:fixed;inset:0;background:#000b;z-index:50;display:flex;align-items:center;justify-content:center;padding:15px}
+.modal-box{width:100%;max-width:440px;background:var(--panel);border:1px solid var(--border);border-radius:18px;padding:23px;max-height:90vh;overflow:auto}
 .modal-box h2{margin-top:0}
-.token-card{
-  background:#fff;color:#182235;padding:25px;border-radius:14px;
-  text-align:center;margin:15px 0;
-}
+.token-card{background:#fff;color:#182235;padding:25px;border-radius:14px;text-align:center;margin:15px 0}
 .token-card strong{display:block;font-size:38px;letter-spacing:7px;margin:15px 0}
 .token-card p{color:#59677a}
 .status{padding:5px 9px;border-radius:20px;font-size:11px;font-weight:bold}
-.pending{background:#493d21;color:#ffd77d}
-.approved{background:#164d38;color:#76efb3}
-.rejected{background:#572d35;color:#ffabb3}
-.order{
-  padding:14px 0;border-bottom:1px solid var(--border);
-}
-.order:last-child{border:0}
+.pending{background:#493d21;color:#ffd77d}.approved{background:#164d38;color:#76efb3}.rejected{background:#572d35;color:#ffabb3}
+.order{padding:14px 0;border-bottom:1px solid var(--border)}.order:last-child{border:0}
 .tabs{display:flex;gap:7px;flex-wrap:wrap;margin:15px 0}
-.tab{
-  background:var(--panel2);color:white;border:0;padding:10px 13px;
-  border-radius:8px
-}
+.tab{background:var(--panel2);color:white;border:0;padding:10px 13px;border-radius:8px}
 .tab.active{background:var(--accent);color:#241a08}
 .stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
-.stat{
-  background:var(--panel2);border-radius:12px;padding:15px;
-}
+.stat{background:var(--panel2);border-radius:12px;padding:15px}
 .stat strong{display:block;font-size:24px;color:var(--accent);margin-top:8px}
 table{width:100%;border-collapse:collapse;font-size:13px}
 td,th{text-align:left;padding:11px 7px;border-bottom:1px solid var(--border)}
 .table-wrap{overflow-x:auto}
 footer{text-align:center;color:var(--muted);font-size:12px;padding:25px}
-#toast{
-  position:fixed;bottom:20px;left:50%;transform:translateX(-50%);
-  background:#26364b;padding:13px 18px;border-radius:9px;
-  z-index:100;display:none;max-width:90%;text-align:center;
-}
+#toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#26364b;padding:13px 18px;border-radius:9px;z-index:100;display:none;max-width:90%;text-align:center}
 @media(max-width:700px){
-  .hero{grid-template-columns:1fr;padding:17px}
-  .hero-image{order:-1}
-  .product{max-height:230px}
-  .numbers{grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
-  .number{font-size:15px}
-  .stat-grid{grid-template-columns:repeat(2,1fr)}
-  .container{padding:17px 12px 45px}
-  header{padding:0 15px}
+.hero{grid-template-columns:1fr;padding:17px}.hero-image{order:-1}.product{max-height:230px}
+.numbers{grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}.number{font-size:15px}
+.stat-grid{grid-template-columns:repeat(2,1fr)}.container{padding:17px 12px 45px}header{padding:0 15px}
 }
 </style>
 </head>
-
 <body>
 
 <header>
@@ -167,133 +80,100 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:25px}
 </header>
 
 <main class="container">
-
-  <section class="hero">
-    <div>
-      <span class="tag">PRÊMIO DA RIFA</span>
-      <h1>Concorra a um <span>Mondial</span>!</h1>
-      <p>
-        Ventilador de mesa Mondial Super Power VSP-30-B.
-        São 30 cm, 6 pás e 3 velocidades.
-      </p>
-      <div class="features">
-        <span>30 cm</span>
-        <span>6 pás</span>
-        <span>3 velocidades</span>
-        <span>Oscilante</span>
-      </div>
-      <p class="small">Modelo VSP-30-B · Cor preta</p>
+<section class="hero">
+  <div>
+    <span class="tag">PRÊMIO DA RIFA</span>
+    <h1>Concorra a um <span>Mondial</span>!</h1>
+    <p>Ventilador de mesa Mondial Super Power VSP-30-B. São 30 cm, 6 pás e 3 velocidades.</p>
+    <div class="features"><span>30 cm</span><span>6 pás</span><span>3 velocidades</span><span>Oscilante</span></div>
+    <p class="small">Modelo VSP-30-B · Cor preta</p>
+  </div>
+  <div class="hero-image">
+    <img class="product"
+      src="https://lojamondial.vtexassets.com/arquivos/ids/164841-150-150?aspect=true&height=150&v=638839459088970000&width=150"
+      alt="Ventilador Mondial VSP-30-B"
+      onerror="this.style.display='none';document.getElementById('imageFallback').classList.remove('hidden')">
+    <div id="imageFallback" class="hidden card" style="background:white;color:#172235;text-align:center">
+      <strong>Mondial VSP-30-B</strong>
+      <p style="color:#59677a">Ventilador de mesa · 30 cm · 6 pás</p>
+      <a href="https://www.mondial.com.br/ventilador-de-mesa-mondial-6-pas-vsp-30-b/p" target="_blank">Ver foto oficial do produto</a>
     </div>
-    <div class="hero-image">
-      <img class="product"
-        src="https://lojamondial.vtexassets.com/arquivos/ids/164841-150-150?aspect=true&height=150&v=638839459088970000&width=150"
-        alt="Ventilador Mondial VSP-30-B de 30 centímetros"
-        onerror="this.style.display='none';document.getElementById('imageFallback').classList.remove('hidden')">
-      <div id="imageFallback" class="hidden card" style="background:white;color:#172235;text-align:center">
-        <strong>Mondial VSP-30-B</strong>
-        <p style="color:#59677a">Ventilador de mesa · 30 cm · 6 pás</p>
-        <a href="https://www.mondial.com.br/ventilador-de-mesa-mondial-6-pas-vsp-30-b/p" target="_blank">Ver foto oficial do produto</a>
-      </div>
-    </div>
-  </section>
+  </div>
+</section>
 
-  <section class="card">
-    <h2 class="section-title">Como participar</h2>
-    <p>Faça seu cadastro, receba seu token e escolha seus números. Seu pedido será enviado para análise. Os números só serão vendidos depois da aprovação administrativa.</p>
-  </section>
+<section class="card">
+  <h2 class="section-title">Como participar</h2>
+  <p>Faça seu cadastro, receba seu token e escolha seus números. Seu pedido será enviado para análise. Os números só serão vendidos depois da aprovação administrativa.</p>
+</section>
 
-  <section class="card" id="registerSection">
-    <h2 class="section-title">1. Faça seu cadastro</h2>
-    <p>Seu token será permanente e permitirá consultar todos os seus pedidos.</p>
-    <div class="row">
-      <div class="field">
-        <input id="name" placeholder="Nome completo" maxlength="100">
-      </div>
-      <div class="field">
-        <input id="whatsapp" placeholder="WhatsApp com DDD" inputmode="tel" maxlength="20">
-      </div>
-      <button class="btn" onclick="register()">Criar cadastro</button>
-    </div>
-  </section>
+<section class="card" id="registerSection">
+  <h2 class="section-title">1. Faça seu cadastro</h2>
+  <p>Seu token será permanente e permitirá consultar todos os seus pedidos.</p>
+  <div class="row">
+    <div class="field"><input id="name" placeholder="Nome completo" maxlength="100"></div>
+    <div class="field"><input id="whatsapp" placeholder="WhatsApp com DDD" inputmode="tel" maxlength="20"></div>
+    <button class="btn" onclick="register()">Criar cadastro</button>
+  </div>
+</section>
 
-  <section class="card">
-    <h2 class="section-title">2. Já tem seu token?</h2>
-    <p>Entre para escolher números e consultar seus pedidos.</p>
-    <div class="row">
-      <div class="field">
-        <input id="clientToken" placeholder="Seu token de 5 caracteres" maxlength="5" style="text-transform:uppercase">
-      </div>
-      <button class="btn" onclick="clientLogin()">Entrar</button>
-    </div>
-    <div id="clientInfo" class="hidden">
-      <p id="clientName"></p>
-      <button class="btn secondary" onclick="logoutClient()">Sair da área do cliente</button>
-    </div>
-  </section>
+<section class="card">
+  <h2 class="section-title">2. Já tem seu token?</h2>
+  <p>Entre para escolher números e consultar seus pedidos.</p>
+  <div class="row">
+    <div class="field"><input id="clientToken" placeholder="Seu token de 5 caracteres" maxlength="5" style="text-transform:uppercase"></div>
+    <button class="btn" onclick="clientLogin()">Entrar</button>
+  </div>
+  <div id="clientInfo" class="hidden">
+    <p id="clientName"></p>
+    <button class="btn secondary" onclick="logoutClient()">Sair da área do cliente</button>
+  </div>
+</section>
 
-  <section class="card hidden" id="numbersSection">
-    <h2 class="section-title">3. Escolha seus números</h2>
-    <p>Selecione os números que deseja solicitar. Números pendentes continuam disponíveis até a aprovação de um pedido.</p>
+<!-- VISUALIZAÇÃO PÚBLICA DOS NÚMEROS -->
+<section class="card" id="numbersSection">
+  <h2 class="section-title">3. Números da rifa</h2>
+  <p id="numbersMessage">Consulte os números disponíveis. Para selecionar e fazer um pedido, entre com seu token.</p>
+  <div class="legend">
+    <span><i class="dot" style="background:#26364b"></i>Disponível</span>
+    <span><i class="dot" style="background:#f5b942"></i>Selecionado</span>
+    <span><i class="dot" style="background:#63343b"></i>Vendido</span>
+  </div>
+  <div class="numbers" id="numbersGrid"></div>
+  <div class="summary" id="selectionSummary">
+    <div><div class="small">Quantidade selecionada</div><strong id="selectedCount">0</strong></div>
+    <div><div class="small">Total do pedido</div><div class="price" id="selectedPrice">R$ 0,00</div></div>
+    <button class="btn" id="sendOrderBtn" onclick="sendOrder()" disabled>Enviar pedido</button>
+  </div>
+  <p class="small">1 número: R$ 6 · 2: R$ 10 · 3: R$ 15 · 4: R$ 18. A cada grupo de 4, a promoção se repete.</p>
+</section>
 
-    <div class="legend">
-      <span><i class="dot" style="background:#26364b"></i>Disponível</span>
-      <span><i class="dot" style="background:#f5b942"></i>Selecionado</span>
-      <span><i class="dot" style="background:#63343b"></i>Vendido</span>
-    </div>
+<section class="card hidden" id="ordersSection">
+  <h2 class="section-title">Meus pedidos</h2>
+  <div id="myOrders"></div>
+</section>
 
-    <div class="numbers" id="numbersGrid"></div>
-
-    <div class="summary">
-      <div>
-        <div class="small">Quantidade selecionada</div>
-        <strong id="selectedCount">0</strong>
-      </div>
-      <div>
-        <div class="small">Total do pedido</div>
-        <div class="price" id="selectedPrice">R$ 0,00</div>
-      </div>
-      <button class="btn" id="sendOrderBtn" onclick="sendOrder()" disabled>Enviar pedido</button>
-    </div>
-    <p class="small">1 número: R$ 6 · 2: R$ 10 · 3: R$ 15 · 4: R$ 18. A cada grupo de 4, a promoção se repete.</p>
-  </section>
-
-  <section class="card hidden" id="ordersSection">
-    <h2 class="section-title">Meus pedidos</h2>
-    <div id="myOrders"></div>
-  </section>
-
-  <section class="card hidden" id="adminPanel">
-    <div class="row" style="justify-content:space-between">
-      <div>
-        <span class="tag">ÁREA RESTRITA</span>
-        <h2 class="section-title" style="margin-top:10px">Painel administrativo</h2>
-      </div>
-      <button class="btn secondary" onclick="adminLogout()">Sair</button>
-    </div>
-
-    <div class="stat-grid" id="adminStats"></div>
-
-    <div class="tabs">
-      <button class="tab active" onclick="adminTab('pending',this)">Pendentes</button>
-      <button class="tab" onclick="adminTab('all',this)">Todos pedidos</button>
-      <button class="tab" onclick="adminTab('numbers',this)">Números</button>
-      <button class="tab" onclick="adminTab('clients',this)">Clientes</button>
-      <button class="tab" onclick="adminTab('payments',this)">Pagamentos</button>
-    </div>
-
-    <div id="adminContent"></div>
-    <button class="btn secondary" style="margin-top:15px" onclick="loadAdmin()">Atualizar painel</button>
-  </section>
-
+<section class="card hidden" id="adminPanel">
+  <div class="row" style="justify-content:space-between">
+    <div><span class="tag">ÁREA RESTRITA</span><h2 class="section-title" style="margin-top:10px">Painel administrativo</h2></div>
+    <button class="btn secondary" onclick="adminLogout()">Sair</button>
+  </div>
+  <div class="stat-grid" id="adminStats"></div>
+  <div class="tabs">
+    <button class="tab active" onclick="adminTab('pending',this)">Pendentes</button>
+    <button class="tab" onclick="adminTab('all',this)">Todos pedidos</button>
+    <button class="tab" onclick="adminTab('manual',this)">Venda manual</button>
+    <button class="tab" onclick="adminTab('numbers',this)">Números</button>
+    <button class="tab" onclick="adminTab('clients',this)">Clientes</button>
+    <button class="tab" onclick="adminTab('payments',this)">Pagamentos</button>
+  </div>
+  <div id="adminContent"></div>
+  <button class="btn secondary" style="margin-top:15px" onclick="loadAdmin()">Atualizar painel</button>
+</section>
 </main>
 
-<footer>
-  Rifa Premiada · Ventilador Mondial VSP-30-B
-</footer>
-
+<footer>Rifa Premiada · Ventilador Mondial VSP-30-B</footer>
 <div id="toast"></div>
 
-<!-- MODAL DE TOKEN -->
 <div class="modal hidden" id="tokenModal">
   <div class="modal-box">
     <h2>Cadastro realizado!</h2>
@@ -311,7 +191,6 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:25px}
   </div>
 </div>
 
-<!-- MODAL LOGIN ADMIN -->
 <div class="modal hidden" id="adminLoginModal">
   <div class="modal-box">
     <h2>Acesso administrativo</h2>
@@ -326,515 +205,390 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:25px}
 </div>
 
 <script>
-const SUPABASE_URL = 'https://supohabonmgsrjljlugj.supabase.co';
-const SUPABASE_KEY = 'sb_publishable_vPpRawuRveyEYI0rdQuV7g_7nASyNXA';
+const SUPABASE_URL='https://supohabonmgsrjljlugj.supabase.co';
+const SUPABASE_KEY='sb_publishable_vPpRawuRveyEYI0rdQuV7g_7nASyNXA';
+const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
-const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-let clientToken = null;
-let clientData = null;
-let selectedNumbers = [];
-let numbersData = [];
-let adminUser = null;
-let currentAdminTab = 'pending';
-let cachedOrders = [];
-let cachedParticipants = [];
-let cachedPayments = [];
+let clientToken=null;
+let clientData=null;
+let selectedNumbers=[];
+let manualSelected=[];
+let numbersData=[];
+let adminUser=null;
+let currentAdminTab='pending';
+let cachedOrders=[];
+let cachedParticipants=[];
+let cachedPayments=[];
 
 function toast(message){
-  const el = document.getElementById('toast');
-  el.textContent = message;
-  el.style.display = 'block';
+  const el=document.getElementById('toast');
+  el.textContent=message;
+  el.style.display='block';
   clearTimeout(window.toastTimer);
-  window.toastTimer = setTimeout(()=>el.style.display='none',3500);
+  window.toastTimer=setTimeout(()=>el.style.display='none',4000);
 }
-
 function money(value){
-  return Number(value || 0).toLocaleString('pt-BR',{
-    style:'currency',currency:'BRL'
-  });
+  return Number(value||0).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
 }
-
 function priceFor(qty){
-  const prices = [0,6,10,15,18];
-  let total = 0;
-  while(qty > 0){
-    const group = Math.min(qty,4);
-    total += prices[group];
-    qty -= group;
-  }
+  const prices=[0,6,10,15,18];
+  let total=0;
+  while(qty>0){const group=Math.min(qty,4);total+=prices[group];qty-=group;}
   return total;
 }
-
-function closeTokenModal(){
-  document.getElementById('tokenModal').classList.add('hidden');
+function escapeHTML(value){
+  return String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 }
-
-function openAdminLogin(){
-  document.getElementById('adminLoginModal').classList.remove('hidden');
-}
-function closeAdminLogin(){
-  document.getElementById('adminLoginModal').classList.add('hidden');
-}
+function closeTokenModal(){document.getElementById('tokenModal').classList.add('hidden');}
+function openAdminLogin(){document.getElementById('adminLoginModal').classList.remove('hidden');}
+function closeAdminLogin(){document.getElementById('adminLoginModal').classList.add('hidden');}
 
 async function register(){
-  const name = document.getElementById('name').value.trim();
-  const whatsapp = document.getElementById('whatsapp').value.trim();
-
-  if(name.length < 3 || whatsapp.length < 8){
-    return toast('Informe nome e WhatsApp válidos.');
-  }
-
-  const {data,error} = await db.rpc('register_participant',{
-    p_name:name,
-    p_whatsapp:whatsapp
-  });
-
-  if(error){
-    console.error(error);
-    return toast('Não foi possível realizar o cadastro: '+error.message);
-  }
-
-  if(!data || !data.success){
-    return toast('Cadastro não confirmado.');
-  }
-
-  document.getElementById('generatedToken').textContent = data.token;
+  const name=document.getElementById('name').value.trim();
+  const whatsapp=document.getElementById('whatsapp').value.trim();
+  if(name.length<3||whatsapp.length<8)return toast('Informe nome e WhatsApp válidos.');
+  const {data,error}=await db.rpc('register_participant',{p_name:name,p_whatsapp:whatsapp});
+  if(error){console.error(error);return toast('Não foi possível realizar o cadastro: '+error.message);}
+  if(!data||!data.success)return toast('Cadastro não confirmado.');
+  document.getElementById('generatedToken').textContent=data.token;
   document.getElementById('tokenModal').classList.remove('hidden');
-
-  clientToken = data.token;
-  document.getElementById('clientToken').value = data.token;
-
+  document.getElementById('clientToken').value=data.token;
   toast('Cadastro realizado. Guarde seu token.');
 }
-
 async function copyToken(){
-  const token = document.getElementById('generatedToken').textContent;
-  try{
-    await navigator.clipboard.writeText(token);
-    toast('Token copiado!');
-  }catch(e){
-    toast('Selecione e copie o token manualmente.');
-  }
+  const token=document.getElementById('generatedToken').textContent;
+  try{await navigator.clipboard.writeText(token);toast('Token copiado!');}
+  catch(e){toast('Selecione e copie o token manualmente.');}
 }
-
 async function saveTokenCard(){
-  const card = document.getElementById('tokenCard');
   try{
-    const canvas = await html2canvas(card,{scale:2});
-    const link = document.createElement('a');
-    link.download = 'meu-token-rifa.png';
-    link.href = canvas.toDataURL('image/png');
-    link.click();
-  }catch(e){
-    toast('Não foi possível salvar a imagem.');
-  }
+    const canvas=await html2canvas(document.getElementById('tokenCard'),{scale:2});
+    const link=document.createElement('a');link.download='meu-token-rifa.png';
+    link.href=canvas.toDataURL('image/png');link.click();
+  }catch(e){toast('Não foi possível salvar a imagem.');}
 }
 
 async function clientLogin(){
-  const token = document.getElementById('clientToken').value.trim().toUpperCase();
-
-  if(!/^[A-HJ-NP-Z2-9]{5}$/.test(token)){
-    return toast('Digite um token válido de 5 caracteres.');
-  }
-
-  const {data,error} = await db.rpc('lookup_my_numbers',{p_token:token});
-
-  if(error){
-    console.error(error);
-    return toast('Erro ao consultar token.');
-  }
-  if(!data || !data.success){
-    return toast('Token não encontrado.');
-  }
-
-  clientToken = token;
-  clientData = data;
-
+  const token=document.getElementById('clientToken').value.trim().toUpperCase();
+  if(!/^[A-HJ-NP-Z2-9]{5}$/.test(token))return toast('Digite um token válido de 5 caracteres.');
+  const {data,error}=await db.rpc('lookup_my_numbers',{p_token:token});
+  if(error){console.error(error);return toast('Erro ao consultar token: '+error.message);}
+  if(!data||!data.success)return toast('Token não encontrado.');
+  clientToken=token;clientData=data;
   document.getElementById('clientInfo').classList.remove('hidden');
-  document.getElementById('clientName').textContent =
-    'Olá, '+data.participant+'!';
-  document.getElementById('numbersSection').classList.remove('hidden');
+  document.getElementById('clientName').textContent='Olá, '+data.participant+'!';
   document.getElementById('ordersSection').classList.remove('hidden');
-
+  document.getElementById('numbersMessage').textContent='Selecione os números disponíveis. Seu pedido será enviado para análise.';
   await loadNumbers();
-  renderMyOrders(data.orders || []);
+  renderMyOrders(data.orders||[]);
   toast('Acesso liberado.');
 }
-
 function logoutClient(){
-  clientToken = null;
-  clientData = null;
-  selectedNumbers = [];
+  clientToken=null;clientData=null;selectedNumbers=[];
   document.getElementById('clientInfo').classList.add('hidden');
-  document.getElementById('numbersSection').classList.add('hidden');
   document.getElementById('ordersSection').classList.add('hidden');
-  document.getElementById('clientToken').value = '';
+  document.getElementById('clientToken').value='';
+  document.getElementById('numbersMessage').textContent='Consulte os números disponíveis. Para selecionar e fazer um pedido, entre com seu token.';
+  renderNumbers();
   toast('Você saiu da área do cliente.');
 }
 
 async function loadNumbers(){
-  const {data,error} = await db
-    .from('numbers')
-    .select('id,status')
-    .order('id');
-
-  if(error){
-    console.error(error);
-    return toast('Não foi possível carregar os números.');
-  }
-
-  numbersData = data || [];
+  const {data,error}=await db.from('numbers').select('id,status').order('id');
+  if(error){console.error(error);toast('Não foi possível carregar os números: '+error.message);return;}
+  numbersData=data||[];
   renderNumbers();
 }
-
 function renderNumbers(){
-  const grid = document.getElementById('numbersGrid');
-  grid.innerHTML = '';
-
+  const grid=document.getElementById('numbersGrid');
+  grid.innerHTML='';
   numbersData.forEach(item=>{
-    const button = document.createElement('button');
-    button.className = 'number';
-    button.textContent = String(item.id).padStart(2,'0');
-
-    if(item.status === 'sold'){
-      button.classList.add('sold');
-      button.disabled = true;
-      button.title = 'Número vendido';
+    const button=document.createElement('button');
+    button.className='number';
+    button.textContent=String(item.id).padStart(2,'0');
+    if(item.status==='sold'){
+      button.classList.add('sold');button.disabled=true;button.title='Número vendido';
     }else if(selectedNumbers.includes(item.id)){
       button.classList.add('selected');
+    }else if(!clientToken){
+      button.classList.add('locked');
+      button.title='Entre com seu token para selecionar';
     }
-
-    button.onclick = ()=>{
-      if(item.status === 'sold') return;
-      if(selectedNumbers.includes(item.id)){
-        selectedNumbers = selectedNumbers.filter(n=>n!==item.id);
-      }else{
-        selectedNumbers.push(item.id);
-      }
+    button.onclick=()=>{
+      if(item.status==='sold')return;
+      if(!clientToken){toast('Entre com seu token para selecionar números.');return;}
+      if(selectedNumbers.includes(item.id))selectedNumbers=selectedNumbers.filter(n=>n!==item.id);
+      else selectedNumbers.push(item.id);
       renderNumbers();
-      updateSelection();
     };
-
     grid.appendChild(button);
   });
-
   updateSelection();
 }
-
 function updateSelection(){
-  const count = selectedNumbers.length;
-  document.getElementById('selectedCount').textContent = count;
-  document.getElementById('selectedPrice').textContent = money(priceFor(count));
-  document.getElementById('sendOrderBtn').disabled = !count || !clientToken;
+  const count=selectedNumbers.length;
+  document.getElementById('selectedCount').textContent=count;
+  document.getElementById('selectedPrice').textContent=money(priceFor(count));
+  document.getElementById('sendOrderBtn').disabled=!count||!clientToken;
 }
-
 async function sendOrder(){
-  if(!clientToken) return toast('Entre com seu token primeiro.');
-  if(!selectedNumbers.length) return toast('Escolha pelo menos um número.');
-
-  const btn = document.getElementById('sendOrderBtn');
-  btn.disabled = true;
-  btn.textContent = 'Enviando...';
-
-  const {data,error} = await db.rpc('create_raffle_order',{
-    p_token:clientToken,
-    p_numbers:selectedNumbers
-  });
-
-  btn.textContent = 'Enviar pedido';
-
-  if(error){
-    console.error(error);
-    btn.disabled = false;
-    return toast('Não foi possível enviar: '+error.message);
-  }
-
-  if(!data || !data.success){
-    btn.disabled = false;
-    return toast('O pedido não foi confirmado.');
-  }
-
-  selectedNumbers = [];
+  if(!clientToken)return toast('Entre com seu token primeiro.');
+  if(!selectedNumbers.length)return toast('Escolha pelo menos um número.');
+  const btn=document.getElementById('sendOrderBtn');
+  btn.disabled=true;btn.textContent='Enviando...';
+  const {data,error}=await db.rpc('create_raffle_order',{p_token:clientToken,p_numbers:selectedNumbers});
+  btn.textContent='Enviar pedido';
+  if(error){console.error(error);btn.disabled=false;return toast('Não foi possível enviar: '+error.message);}
+  if(!data||!data.success){btn.disabled=false;return toast('O pedido não foi confirmado.');}
+  selectedNumbers=[];
   await loadNumbers();
-
-  const {data:lookup} = await db.rpc('lookup_my_numbers',{p_token:clientToken});
-  if(lookup && lookup.success){
-    clientData = lookup;
-    renderMyOrders(lookup.orders || []);
-  }
-
+  const {data:lookup,error:lookupError}=await db.rpc('lookup_my_numbers',{p_token:clientToken});
+  if(!lookupError&&lookup&&lookup.success){clientData=lookup;renderMyOrders(lookup.orders||[]);}
   toast('Pedido enviado! Total: '+money(data.total));
 }
-
 function renderMyOrders(orders){
-  const box = document.getElementById('myOrders');
-  box.innerHTML = '';
-
-  if(!orders.length){
-    box.innerHTML = '<p>Você ainda não possui pedidos.</p>';
-    return;
-  }
-
+  const box=document.getElementById('myOrders');box.innerHTML='';
+  if(!orders.length){box.innerHTML='<p>Você ainda não possui pedidos.</p>';return;}
   orders.forEach(order=>{
-    const div = document.createElement('div');
-    div.className = 'order';
-
-    const nums = (order.numbers || [])
-      .map(n=>String(n).padStart(2,'0')).join(', ');
-
-    const statusClass = order.status === 'approved' ? 'approved' :
-      order.status === 'rejected' ? 'rejected' : 'pending';
-
-    const statusText = order.status === 'approved' ? 'Aprovado' :
-      order.status === 'rejected' ? 'Rejeitado' : 'Pendente';
-
-    div.innerHTML = `
-      <strong>${money(order.amount)}</strong>
-      <span class="status ${statusClass}">${statusText}</span>
-      <p>Números: ${nums || '—'}</p>
-      <p class="small">Pedido: ${order.order_id}</p>
-    `;
+    const div=document.createElement('div');div.className='order';
+    const nums=(order.numbers||[]).map(n=>String(n).padStart(2,'0')).join(', ');
+    const cls=order.status==='approved'?'approved':order.status==='rejected'?'rejected':'pending';
+    const label=order.status==='approved'?'Aprovado':order.status==='rejected'?'Rejeitado':'Pendente';
+    div.innerHTML=`<strong>${money(order.amount)}</strong> <span class="status ${cls}">${label}</span><p>Números: ${nums||'—'}</p><p class="small">Pedido: ${escapeHTML(order.order_id)}</p>`;
     box.appendChild(div);
   });
 }
 
-// ADMINISTRAÇÃO
-
+// ADMINISTRAÇÃO E AUTORIZAÇÃO
 async function adminLogin(){
-  const email = document.getElementById('adminEmail').value.trim();
-  const password = document.getElementById('adminPassword').value;
-
-  if(!email || !password) return toast('Informe e-mail e senha.');
-
-  const {data,error} = await db.auth.signInWithPassword({email,password});
-
-  if(error){
-    console.error(error);
-    return toast('Login não autorizado: '+error.message);
-  }
-
-  const user = data.user;
-
-  const {data:admin,error:adminError} = await db
-    .from('admin_users')
-    .select('id')
-    .eq('id',user.id)
-    .maybeSingle();
-
-  if(adminError || !admin){
+  const email=document.getElementById('adminEmail').value.trim();
+  const password=document.getElementById('adminPassword').value;
+  if(!email||!password)return toast('Informe e-mail e senha.');
+  const {data,error}=await db.auth.signInWithPassword({email,password});
+  if(error){console.error('Erro de login:',error);return toast('Falha no login: '+error.message);}
+  const user=data.user;
+  if(!user){await db.auth.signOut();return toast('O Supabase não retornou um usuário autenticado.');}
+  const {data:admin,error:adminError}=await db.from('admin_users').select('id').eq('id',user.id).maybeSingle();
+  console.log('USUÁRIO AUTENTICADO:',user.id);
+  console.log('ADMIN ENCONTRADO:',admin);
+  console.log('ERRO DA CONSULTA ADMIN:',adminError);
+  if(adminError){
     await db.auth.signOut();
-    return toast('Este usuário não tem permissão administrativa.');
+    return toast('Erro ao verificar administrador: '+adminError.message);
   }
-
-  adminUser = user;
+  if(!admin){
+    await db.auth.signOut();
+    return toast('Usuário autenticado, mas não encontrado em admin_users. ID: '+user.id);
+  }
+  adminUser=user;
   closeAdminLogin();
   document.getElementById('adminPanel').classList.remove('hidden');
   await loadAdmin();
   document.getElementById('adminPanel').scrollIntoView({behavior:'smooth'});
   toast('Acesso administrativo liberado.');
 }
-
 async function adminLogout(){
-  await db.auth.signOut();
-  adminUser = null;
+  await db.auth.signOut();adminUser=null;
   document.getElementById('adminPanel').classList.add('hidden');
   toast('Sessão administrativa encerrada.');
 }
-
 async function loadAdmin(){
-  if(!adminUser) return;
-
-  const [numbers,orders,participants,payments] = await Promise.all([
+  if(!adminUser)return;
+  const [numbers,orders,participants,payments]=await Promise.all([
     db.from('numbers').select('id,status').order('id'),
     db.from('orders').select('*').order('created_at',{ascending:false}),
     db.from('participants').select('id,full_name,whatsapp,created_at'),
     db.from('payments').select('*').order('created_at',{ascending:false})
   ]);
-
-  const errors = [numbers,orders,participants,payments].filter(x=>x.error);
-  if(errors.length){
-    console.error(errors);
-    return toast('Erro ao carregar dados administrativos.');
-  }
-
-  numbersData = numbers.data || [];
-  cachedOrders = orders.data || [];
-  cachedParticipants = participants.data || [];
-  cachedPayments = payments.data || [];
-
-  const sold = numbersData.filter(n=>n.status==='sold').length;
-  const pending = cachedOrders.filter(o=>o.status==='pending').length;
-  const confirmed = cachedPayments
-    .filter(p=>p.status==='confirmed')
-    .reduce((sum,p)=>sum+Number(p.amount),0);
-
-  document.getElementById('adminStats').innerHTML = `
+  const errors=[numbers,orders,participants,payments].filter(x=>x.error);
+  if(errors.length){console.error('Erros painel:',errors);return toast('Erro ao carregar painel: '+errors.map(x=>x.error.message).join(' | '));}
+  numbersData=numbers.data||[];
+  cachedOrders=orders.data||[];
+  cachedParticipants=participants.data||[];
+  cachedPayments=payments.data||[];
+  const sold=numbersData.filter(n=>n.status==='sold').length;
+  const pending=cachedOrders.filter(o=>o.status==='pending').length;
+  const confirmed=cachedPayments.filter(p=>p.status==='confirmed').reduce((s,p)=>s+Number(p.amount),0);
+  document.getElementById('adminStats').innerHTML=`
     <div class="stat"><span class="small">Números vendidos</span><strong>${sold}/100</strong></div>
     <div class="stat"><span class="small">Pedidos pendentes</span><strong>${pending}</strong></div>
-    <div class="stat"><span class="small">Clientes</span><strong>${cachedParticipants.length}</strong></div>
-    <div class="stat"><span class="small">Confirmado</span><strong>${money(confirmed)}</strong></div>
-  `;
-
+    <div class="stat"><span class="small">Cadastros com token</span><strong>${cachedParticipants.length}</strong></div>
+    <div class="stat"><span class="small">Confirmado</span><strong>${money(confirmed)}</strong></div>`;
   renderAdminTab();
 }
-
 function adminTab(tab,button){
-  currentAdminTab = tab;
+  currentAdminTab=tab;
   document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
   button.classList.add('active');
   renderAdminTab();
 }
-
 function renderAdminTab(){
-  const box = document.getElementById('adminContent');
-
-  if(currentAdminTab === 'numbers'){
-    box.innerHTML = '<h3>Números da rifa</h3><div class="numbers" id="adminNumbers"></div>';
-    const grid = document.getElementById('adminNumbers');
+  const box=document.getElementById('adminContent');
+  if(currentAdminTab==='manual'){renderManualSale(box);return;}
+  if(currentAdminTab==='numbers'){
+    box.innerHTML='<h3>Números da rifa</h3><div class="numbers" id="adminNumbers"></div>';
+    const grid=document.getElementById('adminNumbers');
     numbersData.forEach(n=>{
-      const el = document.createElement('div');
-      el.className = 'number '+(n.status==='sold'?'sold':'');
-      el.style.display='grid';
-      el.style.placeItems='center';
-      el.textContent=String(n.id).padStart(2,'0');
-      grid.appendChild(el);
+      const el=document.createElement('div');
+      el.className='number '+(n.status==='sold'?'sold':'');
+      el.style.display='grid';el.style.placeItems='center';
+      el.textContent=String(n.id).padStart(2,'0');grid.appendChild(el);
     });
     return;
   }
-
-  if(currentAdminTab === 'clients'){
-    box.innerHTML = '<h3>Clientes cadastrados</h3><div class="table-wrap"><table><thead><tr><th>Nome</th><th>WhatsApp</th><th>Cadastro</th></tr></thead><tbody>'+
-      cachedParticipants.map(p=>`
-        <tr>
-          <td>${escapeHTML(p.full_name)}</td>
-          <td>${escapeHTML(p.whatsapp)}</td>
-          <td>${new Date(p.created_at).toLocaleDateString('pt-BR')}</td>
-        </tr>`).join('')+
+  if(currentAdminTab==='clients'){
+    box.innerHTML='<h3>Clientes cadastrados com token</h3><div class="table-wrap"><table><thead><tr><th>Nome</th><th>WhatsApp</th><th>Cadastro</th></tr></thead><tbody>'+
+      cachedParticipants.map(p=>`<tr><td>${escapeHTML(p.full_name)}</td><td>${escapeHTML(p.whatsapp)}</td><td>${new Date(p.created_at).toLocaleDateString('pt-BR')}</td></tr>`).join('')+
+      '</tbody></table></div><p class="small">Vendas sem cadastro aparecem na aba Todos pedidos.</p>';
+    return;
+  }
+  if(currentAdminTab==='payments'){
+    box.innerHTML='<h3>Pagamentos</h3><div class="table-wrap"><table><thead><tr><th>Pedido</th><th>Valor</th><th>Status</th></tr></thead><tbody>'+
+      cachedPayments.map(p=>`<tr><td>${escapeHTML(p.order_id)}</td><td>${money(p.amount)}</td><td>${escapeHTML(p.status)}</td></tr>`).join('')+
       '</tbody></table></div>';
     return;
   }
-
-  if(currentAdminTab === 'payments'){
-    box.innerHTML = '<h3>Pagamentos</h3><div class="table-wrap"><table><thead><tr><th>Pedido</th><th>Valor</th><th>Status</th></tr></thead><tbody>'+
-      cachedPayments.map(p=>`
-        <tr>
-          <td>${p.order_id}</td>
-          <td>${money(p.amount)}</td>
-          <td>${escapeHTML(p.status)}</td>
-        </tr>`).join('')+
-      '</tbody></table></div>';
-    return;
-  }
-
-  let orders = cachedOrders;
-  if(currentAdminTab === 'pending'){
-    orders = orders.filter(o=>o.status==='pending');
-  }
-
-  if(!orders.length){
-    box.innerHTML = '<p>Nenhum pedido nesta categoria.</p>';
-    return;
-  }
-
-  box.innerHTML = '<h3>'+(
-    currentAdminTab==='pending'?'Pedidos aguardando aprovação':'Todos os pedidos'
-  )+'</h3><div id="adminOrders"></div>';
-
-  const list = document.getElementById('adminOrders');
-
+  let orders=cachedOrders;
+  if(currentAdminTab==='pending')orders=orders.filter(o=>o.status==='pending');
+  if(!orders.length){box.innerHTML='<p>Nenhum pedido nesta categoria.</p>';return;}
+  box.innerHTML='<h3>'+(currentAdminTab==='pending'?'Pedidos aguardando aprovação':'Todos os pedidos')+'</h3><div id="adminOrders"></div>';
+  const list=document.getElementById('adminOrders');
   orders.forEach(order=>{
-    const participant = cachedParticipants.find(p=>p.id===order.participant_id);
-    const div = document.createElement('div');
-    div.className='order';
-
+    const participant=cachedParticipants.find(p=>p.id===order.participant_id);
+    const name=order.customer_name||participant?.full_name||'Cliente sem cadastro';
+    const whatsapp=order.customer_whatsapp||participant?.whatsapp||'—';
+    const div=document.createElement('div');div.className='order';
+    const cls=order.status==='approved'?'approved':order.status==='rejected'?'rejected':'pending';
     div.innerHTML=`
-      <strong>${escapeHTML(participant?.full_name || 'Cliente')}</strong>
-      <span class="status ${order.status==='approved'?'approved':order.status==='rejected'?'rejected':'pending'}">${escapeHTML(order.status)}</span>
+      <strong>${escapeHTML(name)}</strong>
+      <span class="status ${cls}">${escapeHTML(order.status)}</span>
       <p>${money(order.total_amount)} · ${new Date(order.created_at).toLocaleString('pt-BR')}</p>
-      <p class="small">Pedido: ${order.id}</p>
-      <p class="small">Cliente: ${escapeHTML(participant?.whatsapp || '—')}</p>
+      <p class="small">Pedido: ${escapeHTML(order.id)}</p>
+      <p class="small">WhatsApp: ${escapeHTML(whatsapp)}</p>
+      <p class="small">${order.customer_name?'Venda manual, sem token':'Pedido de cliente cadastrado'}</p>
       <div class="row" id="orderNumbers-${order.id}"></div>
-      ${order.status==='pending'?`
-        <div class="row" style="margin-top:12px">
-          <button class="btn green" onclick="approveOrder('${order.id}')">Confirmar pagamento e aprovar</button>
-          <button class="btn danger" onclick="rejectOrder('${order.id}')">Rejeitar</button>
-        </div>`:''}
-    `;
-
-    list.appendChild(div);
-    loadOrderNumbers(order.id);
+      ${order.status==='pending'?`<div class="row" style="margin-top:12px">
+        <button class="btn green" onclick="approveOrder('${order.id}')">Confirmar pagamento e aprovar</button>
+        <button class="btn danger" onclick="rejectOrder('${order.id}')">Rejeitar</button>
+      </div>`:''}`;
+    list.appendChild(div);loadOrderNumbers(order.id);
   });
+}
+
+// VENDA MANUAL DO ADMINISTRADOR
+function renderManualSale(box){
+  manualSelected=[];
+  box.innerHTML=`
+    <h3>Registrar venda sem cadastro</h3>
+    <p>Use esta opção para pessoas que não querem criar token. A venda será registrada como paga e aprovada imediatamente.</p>
+    <div class="row">
+      <div class="field"><input id="manualName" placeholder="Nome da pessoa" maxlength="100"></div>
+      <div class="field"><input id="manualWhatsapp" placeholder="WhatsApp com DDD" maxlength="20"></div>
+    </div>
+    <p><strong>Selecione os números disponíveis:</strong></p>
+    <div class="numbers" id="manualNumbers"></div>
+    <div class="summary">
+      <div><div class="small">Selecionados</div><strong id="manualCount">0</strong></div>
+      <div><div class="small">Total</div><div class="price" id="manualPrice">R$ 0,00</div></div>
+      <button class="btn green" id="manualSaveBtn" onclick="saveManualSale()" disabled>Registrar venda paga</button>
+    </div>`;
+  renderManualNumbers();
+}
+function renderManualNumbers(){
+  const grid=document.getElementById('manualNumbers');
+  if(!grid)return;
+  grid.innerHTML='';
+  numbersData.forEach(n=>{
+    const b=document.createElement('button');
+    b.className='number';
+    b.textContent=String(n.id).padStart(2,'0');
+    if(n.status==='sold'){b.classList.add('sold');b.disabled=true;b.title='Já vendido';}
+    else if(manualSelected.includes(n.id))b.classList.add('selected');
+    b.onclick=()=>{
+      if(n.status==='sold')return;
+      if(manualSelected.includes(n.id))manualSelected=manualSelected.filter(x=>x!==n.id);
+      else manualSelected.push(n.id);
+      renderManualNumbers();updateManualSummary();
+    };
+    grid.appendChild(b);
+  });
+  updateManualSummary();
+}
+function updateManualSummary(){
+  const count=manualSelected.length;
+  const countEl=document.getElementById('manualCount');
+  const priceEl=document.getElementById('manualPrice');
+  const saveBtn=document.getElementById('manualSaveBtn');
+  if(!countEl)return;
+  countEl.textContent=count;
+  priceEl.textContent=money(priceFor(count));
+  saveBtn.disabled=!count;
+}
+async function saveManualSale(){
+  if(!adminUser)return toast('Sessão administrativa não encontrada.');
+  const name=document.getElementById('manualName').value.trim();
+  const whatsapp=document.getElementById('manualWhatsapp').value.trim();
+  if(name.length<3)return toast('Informe o nome da pessoa.');
+  if(whatsapp.length<8)return toast('Informe um WhatsApp válido.');
+  if(!manualSelected.length)return toast('Selecione pelo menos um número.');
+  const numbers=[...manualSelected].sort((a,b)=>a-b);
+  if(!confirm('Confirma o recebimento do pagamento de '+money(priceFor(numbers.length))+' e a venda dos números '+numbers.map(n=>String(n).padStart(2,'0')).join(', ')+'?'))return;
+  const btn=document.getElementById('manualSaveBtn');
+  btn.disabled=true;btn.textContent='Registrando...';
+  const {data,error}=await db.rpc('admin_create_manual_sale',{
+    p_name:name,p_whatsapp:whatsapp,p_numbers:numbers
+  });
+  if(error){
+    console.error('Erro na venda manual:',error);
+    btn.disabled=false;btn.textContent='Registrar venda paga';
+    return toast('Não foi possível registrar: '+error.message);
+  }
+  if(!data||!data.success){
+    btn.disabled=false;btn.textContent='Registrar venda paga';
+    return toast('O banco não confirmou a venda.');
+  }
+  toast('Venda manual registrada! Total: '+money(data.total));
+  await loadAdmin();
+  await loadNumbers();
+  currentAdminTab='manual';
+  document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
+  const manualTabButton=[...document.querySelectorAll('.tab')].find(b=>b.textContent.includes('Venda manual'));
+  if(manualTabButton)manualTabButton.classList.add('active');
+  renderAdminTab();
 }
 
 async function loadOrderNumbers(orderId){
-  const {data,error} = await db
-    .from('order_numbers')
-    .select('number_id')
-    .eq('order_id',orderId);
-
-  if(error){
-    console.error(error);
-    return;
-  }
-
-  const box = document.getElementById('orderNumbers-'+orderId);
-  if(box){
-    box.textContent='Números: '+(data||[])
-      .map(x=>String(x.number_id).padStart(2,'0')).join(', ');
-  }
+  const {data,error}=await db.from('order_numbers').select('number_id').eq('order_id',orderId);
+  if(error){console.error(error);return;}
+  const box=document.getElementById('orderNumbers-'+orderId);
+  if(box)box.textContent='Números: '+(data||[]).map(x=>String(x.number_id).padStart(2,'0')).join(', ');
 }
-
 async function approveOrder(orderId){
-  if(!confirm('Confirma que o pagamento foi verificado e deseja aprovar este pedido?')) return;
-
-  const {data,error} = await db.rpc('approve_raffle_order',{
-    p_order_id:orderId
-  });
-
-  if(error){
-    console.error(error);
-    return toast('Não foi possível aprovar: '+error.message);
-  }
-
+  if(!confirm('Confirma que o pagamento foi verificado e deseja aprovar este pedido?'))return;
+  const {data,error}=await db.rpc('approve_raffle_order',{p_order_id:orderId});
+  if(error){console.error(error);return toast('Não foi possível aprovar: '+error.message);}
   toast('Pedido aprovado e números vendidos.');
-  await loadAdmin();
+  await loadAdmin();await loadNumbers();
 }
-
 async function rejectOrder(orderId){
-  if(!confirm('Deseja realmente rejeitar este pedido?')) return;
-
-  const {data,error} = await db.rpc('reject_raffle_order',{
-    p_order_id:orderId
-  });
-
-  if(error){
-    console.error(error);
-    return toast('Não foi possível rejeitar: '+error.message);
-  }
-
+  if(!confirm('Deseja realmente rejeitar este pedido?'))return;
+  const {data,error}=await db.rpc('reject_raffle_order',{p_order_id:orderId});
+  if(error){console.error(error);return toast('Não foi possível rejeitar: '+error.message);}
   toast('Pedido rejeitado.');
   await loadAdmin();
 }
 
-function escapeHTML(value){
-  return String(value ?? '').replace(/[&<>"']/g,char=>({
-    '&':'&amp;','<':'&lt;','>':'&gt;',
-    '"':'&quot;',"'":'&#39;'
-  })[char]);
-}
-
-// Recuperar sessão administrativa caso a página seja atualizada.
-db.auth.getSession().then(async ({data})=>{
-  const user = data.session?.user;
-  if(!user) return;
-
-  const {data:admin} = await db
-    .from('admin_users')
-    .select('id')
-    .eq('id',user.id)
-    .maybeSingle();
-
+// RECUPERAÇÃO DA SESSÃO ADMINISTRATIVA
+async function restoreAdminSession(){
+  const {data,error}=await db.auth.getSession();
+  if(error){console.error('Erro ao recuperar sessão:',error);return;}
+  const user=data.session?.user;
+  if(!user)return;
+  const {data:admin,error:adminError}=await db.from('admin_users').select('id').eq('id',user.id).maybeSingle();
+  console.log('RECUPERAÇÃO - USUÁRIO:',user.id);
+  console.log('RECUPERAÇÃO - ADMIN:',admin);
+  console.log('RECUPERAÇÃO - ERRO:',adminError);
+  if(adminError){console.error('Não foi possível verificar a sessão administrativa:',adminError);return;}
   if(admin){
     adminUser=user;
     document.getElementById('adminPanel').classList.remove('hidden');
@@ -842,8 +596,13 @@ db.auth.getSession().then(async ({data})=>{
   }else{
     await db.auth.signOut();
   }
+}
+
+// Carrega os números para qualquer visitante, sem exigir login.
+document.addEventListener('DOMContentLoaded',async()=>{
+  await loadNumbers();
+  await restoreAdminSession();
 });
 </script>
-
 </body>
 </html>
